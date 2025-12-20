@@ -68,7 +68,7 @@ Mobigen is a full-stack platform that transforms natural language descriptions i
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │
 │  │  Web Dashboard  │  │    Generator    │  │     Builder     │  │     Tester      │     │
 │  │   (Next.js)     │  │    Service      │  │     Service     │  │     Service     │     │
-│  │   Port: 3333    │  │   Port: 4000    │  │   Port: 5000    │  │   Port: 6000    │     │
+│  │   Port: 3333    │  │   Port: 4000    │  │   Port: 5001    │  │   Port: 6000    │     │
 │  │                 │  │                 │  │                 │  │                 │     │
 │  │ • Dashboard UI  │  │ • AI Pipeline   │  │ • EAS Builds    │  │ • Device Tests  │     │
 │  │ • NextAuth SSO  │  │ • Socket.IO     │  │ • BullMQ Queue  │  │ • Screenshots   │     │
@@ -168,7 +168,7 @@ NEXTAUTH_URL=http://localhost:3333
 |---------|-----|-------------|
 | Web Dashboard | http://localhost:3333 | Main user interface |
 | Generator API | http://localhost:4000 | AI generation service |
-| Builder API | http://localhost:5000 | EAS build service |
+| Builder API | http://localhost:5001 | EAS build service |
 | Tester API | http://localhost:6000 | Device testing service |
 | Analytics API | http://localhost:7000 | Usage analytics |
 | MinIO Console | http://localhost:9001 | S3 storage UI (admin/minio_password) |
@@ -221,7 +221,7 @@ NEXTAUTH_URL=http://localhost:3333
 |----------|-------------|---------|
 | `NEXT_PUBLIC_GENERATOR_URL` | Generator URL (client-side) | `http://localhost:4000` |
 | `GENERATOR_URL` | Generator URL (server-side) | `http://localhost:4000` |
-| `BUILDER_URL` | Builder service URL | `http://localhost:5000` |
+| `BUILDER_URL` | Builder service URL | `http://localhost:5001` |
 | `TESTER_URL` | Tester service URL | `http://localhost:6000` |
 | `ANALYTICS_URL` | Analytics service URL | `http://localhost:7000` |
 | `FRONTEND_URL` | Frontend URL for CORS | `http://localhost:3333` |
@@ -275,9 +275,9 @@ NEXTAUTH_URL=http://localhost:3333
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `WEB_PORT` | Web dashboard port | `3000` |
+| `WEB_PORT` | Web dashboard port | `3333` |
 | `GENERATOR_PORT` | Generator service port | `4000` |
-| `BUILDER_PORT` | Builder service port | `5000` |
+| `BUILDER_PORT` | Builder service port | `5001` |
 | `TESTER_PORT` | Tester service port | `6000` |
 | `ANALYTICS_PORT` | Analytics service port | `7000` |
 
@@ -397,9 +397,9 @@ docker compose down -v
 | PostgreSQL | 5432 | mobigen-postgres |
 | Redis | 6379 | mobigen-redis |
 | MinIO | 9000, 9001 | mobigen-minio |
-| Web | 3000 | mobigen-web |
+| Web | 3333 | mobigen-web |
 | Generator | 4000 | mobigen-generator |
-| Builder | 5000 | mobigen-builder |
+| Builder | 5001 | mobigen-builder |
 | Tester | 6000 | mobigen-tester |
 | Analytics | 7000 | mobigen-analytics |
 
@@ -1000,10 +1000,10 @@ curl http://localhost:3333/api/health
 curl http://localhost:4000/health
 
 # Builder
-curl http://localhost:5000/health
+curl http://localhost:5001/health
 
 # All services
-for port in 3000 4000 5000 6000 7000; do
+for port in 3333 4000 5001 6000 7000; do
   echo "Port $port: $(curl -s http://localhost:$port/health | head -c 50)"
 done
 ```

@@ -121,10 +121,10 @@ services:
     container_name: mobigen-builder
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
       - NODE_ENV=production
-      - PORT=5000
+      - PORT=5001
       - DATABASE_URL=postgresql://mobigen:mobigen_dev_password@postgres:5432/mobigen
       - REDIS_URL=redis://redis:6379
       - EXPO_TOKEN=${EXPO_TOKEN:-}

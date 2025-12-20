@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch src/index.ts",
+    "dev": "PORT=5001 tsx watch src/index.ts",
     "start": "node dist/index.js",
     "test": "jest",
     "typecheck": "tsc --noEmit"
