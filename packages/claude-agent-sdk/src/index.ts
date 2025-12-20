@@ -160,7 +160,13 @@ export async function* query(params: {
   ].filter(Boolean).join('\n\n');
 
   // Make the API call
-  const response = await client.messages.create({
+  // Use type assertion to handle union type incompatibility between SDK versions
+  const response = await (client.messages.create as (params: {
+    model: string;
+    max_tokens: number;
+    system?: string;
+    messages: Array<{ role: 'user' | 'assistant'; content: string }>;
+  }) => Promise<{ content: Array<{ type: string; text?: string }> }>)({
     model: modelId,
     max_tokens: 4096,
     system: systemPrompt || undefined,
@@ -173,7 +179,7 @@ export async function* query(params: {
   yield {
     type: 'assistant',
     message: {
-      content: response.content.map((block: { type: string; text?: string }) => {
+      content: response.content.map((block) => {
         if (block.type === 'text') {
           return { type: 'text', text: block.text };
         }
