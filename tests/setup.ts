@@ -1,10 +1,10 @@
 /**
- * Jest Test Setup
+ * Vitest Test Setup
  *
  * Mocks external dependencies and sets up test environment
  */
 
-import { vi } from 'vitest';
+import { vi, beforeAll, afterAll } from 'vitest';
 
 // Set test environment variables
 process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/mobigen_test';
@@ -28,5 +28,4 @@ afterAll(() => {
   console.debug = originalConsole.debug;
 });
 
-// Global test timeout
-jest.setTimeout(30000);
+// Note: Test timeout is configured in vitest.config.ts
