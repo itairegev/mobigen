@@ -10,7 +10,10 @@ export const metadata: Metadata = {
   description: 'Generate production-ready mobile apps with AI',
 };
 
+console.log('[layout.tsx] Module loaded');
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  console.log('[layout.tsx] RootLayout rendering');
   return (
     <html lang="en">
       <body className={inter.className}>
