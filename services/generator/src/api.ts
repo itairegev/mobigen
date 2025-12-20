@@ -103,6 +103,8 @@ const GenerateRequestSchema = z.object({
 
 // API Routes
 app.post('/api/generate', async (req, res) => {
+  let responseSent = false;
+
   try {
     const validated = GenerateRequestSchema.parse(req.body);
 
@@ -119,16 +121,28 @@ app.post('/api/generate', async (req, res) => {
       jobId: validated.projectId,
       message: 'Generation started. Subscribe to WebSocket for progress updates.',
     });
+    responseSent = true;
 
-    // Wait for completion and store result
-    const result = await resultPromise;
-    io.to(`project:${validated.projectId}`).emit('generation:complete', result);
+    // Wait for completion and emit result via WebSocket
+    try {
+      const result = await resultPromise;
+      io.to(`project:${validated.projectId}`).emit('generation:complete', result);
+    } catch (genError) {
+      // Generation failed after response was sent - emit error via WebSocket
+      console.error('Generation error:', genError);
+      io.to(`project:${validated.projectId}`).emit('generation:error', {
+        error: genError instanceof Error ? genError.message : 'Generation failed',
+      });
+    }
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json({ success: false, errors: error.errors });
-    } else {
-      console.error('Generation error:', error);
-      res.status(500).json({ success: false, error: 'Internal server error' });
+    // Only send HTTP error if response hasn't been sent yet
+    if (!responseSent) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ success: false, errors: error.errors });
+      } else {
+        console.error('Generation error:', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+      }
     }
   }
 });
