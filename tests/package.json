@@ -8,11 +8,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:api": "vitest run --config vitest.config.ts tests/api/",
-    "test:services": "vitest run --config vitest.config.ts tests/services/",
-    "test:e2e": "vitest run --config vitest.config.ts tests/e2e/",
-    "test:ui": "vitest run --config vitest.config.ts tests/ui/",
-    "test:all": "vitest run --config vitest.config.ts"
+    "test:api": "vitest run api/",
+    "test:services": "vitest run services/",
+    "test:e2e": "vitest run e2e/",
+    "test:ui": "vitest run ui/",
+    "test:all": "vitest run"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
