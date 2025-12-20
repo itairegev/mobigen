@@ -7,8 +7,8 @@ export {
   validateAIConfig,
   MODEL_MAPPING,
   BEDROCK_TO_ANTHROPIC,
-} from './client.js';
-export type { AIProvider, AIClientConfig, AIClient } from './client.js';
+} from './client';
+export type { AIProvider, AIClientConfig, AIClient } from './client';
 
 // Export types
 export type {
@@ -48,7 +48,7 @@ export type {
   HookOutput,
   PreToolUseHookInput,
   PostToolUseHookInput,
-} from './types.js';
+} from './types';
 
 // Export agents and pipeline configuration
-export { mobigenAgents, generationPipeline, agentModelConfig } from './agents/index.js';
+export { mobigenAgents, generationPipeline, agentModelConfig } from './agents/index';

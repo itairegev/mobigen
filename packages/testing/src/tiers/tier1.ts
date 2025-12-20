@@ -1,6 +1,6 @@
-import type { ValidatorConfig, ValidationResult, StageResult } from '../types.js';
-import { typescriptValidator } from '../validators/typescript.js';
-import { eslintValidator } from '../validators/eslint.js';
+import type { ValidatorConfig, ValidationResult, StageResult } from '../types';
+import { typescriptValidator } from '../validators/typescript';
+import { eslintValidator } from '../validators/eslint';
 
 /**
  * Tier 1: Instant validation (<30 seconds)

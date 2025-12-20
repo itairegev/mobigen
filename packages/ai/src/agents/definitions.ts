@@ -1,4 +1,4 @@
-import type { AgentDefinition, AgentRole } from '../types.js';
+import type { AgentDefinition, AgentRole } from '../types';
 
 export const mobigenAgents: Record<AgentRole, AgentDefinition> = {
   // === TOP-LEVEL ORCHESTRATION ===

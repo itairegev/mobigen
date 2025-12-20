@@ -1,11 +1,11 @@
-import type { ValidationTier, ValidatorConfig, ValidationResult } from './types.js';
-import { runTier1 } from './tiers/tier1.js';
-import { runTier2 } from './tiers/tier2.js';
-import { runTier3 } from './tiers/tier3.js';
+import type { ValidationTier, ValidatorConfig, ValidationResult } from './types';
+import { runTier1 } from './tiers/tier1';
+import { runTier2 } from './tiers/tier2';
+import { runTier3 } from './tiers/tier3';
 
-export * from './types.js';
-export * from './tiers/index.js';
-export * from './validators/index.js';
+export * from './types';
+export * from './tiers/index';
+export * from './validators/index';
 
 /**
  * Run validation at the specified tier level

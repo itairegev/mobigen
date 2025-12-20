@@ -1,7 +1,7 @@
-import type { ValidatorConfig, ValidationResult, StageResult } from '../types.js';
-import { runTier1 } from './tier1.js';
-import { expoPrebuildValidator } from '../validators/expo-prebuild.js';
-import { jestValidator } from '../validators/jest.js';
+import type { ValidatorConfig, ValidationResult, StageResult } from '../types';
+import { runTier1 } from './tier1';
+import { expoPrebuildValidator } from '../validators/expo-prebuild';
+import { jestValidator } from '../validators/jest';
 
 /**
  * Tier 2: Fast validation (<2 minutes)

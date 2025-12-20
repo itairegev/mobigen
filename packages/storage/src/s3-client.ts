@@ -14,7 +14,7 @@ import type {
   FileInfo,
   UploadResult,
   DownloadResult,
-} from './types.js';
+} from './types';
 
 export class S3Storage {
   private client: S3Client;

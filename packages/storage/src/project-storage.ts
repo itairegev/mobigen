@@ -1,9 +1,9 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as tar from 'tar';
-import { S3Storage } from './s3-client.js';
-import { GitStorage } from './git-client.js';
-import type { ProjectStorageConfig, ProjectSnapshot, FileInfo } from './types.js';
+import { S3Storage } from './s3-client';
+import { GitStorage } from './git-client';
+import type { ProjectStorageConfig, ProjectSnapshot, FileInfo } from './types';
 
 export class ProjectStorage {
   private s3: S3Storage;

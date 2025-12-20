@@ -1,5 +1,5 @@
 import { execa } from 'execa';
-import type { Validator, ValidatorConfig, StageResult, ValidationError } from '../types.js';
+import type { Validator, ValidatorConfig, StageResult, ValidationError } from '../types';
 
 export const jestValidator: Validator = {
   name: 'jest',

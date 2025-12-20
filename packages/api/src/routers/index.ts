@@ -1,7 +1,7 @@
-import { router } from '../trpc.js';
-import { projectsRouter } from './projects.js';
-import { buildsRouter } from './builds.js';
-import { usersRouter } from './users.js';
+import { router } from '../trpc';
+import { projectsRouter } from './projects';
+import { buildsRouter } from './builds';
+import { usersRouter } from './users';
 
 export const appRouter = router({
   projects: projectsRouter,

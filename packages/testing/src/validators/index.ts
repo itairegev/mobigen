@@ -1,5 +1,5 @@
-export { typescriptValidator } from './typescript.js';
-export { eslintValidator } from './eslint.js';
-export { expoPrebuildValidator } from './expo-prebuild.js';
-export { jestValidator } from './jest.js';
-export { maestroValidator } from './maestro.js';
+export { typescriptValidator } from './typescript';
+export { eslintValidator } from './eslint';
+export { expoPrebuildValidator } from './expo-prebuild';
+export { jestValidator } from './jest';
+export { maestroValidator } from './maestro';

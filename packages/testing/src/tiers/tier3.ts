@@ -1,6 +1,6 @@
-import type { ValidatorConfig, ValidationResult } from '../types.js';
-import { runTier2 } from './tier2.js';
-import { maestroValidator } from '../validators/maestro.js';
+import type { ValidatorConfig, ValidationResult } from '../types';
+import { runTier2 } from './tier2';
+import { maestroValidator } from '../validators/maestro';
 
 /**
  * Tier 3: Thorough validation (<10 minutes)

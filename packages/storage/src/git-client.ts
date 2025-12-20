@@ -1,5 +1,5 @@
 import simpleGit, { SimpleGit } from 'simple-git';
-import type { GitCommit } from './types.js';
+import type { GitCommit } from './types';
 
 export class GitStorage {
   private git: SimpleGit;
