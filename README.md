@@ -983,6 +983,19 @@ done
 
 ---
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Project Creation Flow](docs/PROJECT_CREATION_FLOW.md) | Complete guide on how apps are generated from templates |
+| [Architecture Overview](docs/ARCHITECTURE.md) | System architecture and component relationships |
+| [API Reference](docs/API.md) | REST and tRPC API documentation |
+| [Templates Guide](templates/README.md) | Available templates and how to create new ones |
+| [Terraform Deployment](terraform/README.md) | AWS infrastructure setup |
+| [Kubernetes Deployment](k8s/README.md) | Kubernetes manifests and configuration |
+
+---
+
 ## Contributing
 
 1. Fork the repository
