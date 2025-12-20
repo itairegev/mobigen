@@ -1,14 +1,19 @@
 /**
- * Mock Claude Agent SDK
+ * Claude Agent SDK Shim
  *
- * This is a mock implementation of the hypothetical Claude Agent SDK
- * described in the Mobigen technical design. It provides a similar interface
- * using the standard Anthropic SDK under the hood.
+ * This is a shim implementation of the Claude Agent SDK interface
+ * described in the Mobigen technical design. It provides the same interface
+ * using either direct Anthropic API or AWS Bedrock.
+ *
+ * Supports:
+ * - AI_PROVIDER=bedrock (uses AWS Bedrock)
+ * - AI_PROVIDER=anthropic (uses direct Anthropic API)
  *
  * When a real Claude Agent SDK becomes available, replace this package.
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import AnthropicBedrock from '@anthropic-ai/bedrock-sdk';
 
 // Types
 export interface AgentDefinition {
@@ -62,18 +67,66 @@ export interface SDKMessage {
   tool_input?: Record<string, unknown>;
 }
 
-// Model mapping
-const MODEL_MAP: Record<string, string> = {
+// Model mapping for direct Anthropic API
+const ANTHROPIC_MODEL_MAP: Record<string, string> = {
   sonnet: 'claude-sonnet-4-20250514',
   opus: 'claude-3-opus-20240229',
   haiku: 'claude-3-5-haiku-20241022',
 };
 
+// Model mapping for AWS Bedrock
+const BEDROCK_MODEL_MAP: Record<string, string> = {
+  sonnet: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  opus: 'anthropic.claude-3-opus-20240229-v1:0',
+  haiku: 'anthropic.claude-3-5-haiku-20241022-v1:0',
+};
+
+type AIProvider = 'anthropic' | 'bedrock';
+
+function getProvider(): AIProvider {
+  return (process.env.AI_PROVIDER as AIProvider) || 'bedrock';
+}
+
+function createClient(): Anthropic | AnthropicBedrock {
+  const provider = getProvider();
+
+  if (provider === 'bedrock') {
+    const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'us-east-1';
+    const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+    const sessionToken = process.env.AWS_SESSION_TOKEN;
+
+    if (accessKeyId && secretAccessKey) {
+      return new AnthropicBedrock({
+        awsRegion: region,
+        awsAccessKey: accessKeyId,
+        awsSecretKey: secretAccessKey,
+        awsSessionToken: sessionToken,
+      });
+    }
+
+    // Use default AWS credential chain (IAM role, ~/.aws/credentials, etc.)
+    return new AnthropicBedrock({ awsRegion: region });
+  }
+
+  // Direct Anthropic API
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY required when AI_PROVIDER=anthropic. Set AI_PROVIDER=bedrock to use AWS Bedrock.');
+  }
+  return new Anthropic({ apiKey });
+}
+
+function getModelId(alias: string): string {
+  const provider = getProvider();
+  const modelMap = provider === 'bedrock' ? BEDROCK_MODEL_MAP : ANTHROPIC_MODEL_MAP;
+  return modelMap[alias] || alias;
+}
+
 /**
- * Mock query function that simulates the Claude Agent SDK behavior
+ * Query function implementing the Claude Agent SDK interface
  *
- * In reality, this would be a sophisticated multi-agent orchestration system.
- * For development, we simulate basic responses.
+ * Uses AWS Bedrock (default) or direct Anthropic API based on AI_PROVIDER env var.
  */
 export async function* query(params: {
   prompt: string;
@@ -90,82 +143,50 @@ export async function* query(params: {
 
   // Get the model to use
   const modelAlias = Object.values(params.options?.agents || {})[0]?.model || 'sonnet';
-  const modelId = MODEL_MAP[modelAlias] || modelAlias;
+  const modelId = getModelId(modelAlias);
 
-  try {
-    // Create Anthropic client
-    const client = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
+  // Create client (Bedrock or direct Anthropic)
+  const client = createClient();
 
-    // Build system prompt from agent definitions
-    const agentPrompts = Object.values(params.options?.agents || {})
-      .map(a => a.prompt)
-      .join('\n\n');
+  // Build system prompt from agent definitions
+  const agentPrompts = Object.values(params.options?.agents || {})
+    .map(a => a.prompt)
+    .join('\n\n');
 
-    const systemPrompt = [
-      params.options?.systemPrompt,
-      agentPrompts,
-      params.options?.cwd ? `Working directory: ${params.options.cwd}` : null,
-    ].filter(Boolean).join('\n\n');
+  const systemPrompt = [
+    params.options?.systemPrompt,
+    agentPrompts,
+    params.options?.cwd ? `Working directory: ${params.options.cwd}` : null,
+  ].filter(Boolean).join('\n\n');
 
-    // Make the API call
-    const response = await client.messages.create({
-      model: modelId,
-      max_tokens: 4096,
-      system: systemPrompt || undefined,
-      messages: [
-        { role: 'user', content: params.prompt }
-      ],
-    });
+  // Make the API call
+  const response = await client.messages.create({
+    model: modelId,
+    max_tokens: 4096,
+    system: systemPrompt || undefined,
+    messages: [
+      { role: 'user', content: params.prompt }
+    ],
+  });
 
-    // Yield assistant message
-    yield {
-      type: 'assistant',
-      message: {
-        content: response.content.map(block => {
-          if (block.type === 'text') {
-            return { type: 'text', text: block.text };
-          }
-          return { type: block.type };
-        }),
-      },
-    };
+  // Yield assistant message
+  yield {
+    type: 'assistant',
+    message: {
+      content: response.content.map(block => {
+        if (block.type === 'text') {
+          return { type: 'text', text: block.text };
+        }
+        return { type: block.type };
+      }),
+    },
+  };
 
-    // Yield result
-    yield {
-      type: 'result',
-      session_id: sessionId,
-    };
-
-  } catch (error) {
-    // If no API key, yield mock response for development
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.warn('[Claude Agent SDK Mock] No ANTHROPIC_API_KEY set, returning mock response');
-
-      yield {
-        type: 'assistant',
-        message: {
-          content: [{
-            type: 'text',
-            text: `[Mock Response] Received prompt: "${params.prompt.substring(0, 100)}..."
-
-This is a mock response from the Claude Agent SDK stub.
-Set ANTHROPIC_API_KEY to get real AI responses.
-
-Mock analysis complete. No actual files were modified.`,
-          }],
-        },
-      };
-
-      yield {
-        type: 'result',
-        session_id: sessionId,
-      };
-    } else {
-      throw error;
-    }
-  }
+  // Yield result
+  yield {
+    type: 'result',
+    session_id: sessionId,
+  };
 }
 
 function generateSessionId(): string {
