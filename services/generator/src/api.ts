@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { z } from 'zod';
-import { generateApp } from './orchestrator.js';
+import { generateApp } from './orchestrator';
 import type { SDKMessage } from '@mobigen/ai';
 
 const app = express();

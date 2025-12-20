@@ -3,8 +3,8 @@ import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
-import { TestService } from './test-service.js';
-import { ScreenshotService } from './screenshot-service.js';
+import { TestService } from './test-service';
+import { ScreenshotService } from './screenshot-service';
 
 const app = express();
 const server = createServer(app);

@@ -13,9 +13,9 @@ import type {
   QAReport,
 } from '@mobigen/ai';
 import { TemplateManager, type ProjectMetadata, type TemplateContext } from '@mobigen/storage';
-import { emitProgress } from './api.js';
-import { flagForHumanReview } from './session-manager.js';
-import { createQAHooks } from './hooks/index.js';
+import { emitProgress } from './api';
+import { flagForHumanReview } from './session-manager';
+import { createQAHooks } from './hooks/index';
 import * as path from 'path';
 
 // Configuration for paths

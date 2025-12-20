@@ -1,9 +1,9 @@
 import express from 'express';
 import cron from 'node-cron';
 import Redis from 'ioredis';
-import { UsageTracker } from './usage-tracker.js';
-import { CostMonitor } from './cost-monitor.js';
-import { MetricsAggregator } from './metrics-aggregator.js';
+import { UsageTracker } from './usage-tracker';
+import { CostMonitor } from './cost-monitor';
+import { MetricsAggregator } from './metrics-aggregator';
 
 const app = express();
 app.use(express.json());

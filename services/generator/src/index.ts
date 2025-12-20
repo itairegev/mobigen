@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: '../../.env' });
 
-import { httpServer } from './api.js';
+import { httpServer } from './api';
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.GENERATOR_PORT || process.env.PORT || 4000;
 
 httpServer.listen(PORT, () => {
   console.log(`Generator service running on port ${PORT}`);
