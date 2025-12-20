@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mobigen-config
+  labels:
+    app.kubernetes.io/name: mobigen
+data:
+  nextauth-url: "https://mobigen.example.com"
+  s3-endpoint: "https://s3.amazonaws.com"
+  s3-bucket: "mobigen-templates"
+  artifacts-bucket: "mobigen-artifacts"
+  log-level: "info"

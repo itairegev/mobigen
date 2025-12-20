@@ -1,0 +1,29 @@
+{
+  "name": "@mobigen/api",
+  "version": "0.1.0",
+  "description": "tRPC API layer for Mobigen",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@trpc/server": "^10.45.0",
+    "@mobigen/db": "workspace:*",
+    "zod": "^3.22.4",
+    "superjson": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}

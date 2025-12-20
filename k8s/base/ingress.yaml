@@ -1,0 +1,53 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mobigen-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    # WebSocket support for Socket.IO
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - mobigen.example.com
+      secretName: mobigen-tls
+  rules:
+    - host: mobigen.example.com
+      http:
+        paths:
+          # Generator API and WebSocket
+          - path: /api/generate
+            pathType: Prefix
+            backend:
+              service:
+                name: generator
+                port:
+                  number: 4000
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: generator
+                port:
+                  number: 4000
+          # Builder webhooks
+          - path: /webhooks
+            pathType: Prefix
+            backend:
+              service:
+                name: builder
+                port:
+                  number: 5000
+          # Web app (default)
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 3000

@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: mobigen-staging
+
+resources:
+  - ../../base
+
+nameSuffix: -staging
+
+patches:
+  # Reduce replicas for staging
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+    target:
+      kind: Deployment
+      name: web
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+    target:
+      kind: Deployment
+      name: generator
+
+  # Update resource limits for staging
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 256Mi
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 250m
+    target:
+      kind: Deployment
+
+configMapGenerator:
+  - name: mobigen-config
+    behavior: merge
+    literals:
+      - nextauth-url=https://staging.mobigen.example.com
+
+images:
+  - name: mobigen/web
+    newTag: staging
+  - name: mobigen/generator
+    newTag: staging
+  - name: mobigen/builder
+    newTag: staging

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mobigen
+  labels:
+    app.kubernetes.io/name: mobigen
+    app.kubernetes.io/part-of: mobigen

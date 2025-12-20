@@ -1,0 +1,29 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: web
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: generator-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: generator
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: builder-pdb
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: builder
