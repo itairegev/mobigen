@@ -206,7 +206,7 @@ cron.schedule('0 0 1 * *', async () => {
   await metricsAggregator.cleanupOldData(90); // Keep 90 days
 });
 
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 7001;
 
 app.listen(PORT, () => {
   console.log(`Analytics service running on port ${PORT}`);

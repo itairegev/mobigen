@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "workspace:*",
     "@anthropic-ai/sdk": "^0.32.0",
     "@mobigen/ai": "workspace:*",
     "@mobigen/storage": "workspace:*",
