@@ -5,21 +5,31 @@
  */
 
 import { vi, beforeAll, afterAll } from 'vitest';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-// Set test environment variables
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/mobigen_test';
+// Load .env from monorepo root FIRST (for E2E tests that need real database)
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+// Set test environment variables ONLY if not already set by .env
+// This allows E2E tests to use real database while unit tests use mocks
+process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/mobigen_test';
 process.env.NODE_ENV = 'test';
-process.env.ANTHROPIC_API_KEY = 'test-api-key';
-process.env.S3_BUCKET = 'mobigen-test-bucket';
-process.env.GENERATOR_URL = 'http://localhost:4000';
-process.env.FRONTEND_URL = 'http://localhost:3000';
+process.env.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || 'test-api-key';
+process.env.S3_BUCKET = process.env.S3_BUCKET || 'mobigen-test-bucket';
+process.env.GENERATOR_URL = process.env.GENERATOR_URL || 'http://localhost:4000';
+process.env.FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-// Mock console for cleaner test output
+// Only mock console for unit tests, not E2E (check if running E2E by looking at test file path)
+const isE2E = process.argv.some(arg => arg.includes('e2e'));
+
 const originalConsole = { ...console };
 beforeAll(() => {
-  console.log = vi.fn();
-  console.info = vi.fn();
-  console.debug = vi.fn();
+  if (!isE2E) {
+    console.log = vi.fn();
+    console.info = vi.fn();
+    console.debug = vi.fn();
+  }
 });
 
 afterAll(() => {

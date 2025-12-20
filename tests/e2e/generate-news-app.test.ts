@@ -23,25 +23,16 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { io, Socket } from 'socket.io-client';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 
-// Load .env from monorepo root (same as generator service)
-dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
+// Note: .env is loaded in setup.ts which runs before all tests
 
 // Test configuration - uses same env vars as generator service
 const GENERATOR_URL = process.env.GENERATOR_URL || 'http://localhost:4000';
 const GENERATION_TIMEOUT = 10 * 60 * 1000; // 10 minutes for full generation
 const CONNECTION_TIMEOUT = 10000;
 
-// Verify DATABASE_URL is set
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL not found. Make sure .env file exists at project root.');
-}
-
-console.log('📊 Database URL:', process.env.DATABASE_URL?.replace(/:[^:@]+@/, ':****@'));
-
-// Initialize Prisma client - uses same DATABASE_URL as generator service
+// Initialize Prisma client - uses DATABASE_URL from .env (loaded in setup.ts)
 const prisma = new PrismaClient();
 
 // Test data
