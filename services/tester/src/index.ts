@@ -12,8 +12,13 @@ const wss = new WebSocketServer({ server, path: '/ws' });
 
 app.use(express.json());
 
-// Redis connection
+// Redis connection for general use
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+
+// Redis connection for BullMQ workers (requires maxRetriesPerRequest: null)
+const workerRedis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: null,
+});
 
 // Services
 const testService = new TestService();
@@ -121,7 +126,7 @@ const testWorker = new Worker(
       throw error;
     }
   },
-  { connection: redis }
+  { connection: workerRedis }
 );
 
 testWorker.on('failed', (job, err) => {
@@ -252,6 +257,7 @@ process.on('SIGTERM', async () => {
   await testWorker.close();
   await testQueue.close();
   await redis.quit();
+  await workerRedis.quit();
   server.close();
   process.exit(0);
 });

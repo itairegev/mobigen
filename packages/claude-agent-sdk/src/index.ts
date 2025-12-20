@@ -173,7 +173,7 @@ export async function* query(params: {
   yield {
     type: 'assistant',
     message: {
-      content: response.content.map(block => {
+      content: response.content.map((block: { type: string; text?: string }) => {
         if (block.type === 'text') {
           return { type: 'text', text: block.text };
         }
