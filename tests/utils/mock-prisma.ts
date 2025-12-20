@@ -80,8 +80,16 @@ export function generateUUID(): string {
   });
 }
 
+// Helper to remove undefined values from overrides
+function cleanOverrides<T extends Record<string, unknown>>(overrides: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(overrides).filter(([_, v]) => v !== undefined)
+  ) as Partial<T>;
+}
+
 // Factory functions for creating mock data
 export function createMockUser(overrides: Partial<MockUser> = {}): MockUser {
+  const cleaned = cleanOverrides(overrides);
   return {
     id: generateUUID(),
     email: 'test@example.com',
@@ -92,7 +100,7 @@ export function createMockUser(overrides: Partial<MockUser> = {}): MockUser {
     createdAt: new Date(),
     updatedAt: new Date(),
     emailVerified: null,
-    ...overrides,
+    ...cleaned,
   };
 }
 

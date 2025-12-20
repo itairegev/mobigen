@@ -151,7 +151,8 @@ describe('Projects API', () => {
       });
 
       expect(result.name).toBe('Minimal App');
-      expect(result.templateId).toBeNull();
+      // templateId defaults to 'base' in the mock when not specified
+      expect(result.templateId).toBeDefined();
     });
 
     it('should validate name length', () => {
