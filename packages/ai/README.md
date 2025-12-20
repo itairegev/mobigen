@@ -8,8 +8,8 @@ This package provides the AI infrastructure for Mobigen's code generation pipeli
 
 ## Tech Stack
 
-- **AI Provider**: Anthropic Claude API
-- **SDK**: @anthropic-ai/sdk
+- **AI Providers**: Anthropic Claude API or AWS Bedrock
+- **SDKs**: @anthropic-ai/sdk, @anthropic-ai/bedrock-sdk
 - **Validation**: Zod schemas
 - **Language**: TypeScript (ESM)
 
@@ -188,21 +188,96 @@ Reviews generated code:
 
 ## Configuration
 
-### Environment Variables
+### AI Provider Selection
+
+Mobigen supports two AI providers:
+
+1. **Direct Anthropic API** - Using your Anthropic API key
+2. **AWS Bedrock** - Using Claude models through AWS Bedrock
+
+### Option 1: Direct Anthropic API
 
 ```env
+AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=sk-ant-api03-...
+```
+
+### Option 2: AWS Bedrock
+
+```env
+AI_PROVIDER=bedrock
+AWS_REGION=us-east-1
+
+# Authentication (choose one method):
+
+# Method A: Access keys
+AWS_ACCESS_KEY_ID=AKIA...
+AWS_SECRET_ACCESS_KEY=...
+
+# Method B: AWS CLI profile (uses ~/.aws/credentials)
+# Just ensure AWS_REGION is set, credentials are auto-loaded
+
+# Method C: IAM Role (on EC2/ECS/Lambda)
+# No credentials needed, uses instance role
+```
+
+### Bedrock Model Mapping
+
+Models are automatically mapped between providers:
+
+| Anthropic Model | Bedrock Model ID |
+|----------------|------------------|
+| claude-sonnet-4-20250514 | anthropic.claude-sonnet-4-20250514-v1:0 |
+| claude-3-5-sonnet-20241022 | anthropic.claude-3-5-sonnet-20241022-v2:0 |
+| claude-3-5-haiku-20241022 | anthropic.claude-3-5-haiku-20241022-v1:0 |
+| claude-3-opus-20240229 | anthropic.claude-3-opus-20240229-v1:0 |
+| claude-3-sonnet-20240229 | anthropic.claude-3-sonnet-20240229-v1:0 |
+| claude-3-haiku-20240307 | anthropic.claude-3-haiku-20240307-v1:0 |
+
+### Using the Client Factory
+
+```typescript
+import { createAIClient, getModelId, getCurrentProvider } from '@mobigen/ai';
+
+// Create client based on environment (AI_PROVIDER)
+const client = createAIClient();
+
+// Get appropriate model ID for current provider
+const model = getModelId('claude-3-5-sonnet-20241022', getCurrentProvider());
+
+// Use client (API is identical for both providers)
+const response = await client.messages.create({
+  model,
+  max_tokens: 1024,
+  messages: [{ role: 'user', content: 'Hello!' }],
+});
 ```
 
 ### Client Options
 
 ```typescript
-const client = createClient({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  maxRetries: 3,
-  timeout: 60000,
-  defaultModel: 'claude-3-sonnet-20240229',
+import { createAIClient } from '@mobigen/ai';
+
+// Explicit configuration (overrides environment)
+const client = createAIClient({
+  provider: 'bedrock',
+  awsRegion: 'us-west-2',
+  awsAccessKeyId: 'AKIA...',
+  awsSecretAccessKey: '...',
 });
+```
+
+### Validating Configuration
+
+```typescript
+import { validateAIConfig } from '@mobigen/ai';
+
+const { valid, provider, error } = validateAIConfig();
+if (!valid) {
+  console.error(`AI configuration error: ${error}`);
+  process.exit(1);
+}
+console.log(`Using AI provider: ${provider}`);
 ```
 
 ## Models

@@ -1,3 +1,15 @@
+// Export AI client factory (supports Anthropic and Bedrock)
+export {
+  createAIClient,
+  getModelId,
+  getCurrentProvider,
+  isBedrockConfigured,
+  validateAIConfig,
+  MODEL_MAPPING,
+  BEDROCK_TO_ANTHROPIC,
+} from './client.js';
+export type { AIProvider, AIClientConfig, AIClient } from './client.js';
+
 // Export types
 export type {
   SDKMessage,
