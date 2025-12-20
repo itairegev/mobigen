@@ -75,9 +75,14 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
 };
 
 // Model mapping for AWS Bedrock
+// Note: Claude 4 models require cross-region inference profiles (us. or eu. prefix)
+// Older Claude 3/3.5 models can use direct model IDs
 const BEDROCK_MODEL_MAP: Record<string, string> = {
-  sonnet: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  // Claude 4 models require cross-region inference profile
+  sonnet: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
+  // Claude 3 Opus (older model, supports on-demand)
   opus: 'anthropic.claude-3-opus-20240229-v1:0',
+  // Claude 3.5 Haiku (supports on-demand)
   haiku: 'anthropic.claude-3-5-haiku-20241022-v1:0',
 };
 

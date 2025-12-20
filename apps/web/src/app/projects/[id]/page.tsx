@@ -16,21 +16,24 @@ export default function ProjectPage() {
 
   const [activeTab, setActiveTab] = useState<Tab>('progress');
   const [hasStarted, setHasStarted] = useState(false);
+  const [promptInput, setPromptInput] = useState('');
 
   // Project info from URL params (in real app, fetch from API)
   const projectName = searchParams.get('name') || 'My App';
   const template = searchParams.get('template') || 'base';
-  const prompt = searchParams.get('prompt') || '';
+  const initialPrompt = searchParams.get('prompt') || '';
   const primaryColor = searchParams.get('primaryColor') || '#3b82f6';
   const secondaryColor = searchParams.get('secondaryColor') || '#10b981';
   const bundleId = searchParams.get('bundleId') || `com.app.${projectName.toLowerCase().replace(/\s+/g, '')}`;
+
+  // Track the actual prompt being used (either from URL or from input)
+  const [activePrompt, setActivePrompt] = useState(initialPrompt);
 
   // Use the real generator hook
   const {
     isConnected,
     isGenerating,
     phases,
-    currentPhaseIndex,
     filesGenerated,
     progress,
     result,
@@ -38,9 +41,9 @@ export default function ProjectPage() {
     startGeneration,
   } = useGenerator({ projectId, autoConnect: true });
 
-  // Start generation when we have a prompt and connection
+  // Start generation when we have a prompt from URL and connection
   useEffect(() => {
-    if (prompt && isConnected && !hasStarted && !isGenerating && !result) {
+    if (initialPrompt && isConnected && !hasStarted && !isGenerating && !result) {
       const config: ProjectConfig = {
         appName: projectName,
         bundleId: {
@@ -61,9 +64,38 @@ export default function ProjectPage() {
       };
 
       setHasStarted(true);
-      startGeneration(prompt, config);
+      setActivePrompt(initialPrompt);
+      startGeneration(initialPrompt, config);
     }
-  }, [prompt, isConnected, hasStarted, isGenerating, result, projectId, projectName, bundleId, primaryColor, secondaryColor, startGeneration]);
+  }, [initialPrompt, isConnected, hasStarted, isGenerating, result, projectId, projectName, bundleId, primaryColor, secondaryColor, startGeneration]);
+
+  // Handler for manual prompt submission
+  const handleStartGeneration = () => {
+    if (!promptInput.trim() || !isConnected || isGenerating) return;
+
+    const config: ProjectConfig = {
+      appName: projectName,
+      bundleId: {
+        ios: bundleId,
+        android: bundleId.replace(/\./g, '_'),
+      },
+      branding: {
+        displayName: projectName,
+        primaryColor,
+        secondaryColor,
+      },
+      identifiers: {
+        projectId,
+        easProjectId: `eas-${projectId}`,
+        awsResourcePrefix: `mobigen-${projectId.slice(0, 8)}`,
+        analyticsKey: `analytics-${projectId}`,
+      },
+    };
+
+    setHasStarted(true);
+    setActivePrompt(promptInput);
+    startGeneration(promptInput, config);
+  };
 
   const getStatusIcon = (status: GenerationPhase['status']) => {
     switch (status) {
@@ -333,12 +365,37 @@ export default function ProjectPage() {
                 </div>
               </div>
 
-              {/* Prompt Card */}
-              {prompt && (
+              {/* Prompt Card - show input if no prompt, otherwise show the prompt */}
+              {!activePrompt && !hasStarted ? (
+                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-4">Describe Your App</h3>
+                  <textarea
+                    value={promptInput}
+                    onChange={(e) => setPromptInput(e.target.value)}
+                    placeholder="Describe the app you want to build...
+
+Example: Create a coffee shop loyalty app with rewards points, QR code scanning for purchases, and a list of menu items."
+                    className="w-full h-40 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    disabled={!isConnected || isGenerating}
+                  />
+                  <button
+                    onClick={handleStartGeneration}
+                    disabled={!promptInput.trim() || !isConnected || isGenerating}
+                    className="w-full mt-4 px-4 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {!isConnected ? 'Connecting...' : isGenerating ? 'Generating...' : 'Generate App'}
+                  </button>
+                  {!isConnected && (
+                    <p className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">
+                      Connecting to generator service...
+                    </p>
+                  )}
+                </div>
+              ) : activePrompt && (
                 <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
                   <h3 className="font-bold text-slate-900 dark:text-white mb-4">Your Request</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
-                    {decodeURIComponent(prompt)}
+                    {decodeURIComponent(activePrompt)}
                   </p>
                 </div>
               )}
