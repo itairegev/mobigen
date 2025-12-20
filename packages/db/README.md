@@ -211,44 +211,36 @@ model ApiUsage {
 ### Generate Client
 
 ```bash
-pnpm --filter @mobigen/db prisma generate
+pnpm --filter @mobigen/db db:generate
 ```
 
 ### Push Schema (Development)
 
 ```bash
-pnpm --filter @mobigen/db prisma db push
+pnpm --filter @mobigen/db db:push
 ```
 
 ### Create Migration
 
 ```bash
-pnpm --filter @mobigen/db prisma migrate dev --name <migration-name>
-```
-
-### Apply Migrations (Production)
-
-```bash
-pnpm --filter @mobigen/db prisma migrate deploy
+pnpm --filter @mobigen/db db:migrate
 ```
 
 ### Open Prisma Studio
 
 ```bash
-pnpm --filter @mobigen/db prisma studio
-```
-
-### Seed Database
-
-```bash
-pnpm --filter @mobigen/db prisma db seed
+pnpm --filter @mobigen/db db:studio
 ```
 
 ## Environment Variables
 
+Set in root `.env` file (automatically loaded by dotenv-cli):
+
 ```env
-DATABASE_URL=postgresql://mobigen:password@localhost:5432/mobigen
+DATABASE_URL=postgresql://mobigen:password@localhost:9432/mobigen
 ```
+
+Note: Port 9432 is used for Docker to avoid conflict with local PostgreSQL on 5432.
 
 ### Connection String Format
 

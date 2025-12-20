@@ -68,7 +68,7 @@ Mobigen is a full-stack platform that transforms natural language descriptions i
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │
 │  │  Web Dashboard  │  │    Generator    │  │     Builder     │  │     Tester      │     │
 │  │   (Next.js)     │  │    Service      │  │     Service     │  │     Service     │     │
-│  │   Port: 3000    │  │   Port: 4000    │  │   Port: 5000    │  │   Port: 6000    │     │
+│  │   Port: 3333    │  │   Port: 4000    │  │   Port: 5000    │  │   Port: 6000    │     │
 │  │                 │  │                 │  │                 │  │                 │     │
 │  │ • Dashboard UI  │  │ • AI Pipeline   │  │ • EAS Builds    │  │ • Device Tests  │     │
 │  │ • NextAuth SSO  │  │ • Socket.IO     │  │ • BullMQ Queue  │  │ • Screenshots   │     │
@@ -109,62 +109,70 @@ Mobigen is a full-stack platform that transforms natural language descriptions i
 - **Node.js** 20+ ([download](https://nodejs.org/))
 - **pnpm** 9+ (`npm install -g pnpm`)
 - **Docker** & Docker Compose ([download](https://docs.docker.com/get-docker/))
-- **Anthropic API Key** ([get one](https://console.anthropic.com/))
+- **AI Provider** (one of):
+  - Anthropic API Key ([get one](https://console.anthropic.com/))
+  - AWS Bedrock access (with Claude models enabled)
 
-### Automated Setup
+### Quick Setup
 
 ```bash
-# Clone repository
+# 1. Clone repository
 git clone https://github.com/your-org/mobigen.git
 cd mobigen
 
-# Run automated setup
-./scripts/dev-setup.sh
+# 2. Install dependencies
+pnpm install
 
-# Set your Anthropic API key in .env
-# ANTHROPIC_API_KEY=sk-ant-...
+# 3. Copy and configure environment
+cp .env.example .env
+# Edit .env with your values (see Configuration below)
 
-# Start development servers
+# 4. Start infrastructure (PostgreSQL, Redis, MinIO)
+docker compose up -d
+
+# 5. Setup database
+pnpm --filter @mobigen/db db:generate
+pnpm --filter @mobigen/db db:push
+
+# 6. Start all services
 pnpm dev
 ```
 
-### Manual Setup
+### Configuration
+
+Edit your `.env` file:
 
 ```bash
-# 1. Install dependencies
-pnpm install
+# Database (port 9432 for Docker, avoids conflict with local PostgreSQL)
+DATABASE_URL=postgresql://mobigen:mobigen_dev_password@localhost:9432/mobigen
 
-# 2. Copy environment file
-cp .env.example .env
-# Edit .env with your values
+# AI Provider - Choose one:
 
-# 3. Start infrastructure
-docker compose up -d postgres redis minio
+# Option A: AWS Bedrock (recommended if you have AWS access)
+AI_PROVIDER=bedrock
+AWS_REGION=us-east-1
+# Uses AWS credential chain (env vars, ~/.aws/credentials, or IAM role)
 
-# 4. Setup database
-pnpm --filter @mobigen/db prisma generate
-pnpm --filter @mobigen/db prisma db push
+# Option B: Direct Anthropic API
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-api03-...
 
-# 5. Build packages
-pnpm --filter @mobigen/ai build
-pnpm --filter @mobigen/storage build
-pnpm --filter @mobigen/testing build
-pnpm --filter @mobigen/ui build
-
-# 6. Start development
-pnpm dev
+# Authentication
+NEXTAUTH_SECRET=your-super-secret-key-change-in-production
+NEXTAUTH_URL=http://localhost:3333
 ```
 
 ### Access Points
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| Web Dashboard | http://localhost:3000 | Main user interface |
+| Web Dashboard | http://localhost:3333 | Main user interface |
 | Generator API | http://localhost:4000 | AI generation service |
 | Builder API | http://localhost:5000 | EAS build service |
 | Tester API | http://localhost:6000 | Device testing service |
 | Analytics API | http://localhost:7000 | Usage analytics |
-| MinIO Console | http://localhost:9001 | S3 storage UI |
+| MinIO Console | http://localhost:9001 | S3 storage UI (admin/minio_password) |
+| PostgreSQL | localhost:9432 | Database |
 
 ---
 
@@ -174,15 +182,34 @@ pnpm dev
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://mobigen:password@localhost:5432/mobigen` |
-| `ANTHROPIC_API_KEY` | Anthropic API key for Claude AI | `sk-ant-api03-...` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://mobigen:password@localhost:9432/mobigen` |
 | `NEXTAUTH_SECRET` | Secret for NextAuth.js sessions | `your-super-secret-key` |
+
+### AI Provider (choose one)
+
+**Option A: AWS Bedrock**
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `AI_PROVIDER` | Set to use Bedrock | `bedrock` |
+| `AWS_REGION` | AWS region | `us-east-1` |
+| `AWS_ACCESS_KEY_ID` | AWS access key (optional*) | `AKIA...` |
+| `AWS_SECRET_ACCESS_KEY` | AWS secret key (optional*) | `...` |
+
+*Credentials are optional if using AWS CLI profile or IAM role
+
+**Option B: Direct Anthropic API**
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `AI_PROVIDER` | Set to use Anthropic | `anthropic` |
+| `ANTHROPIC_API_KEY` | Anthropic API key | `sk-ant-api03-...` |
 
 ### Authentication
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `NEXTAUTH_URL` | NextAuth callback URL | `http://localhost:3000` |
+| `NEXTAUTH_URL` | NextAuth callback URL | `http://localhost:3333` |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID | - |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth secret | - |
 | `GITHUB_CLIENT_ID` | GitHub OAuth client ID | - |
@@ -197,7 +224,7 @@ pnpm dev
 | `BUILDER_URL` | Builder service URL | `http://localhost:5000` |
 | `TESTER_URL` | Tester service URL | `http://localhost:6000` |
 | `ANALYTICS_URL` | Analytics service URL | `http://localhost:7000` |
-| `FRONTEND_URL` | Frontend URL for CORS | `http://localhost:3000` |
+| `FRONTEND_URL` | Frontend URL for CORS | `http://localhost:3333` |
 
 ### Redis
 
@@ -898,7 +925,7 @@ See [docs/API.md](docs/API.md) for complete API documentation.
 docker ps | grep postgres
 
 # Check connection
-psql postgresql://mobigen:mobigen_dev_password@localhost:5432/mobigen
+psql postgresql://mobigen:mobigen_dev_password@localhost:9432/mobigen
 
 # Reset database
 docker compose down -v
@@ -967,7 +994,7 @@ docker compose logs -f
 
 ```bash
 # Web dashboard
-curl http://localhost:3000/api/health
+curl http://localhost:3333/api/health
 
 # Generator
 curl http://localhost:4000/health
