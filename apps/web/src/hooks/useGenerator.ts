@@ -143,7 +143,8 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       default:
         // Handle SDK messages
         if ('tool_name' in progressData && (progressData.tool_name === 'Write' || progressData.tool_name === 'Edit')) {
-          const filePath = progressData.tool_input?.file_path as string;
+          const toolInput = progressData.tool_input as Record<string, unknown> | undefined;
+          const filePath = toolInput?.file_path as string;
           if (filePath) {
             setFilesGenerated((prev) => [...new Set([...prev, filePath])]);
           }
