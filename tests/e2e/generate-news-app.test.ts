@@ -14,6 +14,7 @@
  * - Generator service running at http://localhost:4000
  * - Templates available in templates/ directory
  * - ANTHROPIC_API_KEY set in environment
+ * - .env file configured at project root
  *
  * Run with: pnpm test:e2e
  */
@@ -22,18 +23,26 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { io, Socket } from 'socket.io-client';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 
-// Test configuration
+// Load .env from monorepo root (same as generator service)
+dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
+
+// Test configuration - uses same env vars as generator service
 const GENERATOR_URL = process.env.GENERATOR_URL || 'http://localhost:4000';
 const GENERATION_TIMEOUT = 10 * 60 * 1000; // 10 minutes for full generation
 const CONNECTION_TIMEOUT = 10000;
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://localhost:5432/mobigen_test';
 
-// Initialize Prisma client for test database
-const prisma = new PrismaClient({
-  datasources: { db: { url: DATABASE_URL } },
-});
+// Verify DATABASE_URL is set
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL not found. Make sure .env file exists at project root.');
+}
+
+console.log('📊 Database URL:', process.env.DATABASE_URL?.replace(/:[^:@]+@/, ':****@'));
+
+// Initialize Prisma client - uses same DATABASE_URL as generator service
+const prisma = new PrismaClient();
 
 // Test data
 interface GenerationProgress {
