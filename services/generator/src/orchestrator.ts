@@ -133,45 +133,74 @@ async function runAgent(
   const model = agentModelConfig[role];
   let output = '';
 
-  for await (const message of query({
-    prompt,
-    options: {
-      resume: context.sessionId,
-      agents: { [role]: agent },
-      allowedTools: options.allowedTools || agent.tools,
-      permissionMode: options.permissionMode,
-      hooks: options.hooks,
-      model,
-      systemPrompt: `You are ${agent.description}
+  console.log(`[orchestrator] Starting agent: ${role} (model: ${model})`);
+  const startTime = Date.now();
+
+  try {
+    for await (const message of query({
+      prompt,
+      options: {
+        resume: context.sessionId,
+        agents: { [role]: agent },
+        allowedTools: options.allowedTools || agent.tools,
+        permissionMode: options.permissionMode,
+        hooks: options.hooks,
+        model,
+        systemPrompt: `You are ${agent.description}
 Working directory: ${MOBIGEN_ROOT}
 Project directory: ${context.projectPath}
 ${agent.prompt}`,
-      cwd: MOBIGEN_ROOT,
-    },
-  })) {
-    // Capture session ID
-    if (message.type === 'system' && message.subtype === 'init' && !context.sessionId) {
-      context.sessionId = message.session_id;
-    }
-
-    // Track file changes
-    if (message.type === 'tool' && (message.tool_name === 'Write' || message.tool_name === 'Edit')) {
-      const filePath = message.tool_input?.file_path as string;
-      if (filePath && !result.files.includes(filePath)) {
-        result.files.push(filePath);
+        cwd: MOBIGEN_ROOT,
+      },
+    })) {
+      // Capture session ID
+      if (message.type === 'system' && message.subtype === 'init' && !context.sessionId) {
+        context.sessionId = message.session_id;
       }
-    }
 
-    // Capture output from assistant messages
-    if (message.type === 'assistant' && message.message) {
-      const textBlock = message.message.content.find((b: { type: string }) => b.type === 'text');
-      if (textBlock && 'text' in textBlock) {
-        output += textBlock.text;
+      // Track file changes
+      if (message.type === 'tool' && (message.tool_name === 'Write' || message.tool_name === 'Edit')) {
+        const filePath = message.tool_input?.file_path as string;
+        if (filePath && !result.files.includes(filePath)) {
+          result.files.push(filePath);
+        }
       }
+
+      // Capture output from assistant messages
+      if (message.type === 'assistant' && message.message) {
+        const textBlock = message.message.content.find((b: { type: string }) => b.type === 'text');
+        if (textBlock && 'text' in textBlock) {
+          output += textBlock.text;
+        }
+      }
+
+      await emitProgress(context.projectId, role, message);
+      result.logs.push(message as SDKMessage);
     }
 
-    await emitProgress(context.projectId, role, message);
-    result.logs.push(message as SDKMessage);
+    const elapsed = Date.now() - startTime;
+    console.log(`[orchestrator] Agent ${role} completed in ${elapsed}ms`);
+  } catch (error) {
+    const elapsed = Date.now() - startTime;
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[orchestrator] Agent ${role} failed after ${elapsed}ms: ${errMsg}`);
+
+    // Emit error event for this agent
+    await emitProgress(context.projectId, role, {
+      type: 'error',
+      error: errMsg,
+      agent: role,
+      duration: elapsed,
+    });
+
+    // Also emit a general error event
+    await emitProgress(context.projectId, 'error', {
+      error: `Agent ${role} failed: ${errMsg}`,
+      agent: role,
+    });
+
+    // Re-throw to let orchestrator handle it
+    throw error;
   }
 
   return output;
@@ -474,21 +503,27 @@ Use NativeWind/Tailwind patterns consistent with existing code.`,
       result
     );
 
+    // Default color scale for fallback
+    const defaultColorScale = {
+      50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af',
+      500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827',
+    };
+
     context.uiDesign = parseJSON(uiOutput, {
       colorPalette: {
-        primary: {} as Record<string, string>,
-        secondary: {} as Record<string, string>,
-        neutral: {} as Record<string, string>,
-        semantic: { success: '', warning: '', error: '', info: '' },
+        primary: { ...defaultColorScale },
+        secondary: { ...defaultColorScale },
+        neutral: { ...defaultColorScale },
+        semantic: { success: '#10b981', warning: '#f59e0b', error: '#ef4444', info: '#3b82f6' },
       },
       typography: {
-        fontFamily: { heading: '', body: '', mono: '' },
+        fontFamily: { heading: 'System', body: 'System', mono: 'Courier' },
         sizes: {},
         weights: {},
       },
       components: [],
       screens: [],
-      navigationFlow: { type: 'stack', routes: [], deepLinks: [] },
+      navigationFlow: { type: 'stack' as const, routes: [], deepLinks: [] },
       animations: [],
       accessibilityNotes: [],
     });
@@ -728,4 +763,5 @@ Provide overall score and production readiness assessment.`,
 }
 
 // Export for external use
-export { templateManager, runAgent, parseJSON, PipelineContext, PROJECTS_DIR };
+export { templateManager, runAgent, parseJSON, PROJECTS_DIR };
+export type { PipelineContext };

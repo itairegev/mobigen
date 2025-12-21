@@ -77,13 +77,15 @@ const ANTHROPIC_MODEL_MAP: Record<string, string> = {
 // Model mapping for AWS Bedrock
 // Note: Claude 4 models require cross-region inference profiles (us. or eu. prefix)
 // Older Claude 3/3.5 models can use direct model IDs
+// Set BEDROCK_OPUS_MODEL to override the default opus model
 const BEDROCK_MODEL_MAP: Record<string, string> = {
-  // Claude 4 models require cross-region inference profile
-  sonnet: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
-  // Claude 3 Opus (older model, supports on-demand)
-  opus: 'anthropic.claude-3-opus-20240229-v1:0',
+  // Claude 4 Sonnet - requires cross-region inference profile
+  sonnet: process.env.BEDROCK_SONNET_MODEL || 'us.anthropic.claude-sonnet-4-20250514-v1:0',
+  // For opus: prefer Claude 3 Opus if available, otherwise fall back to Sonnet
+  // Claude 3 Opus may not be available in all regions or require different access
+  opus: process.env.BEDROCK_OPUS_MODEL || 'us.anthropic.claude-sonnet-4-20250514-v1:0',
   // Claude 3.5 Haiku (supports on-demand)
-  haiku: 'anthropic.claude-3-5-haiku-20241022-v1:0',
+  haiku: process.env.BEDROCK_HAIKU_MODEL || 'us.anthropic.claude-3-5-haiku-20241022-v1:0',
 };
 
 type AIProvider = 'anthropic' | 'bedrock';
@@ -128,6 +130,21 @@ function getModelId(alias: string): string {
   return modelMap[alias] || alias;
 }
 
+// Default timeout for API calls (5 minutes)
+const API_TIMEOUT_MS = parseInt(process.env.CLAUDE_API_TIMEOUT_MS || '300000', 10);
+
+/**
+ * Wraps a promise with a timeout
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => {
+      setTimeout(() => reject(new Error(`Timeout: ${message} (${ms}ms)`)), ms);
+    }),
+  ]);
+}
+
 /**
  * Query function implementing the Claude Agent SDK interface
  *
@@ -146,12 +163,26 @@ export async function* query(params: {
     session_id: sessionId,
   };
 
-  // Get the model to use
-  const modelAlias = Object.values(params.options?.agents || {})[0]?.model || 'sonnet';
+  // Get the model to use - prefer explicit model option, then agent model, then default
+  const agentModel = Object.values(params.options?.agents || {})[0]?.model;
+  const modelAlias = params.options?.model || agentModel || 'sonnet';
   const modelId = getModelId(modelAlias);
 
-  // Create client (Bedrock or direct Anthropic)
-  const client = createClient();
+  let client: Anthropic | AnthropicBedrock;
+  try {
+    // Create client (Bedrock or direct Anthropic)
+    client = createClient();
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[claude-agent-sdk] Failed to create client: ${errMsg}`);
+    yield {
+      type: 'assistant',
+      message: {
+        content: [{ type: 'text', text: `Error: Failed to initialize AI client - ${errMsg}` }],
+      },
+    };
+    return;
+  }
 
   // Build system prompt from agent definitions
   const agentPrompts = Object.values(params.options?.agents || {})
@@ -164,40 +195,63 @@ export async function* query(params: {
     params.options?.cwd ? `Working directory: ${params.options.cwd}` : null,
   ].filter(Boolean).join('\n\n');
 
-  // Make the API call
-  // Use type assertion to handle union type incompatibility between SDK versions
-  const response = await (client.messages.create as (params: {
-    model: string;
-    max_tokens: number;
-    system?: string;
-    messages: Array<{ role: 'user' | 'assistant'; content: string }>;
-  }) => Promise<{ content: Array<{ type: string; text?: string }> }>)({
-    model: modelId,
-    max_tokens: 4096,
-    system: systemPrompt || undefined,
-    messages: [
-      { role: 'user', content: params.prompt }
-    ],
-  });
+  try {
+    console.log(`[claude-agent-sdk] Calling model: ${modelId} (${modelAlias})`);
+    const startTime = Date.now();
 
-  // Yield assistant message
-  yield {
-    type: 'assistant',
-    message: {
-      content: response.content.map((block) => {
-        if (block.type === 'text') {
-          return { type: 'text', text: block.text };
-        }
-        return { type: block.type };
+    // Make the API call with timeout
+    // Use type assertion to handle union type incompatibility between SDK versions
+    const response = await withTimeout(
+      (client.messages.create as (params: {
+        model: string;
+        max_tokens: number;
+        system?: string;
+        messages: Array<{ role: 'user' | 'assistant'; content: string }>;
+      }) => Promise<{ content: Array<{ type: string; text?: string }> }>)({
+        model: modelId,
+        max_tokens: 4096,
+        system: systemPrompt || undefined,
+        messages: [
+          { role: 'user', content: params.prompt }
+        ],
       }),
-    },
-  };
+      API_TIMEOUT_MS,
+      `API call to ${modelId}`
+    );
 
-  // Yield result
-  yield {
-    type: 'result',
-    session_id: sessionId,
-  };
+    const elapsed = Date.now() - startTime;
+    console.log(`[claude-agent-sdk] Response received in ${elapsed}ms`);
+
+    // Yield assistant message
+    yield {
+      type: 'assistant',
+      message: {
+        content: response.content.map((block) => {
+          if (block.type === 'text') {
+            return { type: 'text', text: block.text };
+          }
+          return { type: block.type };
+        }),
+      },
+    };
+
+    // Yield result
+    yield {
+      type: 'result',
+      session_id: sessionId,
+    };
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[claude-agent-sdk] API call failed: ${errMsg}`);
+
+    // Yield error as assistant message so caller knows what happened
+    yield {
+      type: 'assistant',
+      message: {
+        content: [{ type: 'text', text: `Error: API call failed - ${errMsg}` }],
+      },
+    };
+  }
 }
 
 function generateSessionId(): string {
