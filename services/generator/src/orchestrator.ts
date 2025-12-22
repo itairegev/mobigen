@@ -21,10 +21,56 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 // Configuration for paths
-const MOBIGEN_ROOT = process.env.MOBIGEN_ROOT || process.cwd();
+// When running from services/generator/, we need to go up 2 levels to reach mobigen root
+function resolveMobigenRoot(): string {
+  if (process.env.MOBIGEN_ROOT) {
+    return process.env.MOBIGEN_ROOT;
+  }
+
+  // Check if we're in services/generator/ directory
+  const cwd = process.cwd();
+  if (cwd.endsWith('services/generator') || cwd.endsWith('services\\generator')) {
+    return path.resolve(cwd, '../..');
+  }
+
+  // Check if templates-bare exists at cwd level
+  if (fs.existsSync(path.join(cwd, 'templates-bare'))) {
+    return cwd;
+  }
+
+  // Try going up one level (in case we're in services/)
+  const oneUp = path.resolve(cwd, '..');
+  if (fs.existsSync(path.join(oneUp, 'templates-bare'))) {
+    return oneUp;
+  }
+
+  // Try going up two levels
+  const twoUp = path.resolve(cwd, '../..');
+  if (fs.existsSync(path.join(twoUp, 'templates-bare'))) {
+    return twoUp;
+  }
+
+  // Fallback to cwd - will fail with clear error later
+  console.warn(`[orchestrator] Could not find templates-bare directory. Checked: ${cwd}, ${oneUp}, ${twoUp}`);
+  return cwd;
+}
+
+const MOBIGEN_ROOT = resolveMobigenRoot();
 const TEMPLATES_BARE_DIR = path.join(MOBIGEN_ROOT, 'templates-bare');
 const TEMPLATES_WORKING_DIR = path.join(MOBIGEN_ROOT, 'templates');
 const PROJECTS_DIR = path.join(MOBIGEN_ROOT, 'projects');
+
+// Log paths at startup
+console.log(`[orchestrator] ┌─────────────────────────────────────────────`);
+console.log(`[orchestrator] │ Path Configuration:`);
+console.log(`[orchestrator] │   MOBIGEN_ROOT:      ${MOBIGEN_ROOT}`);
+console.log(`[orchestrator] │   TEMPLATES_BARE:    ${TEMPLATES_BARE_DIR}`);
+console.log(`[orchestrator] │   TEMPLATES_WORKING: ${TEMPLATES_WORKING_DIR}`);
+console.log(`[orchestrator] │   PROJECTS_DIR:      ${PROJECTS_DIR}`);
+console.log(`[orchestrator] │   CWD:               ${process.cwd()}`);
+console.log(`[orchestrator] │   Bare exists:       ${fs.existsSync(TEMPLATES_BARE_DIR)}`);
+console.log(`[orchestrator] │   Working exists:    ${fs.existsSync(TEMPLATES_WORKING_DIR)}`);
+console.log(`[orchestrator] └─────────────────────────────────────────────`);
 
 // Initialize template manager
 const templateManager = new TemplateManager({

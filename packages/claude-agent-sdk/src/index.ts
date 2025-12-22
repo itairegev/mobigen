@@ -305,17 +305,58 @@ export async function* query(params: {
     const errMsg = error instanceof Error ? error.message : String(error);
     const errStack = error instanceof Error ? error.stack : undefined;
 
-    log('error', `API call failed: ${errMsg}`, {
+    // Extract more details from Anthropic/Bedrock errors
+    let errorDetails: Record<string, unknown> = {
       modelId,
       provider,
-      stack: errStack,
-    });
+    };
+
+    if (error && typeof error === 'object') {
+      const e = error as Record<string, unknown>;
+      if (e.status) errorDetails.httpStatus = e.status;
+      if (e.error) errorDetails.apiError = e.error;
+      if (e.code) errorDetails.errorCode = e.code;
+      if (e.type) errorDetails.errorType = e.type;
+      if (e.headers) errorDetails.headers = e.headers;
+
+      // Bedrock-specific errors
+      if (e.$metadata) {
+        const metadata = e.$metadata as Record<string, unknown>;
+        errorDetails.requestId = metadata.requestId;
+        errorDetails.attempts = metadata.attempts;
+        errorDetails.totalRetryDelay = metadata.totalRetryDelay;
+      }
+    }
+
+    log('error', `API call failed: ${errMsg}`, errorDetails);
+
+    if (errStack) {
+      log('debug', 'Stack trace:', { stack: errStack });
+    }
+
+    // Provide more helpful error message
+    let userMessage = `Error: API call failed - ${errMsg}`;
+
+    if (errMsg.includes('Could not resolve credentials')) {
+      userMessage += '\n\nHint: AWS credentials not found. Configure via:\n' +
+        '- Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)\n' +
+        '- AWS CLI profile (~/.aws/credentials)\n' +
+        '- Or set AI_PROVIDER=anthropic and provide ANTHROPIC_API_KEY';
+    } else if (errMsg.includes('AccessDeniedException') || errMsg.includes('UnauthorizedAccess')) {
+      userMessage += '\n\nHint: Check that your AWS credentials have access to Bedrock and the Claude models.';
+    } else if (errMsg.includes('ModelNotFound') || errMsg.includes('ValidationException')) {
+      userMessage += `\n\nHint: Model ${modelId} may not be available in your region or requires enablement.`;
+    } else if (errMsg.includes('ThrottlingException')) {
+      userMessage += '\n\nHint: Rate limited. Try again in a few seconds.';
+    } else if (errMsg.includes('Timeout')) {
+      userMessage += '\n\nHint: API call timed out. Try setting CLAUDE_API_TIMEOUT_MS to a higher value.';
+    }
 
     // Yield error as assistant message so caller knows what happened
     yield {
       type: 'assistant',
       message: {
-        content: [{ type: 'text', text: `Error: API call failed - ${errMsg}` }],
+        content: [{ type: 'text', text: userMessage }],
       },
     };
   }

@@ -147,8 +147,136 @@ app.post('/api/generate', async (req, res) => {
   }
 });
 
+// Simple health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Detailed config check
+app.get('/api/config', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+
+  // Check paths
+  const possibleRoots = [
+    process.env.MOBIGEN_ROOT,
+    process.cwd(),
+    path.resolve(process.cwd(), '..'),
+    path.resolve(process.cwd(), '../..'),
+  ].filter(Boolean);
+
+  let templatesPath: string | null = null;
+  let availableTemplates: string[] = [];
+
+  for (const root of possibleRoots) {
+    const testPath = path.join(root, 'templates-bare');
+    if (fs.existsSync(testPath)) {
+      templatesPath = testPath;
+      try {
+        availableTemplates = fs.readdirSync(testPath)
+          .filter((f: string) => f.endsWith('.git'))
+          .map((f: string) => f.replace('.git', ''));
+      } catch (e) {
+        // ignore
+      }
+      break;
+    }
+  }
+
+  const config = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    environment: {
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      cwd: process.cwd(),
+    },
+    ai: {
+      provider: process.env.AI_PROVIDER || 'bedrock (default)',
+      anthropicKeyConfigured: !!process.env.ANTHROPIC_API_KEY,
+      awsRegion: process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'us-east-1',
+      awsKeyConfigured: !!process.env.AWS_ACCESS_KEY_ID,
+      verbose: process.env.CLAUDE_SDK_VERBOSE === 'true',
+      timeout: process.env.CLAUDE_API_TIMEOUT_MS || '300000',
+    },
+    templates: {
+      path: templatesPath,
+      available: availableTemplates,
+      found: availableTemplates.length > 0,
+    },
+    paths: {
+      MOBIGEN_ROOT: process.env.MOBIGEN_ROOT || 'auto-detected',
+      searched: possibleRoots,
+    },
+  };
+
+  // Check for issues
+  const issues: string[] = [];
+
+  if (!config.templates.found) {
+    issues.push('templates-bare directory not found');
+  }
+
+  if (config.ai.provider === 'anthropic' && !config.ai.anthropicKeyConfigured) {
+    issues.push('ANTHROPIC_API_KEY not set but AI_PROVIDER=anthropic');
+  }
+
+  if (config.ai.provider.includes('bedrock') && !config.ai.awsKeyConfigured) {
+    issues.push('AWS credentials not configured (will use credential chain)');
+  }
+
+  res.json({
+    ...config,
+    issues,
+    healthy: issues.filter(i => !i.includes('credential chain')).length === 0,
+  });
+});
+
+// Test AI connection
+app.get('/api/test-ai', async (req, res) => {
+  try {
+    const { query } = await import('@anthropic-ai/claude-agent-sdk');
+
+    const startTime = Date.now();
+    let response = '';
+
+    for await (const message of query({
+      prompt: 'Say "AI connection test successful" and nothing else.',
+      options: {
+        maxTurns: 1,
+      },
+    })) {
+      if (message.type === 'assistant' && message.message) {
+        const textBlock = message.message.content.find((b: { type: string }) => b.type === 'text');
+        if (textBlock && 'text' in textBlock) {
+          response = textBlock.text as string;
+        }
+      }
+    }
+
+    const duration = Date.now() - startTime;
+
+    res.json({
+      status: 'ok',
+      message: 'AI connection successful',
+      response: response.substring(0, 100),
+      durationMs: duration,
+      provider: process.env.AI_PROVIDER || 'bedrock',
+    });
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'AI connection failed',
+      error: errMsg,
+      provider: process.env.AI_PROVIDER || 'bedrock',
+      hints: [
+        'Check that AI_PROVIDER is set correctly',
+        'If using Anthropic: ensure ANTHROPIC_API_KEY is set',
+        'If using Bedrock: ensure AWS credentials are configured',
+        'Check CLAUDE_SDK_VERBOSE=true for more details in logs',
+      ],
+    });
+  }
 });
 
 export { app, httpServer, io };
