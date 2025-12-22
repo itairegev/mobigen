@@ -173,8 +173,8 @@ async function runAgent(
   result: GenerationResult,
   options: {
     allowedTools?: string[];
-    permissionMode?: 'acceptEdits' | 'plan' | 'bypassPermissions';
-    hooks?: unknown;
+    permissionMode?: 'acceptEdits' | 'ask';
+    hooks?: Record<string, unknown>;
   } = {}
 ): Promise<string> {
   const agent = mobigenAgents[role];

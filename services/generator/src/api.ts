@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Express } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { generateApp } from './orchestrator';
 import type { SDKMessage } from '@mobigen/ai';
 
-const app = express();
+const app: Express = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
