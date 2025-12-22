@@ -452,7 +452,7 @@ Provide detailed analysis with:
     logger.saveArtifact('intent-analysis', context.intent, 'json');
     logger.info('Intent analysis complete', {
       category: context.intent.category,
-      features: context.intent.features.length,
+      features: context.intent.features?.length || 0,
       complexity: context.intent.complexity,
     });
     logger.phaseEnd('intent-analysis', true);
@@ -519,8 +519,8 @@ Identify what the template already provides vs. what needs to be built.`,
     // Save PRD artifact
     logger.savePRD(context.prd);
     logger.info('PRD generated', {
-      features: context.prd.coreFeatures.length,
-      userStories: context.prd.userStories.length,
+      features: context.prd.coreFeatures?.length || 0,
+      userStories: context.prd.userStories?.length || 0,
     });
 
     // Commit PRD phase
@@ -582,9 +582,9 @@ Follow the patterns already established in the template.`,
     // Save architecture artifact
     logger.saveArchitecture(context.architecture);
     logger.info('Architecture designed', {
-      dataModels: context.architecture.dataModels.length,
-      apiEndpoints: context.architecture.apiEndpoints.length,
-      dependencies: context.architecture.dependencies.length,
+      dataModels: context.architecture.dataModels?.length || 0,
+      apiEndpoints: context.architecture.apiEndpoints?.length || 0,
+      dependencies: context.architecture.dependencies?.length || 0,
     });
 
     // Commit architecture phase
@@ -667,8 +667,8 @@ Use NativeWind/Tailwind patterns consistent with existing code.`,
     // Save UI design artifact
     logger.saveUIDesign(context.uiDesign);
     logger.info('UI design complete', {
-      screens: context.uiDesign.screens.length,
-      components: context.uiDesign.components.length,
+      screens: context.uiDesign.screens?.length || 0,
+      components: context.uiDesign.components?.length || 0,
     });
 
     // Commit UI design phase
@@ -728,9 +728,9 @@ Each task should specify whether it's modifying or creating a file.`,
     // Save task breakdown artifact
     logger.saveTaskBreakdown(context.taskBreakdown);
     logger.info('Task breakdown complete', {
-      tasks: context.taskBreakdown.tasks.length,
+      tasks: context.taskBreakdown.tasks?.length || 0,
       complexity: context.taskBreakdown.estimatedComplexity,
-      criticalPath: context.taskBreakdown.criticalPath.length,
+      criticalPath: context.taskBreakdown.criticalPath?.length || 0,
     });
     logger.phaseEnd('planning', true);
 
