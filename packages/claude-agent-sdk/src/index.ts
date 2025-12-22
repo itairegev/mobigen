@@ -133,14 +133,42 @@ function getModelId(alias: string): string {
 // Default timeout for API calls (5 minutes)
 const API_TIMEOUT_MS = parseInt(process.env.CLAUDE_API_TIMEOUT_MS || '300000', 10);
 
+// Logging configuration
+const LOG_PREFIX = '[claude-agent-sdk]';
+const LOG_VERBOSE = process.env.CLAUDE_SDK_VERBOSE === 'true';
+
+function log(level: 'info' | 'warn' | 'error' | 'debug', message: string, data?: unknown): void {
+  const timestamp = new Date().toISOString();
+  const prefix = `${LOG_PREFIX} [${timestamp}]`;
+
+  if (level === 'debug' && !LOG_VERBOSE) return;
+
+  const logFn = level === 'error' ? console.error : level === 'warn' ? console.warn : console.log;
+
+  if (data) {
+    const dataStr = typeof data === 'object' ? JSON.stringify(data, null, 2) : String(data);
+    if (dataStr.length > 500) {
+      logFn(`${prefix} ${level.toUpperCase()}: ${message} (${dataStr.length} chars)`);
+    } else {
+      logFn(`${prefix} ${level.toUpperCase()}: ${message}`, data);
+    }
+  } else {
+    logFn(`${prefix} ${level.toUpperCase()}: ${message}`);
+  }
+}
+
 /**
  * Wraps a promise with a timeout
  */
 function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  log('debug', `Starting operation with ${ms}ms timeout: ${message}`);
   return Promise.race([
     promise,
     new Promise<T>((_, reject) => {
-      setTimeout(() => reject(new Error(`Timeout: ${message} (${ms}ms)`)), ms);
+      setTimeout(() => {
+        log('error', `Operation timed out: ${message}`);
+        reject(new Error(`Timeout: ${message} (${ms}ms)`));
+      }, ms);
     }),
   ]);
 }
@@ -155,6 +183,14 @@ export async function* query(params: {
   options?: QueryOptions;
 }): AsyncGenerator<SDKMessage> {
   const sessionId = params.options?.resume || generateSessionId();
+  const agentNames = Object.keys(params.options?.agents || {});
+
+  log('info', `Query started`, {
+    sessionId,
+    agents: agentNames,
+    resuming: !!params.options?.resume,
+    promptLength: params.prompt.length,
+  });
 
   // Emit init message with session ID
   yield {
@@ -167,14 +203,24 @@ export async function* query(params: {
   const agentModel = Object.values(params.options?.agents || {})[0]?.model;
   const modelAlias = params.options?.model || agentModel || 'sonnet';
   const modelId = getModelId(modelAlias);
+  const provider = getProvider();
+
+  log('info', `Model selected`, {
+    alias: modelAlias,
+    modelId,
+    provider,
+    agentModel: agentModel || 'not specified',
+  });
 
   let client: Anthropic | AnthropicBedrock;
   try {
-    // Create client (Bedrock or direct Anthropic)
+    log('debug', `Creating ${provider} client...`);
     client = createClient();
+    log('info', `Client created successfully`, { provider });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
-    console.error(`[claude-agent-sdk] Failed to create client: ${errMsg}`);
+    const errStack = error instanceof Error ? error.stack : undefined;
+    log('error', `Failed to create client: ${errMsg}`, { stack: errStack });
     yield {
       type: 'assistant',
       message: {
@@ -195,8 +241,11 @@ export async function* query(params: {
     params.options?.cwd ? `Working directory: ${params.options.cwd}` : null,
   ].filter(Boolean).join('\n\n');
 
+  log('debug', `System prompt built`, { length: systemPrompt.length });
+  log('debug', `User prompt preview`, { preview: params.prompt.substring(0, 200) + '...' });
+
   try {
-    console.log(`[claude-agent-sdk] Calling model: ${modelId} (${modelAlias})`);
+    log('info', `Calling model: ${modelId} (timeout: ${API_TIMEOUT_MS}ms)`);
     const startTime = Date.now();
 
     // Make the API call with timeout
@@ -220,7 +269,17 @@ export async function* query(params: {
     );
 
     const elapsed = Date.now() - startTime;
-    console.log(`[claude-agent-sdk] Response received in ${elapsed}ms`);
+    const responseText = response.content
+      .filter((b): b is { type: 'text'; text: string } => b.type === 'text')
+      .map(b => b.text)
+      .join('');
+
+    log('info', `Response received`, {
+      durationMs: elapsed,
+      responseLength: responseText.length,
+      contentBlocks: response.content.length,
+    });
+    log('debug', `Response preview`, { preview: responseText.substring(0, 300) + '...' });
 
     // Yield assistant message
     yield {
@@ -240,9 +299,17 @@ export async function* query(params: {
       type: 'result',
       session_id: sessionId,
     };
+
+    log('info', `Query completed successfully`, { sessionId, durationMs: elapsed });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
-    console.error(`[claude-agent-sdk] API call failed: ${errMsg}`);
+    const errStack = error instanceof Error ? error.stack : undefined;
+
+    log('error', `API call failed: ${errMsg}`, {
+      modelId,
+      provider,
+      stack: errStack,
+    });
 
     // Yield error as assistant message so caller knows what happened
     yield {

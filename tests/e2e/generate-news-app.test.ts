@@ -67,6 +67,9 @@ interface WhiteLabelConfig {
   identifiers: { projectId: string; easProjectId: string; awsResourcePrefix: string; analyticsKey: string };
 }
 
+// Test output directory for artifacts
+const TEST_OUTPUT_DIR = path.join(process.cwd(), 'test-output');
+
 // Test state
 let testUserId: string;
 let testProjectId: string;
@@ -75,6 +78,51 @@ let socket: Socket;
 let progressEvents: GenerationProgress[] = [];
 let generationResult: GenerationResult | null = null;
 let generationError: Error | null = null;
+
+// Helper to save artifact to output directory
+async function saveArtifact(name: string, data: unknown, format: 'json' | 'txt' = 'json'): Promise<void> {
+  try {
+    await fs.mkdir(TEST_OUTPUT_DIR, { recursive: true });
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `${name}-${timestamp}.${format}`;
+    const filepath = path.join(TEST_OUTPUT_DIR, filename);
+
+    const content = format === 'json'
+      ? JSON.stringify(data, null, 2)
+      : String(data);
+
+    await fs.writeFile(filepath, content);
+    console.log(`  💾 Saved: ${filename} (${content.length} bytes)`);
+  } catch (error) {
+    console.warn(`  ⚠️ Failed to save ${name}:`, error);
+  }
+}
+
+// Helper to copy directory recursively
+async function copyDirectory(src: string, dest: string): Promise<number> {
+  let fileCount = 0;
+  try {
+    await fs.mkdir(dest, { recursive: true });
+    const entries = await fs.readdir(src, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+
+      if (entry.isDirectory()) {
+        // Skip node_modules and .git
+        if (entry.name === 'node_modules' || entry.name === '.git') continue;
+        fileCount += await copyDirectory(srcPath, destPath);
+      } else {
+        await fs.copyFile(srcPath, destPath);
+        fileCount++;
+      }
+    }
+  } catch (error) {
+    // Directory may not exist
+  }
+  return fileCount;
+}
 
 // Helper to generate UUID
 function generateUUID(): string {
@@ -727,6 +775,139 @@ describe('E2E: Full News App Generation', () => {
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
       expect(true).toBe(true);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // TEST 9: Save All Artifacts
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  describe('9. Save All Artifacts', () => {
+    it('should save progress events log', async () => {
+      await saveArtifact('progress-events', progressEvents);
+      console.log('✅ Progress events log saved');
+    });
+
+    it('should save generation result', async () => {
+      if (generationResult) {
+        await saveArtifact('generation-result', generationResult);
+        console.log('✅ Generation result saved');
+      }
+    });
+
+    it('should save PRD artifact', async () => {
+      if (generationResult?.prd) {
+        await saveArtifact('prd', generationResult.prd);
+        console.log('✅ PRD artifact saved');
+      } else {
+        console.log('⚠️ No PRD to save');
+      }
+    });
+
+    it('should save Architecture artifact', async () => {
+      if (generationResult?.architecture) {
+        await saveArtifact('architecture', generationResult.architecture);
+        console.log('✅ Architecture artifact saved');
+      } else {
+        console.log('⚠️ No Architecture to save');
+      }
+    });
+
+    it('should save UI Design artifact', async () => {
+      if (generationResult?.uiDesign) {
+        await saveArtifact('ui-design', generationResult.uiDesign);
+        console.log('✅ UI Design artifact saved');
+      } else {
+        console.log('⚠️ No UI Design to save');
+      }
+    });
+
+    it('should save Task Breakdown artifact', async () => {
+      if (generationResult?.taskBreakdown) {
+        await saveArtifact('task-breakdown', generationResult.taskBreakdown);
+        console.log('✅ Task Breakdown artifact saved');
+      } else {
+        console.log('⚠️ No Task Breakdown to save');
+      }
+    });
+
+    it('should save Validation artifact', async () => {
+      if (generationResult?.validation) {
+        await saveArtifact('validation', generationResult.validation);
+        console.log('✅ Validation artifact saved');
+      } else {
+        console.log('⚠️ No Validation to save');
+      }
+    });
+
+    it('should save QA Report artifact', async () => {
+      if (generationResult?.qaReport) {
+        await saveArtifact('qa-report', generationResult.qaReport);
+        console.log('✅ QA Report artifact saved');
+      } else {
+        console.log('⚠️ No QA Report to save');
+      }
+    });
+
+    it('should save generated source code', async () => {
+      console.log('📦 Saving generated source code...');
+
+      const sourceOutputDir = path.join(TEST_OUTPUT_DIR, 'source-code');
+      const fileCount = await copyDirectory(projectPath, sourceOutputDir);
+
+      if (fileCount > 0) {
+        console.log(`✅ Source code saved: ${fileCount} files to ${sourceOutputDir}`);
+      } else {
+        console.log('⚠️ No source code files found to save');
+      }
+
+      // Also try to copy from artifacts directory inside the project
+      const artifactsDir = path.join(projectPath, 'artifacts');
+      try {
+        const artifactsOutputDir = path.join(TEST_OUTPUT_DIR, 'generator-artifacts');
+        const artifactCount = await copyDirectory(artifactsDir, artifactsOutputDir);
+        if (artifactCount > 0) {
+          console.log(`✅ Generator artifacts saved: ${artifactCount} files`);
+        }
+      } catch {
+        // Artifacts directory may not exist
+      }
+
+      // Also try to copy logs
+      const logsDir = path.join(projectPath, 'logs');
+      try {
+        const logsOutputDir = path.join(TEST_OUTPUT_DIR, 'generator-logs');
+        const logCount = await copyDirectory(logsDir, logsOutputDir);
+        if (logCount > 0) {
+          console.log(`✅ Generator logs saved: ${logCount} files`);
+        }
+      } catch {
+        // Logs directory may not exist
+      }
+    });
+
+    it('should save test summary', async () => {
+      const summary = {
+        testProjectId,
+        testUserId,
+        projectPath,
+        timestamp: new Date().toISOString(),
+        progressEventsCount: progressEvents.length,
+        success: generationResult?.success || false,
+        filesGenerated: generationResult?.files?.length || 0,
+        files: generationResult?.files || [],
+        qaScore: generationResult?.qaReport?.overallScore || null,
+        readyForProduction: generationResult?.qaReport?.readyForProduction || false,
+        requiresReview: generationResult?.requiresReview || false,
+        sessionId: generationResult?.sessionId,
+        phasesCompleted: progressEvents.filter((e) => e.stage === 'phase').map((e) => e.data.phase),
+        errors: progressEvents.filter((e) => e.stage === 'error').map((e) => e.data),
+      };
+
+      await saveArtifact('test-summary', summary);
+
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('📁 ALL ARTIFACTS SAVED TO:', TEST_OUTPUT_DIR);
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     });
   });
 });

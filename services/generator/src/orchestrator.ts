@@ -16,6 +16,7 @@ import { TemplateManager, type ProjectMetadata, type TemplateContext } from '@mo
 import { emitProgress } from './api';
 import { flagForHumanReview } from './session-manager';
 import { createQAHooks } from './hooks/index';
+import { createLogger, type GenerationLogger } from './logger';
 import * as path from 'path';
 
 // Configuration for paths
@@ -250,6 +251,10 @@ export async function generateApp(
 ): Promise<GenerationResult> {
   const projectPath = path.join(PROJECTS_DIR, projectId);
 
+  // Create logger for this generation run
+  const logger = createLogger(projectId, projectPath);
+  logger.info('Starting app generation', { userPrompt: userPrompt.substring(0, 100) + '...', config });
+
   const context: PipelineContext = {
     userPrompt,
     projectId,
@@ -270,9 +275,11 @@ export async function generateApp(
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 0: PROJECT SETUP (Clone template)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('setup', 'Project Setup & Template Selection');
     await emitProgress(projectId, 'phase', { phase: 'setup', index: 0 });
 
     // First, do quick intent analysis to select template
+    logger.agentStart('intent-analyzer', 'setup');
     const quickIntentOutput = await runAgent(
       'intent-analyzer',
       `Quickly analyze this request and select the best template:
@@ -286,11 +293,14 @@ Output JSON with just: { "template": "base", "category": "..." }`,
       result
     );
 
+    logger.agentEnd('intent-analyzer', true, 'setup');
     const quickIntent = parseJSON(quickIntentOutput, { template: 'base', category: 'custom' });
     const selectedTemplate = quickIntent.template || 'base';
+    logger.info('Template selected', { template: selectedTemplate, category: quickIntent.category });
 
     // Clone template to create project
     await emitProgress(projectId, 'cloning', { template: selectedTemplate });
+    logger.info('Cloning template to project', { template: selectedTemplate, projectPath });
 
     context.metadata = await templateManager.cloneToProject(
       selectedTemplate,
@@ -315,10 +325,18 @@ Output JSON with just: { "template": "base", "category": "..." }`,
       components: context.templateContext?.components.length || 0,
       hooks: context.templateContext?.hooks.length || 0,
     });
+    logger.info('Template context loaded', {
+      screens: context.templateContext?.screens.length || 0,
+      components: context.templateContext?.components.length || 0,
+      hooks: context.templateContext?.hooks.length || 0,
+      types: context.templateContext?.types.length || 0,
+    });
+    logger.phaseEnd('setup', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 1: INTENT ANALYSIS (detailed)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('intent-analysis', 'Detailed Intent Analysis');
     await emitProgress(projectId, 'phase', { phase: 'analysis', index: 1 });
 
     // Format template context for intent analysis
@@ -329,6 +347,7 @@ ${formatTemplateContext(context.templateContext)}
 Analyze what ADDITIONAL features are needed beyond what the template provides.`
       : '';
 
+    logger.agentStart('intent-analyzer', 'intent-analysis');
     const intentOutput = await runAgent(
       'intent-analyzer',
       `Analyze this mobile app request in detail:
@@ -353,6 +372,9 @@ Provide detailed analysis with:
       result
     );
 
+    logger.agentEnd('intent-analyzer', true, 'intent-analysis');
+    logger.agentOutput('intent-analyzer', intentOutput, 'intent-analysis');
+
     context.intent = parseJSON(intentOutput, {
       category: quickIntent.category || 'custom',
       template: selectedTemplate,
@@ -361,9 +383,19 @@ Provide detailed analysis with:
       complexity: 'medium' as const,
     });
 
+    // Save intent analysis artifact
+    logger.saveArtifact('intent-analysis', context.intent, 'json');
+    logger.info('Intent analysis complete', {
+      category: context.intent.category,
+      features: context.intent.features.length,
+      complexity: context.intent.complexity,
+    });
+    logger.phaseEnd('intent-analysis', true);
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 2: PRODUCT MANAGEMENT
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('product-definition', 'Product Requirements Document');
     await emitProgress(projectId, 'phase', { phase: 'product-definition', index: 2 });
 
     // Format template context for PRD
@@ -376,6 +408,7 @@ Focus your PRD on what ADDITIONAL features and customizations are needed beyond 
 Do NOT re-specify features that already exist in the template.`
       : '';
 
+    logger.agentStart('product-manager', 'product-definition');
     const prdOutput = await runAgent(
       'product-manager',
       `Create a Product Requirements Document based on this analysis:
@@ -396,6 +429,9 @@ Identify what the template already provides vs. what needs to be built.`,
       result
     );
 
+    logger.agentEnd('product-manager', true, 'product-definition');
+    logger.agentOutput('product-manager', prdOutput, 'product-definition');
+
     context.prd = parseJSON(prdOutput, {
       appName: config.appName,
       description: userPrompt,
@@ -408,12 +444,21 @@ Identify what the template already provides vs. what needs to be built.`,
     });
     result.prd = context.prd;
 
+    // Save PRD artifact
+    logger.savePRD(context.prd);
+    logger.info('PRD generated', {
+      features: context.prd.coreFeatures.length,
+      userStories: context.prd.userStories.length,
+    });
+
     // Commit PRD phase
     await commitPhase(context, 'product-definition', 'product-manager');
+    logger.phaseEnd('product-definition', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 3: TECHNICAL ARCHITECTURE
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('architecture', 'Technical Architecture Design');
     await emitProgress(projectId, 'phase', { phase: 'architecture', index: 3 });
 
     // Format template context for Architecture
@@ -428,6 +473,7 @@ IMPORTANT: Build on top of the existing template architecture.
 - Only add dependencies that aren't already installed`
       : '';
 
+    logger.agentStart('technical-architect', 'architecture');
     const archOutput = await runAgent(
       'technical-architect',
       `Design the technical architecture based on this PRD:
@@ -446,6 +492,9 @@ Follow the patterns already established in the template.`,
       result
     );
 
+    logger.agentEnd('technical-architect', true, 'architecture');
+    logger.agentOutput('technical-architect', archOutput, 'architecture');
+
     context.architecture = parseJSON(archOutput, {
       template: context.intent?.template || 'base',
       templateReason: '',
@@ -458,12 +507,22 @@ Follow the patterns already established in the template.`,
     });
     result.architecture = context.architecture;
 
+    // Save architecture artifact
+    logger.saveArchitecture(context.architecture);
+    logger.info('Architecture designed', {
+      dataModels: context.architecture.dataModels.length,
+      apiEndpoints: context.architecture.apiEndpoints.length,
+      dependencies: context.architecture.dependencies.length,
+    });
+
     // Commit architecture phase
     await commitPhase(context, 'architecture', 'technical-architect');
+    logger.phaseEnd('architecture', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 4: UI/UX DESIGN
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('ui-design', 'UI/UX Design System');
     await emitProgress(projectId, 'phase', { phase: 'ui-design', index: 4 });
 
     // Format template context for UI/UX
@@ -478,6 +537,7 @@ IMPORTANT: The template already has a working design system.
 - Maintain visual consistency with existing screens`
       : '';
 
+    logger.agentStart('ui-ux-expert', 'ui-design');
     const uiOutput = await runAgent(
       'ui-ux-expert',
       `Create the UI/UX design system:
@@ -502,6 +562,9 @@ Use NativeWind/Tailwind patterns consistent with existing code.`,
       context,
       result
     );
+
+    logger.agentEnd('ui-ux-expert', true, 'ui-design');
+    logger.agentOutput('ui-ux-expert', uiOutput, 'ui-design');
 
     // Default color scale for fallback
     const defaultColorScale = {
@@ -529,12 +592,21 @@ Use NativeWind/Tailwind patterns consistent with existing code.`,
     });
     result.uiDesign = context.uiDesign;
 
+    // Save UI design artifact
+    logger.saveUIDesign(context.uiDesign);
+    logger.info('UI design complete', {
+      screens: context.uiDesign.screens.length,
+      components: context.uiDesign.components.length,
+    });
+
     // Commit UI design phase
     await commitPhase(context, 'ui-design', 'ui-ux-expert');
+    logger.phaseEnd('ui-design', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 5: TASK PLANNING
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('planning', 'Task Planning & Breakdown');
     await emitProgress(projectId, 'phase', { phase: 'planning', index: 5 });
 
     // Format template context for Lead Developer
@@ -549,6 +621,7 @@ IMPORTANT: The template is already a working app.
 - Use existing patterns for new code`
       : '';
 
+    logger.agentStart('lead-developer', 'planning');
     const taskOutput = await runAgent(
       'lead-developer',
       `Break down the implementation into development tasks:
@@ -569,6 +642,9 @@ Each task should specify whether it's modifying or creating a file.`,
       result
     );
 
+    logger.agentEnd('lead-developer', true, 'planning');
+    logger.agentOutput('lead-developer', taskOutput, 'planning');
+
     context.taskBreakdown = parseJSON(taskOutput, {
       tasks: [],
       estimatedComplexity: 'medium' as const,
@@ -577,9 +653,19 @@ Each task should specify whether it's modifying or creating a file.`,
     });
     result.taskBreakdown = context.taskBreakdown;
 
+    // Save task breakdown artifact
+    logger.saveTaskBreakdown(context.taskBreakdown);
+    logger.info('Task breakdown complete', {
+      tasks: context.taskBreakdown.tasks.length,
+      complexity: context.taskBreakdown.estimatedComplexity,
+      criticalPath: context.taskBreakdown.criticalPath.length,
+    });
+    logger.phaseEnd('planning', true);
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 6: IMPLEMENTATION
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('implementation', 'Code Implementation');
     await emitProgress(projectId, 'phase', { phase: 'implementation', index: 6 });
 
     const qaHooks = createQAHooks(projectId);
@@ -587,6 +673,7 @@ Each task should specify whether it's modifying or creating a file.`,
 
     // Sort tasks by priority and dependencies
     const sortedTasks = [...tasks].sort((a, b) => a.priority - b.priority);
+    logger.info('Starting implementation', { totalTasks: sortedTasks.length });
 
     // Execute tasks sequentially (respecting dependencies)
     for (let i = 0; i < sortedTasks.length; i++) {
@@ -597,6 +684,13 @@ Each task should specify whether it's modifying or creating a file.`,
         index: i + 1,
         total: sortedTasks.length
       });
+
+      logger.info(`Task ${i + 1}/${sortedTasks.length}: ${task.title}`, {
+        taskId: task.id,
+        type: task.type,
+        files: task.files,
+      });
+      logger.agentStart('developer', 'implementation');
 
       await runAgent(
         'developer',
@@ -624,13 +718,20 @@ Implement the task following React Native + Expo patterns.`,
         }
       );
 
+      logger.agentEnd('developer', true, 'implementation');
+      logger.success(`Task completed: ${task.title}`);
+
       // Commit after each task
       await commitPhase(context, `task-${task.id}`, 'developer');
     }
 
+    logger.info('Implementation complete', { filesModified: result.files.length });
+    logger.phaseEnd('implementation', true);
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 7: VALIDATION (with retry loop)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('validation', 'Code Validation');
     await emitProgress(projectId, 'phase', { phase: 'validation', index: 7 });
 
     let validationPassed = false;
@@ -638,9 +739,11 @@ Implement the task following React Native + Expo patterns.`,
 
     while (!validationPassed && attempts < generationPipeline.maxRetries) {
       attempts++;
+      logger.info(`Validation attempt ${attempts}/${generationPipeline.maxRetries}`);
       await emitProgress(projectId, 'validation-attempt', { attempt: attempts });
 
       // Run validator
+      logger.agentStart('validator', 'validation');
       const validationOutput = await runAgent(
         'validator',
         `Validate the generated app in ${context.projectPath}
@@ -656,6 +759,9 @@ Report structured validation result.`,
         { allowedTools: ['Bash', 'Read', 'Grep'] }
       );
 
+      logger.agentEnd('validator', true, 'validation');
+      logger.agentOutput('validator', validationOutput, 'validation');
+
       context.validation = parseJSON(validationOutput, {
         passed: false,
         tier: 'tier1' as const,
@@ -665,13 +771,24 @@ Report structured validation result.`,
 
       validationPassed = context.validation.passed;
 
+      if (validationPassed) {
+        logger.success('Validation passed');
+      } else {
+        logger.warn('Validation failed', {
+          stages: Object.keys(context.validation.stages || {}),
+          summary: context.validation.summary,
+        });
+      }
+
       // If failed, run error-fixer
       if (!validationPassed && attempts < generationPipeline.maxRetries) {
+        logger.info('Running error-fixer agent');
         await emitProgress(projectId, 'fixing', { attempt: attempts });
 
         const errors = Object.values(context.validation.stages || {})
           .flatMap(stage => stage.errors || []);
 
+        logger.agentStart('error-fixer', 'validation');
         await runAgent(
           'error-fixer',
           `Fix these validation errors:
@@ -688,6 +805,9 @@ Project path: ${context.projectPath}`,
           }
         );
 
+        logger.agentEnd('error-fixer', true, 'validation');
+        logger.info('Error fixes applied');
+
         // Commit fixes
         await commitPhase(context, `error-fix-attempt-${attempts}`, 'error-fixer');
       }
@@ -695,14 +815,21 @@ Project path: ${context.projectPath}`,
 
     result.validation = context.validation;
 
+    // Save validation result artifact
+    logger.saveValidation(context.validation);
+    logger.info('Validation complete', { passed: validationPassed, attempts });
+
     // Commit validation phase
     await commitPhase(context, 'validation', 'validator');
+    logger.phaseEnd('validation', validationPassed);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 8: QA ASSESSMENT
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    logger.phaseStart('qa', 'Quality Assurance');
     await emitProgress(projectId, 'phase', { phase: 'quality-assurance', index: 8 });
 
+    logger.agentStart('qa', 'qa');
     const qaOutput = await runAgent(
       'qa',
       `Perform final quality assessment of the app in ${context.projectPath}
@@ -721,6 +848,9 @@ Provide overall score and production readiness assessment.`,
       { allowedTools: ['Read', 'Grep', 'Glob', 'Bash'] }
     );
 
+    logger.agentEnd('qa', true, 'qa');
+    logger.agentOutput('qa', qaOutput, 'qa');
+
     context.qaReport = parseJSON(qaOutput, {
       overallScore: 0,
       categories: [],
@@ -730,8 +860,17 @@ Provide overall score and production readiness assessment.`,
     });
     result.qaReport = context.qaReport;
 
+    // Save QA report artifact
+    logger.saveQAReport(context.qaReport);
+    logger.info('QA assessment complete', {
+      overallScore: context.qaReport.overallScore,
+      readyForProduction: context.qaReport.readyForProduction,
+      blockers: context.qaReport.blockers.length,
+    });
+
     // Commit QA phase
     await commitPhase(context, 'quality-assurance', 'qa');
+    logger.phaseEnd('qa', context.qaReport.readyForProduction);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // FINALIZE
@@ -741,8 +880,22 @@ Provide overall score and production readiness assessment.`,
 
     if (!result.success) {
       result.requiresReview = true;
+      logger.warn('Generation requires human review', {
+        validationPassed,
+        qaScore: context.qaReport?.overallScore,
+        readyForProduction: context.qaReport?.readyForProduction,
+      });
       await flagForHumanReview(projectId, result.logs);
+    } else {
+      logger.success('Generation completed successfully!');
     }
+
+    // Print final summary
+    logger.printSummary({
+      success: result.success,
+      files: result.files,
+      requiresReview: result.requiresReview,
+    });
 
     await emitProgress(projectId, 'complete', {
       success: result.success,
@@ -756,13 +909,31 @@ Provide overall score and production readiness assessment.`,
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
 
+    logger.error('Pipeline failed', { error: errorMessage });
     console.error(`[orchestrator] Pipeline failed:`, errorMessage);
     if (errorStack) {
       console.error(`[orchestrator] Stack trace:`, errorStack);
+      logger.error('Stack trace', { stack: errorStack });
     }
+
+    // Save error artifact
+    logger.saveArtifact('pipeline-error', {
+      error: errorMessage,
+      stack: errorStack,
+      projectId,
+      timestamp: new Date().toISOString(),
+    }, 'json');
 
     result.success = false;
     result.requiresReview = true;
+
+    // Print error summary
+    logger.printSummary({
+      success: false,
+      files: result.files,
+      requiresReview: true,
+    });
+
     await emitProgress(projectId, 'error', { error: errorMessage, stack: errorStack });
     await flagForHumanReview(projectId, result.logs);
   }
