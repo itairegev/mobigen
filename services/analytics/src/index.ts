@@ -170,7 +170,7 @@ app.get('/metrics/range', async (req, res) => {
     const metrics = await metricsAggregator.getMetricsRange({
       start: new Date(start as string),
       end: new Date(end as string),
-      granularity: (granularity as string) || 'day',
+      granularity: (granularity as 'month' | 'day' | 'hour' | 'week') || 'day',
     });
 
     res.json(metrics);
