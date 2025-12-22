@@ -316,3 +316,25 @@ export async function copyArtifact(
     throw new Error(`Artifact copy failed: ${error.message}`);
   }
 }
+
+/**
+ * Get artifact storage interface for webhooks
+ */
+export function getArtifactStorage() {
+  return {
+    async downloadAndStore(
+      buildId: string,
+      buildUrl: string,
+      platform: 'ios' | 'android'
+    ): Promise<string> {
+      return downloadAndStoreArtifact(buildId, buildUrl, platform);
+    },
+
+    async storeLogs(buildId: string, logsUrl: string): Promise<string> {
+      // Fetch logs from URL and store
+      const response = await fetch(logsUrl);
+      const logs = await response.text();
+      return storeBuildLogs(buildId, logs);
+    },
+  };
+}
