@@ -753,9 +753,17 @@ Provide overall score and production readiness assessment.`,
     });
 
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    console.error(`[orchestrator] Pipeline failed:`, errorMessage);
+    if (errorStack) {
+      console.error(`[orchestrator] Stack trace:`, errorStack);
+    }
+
     result.success = false;
     result.requiresReview = true;
-    await emitProgress(projectId, 'error', { error: String(error) });
+    await emitProgress(projectId, 'error', { error: errorMessage, stack: errorStack });
     await flagForHumanReview(projectId, result.logs);
   }
 
