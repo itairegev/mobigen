@@ -174,7 +174,8 @@ async function runAgent(
   options: {
     allowedTools?: string[];
     permissionMode?: 'acceptEdits' | 'ask';
-    hooks?: Record<string, unknown>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    hooks?: any;
   } = {}
 ): Promise<string> {
   const agent = mobigenAgents[role];
