@@ -535,6 +535,9 @@ export class TemplateManager {
   /**
    * Clone a template from bare repo to create a new project
    * This creates a fresh git history for the project
+   *
+   * Uses git archive to extract files, which works even if the target
+   * directory already exists (e.g., for logs/artifacts created early)
    */
   async cloneToProject(
     templateName: string,
@@ -554,16 +557,21 @@ export class TemplateManager {
     // Get template info before cloning
     const templateInfo = await this.getTemplateInfo(templateName);
 
-    // Clone from bare repo
-    const git = simpleGit();
-    await git.clone(bareRepoPath, projectPath, ['--depth', '1']);
+    // Ensure project directory exists
+    await fs.mkdir(projectPath, { recursive: true });
 
-    // Remove origin (no relationship to template after clone)
+    // Use git archive to extract files (works with non-empty directories)
+    // This extracts the template files without .git directory
+    const { execSync } = await import('child_process');
+
+    // git archive exports files as a tar stream, which we pipe to tar to extract
+    execSync(
+      `git --git-dir="${bareRepoPath}" archive HEAD | tar -x -C "${projectPath}"`,
+      { stdio: 'pipe' }
+    );
+
+    // Initialize fresh git repository
     const projectGit = simpleGit(projectPath);
-    await projectGit.removeRemote('origin');
-
-    // Remove .git and reinitialize for fresh history
-    await fs.rm(path.join(projectPath, '.git'), { recursive: true });
     await projectGit.init();
     await projectGit.addConfig('user.email', 'mobigen@generated.local');
     await projectGit.addConfig('user.name', 'Mobigen Generator');
