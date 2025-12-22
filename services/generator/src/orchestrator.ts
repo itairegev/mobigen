@@ -134,11 +134,18 @@ async function runAgent(
   const agent = mobigenAgents[role];
   const model = agentModelConfig[role];
   let output = '';
+  let messageCount = 0;
 
-  console.log(`[orchestrator] Starting agent: ${role} (model: ${model})`);
+  console.log(`[orchestrator] ┌─────────────────────────────────────────────`);
+  console.log(`[orchestrator] │ Agent: ${role}`);
+  console.log(`[orchestrator] │ Model: ${model}`);
+  console.log(`[orchestrator] │ Prompt length: ${prompt.length} chars`);
+  console.log(`[orchestrator] │ Has session ID: ${!!context.sessionId}`);
+  console.log(`[orchestrator] └─────────────────────────────────────────────`);
   const startTime = Date.now();
 
   try {
+    console.log(`[orchestrator] Calling query() for ${role}...`);
     for await (const message of query({
       prompt,
       options: {
@@ -155,9 +162,13 @@ ${agent.prompt}`,
         cwd: MOBIGEN_ROOT,
       },
     })) {
+      messageCount++;
+      console.log(`[orchestrator] ${role} message #${messageCount}: type=${message.type}, subtype=${message.subtype || 'N/A'}`);
+
       // Capture session ID
       if (message.type === 'system' && message.subtype === 'init' && !context.sessionId) {
         context.sessionId = message.session_id;
+        console.log(`[orchestrator] Captured session ID: ${message.session_id?.substring(0, 20)}...`);
       }
 
       // Track file changes
@@ -181,7 +192,7 @@ ${agent.prompt}`,
     }
 
     const elapsed = Date.now() - startTime;
-    console.log(`[orchestrator] Agent ${role} completed in ${elapsed}ms`);
+    console.log(`[orchestrator] ✓ Agent ${role} completed: ${messageCount} messages, ${elapsed}ms, output: ${output.length} chars`);
   } catch (error) {
     const elapsed = Date.now() - startTime;
     const errMsg = error instanceof Error ? error.message : String(error);
@@ -399,9 +410,14 @@ Provide detailed analysis with:
     });
     logger.phaseEnd('intent-analysis', true);
 
+    console.log('[orchestrator] ════════════════════════════════════════════════════');
+    console.log('[orchestrator] TRANSITIONING FROM PHASE 1 TO PHASE 2');
+    console.log('[orchestrator] ════════════════════════════════════════════════════');
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 2: PRODUCT MANAGEMENT
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    console.log('[orchestrator] Starting Phase 2: Product Management');
     logger.phaseStart('product-definition', 'Product Requirements Document');
     await emitProgress(projectId, 'phase', { phase: 'product-definition', index: 2 });
 
@@ -415,6 +431,7 @@ Focus your PRD on what ADDITIONAL features and customizations are needed beyond 
 Do NOT re-specify features that already exist in the template.`
       : '';
 
+    console.log('[orchestrator] About to call product-manager agent...');
     logger.agentStart('product-manager', 'product-definition');
     const prdOutput = await runAgent(
       'product-manager',
@@ -436,6 +453,7 @@ Identify what the template already provides vs. what needs to be built.`,
       result
     );
 
+    console.log('[orchestrator] product-manager agent completed, output length:', prdOutput.length);
     logger.agentEnd('product-manager', true, 'product-definition');
     logger.agentOutput('product-manager', prdOutput, 'product-definition');
 
