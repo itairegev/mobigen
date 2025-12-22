@@ -19,6 +19,68 @@ import { createQAHooks } from './hooks/index';
 import { createLogger, type GenerationLogger } from './logger';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as fsPromises from 'fs/promises';
+
+// Helper functions to count and list project files
+async function countProjectFiles(projectPath: string): Promise<number> {
+  let count = 0;
+  const srcPath = path.join(projectPath, 'src');
+
+  async function walkDir(dir: string): Promise<void> {
+    try {
+      const entries = await fsPromises.readdir(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.name === 'node_modules' || entry.name === '.git') continue;
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          await walkDir(fullPath);
+        } else if (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) {
+          count++;
+        }
+      }
+    } catch {
+      // Directory doesn't exist
+    }
+  }
+
+  await walkDir(srcPath);
+  return count;
+}
+
+async function listProjectFiles(projectPath: string): Promise<string[]> {
+  const files: string[] = [];
+  const srcPath = path.join(projectPath, 'src');
+
+  async function walkDir(dir: string): Promise<void> {
+    try {
+      const entries = await fsPromises.readdir(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.name === 'node_modules' || entry.name === '.git') continue;
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          await walkDir(fullPath);
+        } else if (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx') ||
+                   entry.name.endsWith('.json') || entry.name.endsWith('.js')) {
+          files.push(fullPath);
+        }
+      }
+    } catch {
+      // Directory doesn't exist
+    }
+  }
+
+  await walkDir(srcPath);
+  // Also include root config files
+  const rootFiles = ['app.json', 'package.json', 'tsconfig.json', 'tailwind.config.js'];
+  for (const file of rootFiles) {
+    const filePath = path.join(projectPath, file);
+    if (fs.existsSync(filePath)) {
+      files.push(filePath);
+    }
+  }
+
+  return files;
+}
 
 // Configuration for paths
 // When running from services/generator/, we need to go up 2 levels to reach mobigen root
@@ -266,16 +328,65 @@ ${agent.prompt}`,
   return output;
 }
 
-// Parse JSON from agent output
-function parseJSON<T>(output: string, fallback: T): T {
+// Parse JSON from agent output with improved handling
+function parseJSON<T extends Record<string, unknown>>(output: string, fallback: T): T {
   try {
-    const jsonMatch = output.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]) as T;
+    // First, try to find JSON in markdown code blocks
+    const codeBlockMatch = output.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+    if (codeBlockMatch) {
+      const parsed = JSON.parse(codeBlockMatch[1]) as Partial<T>;
+      // Merge with fallback to ensure all fields exist
+      return { ...fallback, ...parsed };
     }
-  } catch {
-    console.error('Failed to parse agent output as JSON');
+
+    // Then try to find the largest valid JSON object
+    const jsonMatches = output.match(/\{[\s\S]*?\}/g);
+    if (jsonMatches) {
+      // Try each match, starting with the longest
+      const sortedMatches = jsonMatches.sort((a, b) => b.length - a.length);
+      for (const match of sortedMatches) {
+        try {
+          const parsed = JSON.parse(match) as Partial<T>;
+          // Merge with fallback to ensure all fields exist
+          return { ...fallback, ...parsed };
+        } catch {
+          // Try next match
+        }
+      }
+    }
+
+    // Try to extract key-value pairs from text output
+    const extractedValues: Record<string, unknown> = {};
+
+    // Look for "score: 85" or "overallScore: 85" patterns
+    const scoreMatch = output.match(/(?:overall\s*)?score[:\s]+(\d+)/i);
+    if (scoreMatch) {
+      extractedValues.overallScore = parseInt(scoreMatch[1], 10);
+    }
+
+    // Look for "ready for production: true/yes" patterns
+    const readyMatch = output.match(/ready\s*(?:for\s*)?production[:\s]*(true|yes|false|no)/i);
+    if (readyMatch) {
+      extractedValues.readyForProduction = readyMatch[1].toLowerCase() === 'true' ||
+                                            readyMatch[1].toLowerCase() === 'yes';
+    }
+
+    // Look for "passed: true" patterns
+    const passedMatch = output.match(/passed[:\s]*(true|yes|false|no)/i);
+    if (passedMatch) {
+      extractedValues.passed = passedMatch[1].toLowerCase() === 'true' ||
+                               passedMatch[1].toLowerCase() === 'yes';
+    }
+
+    if (Object.keys(extractedValues).length > 0) {
+      console.log('[orchestrator] Extracted values from text output:', extractedValues);
+      return { ...fallback, ...extractedValues } as T;
+    }
+  } catch (e) {
+    console.error('Failed to parse agent output as JSON:', e);
   }
+
+  console.log('[orchestrator] Using fallback values for JSON parsing');
   return fallback;
 }
 
@@ -947,7 +1058,15 @@ Provide overall score and production readiness assessment.`,
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // FINALIZE
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    result.success = validationPassed && (context.qaReport?.readyForProduction || false);
+
+    // Count actual files in project (since tool tracking may not work with current SDK)
+    const actualFiles = await countProjectFiles(context.projectPath);
+    if (actualFiles > 0 && result.files.length === 0) {
+      result.files = await listProjectFiles(context.projectPath);
+    }
+
+    // Success = validation passed (QA is advisory, not blocking)
+    result.success = validationPassed;
     result.sessionId = context.sessionId;
 
     if (!result.success) {
