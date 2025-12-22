@@ -18,6 +18,7 @@ import { flagForHumanReview } from './session-manager';
 import { createQAHooks } from './hooks/index';
 import { createLogger, type GenerationLogger } from './logger';
 import * as path from 'path';
+import * as fs from 'fs';
 
 // Configuration for paths
 const MOBIGEN_ROOT = process.env.MOBIGEN_ROOT || process.cwd();
@@ -250,6 +251,12 @@ export async function generateApp(
   config: WhiteLabelConfig
 ): Promise<GenerationResult> {
   const projectPath = path.join(PROJECTS_DIR, projectId);
+
+  // Ensure project directory exists before creating logger
+  if (!fs.existsSync(projectPath)) {
+    fs.mkdirSync(projectPath, { recursive: true });
+    console.log(`[orchestrator] Created project directory: ${projectPath}`);
+  }
 
   // Create logger for this generation run
   const logger = createLogger(projectId, projectPath);
