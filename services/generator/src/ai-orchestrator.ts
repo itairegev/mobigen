@@ -21,7 +21,7 @@ import {
 } from '@anthropic-ai/claude-agent-sdk';
 import {
   getDefaultRegistry,
-  type AgentDefinition,
+  type DynamicAgentDefinition,
 } from '@mobigen/ai';
 import type { WhiteLabelConfig, GenerationResult } from '@mobigen/ai';
 import { TemplateManager, type ProjectMetadata, type TemplateContext } from '@mobigen/storage';
@@ -160,6 +160,172 @@ async function listProjectFiles(projectPath: string): Promise<string[]> {
 }
 
 // ============================================================================
+// SUCCESS EVALUATION
+// ============================================================================
+
+interface SuccessSignals {
+  isSuccess: boolean;
+  fileCount: number;
+  hasGeneratedFiles: boolean;
+  hasErrors: boolean;
+  errorCount: number;
+  hasValidationPass: boolean;
+  hasCompletionKeywords: boolean;
+  hasFailureKeywords: boolean;
+  taskSuccessRate: number;
+  reasoning: string;
+}
+
+/**
+ * Evaluates success based on multiple signals rather than just keywords
+ */
+function evaluateSuccess(
+  logs: SDKMessage[],
+  trackedFiles: string[],
+  actualFileCount: number,
+  logger: GenerationLogger
+): SuccessSignals {
+  const signals: SuccessSignals = {
+    isSuccess: false,
+    fileCount: Math.max(trackedFiles.length, actualFileCount),
+    hasGeneratedFiles: false,
+    hasErrors: false,
+    errorCount: 0,
+    hasValidationPass: false,
+    hasCompletionKeywords: false,
+    hasFailureKeywords: false,
+    taskSuccessRate: 0,
+    reasoning: '',
+  };
+
+  // Signal 1: Check if files were generated
+  signals.hasGeneratedFiles = signals.fileCount > 0;
+
+  // Signal 2: Count errors in logs
+  let taskCount = 0;
+  let taskSuccessCount = 0;
+
+  for (const log of logs) {
+    // Check for error messages
+    if (log.type === 'tool' && log.tool_result && !log.tool_result.success) {
+      signals.errorCount++;
+    }
+
+    // Check Task tool results
+    if (log.type === 'tool' && log.tool_name === 'Task') {
+      taskCount++;
+      if (log.tool_result?.success) {
+        taskSuccessCount++;
+        const output = log.tool_result.output as Record<string, unknown>;
+        if (output?.status === 'completed') {
+          taskSuccessCount++; // Extra credit for completed status
+        }
+      }
+    }
+
+    // Check for validation results in assistant messages
+    if (log.type === 'assistant' && log.message) {
+      const content = log.message.content
+        .filter((b: { type: string }) => b.type === 'text')
+        .map((b: { text?: string }) => b.text || '')
+        .join('');
+
+      const lowerContent = content.toLowerCase();
+
+      // Check for validation pass indicators
+      if (lowerContent.includes('validation passed') ||
+          lowerContent.includes('all checks passed') ||
+          lowerContent.includes('no errors found') ||
+          lowerContent.includes('typescript: pass') ||
+          lowerContent.includes('eslint: pass')) {
+        signals.hasValidationPass = true;
+      }
+
+      // Check for completion keywords
+      if (lowerContent.includes('success') ||
+          lowerContent.includes('completed') ||
+          lowerContent.includes('generation complete') ||
+          lowerContent.includes('app is ready') ||
+          lowerContent.includes('finished generating') ||
+          lowerContent.includes('all tasks complete')) {
+        signals.hasCompletionKeywords = true;
+      }
+
+      // Check for failure keywords
+      if (lowerContent.includes('failed') ||
+          lowerContent.includes('error') ||
+          lowerContent.includes('could not') ||
+          lowerContent.includes('unable to')) {
+        signals.hasFailureKeywords = true;
+      }
+    }
+  }
+
+  signals.hasErrors = signals.errorCount > 0;
+  signals.taskSuccessRate = taskCount > 0 ? taskSuccessCount / taskCount : 1;
+
+  // Decision logic: Use weighted signals
+  let score = 0;
+  const reasons: string[] = [];
+
+  // Positive signals
+  if (signals.hasGeneratedFiles) {
+    score += 3;
+    reasons.push(`+3: Generated ${signals.fileCount} files`);
+  }
+
+  if (signals.hasValidationPass) {
+    score += 2;
+    reasons.push('+2: Validation passed');
+  }
+
+  if (signals.hasCompletionKeywords) {
+    score += 1;
+    reasons.push('+1: Completion keywords found');
+  }
+
+  if (signals.taskSuccessRate >= 0.8) {
+    score += 2;
+    reasons.push(`+2: High task success rate (${Math.round(signals.taskSuccessRate * 100)}%)`);
+  } else if (signals.taskSuccessRate >= 0.5) {
+    score += 1;
+    reasons.push(`+1: Moderate task success rate (${Math.round(signals.taskSuccessRate * 100)}%)`);
+  }
+
+  // Negative signals
+  if (signals.hasFailureKeywords && !signals.hasCompletionKeywords) {
+    score -= 2;
+    reasons.push('-2: Failure keywords without completion');
+  }
+
+  if (signals.errorCount > 3) {
+    score -= 2;
+    reasons.push(`-2: Multiple errors (${signals.errorCount})`);
+  } else if (signals.errorCount > 0) {
+    score -= 1;
+    reasons.push(`-1: Some errors (${signals.errorCount})`);
+  }
+
+  // Threshold: score >= 3 is success
+  signals.isSuccess = score >= 3;
+  signals.reasoning = reasons.join('; ');
+
+  logger.info('Success evaluation', {
+    score,
+    threshold: 3,
+    signals: {
+      fileCount: signals.fileCount,
+      errorCount: signals.errorCount,
+      taskSuccessRate: `${Math.round(signals.taskSuccessRate * 100)}%`,
+      hasValidationPass: signals.hasValidationPass,
+      hasCompletionKeywords: signals.hasCompletionKeywords,
+    },
+  });
+
+  return signals;
+}
+
+// ============================================================================
 // AGENT EXECUTOR
 // ============================================================================
 
@@ -167,7 +333,7 @@ async function listProjectFiles(projectPath: string): Promise<string[]> {
  * Executes an agent using the Claude SDK
  */
 const executeAgent: AgentExecutor = async (
-  agent: AgentDefinition,
+  agent: DynamicAgentDefinition,
   prompt: string,
   context?: Record<string, unknown>
 ): Promise<{ result: string; filesModified?: string[]; error?: string }> => {
@@ -397,7 +563,7 @@ Output JSON with: { "template": "base", "category": "..." }`,
 
     // Create Task and TaskOutput tools
     const { taskTool, taskOutputTool } = createTaskTools({
-      getAgent: (id) => agentRegistry.get(id),
+      getAgent: (id: string) => agentRegistry.get(id),
       listAgents: () => agentRegistry.list(),
       executeAgent,
       executionManager,
@@ -482,31 +648,18 @@ Output JSON with: { "template": "base", "category": "..." }`,
       result.files = await listProjectFiles(projectPath);
     }
 
-    // Determine success (check if we got a completion message)
-    // The AI orchestrator will indicate success in its final message
-    const lastAssistantMessage = [...result.logs]
-      .reverse()
-      .find(m => m.type === 'assistant');
-
-    if (lastAssistantMessage?.message) {
-      const content = lastAssistantMessage.message.content
-        .filter((b: { type: string }) => b.type === 'text')
-        .map((b: { text?: string }) => b.text || '')
-        .join('');
-
-      // Check for success indicators in the orchestrator's summary
-      result.success = content.toLowerCase().includes('success') ||
-                      content.toLowerCase().includes('completed') ||
-                      content.toLowerCase().includes('generation complete');
-    }
-
+    // Determine success using multiple signals
+    const successSignals = evaluateSuccess(result.logs, result.files, actualFileCount, logger);
+    result.success = successSignals.isSuccess;
     result.sessionId = sessionId;
 
     if (result.success) {
       logger.success('AI orchestration completed successfully!');
+      logger.info('Success signals', successSignals);
     } else {
       result.requiresReview = true;
       logger.warn('AI orchestration completed with issues');
+      logger.info('Success signals', successSignals);
       await flagForHumanReview(projectId, result.logs);
     }
 

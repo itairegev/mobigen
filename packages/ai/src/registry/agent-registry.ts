@@ -14,9 +14,9 @@
 
 import * as path from 'path';
 import { EventEmitter } from 'events';
-import { AgentLoader, AgentDefinition } from './agent-loader';
+import { AgentLoader, type AgentDefinition } from './agent-loader';
 
-export { AgentDefinition } from './agent-loader';
+export type { AgentDefinition } from './agent-loader';
 
 /**
  * Options for creating the registry

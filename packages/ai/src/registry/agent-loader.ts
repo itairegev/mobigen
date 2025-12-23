@@ -108,7 +108,7 @@ function parseFrontmatter(content: string): { frontmatter: AgentFrontmatter; bod
   }
 
   return {
-    frontmatter: frontmatter as AgentFrontmatter,
+    frontmatter: frontmatter as unknown as AgentFrontmatter,
     body
   };
 }

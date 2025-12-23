@@ -5,14 +5,8 @@
  * Agents are defined as markdown files with YAML frontmatter.
  */
 
-export {
-  AgentLoader,
-  type AgentDefinition,
-} from './agent-loader';
+export { AgentLoader } from './agent-loader';
+export type { AgentDefinition } from './agent-loader';
 
-export {
-  AgentRegistry,
-  getDefaultRegistry,
-  createRegistry,
-  type RegistryOptions,
-} from './agent-registry';
+export { AgentRegistry, getDefaultRegistry, createRegistry } from './agent-registry';
+export type { RegistryOptions } from './agent-registry';
