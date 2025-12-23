@@ -5,6 +5,12 @@
  * described in the Mobigen technical design. It provides the same interface
  * using either direct Anthropic API or AWS Bedrock.
  *
+ * Features:
+ * - Multi-turn tool execution loop (continues until stop_reason != 'tool_use')
+ * - Built-in tools: Read, Write, Edit, Bash, Glob, Grep
+ * - Custom tool support via customTools option
+ * - Session management for conversation continuity
+ *
  * Supports:
  * - AI_PROVIDER=bedrock (uses AWS Bedrock)
  * - AI_PROVIDER=anthropic (uses direct Anthropic API)
@@ -14,6 +20,55 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import AnthropicBedrock from '@anthropic-ai/bedrock-sdk';
+import {
+  builtinTools,
+  getToolDefinitions,
+  executeTool,
+  type Tool,
+  type ToolDefinition,
+  type ToolResult,
+  type ToolUseBlock,
+  type ToolResultBlock,
+  type CustomToolConfig,
+} from './tools/index.js';
+
+// Re-export tool types
+export type {
+  Tool,
+  ToolDefinition,
+  ToolResult,
+  ToolUseBlock,
+  ToolResultBlock,
+  CustomToolConfig,
+};
+
+// Export tools module
+export {
+  builtinTools,
+  getToolDefinitions,
+  executeTool,
+} from './tools/index.js';
+
+// Export parallel execution
+export {
+  ParallelExecutionManager,
+  type TaskResult,
+  type TaskOptions,
+  type TaskExecutor,
+  type ExecutionEvents,
+} from './tools/index.js';
+
+// Export Task tool for spawning subagents
+export {
+  createTaskTool,
+  createTaskOutputTool,
+  createTaskTools,
+  type TaskToolInput,
+  type TaskToolOutput,
+  type TaskToolConfig,
+  type TaskAgentDefinition,
+  type AgentExecutor,
+} from './tools/index.js';
 
 // Types
 export interface AgentDefinition {
@@ -33,6 +88,17 @@ export interface QueryOptions {
   hooks?: HookConfig;
   model?: string;
   maxTurns?: number;
+  /**
+   * Custom tools to register for this query.
+   * These are in addition to built-in tools (Read, Write, Edit, Bash, Glob, Grep).
+   */
+  customTools?: Record<string, CustomToolConfig>;
+  /**
+   * Whether to enable tool execution loop.
+   * When true (default), the SDK will automatically execute tools and continue
+   * the conversation until the model stops requesting tools.
+   */
+  enableToolExecution?: boolean;
 }
 
 export interface HookConfig {
@@ -61,11 +127,28 @@ export interface SDKMessage {
   subtype?: 'init';
   session_id?: string;
   message?: {
-    content: Array<{ type: string; text?: string }>;
+    content: Array<ContentBlock>;
   };
   tool_name?: string;
   tool_input?: Record<string, unknown>;
+  tool_result?: ToolResult;
+  stop_reason?: string;
 }
+
+// Content block types matching Anthropic API
+interface TextBlock {
+  type: 'text';
+  text: string;
+}
+
+interface ToolUseBlockContent {
+  type: 'tool_use';
+  id: string;
+  name: string;
+  input: Record<string, unknown>;
+}
+
+type ContentBlock = TextBlock | ToolUseBlockContent | { type: string };
 
 // Model mapping for direct Anthropic API
 const ANTHROPIC_MODEL_MAP: Record<string, string> = {
@@ -133,6 +216,9 @@ function getModelId(alias: string): string {
 // Default timeout for API calls (5 minutes)
 const API_TIMEOUT_MS = parseInt(process.env.CLAUDE_API_TIMEOUT_MS || '300000', 10);
 
+// Default max turns for tool execution loop
+const DEFAULT_MAX_TURNS = 50;
+
 // Logging configuration
 const LOG_PREFIX = '[claude-agent-sdk]';
 const LOG_VERBOSE = process.env.CLAUDE_SDK_VERBOSE === 'true';
@@ -174,9 +260,93 @@ function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promi
 }
 
 /**
+ * Build tool definitions from allowed tools and custom tools
+ */
+function buildToolDefinitions(
+  allowedTools?: string[],
+  customTools?: Record<string, CustomToolConfig>
+): ToolDefinition[] {
+  const tools: ToolDefinition[] = [];
+
+  // Add built-in tools (filtered by allowedTools if specified)
+  const builtinDefs = getToolDefinitions(allowedTools);
+  tools.push(...builtinDefs);
+
+  // Add custom tools
+  if (customTools) {
+    for (const [name, config] of Object.entries(customTools)) {
+      // Skip if allowedTools is specified and doesn't include this tool
+      if (allowedTools && !allowedTools.includes(name)) continue;
+
+      tools.push({
+        name,
+        description: config.description || `Custom tool: ${name}`,
+        input_schema: config.schema,
+      });
+    }
+  }
+
+  return tools;
+}
+
+/**
+ * Build custom tools map from config
+ */
+function buildCustomToolsMap(
+  customTools?: Record<string, CustomToolConfig>
+): Record<string, Tool> | undefined {
+  if (!customTools) return undefined;
+
+  const map: Record<string, Tool> = {};
+  for (const [name, config] of Object.entries(customTools)) {
+    map[name] = {
+      definition: {
+        name,
+        description: config.description || `Custom tool: ${name}`,
+        input_schema: config.schema,
+      },
+      handler: config.handler,
+    };
+  }
+  return map;
+}
+
+/**
+ * Run hooks for a tool use
+ */
+async function runHooks(
+  hookType: 'PreToolUse' | 'PostToolUse',
+  toolName: string,
+  toolInput: Record<string, unknown>,
+  toolUseId: string,
+  hooks?: HookConfig,
+  signal?: AbortSignal
+): Promise<HookOutput | null> {
+  if (!hooks || !hooks[hookType]) return null;
+
+  for (const matcher of hooks[hookType]!) {
+    const regex = new RegExp(matcher.matcher);
+    if (regex.test(toolName)) {
+      for (const hookFn of matcher.hooks) {
+        const result = await hookFn(
+          { tool_name: toolName, tool_input: toolInput, hook_event_name: hookType },
+          toolUseId,
+          { signal }
+        );
+        if (result.hookSpecificOutput) {
+          return result;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * Query function implementing the Claude Agent SDK interface
  *
  * Uses AWS Bedrock (default) or direct Anthropic API based on AI_PROVIDER env var.
+ * Implements multi-turn tool execution loop.
  */
 export async function* query(params: {
   prompt: string;
@@ -184,12 +354,16 @@ export async function* query(params: {
 }): AsyncGenerator<SDKMessage> {
   const sessionId = params.options?.resume || generateSessionId();
   const agentNames = Object.keys(params.options?.agents || {});
+  const enableToolExecution = params.options?.enableToolExecution !== false;
+  const maxTurns = params.options?.maxTurns || DEFAULT_MAX_TURNS;
 
   log('info', `Query started`, {
     sessionId,
     agents: agentNames,
     resuming: !!params.options?.resume,
     promptLength: params.prompt.length,
+    enableToolExecution,
+    maxTurns,
   });
 
   // Emit init message with session ID
@@ -241,125 +415,253 @@ export async function* query(params: {
     params.options?.cwd ? `Working directory: ${params.options.cwd}` : null,
   ].filter(Boolean).join('\n\n');
 
+  // Build tools
+  const toolDefinitions = buildToolDefinitions(
+    params.options?.allowedTools,
+    params.options?.customTools
+  );
+  const customToolsMap = buildCustomToolsMap(params.options?.customTools);
+
   log('debug', `System prompt built`, { length: systemPrompt.length });
+  log('debug', `Tools configured`, { count: toolDefinitions.length, names: toolDefinitions.map(t => t.name) });
   log('debug', `User prompt preview`, { preview: params.prompt.substring(0, 200) + '...' });
 
-  try {
-    log('info', `Calling model: ${modelId} (timeout: ${API_TIMEOUT_MS}ms)`);
-    const startTime = Date.now();
+  // Message history for multi-turn conversation
+  type Message = { role: 'user' | 'assistant'; content: string | ContentBlock[] };
+  const messages: Message[] = [
+    { role: 'user', content: params.prompt }
+  ];
 
-    // Make the API call with timeout
-    // Use type assertion to handle union type incompatibility between SDK versions
-    const response = await withTimeout(
-      (client.messages.create as (params: {
+  let turnCount = 0;
+  let continueLoop = true;
+
+  while (continueLoop && turnCount < maxTurns) {
+    turnCount++;
+    log('info', `Turn ${turnCount}/${maxTurns}`);
+
+    try {
+      log('info', `Calling model: ${modelId} (timeout: ${API_TIMEOUT_MS}ms)`);
+      const startTime = Date.now();
+
+      // Build API request parameters
+      const requestParams: {
         model: string;
         max_tokens: number;
         system?: string;
-        messages: Array<{ role: 'user' | 'assistant'; content: string }>;
-      }) => Promise<{ content: Array<{ type: string; text?: string }> }>)({
+        messages: Message[];
+        tools?: ToolDefinition[];
+      } = {
         model: modelId,
         max_tokens: 4096,
         system: systemPrompt || undefined,
-        messages: [
-          { role: 'user', content: params.prompt }
-        ],
-      }),
-      API_TIMEOUT_MS,
-      `API call to ${modelId}`
-    );
+        messages,
+      };
 
-    const elapsed = Date.now() - startTime;
-    const responseText = response.content
-      .filter((b): b is { type: 'text'; text: string } => b.type === 'text')
-      .map(b => b.text)
-      .join('');
-
-    log('info', `Response received`, {
-      durationMs: elapsed,
-      responseLength: responseText.length,
-      contentBlocks: response.content.length,
-    });
-    log('debug', `Response preview`, { preview: responseText.substring(0, 300) + '...' });
-
-    // Yield assistant message
-    yield {
-      type: 'assistant',
-      message: {
-        content: response.content.map((block) => {
-          if (block.type === 'text') {
-            return { type: 'text', text: block.text };
-          }
-          return { type: block.type };
-        }),
-      },
-    };
-
-    // Yield result
-    yield {
-      type: 'result',
-      session_id: sessionId,
-    };
-
-    log('info', `Query completed successfully`, { sessionId, durationMs: elapsed });
-  } catch (error) {
-    const errMsg = error instanceof Error ? error.message : String(error);
-    const errStack = error instanceof Error ? error.stack : undefined;
-
-    // Extract more details from Anthropic/Bedrock errors
-    let errorDetails: Record<string, unknown> = {
-      modelId,
-      provider,
-    };
-
-    if (error && typeof error === 'object') {
-      const e = error as Record<string, unknown>;
-      if (e.status) errorDetails.httpStatus = e.status;
-      if (e.error) errorDetails.apiError = e.error;
-      if (e.code) errorDetails.errorCode = e.code;
-      if (e.type) errorDetails.errorType = e.type;
-      if (e.headers) errorDetails.headers = e.headers;
-
-      // Bedrock-specific errors
-      if (e.$metadata) {
-        const metadata = e.$metadata as Record<string, unknown>;
-        errorDetails.requestId = metadata.requestId;
-        errorDetails.attempts = metadata.attempts;
-        errorDetails.totalRetryDelay = metadata.totalRetryDelay;
+      // Add tools if enabled
+      if (enableToolExecution && toolDefinitions.length > 0) {
+        requestParams.tools = toolDefinitions;
       }
+
+      // Make the API call with timeout
+      const response = await withTimeout(
+        (client.messages.create as (params: typeof requestParams) => Promise<{
+          content: ContentBlock[];
+          stop_reason: string;
+        }>)(requestParams),
+        API_TIMEOUT_MS,
+        `API call to ${modelId}`
+      );
+
+      const elapsed = Date.now() - startTime;
+
+      log('info', `Response received`, {
+        durationMs: elapsed,
+        contentBlocks: response.content.length,
+        stopReason: response.stop_reason,
+      });
+
+      // Check for tool use blocks
+      const toolUseBlocks = response.content.filter(
+        (block): block is ToolUseBlockContent => block.type === 'tool_use'
+      );
+
+      // Yield assistant message
+      yield {
+        type: 'assistant',
+        message: {
+          content: response.content,
+        },
+        stop_reason: response.stop_reason,
+      };
+
+      // If there are tool uses and tool execution is enabled, execute them
+      if (toolUseBlocks.length > 0 && enableToolExecution) {
+        // Add assistant message to history
+        messages.push({ role: 'assistant', content: response.content });
+
+        // Execute each tool and collect results
+        const toolResults: ToolResultBlock[] = [];
+
+        for (const toolUse of toolUseBlocks) {
+          log('info', `Executing tool: ${toolUse.name}`, { id: toolUse.id });
+
+          // Run PreToolUse hooks
+          const preHookResult = await runHooks(
+            'PreToolUse',
+            toolUse.name,
+            toolUse.input,
+            toolUse.id,
+            params.options?.hooks
+          );
+
+          // Check if hook blocked the tool
+          if (preHookResult?.hookSpecificOutput?.permissionDecision === 'deny') {
+            log('warn', `Tool blocked by PreToolUse hook: ${toolUse.name}`);
+            yield {
+              type: 'tool',
+              tool_name: toolUse.name,
+              tool_input: toolUse.input,
+              tool_result: {
+                success: false,
+                error: preHookResult.hookSpecificOutput.permissionDecisionReason as string || 'Blocked by hook',
+              },
+            };
+            toolResults.push({
+              type: 'tool_result',
+              tool_use_id: toolUse.id,
+              content: `Error: ${preHookResult.hookSpecificOutput.permissionDecisionReason || 'Blocked by hook'}`,
+              is_error: true,
+            });
+            continue;
+          }
+
+          // Execute the tool
+          const result = await executeTool(toolUse.name, toolUse.input, customToolsMap);
+
+          // Yield tool execution message
+          yield {
+            type: 'tool',
+            tool_name: toolUse.name,
+            tool_input: toolUse.input,
+            tool_result: result,
+          };
+
+          // Run PostToolUse hooks
+          await runHooks(
+            'PostToolUse',
+            toolUse.name,
+            toolUse.input,
+            toolUse.id,
+            params.options?.hooks
+          );
+
+          // Format result for API
+          const resultContent = result.success
+            ? (typeof result.output === 'string' ? result.output : JSON.stringify(result.output))
+            : `Error: ${result.error}`;
+
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: toolUse.id,
+            content: resultContent,
+            is_error: !result.success,
+          });
+        }
+
+        // Add tool results to messages
+        messages.push({
+          role: 'user',
+          content: toolResults as unknown as ContentBlock[],
+        });
+
+        // Continue loop to get model's response to tool results
+        continueLoop = true;
+      } else {
+        // No tool use or tool execution disabled - stop loop
+        continueLoop = false;
+      }
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : String(error);
+      const errStack = error instanceof Error ? error.stack : undefined;
+
+      // Extract more details from Anthropic/Bedrock errors
+      let errorDetails: Record<string, unknown> = {
+        modelId,
+        provider,
+        turn: turnCount,
+      };
+
+      if (error && typeof error === 'object') {
+        const e = error as Record<string, unknown>;
+        if (e.status) errorDetails.httpStatus = e.status;
+        if (e.error) errorDetails.apiError = e.error;
+        if (e.code) errorDetails.errorCode = e.code;
+        if (e.type) errorDetails.errorType = e.type;
+        if (e.headers) errorDetails.headers = e.headers;
+
+        // Bedrock-specific errors
+        if (e.$metadata) {
+          const metadata = e.$metadata as Record<string, unknown>;
+          errorDetails.requestId = metadata.requestId;
+          errorDetails.attempts = metadata.attempts;
+          errorDetails.totalRetryDelay = metadata.totalRetryDelay;
+        }
+      }
+
+      log('error', `API call failed: ${errMsg}`, errorDetails);
+
+      if (errStack) {
+        log('debug', 'Stack trace:', { stack: errStack });
+      }
+
+      // Provide more helpful error message
+      let userMessage = `Error: API call failed - ${errMsg}`;
+
+      if (errMsg.includes('Could not resolve credentials')) {
+        userMessage += '\n\nHint: AWS credentials not found. Configure via:\n' +
+          '- Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)\n' +
+          '- AWS CLI profile (~/.aws/credentials)\n' +
+          '- Or set AI_PROVIDER=anthropic and provide ANTHROPIC_API_KEY';
+      } else if (errMsg.includes('AccessDeniedException') || errMsg.includes('UnauthorizedAccess')) {
+        userMessage += '\n\nHint: Check that your AWS credentials have access to Bedrock and the Claude models.';
+      } else if (errMsg.includes('ModelNotFound') || errMsg.includes('ValidationException')) {
+        userMessage += `\n\nHint: Model ${modelId} may not be available in your region or requires enablement.`;
+      } else if (errMsg.includes('ThrottlingException')) {
+        userMessage += '\n\nHint: Rate limited. Try again in a few seconds.';
+      } else if (errMsg.includes('Timeout')) {
+        userMessage += '\n\nHint: API call timed out. Try setting CLAUDE_API_TIMEOUT_MS to a higher value.';
+      }
+
+      // Yield error as assistant message so caller knows what happened
+      yield {
+        type: 'assistant',
+        message: {
+          content: [{ type: 'text', text: userMessage }],
+        },
+      };
+
+      // Stop loop on error
+      continueLoop = false;
     }
+  }
 
-    log('error', `API call failed: ${errMsg}`, errorDetails);
-
-    if (errStack) {
-      log('debug', 'Stack trace:', { stack: errStack });
-    }
-
-    // Provide more helpful error message
-    let userMessage = `Error: API call failed - ${errMsg}`;
-
-    if (errMsg.includes('Could not resolve credentials')) {
-      userMessage += '\n\nHint: AWS credentials not found. Configure via:\n' +
-        '- Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)\n' +
-        '- AWS CLI profile (~/.aws/credentials)\n' +
-        '- Or set AI_PROVIDER=anthropic and provide ANTHROPIC_API_KEY';
-    } else if (errMsg.includes('AccessDeniedException') || errMsg.includes('UnauthorizedAccess')) {
-      userMessage += '\n\nHint: Check that your AWS credentials have access to Bedrock and the Claude models.';
-    } else if (errMsg.includes('ModelNotFound') || errMsg.includes('ValidationException')) {
-      userMessage += `\n\nHint: Model ${modelId} may not be available in your region or requires enablement.`;
-    } else if (errMsg.includes('ThrottlingException')) {
-      userMessage += '\n\nHint: Rate limited. Try again in a few seconds.';
-    } else if (errMsg.includes('Timeout')) {
-      userMessage += '\n\nHint: API call timed out. Try setting CLAUDE_API_TIMEOUT_MS to a higher value.';
-    }
-
-    // Yield error as assistant message so caller knows what happened
+  if (turnCount >= maxTurns) {
+    log('warn', `Max turns (${maxTurns}) reached`);
     yield {
       type: 'assistant',
       message: {
-        content: [{ type: 'text', text: userMessage }],
+        content: [{ type: 'text', text: `Warning: Maximum turns (${maxTurns}) reached. The conversation was stopped.` }],
       },
     };
   }
+
+  // Yield result
+  yield {
+    type: 'result',
+    session_id: sessionId,
+  };
+
+  log('info', `Query completed`, { sessionId, totalTurns: turnCount });
 }
 
 function generateSessionId(): string {

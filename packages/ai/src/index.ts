@@ -50,5 +50,15 @@ export type {
   PostToolUseHookInput,
 } from './types';
 
-// Export agents and pipeline configuration
+// Export agents and pipeline configuration (legacy - will be deprecated)
 export { mobigenAgents, generationPipeline, agentModelConfig } from './agents/index';
+
+// Export new registry system
+export {
+  AgentLoader,
+  AgentRegistry,
+  getDefaultRegistry,
+  createRegistry,
+  type AgentDefinition as DynamicAgentDefinition,
+  type RegistryOptions,
+} from './registry';

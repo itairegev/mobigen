@@ -3,8 +3,15 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { z } from 'zod';
-import { generateApp } from './orchestrator';
+// Use the new AI-driven orchestrator by default
+import { generateApp } from './ai-orchestrator';
+// Legacy orchestrator available as fallback (set ORCHESTRATOR_MODE=legacy to use)
+import { generateApp as generateAppLegacy } from './orchestrator';
 import type { SDKMessage } from '@mobigen/ai';
+
+// Select orchestrator based on environment variable
+const useAIOrchestrator = process.env.ORCHESTRATOR_MODE !== 'legacy';
+const orchestratorGenerateApp = useAIOrchestrator ? generateApp : generateAppLegacy;
 
 const app: Express = express();
 const httpServer = createServer(app);
@@ -108,8 +115,9 @@ app.post('/api/generate', async (req, res) => {
   try {
     const validated = GenerateRequestSchema.parse(req.body);
 
-    // Start generation in background
-    const resultPromise = generateApp(
+    // Start generation in background (uses AI orchestrator by default)
+    console.log(`[api] Using ${useAIOrchestrator ? 'AI-driven' : 'legacy'} orchestrator`);
+    const resultPromise = orchestratorGenerateApp(
       validated.prompt,
       validated.projectId,
       validated.config
@@ -189,6 +197,14 @@ app.get('/api/config', (req, res) => {
     environment: {
       NODE_ENV: process.env.NODE_ENV || 'development',
       cwd: process.cwd(),
+    },
+    orchestrator: {
+      mode: useAIOrchestrator ? 'ai-driven' : 'legacy',
+      description: useAIOrchestrator
+        ? 'Dynamic agent orchestration with Task tool'
+        : 'Hardcoded sequential agent pipeline',
+      envVar: 'ORCHESTRATOR_MODE',
+      currentValue: process.env.ORCHESTRATOR_MODE || 'ai-driven (default)',
     },
     ai: {
       provider: process.env.AI_PROVIDER || 'bedrock (default)',
