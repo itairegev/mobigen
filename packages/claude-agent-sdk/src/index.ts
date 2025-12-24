@@ -280,15 +280,24 @@ function log(level: 'info' | 'warn' | 'error' | 'debug', message: string, data?:
  */
 function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
   log('debug', `Starting operation with ${ms}ms timeout: ${message}`);
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) => {
-      setTimeout(() => {
-        log('error', `Operation timed out: ${message}`);
-        reject(new Error(`Timeout: ${message} (${ms}ms)`));
-      }, ms);
-    }),
-  ]);
+
+  let timeoutId: NodeJS.Timeout | undefined;
+
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      log('error', `Operation timed out: ${message}`);
+      reject(new Error(`Timeout: ${message} (${ms}ms)`));
+    }, ms);
+  });
+
+  // Clear timeout when the original promise settles
+  const wrappedPromise = promise.finally(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  });
+
+  return Promise.race([wrappedPromise, timeoutPromise]);
 }
 
 /**
