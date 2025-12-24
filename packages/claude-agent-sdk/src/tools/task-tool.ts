@@ -317,11 +317,16 @@ export function createTaskOutputTool(config: {
 
     // Wait for completion with timeout
     try {
+      let timeoutId: NodeJS.Timeout | undefined;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error(`Timeout waiting for task ${taskId}`)), timeoutMs);
+      });
+
       const result = await Promise.race([
-        config.executionManager.waitForTask(taskId),
-        new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error(`Timeout waiting for task ${taskId}`)), timeoutMs);
+        config.executionManager.waitForTask(taskId).finally(() => {
+          if (timeoutId) clearTimeout(timeoutId);
         }),
+        timeoutPromise,
       ]);
 
       return {

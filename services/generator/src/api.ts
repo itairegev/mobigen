@@ -3,6 +3,9 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { z } from 'zod';
+import * as fs from 'fs';
+import * as path from 'path';
+import archiver from 'archiver';
 // Use the new AI-driven orchestrator by default
 import { generateApp } from './ai-orchestrator';
 // Legacy orchestrator available as fallback (set ORCHESTRATOR_MODE=legacy to use)
@@ -293,6 +296,205 @@ app.get('/api/test-ai', async (req, res) => {
       ],
     });
   }
+});
+
+// ============================================================================
+// PROJECT ACTIONS: Download, Build, Preview
+// ============================================================================
+
+// Get project path helper
+function getProjectPath(projectId: string): string {
+  const mobigenRoot = process.env.MOBIGEN_ROOT || path.resolve(process.cwd(), '../..');
+  return path.join(mobigenRoot, 'projects', projectId);
+}
+
+// Download project as ZIP
+app.get('/api/projects/:projectId/download', async (req, res) => {
+  const { projectId } = req.params;
+  const projectPath = getProjectPath(projectId);
+
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found',
+      projectId,
+      path: projectPath,
+    });
+  }
+
+  try {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${projectId}.zip"`);
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+    archive.on('error', (err) => {
+      throw err;
+    });
+
+    archive.pipe(res);
+    archive.directory(projectPath, false);
+    await archive.finalize();
+  } catch (error) {
+    console.error('Download error:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create archive',
+    });
+  }
+});
+
+// Get project files list
+app.get('/api/projects/:projectId/files', async (req, res) => {
+  const { projectId } = req.params;
+  const projectPath = getProjectPath(projectId);
+
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found',
+    });
+  }
+
+  try {
+    const getAllFiles = (dir: string, baseDir: string = dir): string[] => {
+      const files: string[] = [];
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        const relativePath = path.relative(baseDir, fullPath);
+
+        // Skip node_modules and .git
+        if (entry.name === 'node_modules' || entry.name === '.git') continue;
+
+        if (entry.isDirectory()) {
+          files.push(...getAllFiles(fullPath, baseDir));
+        } else {
+          files.push(relativePath);
+        }
+      }
+
+      return files;
+    };
+
+    const files = getAllFiles(projectPath);
+    res.json({ success: true, files, count: files.length });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to list files',
+    });
+  }
+});
+
+// Trigger build (placeholder - would integrate with EAS)
+app.post('/api/projects/:projectId/build', async (req, res) => {
+  const { projectId } = req.params;
+  const { platform = 'all' } = req.body;
+  const projectPath = getProjectPath(projectId);
+
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found',
+    });
+  }
+
+  // Check if app.json exists
+  const appJsonPath = path.join(projectPath, 'app.json');
+  if (!fs.existsSync(appJsonPath)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid project: app.json not found',
+    });
+  }
+
+  // TODO: Integrate with Expo EAS Build
+  // For now, return instructions for manual build
+  res.json({
+    success: true,
+    message: 'Build instructions generated',
+    projectId,
+    platform,
+    instructions: {
+      steps: [
+        `1. cd ${projectPath}`,
+        '2. npm install',
+        '3. npx expo prebuild',
+        `4. npx eas build --platform ${platform === 'all' ? 'all' : platform}`,
+      ],
+      note: 'EAS Build integration coming soon. For now, follow the manual steps above.',
+      docs: 'https://docs.expo.dev/build/introduction/',
+    },
+  });
+});
+
+// Get preview URL (Expo Go QR code)
+app.get('/api/projects/:projectId/preview', async (req, res) => {
+  const { projectId } = req.params;
+  const projectPath = getProjectPath(projectId);
+
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found',
+    });
+  }
+
+  // Read app.json for app info
+  const appJsonPath = path.join(projectPath, 'app.json');
+  let appConfig: Record<string, unknown> = {};
+  if (fs.existsSync(appJsonPath)) {
+    try {
+      appConfig = JSON.parse(fs.readFileSync(appJsonPath, 'utf-8'));
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // TODO: Start Expo dev server and return QR code URL
+  // For now, return instructions for manual preview
+  res.json({
+    success: true,
+    message: 'Preview instructions generated',
+    projectId,
+    appConfig: appConfig.expo || appConfig,
+    instructions: {
+      steps: [
+        `1. cd ${projectPath}`,
+        '2. npm install',
+        '3. npx expo start',
+        '4. Scan the QR code with Expo Go app',
+      ],
+      note: 'Automatic preview with QR code coming soon. For now, follow the manual steps above.',
+      expoGoLinks: {
+        ios: 'https://apps.apple.com/app/expo-go/id982107779',
+        android: 'https://play.google.com/store/apps/details?id=host.exp.exponent',
+      },
+    },
+  });
+});
+
+// Start Expo dev server for preview (background)
+app.post('/api/projects/:projectId/preview/start', async (req, res) => {
+  const { projectId } = req.params;
+  const projectPath = getProjectPath(projectId);
+
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found',
+    });
+  }
+
+  // TODO: Actually start Expo dev server
+  res.json({
+    success: true,
+    message: 'Preview server starting...',
+    projectId,
+    status: 'pending',
+    note: 'This feature is coming soon. Use manual preview for now.',
+  });
 });
 
 export { app, httpServer, io };

@@ -9,6 +9,8 @@ import type { GenerationPhase, ProjectConfig } from '@/lib/types';
 
 type Tab = 'progress' | 'chat' | 'files' | 'preview';
 
+const GENERATOR_URL = process.env.NEXT_PUBLIC_GENERATOR_URL || 'http://localhost:4000';
+
 export default function ProjectPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -17,6 +19,10 @@ export default function ProjectPage() {
   const [activeTab, setActiveTab] = useState<Tab>('progress');
   const [hasStarted, setHasStarted] = useState(false);
   const [promptInput, setPromptInput] = useState('');
+  const [showBuildModal, setShowBuildModal] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [buildInstructions, setBuildInstructions] = useState<Record<string, unknown> | null>(null);
+  const [previewInstructions, setPreviewInstructions] = useState<Record<string, unknown> | null>(null);
 
   // Project info from URL params (in real app, fetch from API)
   const projectName = searchParams.get('name') || 'My App';
@@ -126,6 +132,41 @@ export default function ProjectPage() {
   const completedPhases = phases.filter((p) => p.status === 'completed').length;
   const generationComplete = completedPhases === phases.length && result !== null;
 
+  // Handler for download button
+  const handleDownload = () => {
+    window.open(`${GENERATOR_URL}/api/projects/${projectId}/download`, '_blank');
+  };
+
+  // Handler for build button
+  const handleBuild = async () => {
+    try {
+      const response = await fetch(`${GENERATOR_URL}/api/projects/${projectId}/build`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ platform: 'all' }),
+      });
+      const data = await response.json();
+      setBuildInstructions(data);
+      setShowBuildModal(true);
+    } catch (error) {
+      console.error('Build error:', error);
+      alert('Failed to get build instructions');
+    }
+  };
+
+  // Handler for preview button
+  const handlePreview = async () => {
+    try {
+      const response = await fetch(`${GENERATOR_URL}/api/projects/${projectId}/preview`);
+      const data = await response.json();
+      setPreviewInstructions(data);
+      setShowPreviewModal(true);
+    } catch (error) {
+      console.error('Preview error:', error);
+      alert('Failed to get preview instructions');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Header */}
@@ -153,10 +194,16 @@ export default function ProjectPage() {
             <div className="flex gap-2">
               {generationComplete && (
                 <>
-                  <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-700">
+                  <button
+                    onClick={handleDownload}
+                    className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-700"
+                  >
                     Download
                   </button>
-                  <button className="px-4 py-2 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600">
+                  <button
+                    onClick={handleBuild}
+                    className="px-4 py-2 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600"
+                  >
                     Build App
                   </button>
                 </>
@@ -466,7 +513,10 @@ Example: Create a coffee shop loyalty app with rewards points, QR code scanning 
                   : 'Preview will be available after generation completes.'}
               </p>
               {generationComplete && (
-                <button className="px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600">
+                <button
+                  onClick={handlePreview}
+                  className="px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600"
+                >
                   Launch Preview
                 </button>
               )}
@@ -474,6 +524,92 @@ Example: Create a coffee shop loyalty app with rewards points, QR code scanning 
           </div>
         )}
       </main>
+
+      {/* Build Instructions Modal */}
+      {showBuildModal && buildInstructions && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[80vh] overflow-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Build Instructions</h3>
+              <button
+                onClick={() => setShowBuildModal(false)}
+                className="text-slate-500 hover:text-slate-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-slate-600 dark:text-slate-400">
+                {(buildInstructions as { instructions?: { note?: string } })?.instructions?.note}
+              </p>
+              <div className="bg-slate-100 dark:bg-slate-900 rounded-lg p-4">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Steps:</p>
+                <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400 font-mono">
+                  {((buildInstructions as { instructions?: { steps?: string[] } })?.instructions?.steps || []).map((step: string, i: number) => (
+                    <li key={i}>{step.replace(/^\d+\.\s*/, '')}</li>
+                  ))}
+                </ol>
+              </div>
+              <a
+                href={(buildInstructions as { instructions?: { docs?: string } })?.instructions?.docs}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-500 hover:text-primary-600 text-sm"
+              >
+                View Expo Build Documentation →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Preview Instructions Modal */}
+      {showPreviewModal && previewInstructions && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[80vh] overflow-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Preview Instructions</h3>
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="text-slate-500 hover:text-slate-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-slate-600 dark:text-slate-400">
+                {(previewInstructions as { instructions?: { note?: string } })?.instructions?.note}
+              </p>
+              <div className="bg-slate-100 dark:bg-slate-900 rounded-lg p-4">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Steps:</p>
+                <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400 font-mono">
+                  {((previewInstructions as { instructions?: { steps?: string[] } })?.instructions?.steps || []).map((step: string, i: number) => (
+                    <li key={i}>{step.replace(/^\d+\.\s*/, '')}</li>
+                  ))}
+                </ol>
+              </div>
+              <div className="flex gap-4">
+                <a
+                  href={(previewInstructions as { instructions?: { expoGoLinks?: { ios?: string } } })?.instructions?.expoGoLinks?.ios}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-500 hover:text-primary-600 text-sm"
+                >
+                  Get Expo Go (iOS) →
+                </a>
+                <a
+                  href={(previewInstructions as { instructions?: { expoGoLinks?: { android?: string } } })?.instructions?.expoGoLinks?.android}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-500 hover:text-primary-600 text-sm"
+                >
+                  Get Expo Go (Android) →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
