@@ -9,18 +9,29 @@
  * - Dynamic agent selection based on task requirements
  * - Parallel execution of independent agents (up to 5 concurrent)
  * - Session continuity across agent invocations
- * - File-based agent definitions (loaded from agents/ folder)
+ * - File-based agent, command, and skill definitions
+ * - Persistent memory across sessions
  */
 
 import {
   query,
   ParallelExecutionManager,
   createTaskTools,
+  createCommandTool,
+  createListCommandsTool,
+  createSkillTool,
+  createFindSkillsTool,
+  createMemoryTools,
   type AgentExecutor,
   type SDKMessage,
+  type MemoryToolScope,
+  type MemoryToolEntry,
 } from '@anthropic-ai/claude-agent-sdk';
 import {
   getDefaultRegistry,
+  getDefaultCommandRegistry,
+  getDefaultSkillRegistry,
+  getDefaultMemoryManager,
   type DynamicAgentDefinition,
 } from '@mobigen/ai';
 import type { WhiteLabelConfig, GenerationResult } from '@mobigen/ai';
@@ -71,12 +82,17 @@ const TEMPLATES_WORKING_DIR = path.join(MOBIGEN_ROOT, 'templates');
 const PROJECTS_DIR = path.join(MOBIGEN_ROOT, 'projects');
 const AGENTS_DIR = path.join(MOBIGEN_ROOT, 'agents');
 
+const COMMANDS_DIR = path.join(MOBIGEN_ROOT, 'commands');
+const SKILLS_DIR = path.join(MOBIGEN_ROOT, 'skills');
+
 // Log paths at startup
 console.log(`[ai-orchestrator] ┌─────────────────────────────────────────────`);
 console.log(`[ai-orchestrator] │ AI Orchestrator Configuration:`);
-console.log(`[ai-orchestrator] │   MOBIGEN_ROOT: ${MOBIGEN_ROOT}`);
-console.log(`[ai-orchestrator] │   AGENTS_DIR:   ${AGENTS_DIR}`);
-console.log(`[ai-orchestrator] │   PROJECTS_DIR: ${PROJECTS_DIR}`);
+console.log(`[ai-orchestrator] │   MOBIGEN_ROOT:  ${MOBIGEN_ROOT}`);
+console.log(`[ai-orchestrator] │   AGENTS_DIR:    ${AGENTS_DIR}`);
+console.log(`[ai-orchestrator] │   COMMANDS_DIR:  ${COMMANDS_DIR}`);
+console.log(`[ai-orchestrator] │   SKILLS_DIR:    ${SKILLS_DIR}`);
+console.log(`[ai-orchestrator] │   PROJECTS_DIR:  ${PROJECTS_DIR}`);
 console.log(`[ai-orchestrator] └─────────────────────────────────────────────`);
 
 // Initialize template manager
@@ -86,8 +102,11 @@ const templateManager = new TemplateManager({
   projectsDir: PROJECTS_DIR,
 });
 
-// Initialize agent registry
+// Initialize registries
 const agentRegistry = getDefaultRegistry(MOBIGEN_ROOT);
+const commandRegistry = getDefaultCommandRegistry(MOBIGEN_ROOT);
+const skillRegistry = getDefaultSkillRegistry(MOBIGEN_ROOT);
+const memoryManager = getDefaultMemoryManager(MOBIGEN_ROOT);
 
 // Initialize parallel execution manager (max 5 concurrent)
 const executionManager = new ParallelExecutionManager({
@@ -506,10 +525,18 @@ export async function generateApp(
   await emitProgress(projectId, 'starting', { orchestratorType: 'ai-driven' });
 
   try {
-    // Initialize agent registry
-    await agentRegistry.initialize();
-    logger.info('Agent registry initialized', {
-      agentCount: agentRegistry.list().length,
+    // Initialize all registries
+    await Promise.all([
+      agentRegistry.initialize(),
+      commandRegistry.initialize(),
+      skillRegistry.initialize(),
+      memoryManager.initialize(projectId),
+    ]);
+
+    logger.info('All registries initialized', {
+      agents: agentRegistry.list().length,
+      commands: commandRegistry.list().length,
+      skills: skillRegistry.list().length,
     });
 
     // Clone template to project (quick intent analysis first)
@@ -569,6 +596,78 @@ Output JSON with: { "template": "base", "category": "..." }`,
       executionManager,
     });
 
+    // Create Command tools
+    const commandTool = createCommandTool({
+      getCommand: (id: string) => commandRegistry.get(id),
+      listCommands: () => commandRegistry.list(),
+      expandCommand: (id: string, args?: Record<string, string>) => commandRegistry.expandCommand(id, args),
+    });
+    const listCommandsTool = createListCommandsTool({
+      getCommand: (id: string) => commandRegistry.get(id),
+      listCommands: () => commandRegistry.list(),
+      expandCommand: (id: string, args?: Record<string, string>) => commandRegistry.expandCommand(id, args),
+    });
+
+    // Create Skill tools
+    const skillTool = createSkillTool({
+      getSkill: (id: string) => skillRegistry.get(id),
+      listSkills: () => skillRegistry.list(),
+      findByCapability: (cap: string) => skillRegistry.findByCapability(cap),
+      findCompatibleSkills: (agentId: string) => skillRegistry.findCompatibleSkills(agentId),
+    });
+    const findSkillsTool = createFindSkillsTool({
+      getSkill: (id: string) => skillRegistry.get(id),
+      listSkills: () => skillRegistry.list(),
+      findByCapability: (cap: string) => skillRegistry.findByCapability(cap),
+      findCompatibleSkills: (agentId: string) => skillRegistry.findCompatibleSkills(agentId),
+    });
+
+    // Create Memory tools
+    const {
+      rememberTool,
+      recallTool,
+      queryMemoryTool,
+      forgetTool,
+      getMemoryContextTool,
+    } = createMemoryTools({
+      remember: (
+        key: string,
+        value: unknown,
+        options?: {
+          scope?: MemoryToolScope;
+          type?: MemoryToolEntry['type'];
+          tags?: string[];
+          source?: string;
+          priority?: number;
+          expiresIn?: number;
+        }
+      ) => memoryManager.remember(key, value, options),
+      recall: <T = unknown>(key: string, scope?: MemoryToolScope): T | undefined =>
+        memoryManager.recall(key, scope),
+      query: (
+        scope: MemoryToolScope,
+        options?: {
+          type?: MemoryToolEntry['type'];
+          tags?: string[];
+          source?: string;
+          limit?: number;
+        }
+      ) => memoryManager.query(scope, options),
+      forget: (key: string, scope?: MemoryToolScope) =>
+        memoryManager.forget(key, scope),
+      getContextString: (options?: {
+        scopes?: MemoryToolScope[];
+        types?: MemoryToolEntry['type'][];
+        maxEntries?: number;
+      }) => memoryManager.getContextString(options),
+    });
+
+    // Get memory context to include in prompt
+    const memoryContext = memoryManager.getContextString({
+      scopes: ['project', 'global'],
+      types: ['context', 'instruction', 'fact'],
+    });
+
     // Build orchestrator prompt
     const orchestratorPrompt = buildOrchestratorPrompt(
       userPrompt,
@@ -585,15 +684,27 @@ Output JSON with: { "template": "base", "category": "..." }`,
     await emitProgress(projectId, 'orchestrating', { phase: 'ai-driven' });
     logger.info('Starting AI orchestrator loop');
 
+    // Build full system prompt with memory context
+    const systemPrompt = `You are the Mobigen AI Orchestrator. You coordinate app generation by delegating to specialized agents using the Task tool.
+
+You have access to:
+- **Task/TaskOutput**: Spawn specialized agents (run in parallel with run_in_background=true)
+- **SlashCommand/ListCommands**: Execute predefined workflows
+- **Skill/FindSkills**: Use reusable patterns and best practices
+- **Remember/Recall/QueryMemory/Forget/GetMemoryContext**: Persistent memory across sessions
+
+${memoryContext ? `## Memory Context\n${memoryContext}\n` : ''}`;
+
     for await (const message of query({
       prompt: orchestratorPrompt,
       options: {
         model: 'opus', // Use Opus for orchestrator (most capable)
-        systemPrompt: `You are the Mobigen AI Orchestrator. You coordinate app generation by delegating to specialized agents using the Task tool.`,
+        systemPrompt,
         cwd: MOBIGEN_ROOT,
         permissionMode: 'acceptEdits',
         maxTurns: 100, // Allow many turns for complex orchestration
         customTools: {
+          // Agent spawning tools
           Task: {
             schema: taskTool.definition.input_schema,
             handler: taskTool.handler,
@@ -603,6 +714,54 @@ Output JSON with: { "template": "base", "category": "..." }`,
             schema: taskOutputTool.definition.input_schema,
             handler: taskOutputTool.handler,
             description: taskOutputTool.definition.description,
+          },
+          // Command tools
+          SlashCommand: {
+            schema: commandTool.definition.input_schema,
+            handler: commandTool.handler,
+            description: commandTool.definition.description,
+          },
+          ListCommands: {
+            schema: listCommandsTool.definition.input_schema,
+            handler: listCommandsTool.handler,
+            description: listCommandsTool.definition.description,
+          },
+          // Skill tools
+          Skill: {
+            schema: skillTool.definition.input_schema,
+            handler: skillTool.handler,
+            description: skillTool.definition.description,
+          },
+          FindSkills: {
+            schema: findSkillsTool.definition.input_schema,
+            handler: findSkillsTool.handler,
+            description: findSkillsTool.definition.description,
+          },
+          // Memory tools
+          Remember: {
+            schema: rememberTool.definition.input_schema,
+            handler: rememberTool.handler,
+            description: rememberTool.definition.description,
+          },
+          Recall: {
+            schema: recallTool.definition.input_schema,
+            handler: recallTool.handler,
+            description: recallTool.definition.description,
+          },
+          QueryMemory: {
+            schema: queryMemoryTool.definition.input_schema,
+            handler: queryMemoryTool.handler,
+            description: queryMemoryTool.definition.description,
+          },
+          Forget: {
+            schema: forgetTool.definition.input_schema,
+            handler: forgetTool.handler,
+            description: forgetTool.definition.description,
+          },
+          GetMemoryContext: {
+            schema: getMemoryContextTool.definition.input_schema,
+            handler: getMemoryContextTool.handler,
+            description: getMemoryContextTool.definition.description,
           },
         },
         hooks: qaHooks,
@@ -675,6 +834,24 @@ Output JSON with: { "template": "base", "category": "..." }`,
       template: selectedTemplate,
     });
 
+    // Save important context to memory for future sessions
+    if (result.success) {
+      await memoryManager.remember('last_generation', {
+        projectId,
+        template: selectedTemplate,
+        filesGenerated: result.files.length,
+        timestamp: new Date().toISOString(),
+      }, { scope: 'project', type: 'history' });
+
+      await memoryManager.remember('project_template', selectedTemplate, {
+        scope: 'project',
+        type: 'fact',
+      });
+    }
+
+    // Save memory before completing
+    await memoryManager.saveAll();
+
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -707,8 +884,13 @@ Output JSON with: { "template": "base", "category": "..." }`,
 export {
   templateManager,
   agentRegistry,
+  commandRegistry,
+  skillRegistry,
+  memoryManager,
   executionManager,
   executeAgent,
   PROJECTS_DIR,
   MOBIGEN_ROOT,
+  COMMANDS_DIR,
+  SKILLS_DIR,
 };

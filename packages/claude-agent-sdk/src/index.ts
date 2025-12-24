@@ -70,6 +70,38 @@ export {
   type AgentExecutor,
 } from './tools/index.js';
 
+// Export Command tools for slash commands
+export {
+  createCommandTool,
+  createListCommandsTool,
+  type CommandToolInput,
+  type CommandToolConfig,
+  type CommandToolDefinition,
+  type CommandToolArgument,
+} from './tools/index.js';
+
+// Export Skill tools for reusable capabilities
+export {
+  createSkillTool,
+  createFindSkillsTool,
+  type SkillToolInput,
+  type SkillToolConfig,
+  type SkillToolDefinition,
+} from './tools/index.js';
+
+// Export Memory tools for persistent context
+export {
+  createRememberTool,
+  createRecallTool,
+  createQueryMemoryTool,
+  createForgetTool,
+  createGetMemoryContextTool,
+  createMemoryTools,
+  type MemoryToolConfig,
+  type MemoryToolEntry,
+  type MemoryToolScope,
+} from './tools/index.js';
+
 // Types
 export interface AgentDefinition {
   description: string;

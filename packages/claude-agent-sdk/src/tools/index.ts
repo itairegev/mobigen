@@ -49,3 +49,37 @@ export {
   type AgentDefinition as TaskAgentDefinition,
   type AgentExecutor,
 } from './task-tool.js';
+
+// Command tool for slash commands
+export {
+  createCommandTool,
+  createListCommandsTool,
+  type CommandToolInput,
+  type CommandToolConfig,
+  type CommandDefinition as CommandToolDefinition,
+  type CommandArgument as CommandToolArgument,
+} from './command-tool.js';
+
+// Skill tool for reusable capabilities
+export {
+  createSkillTool,
+  createFindSkillsTool,
+  type SkillToolInput,
+  type SkillToolConfig,
+  type SkillDefinition as SkillToolDefinition,
+  type SkillInput as SkillToolInput_,
+  type SkillOutput as SkillToolOutput,
+} from './skill-tool.js';
+
+// Memory tools for persistent context
+export {
+  createRememberTool,
+  createRecallTool,
+  createQueryMemoryTool,
+  createForgetTool,
+  createGetMemoryContextTool,
+  createMemoryTools,
+  type MemoryToolConfig,
+  type MemoryEntry as MemoryToolEntry,
+  type MemoryScope as MemoryToolScope,
+} from './memory-tool.js';

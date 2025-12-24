@@ -55,10 +55,41 @@ export { mobigenAgents, generationPipeline, agentModelConfig } from './agents/in
 
 // Export new registry system
 export {
+  // Agent Registry
   AgentLoader,
   AgentRegistry,
   getDefaultRegistry,
   createRegistry,
   type AgentDefinition as DynamicAgentDefinition,
   type RegistryOptions,
+
+  // Command Registry
+  CommandLoader,
+  CommandRegistry,
+  getDefaultCommandRegistry,
+  createCommandRegistry,
+  type CommandDefinition,
+  type CommandArgument,
+  type CommandRegistryOptions,
+
+  // Skill Registry
+  SkillLoader,
+  SkillRegistry,
+  getDefaultSkillRegistry,
+  createSkillRegistry,
+  type SkillDefinition,
+  type SkillInput,
+  type SkillOutput,
+  type SkillRegistryOptions,
+
+  // Memory Manager
+  MemoryManager,
+  getDefaultMemoryManager,
+  createMemoryManager,
+  type MemoryEntry,
+  type MemoryScope,
+  type MemoryQuery,
+
+  // Convenience function to initialize all registries
+  initializeAllRegistries,
 } from './registry';
