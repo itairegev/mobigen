@@ -1,6 +1,8 @@
 import type { AgentDefinition, AgentRole } from '../types';
 
-export const mobigenAgents: Record<AgentRole, AgentDefinition> = {
+// Map of all available agents, keyed by agent ID
+// This is a flexible record that allows any string key
+export const mobigenAgents: Record<string, AgentDefinition> = {
   // === TOP-LEVEL ORCHESTRATION ===
   'orchestrator': {
     role: 'orchestrator',
@@ -1401,3 +1403,15 @@ export const fullQAPipeline = {
 // - visual-regression-tester: Screenshot comparison, baseline management
 // - flow-validator: User journey verification, state machine testing
 // - exploratory-tester: AI-powered crawling, anomaly detection, chaos testing
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AGENT MODEL CONFIG (derived from agent definitions for backward compatibility)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Model configuration per agent, derived from mobigenAgents.
+ * Default model is 'sonnet' if not specified in the agent definition.
+ */
+export const agentModelConfig: Record<string, string> = Object.fromEntries(
+  Object.entries(mobigenAgents).map(([id, agent]) => [id, agent.model || 'sonnet'])
+);
