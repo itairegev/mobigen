@@ -202,6 +202,13 @@ Project directory: ${projectPath}
 ${agent.prompt}`,
           cwd: MOBIGEN_ROOT,
           permissionMode: 'acceptEdits',
+          // Context for logging and retry budget tracking
+          context: {
+            agentId,
+            phase,
+            projectId: state.projectId,
+            taskId: task?.id,
+          },
         },
       })) {
         // Track file changes

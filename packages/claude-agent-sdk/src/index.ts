@@ -131,6 +131,16 @@ export interface QueryOptions {
    * the conversation until the model stops requesting tools.
    */
   enableToolExecution?: boolean;
+  /**
+   * Optional context for logging and retry budget tracking.
+   * Helps identify which task/agent a call belongs to in logs.
+   */
+  context?: {
+    agentId?: string;
+    phase?: string;
+    taskId?: string;
+    projectId?: string;
+  };
 }
 
 export interface HookConfig {
@@ -317,14 +327,32 @@ function isRetryableError(error: unknown): boolean {
 }
 
 /**
+ * Context for retry operations
+ */
+interface RetryContext {
+  agentId?: string;
+  phase?: string;
+  turnCount?: number;
+  startTime: number; // When the operation started (for timeout budget)
+  timeoutMs: number; // Total timeout budget
+}
+
+/**
  * Execute an API call with retry and exponential backoff
+ * Respects timeout budget - won't retry if delay would exceed remaining time
  */
 async function withRetry<T>(
   operation: () => Promise<T>,
-  operationName: string
+  operationName: string,
+  context?: RetryContext
 ): Promise<T> {
   let lastError: unknown;
   let delay = RETRY_CONFIG.initialDelayMs;
+  let totalDelayAccumulated = 0;
+
+  const contextStr = context?.agentId
+    ? ` [agent=${context.agentId}${context.phase ? `, phase=${context.phase}` : ''}${context.turnCount ? `, turn=${context.turnCount}` : ''}]`
+    : '';
 
   for (let attempt = 1; attempt <= RETRY_CONFIG.maxRetries; attempt++) {
     try {
@@ -336,12 +364,34 @@ async function withRetry<T>(
         throw error;
       }
 
-      log('warn', `Retryable error on ${operationName}, attempt ${attempt}/${RETRY_CONFIG.maxRetries}`, {
+      // Check if retry delay would exceed remaining timeout budget
+      if (context) {
+        const elapsed = Date.now() - context.startTime;
+        const remaining = context.timeoutMs - elapsed;
+
+        if (delay > remaining) {
+          log('warn', `Skipping retry${contextStr} - delay ${delay}ms would exceed remaining budget ${remaining}ms`, {
+            error: error instanceof Error ? error.message : String(error),
+            attempt,
+            elapsed,
+            remaining,
+            wouldDelay: delay,
+          });
+          throw new Error(`Retry would exceed timeout budget. Original error: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      }
+
+      log('warn', `Retryable error on ${operationName}${contextStr}, attempt ${attempt}/${RETRY_CONFIG.maxRetries}`, {
         error: error instanceof Error ? error.message : String(error),
         nextDelayMs: delay,
+        totalDelayAccumulated,
+        agentId: context?.agentId,
+        phase: context?.phase,
+        turn: context?.turnCount,
       });
 
       await sleep(delay);
+      totalDelayAccumulated += delay;
 
       // Exponential backoff with jitter
       delay = Math.min(
@@ -476,14 +526,22 @@ export async function* query(params: {
   const agentNames = Object.keys(params.options?.agents || {});
   const enableToolExecution = params.options?.enableToolExecution !== false;
   const maxTurns = params.options?.maxTurns || DEFAULT_MAX_TURNS;
+  const queryContext = params.options?.context;
+  const queryStartTime = Date.now();
 
-  log('info', `Query started`, {
+  // Build context string for logging
+  const contextStr = queryContext?.agentId
+    ? ` [agent=${queryContext.agentId}${queryContext.phase ? `, phase=${queryContext.phase}` : ''}${queryContext.projectId ? `, project=${queryContext.projectId.slice(0, 8)}` : ''}]`
+    : '';
+
+  log('info', `Query started${contextStr}`, {
     sessionId,
     agents: agentNames,
     resuming: !!params.options?.resume,
     promptLength: params.prompt.length,
     enableToolExecution,
     maxTurns,
+    context: queryContext,
   });
 
   // Emit init message with session ID
@@ -557,11 +615,11 @@ export async function* query(params: {
 
   while (continueLoop && turnCount < maxTurns) {
     turnCount++;
-    log('info', `Turn ${turnCount}/${maxTurns}`);
+    log('info', `Turn ${turnCount}/${maxTurns}${contextStr}`);
 
     try {
-      log('info', `Calling model: ${modelId} (timeout: ${API_TIMEOUT_MS}ms)`);
-      const startTime = Date.now();
+      log('info', `Calling model${contextStr}: ${modelId} (timeout: ${API_TIMEOUT_MS}ms)`);
+      const turnStartTime = Date.now();
 
       // Build API request parameters
       const requestParams: {
@@ -582,6 +640,15 @@ export async function* query(params: {
         requestParams.tools = toolDefinitions;
       }
 
+      // Build retry context for timeout budget tracking
+      const retryContext: RetryContext = {
+        agentId: queryContext?.agentId,
+        phase: queryContext?.phase,
+        turnCount,
+        startTime: queryStartTime,
+        timeoutMs: API_TIMEOUT_MS,
+      };
+
       // Make the API call with retry and timeout
       const response = await withRetry(
         () => withTimeout(
@@ -590,14 +657,15 @@ export async function* query(params: {
             stop_reason: string;
           }>)(requestParams),
           API_TIMEOUT_MS,
-          `API call to ${modelId}`
+          `API call to ${modelId}${contextStr}`
         ),
-        `Turn ${turnCount} API call`
+        `Turn ${turnCount} API call`,
+        retryContext
       );
 
-      const elapsed = Date.now() - startTime;
+      const elapsed = Date.now() - turnStartTime;
 
-      log('info', `Response received`, {
+      log('info', `Response received${contextStr}`, {
         durationMs: elapsed,
         contentBlocks: response.content.length,
         stopReason: response.stop_reason,
@@ -712,6 +780,11 @@ export async function* query(params: {
         modelId,
         provider,
         turn: turnCount,
+        agentId: queryContext?.agentId,
+        phase: queryContext?.phase,
+        projectId: queryContext?.projectId,
+        taskId: queryContext?.taskId,
+        elapsedSinceStart: Date.now() - queryStartTime,
       };
 
       if (error && typeof error === 'object') {
@@ -731,7 +804,7 @@ export async function* query(params: {
         }
       }
 
-      log('error', `API call failed: ${errMsg}`, errorDetails);
+      log('error', `API call failed${contextStr}: ${errMsg}`, errorDetails);
 
       if (errStack) {
         log('debug', 'Stack trace:', { stack: errStack });
