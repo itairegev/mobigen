@@ -17,7 +17,7 @@ import {
   getDefaultRegistry,
   type DynamicAgentDefinition,
 } from '@mobigen/ai';
-import { AGENT_TIMEOUTS, type AgentRole } from '@mobigen/ai';
+import { AGENT_TIMEOUTS, AGENT_MAX_TURNS, type AgentRole } from '@mobigen/ai';
 import {
   TaskTracker,
   type GenerationJob,
@@ -394,7 +394,8 @@ export class PipelineExecutor {
     let output: Record<string, unknown> = {};
     let resultText = '';
 
-    logger.info(`Executing agent ${agentId}`, { timeout, phase });
+    const maxTurns = AGENT_MAX_TURNS[agentId] || 50;
+    logger.info(`Executing agent ${agentId}`, { timeout, maxTurns, phase });
 
     try {
       // Build prompt with context from previous phases
@@ -405,7 +406,7 @@ export class PipelineExecutor {
         setTimeout(() => reject(new Error(`Agent ${agentId} timed out after ${timeout}ms`)), timeout)
       );
 
-      const executionPromise = this.runAgentQuery(agent, prompt, filesModified);
+      const executionPromise = this.runAgentQuery(agent, prompt, filesModified, agentId);
 
       const result = await Promise.race([executionPromise, timeoutPromise]);
       resultText = result.text;
@@ -464,11 +465,15 @@ export class PipelineExecutor {
   private async runAgentQuery(
     agent: DynamicAgentDefinition,
     prompt: string,
-    filesModified: string[]
+    filesModified: string[],
+    agentId?: AgentRole
   ): Promise<{ text: string; output: Record<string, unknown> }> {
     const { projectPath, mobigenRoot } = this.context;
     let resultText = '';
     const output: Record<string, unknown> = {};
+
+    // Get max turns for this agent (default to 50)
+    const maxTurns = agentId ? (AGENT_MAX_TURNS[agentId] || 50) : 50;
 
     for await (const message of query({
       prompt,
@@ -483,6 +488,7 @@ export class PipelineExecutor {
         },
         allowedTools: agent.tools,
         model: agent.model || 'sonnet',
+        maxTurns,
         systemPrompt: `You are ${agent.description}
 Working directory: ${mobigenRoot}
 Project directory: ${projectPath}

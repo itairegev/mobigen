@@ -41,7 +41,7 @@ export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
   'orchestrator': 900000,           // 15 min - coordinates entire workflow
   'product-manager': 300000,        // 5 min - creates detailed PRD
   'technical-architect': 300000,    // 5 min - designs architecture
-  'ui-ux-expert': 180000,           // 3 min - design system
+  'ui-ux-expert': 300000,           // 5 min - design system (complex theme generation)
   'lead-developer': 180000,         // 3 min - task breakdown
   'developer': 300000,              // 5 min - implementation
   'intent-analyzer': 60000,         // 1 min - quick analysis
@@ -59,6 +59,32 @@ export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
   'visual-regression-tester': 300000, // 5 min
   'flow-validator': 300000,         // 5 min
   'exploratory-tester': 600000,     // 10 min - AI crawling
+};
+
+// Per-agent max turns configuration
+// Complex agents that read/write many files need more turns
+export const AGENT_MAX_TURNS: Record<AgentRole, number> = {
+  'orchestrator': 200,              // Coordinates many agents
+  'product-manager': 100,           // Creates detailed PRD with many reads
+  'technical-architect': 100,       // Designs architecture with codebase exploration
+  'ui-ux-expert': 100,              // Generates many theme/style files
+  'lead-developer': 80,             // Breaks down into many tasks
+  'developer': 150,                 // Implements many files
+  'intent-analyzer': 30,            // Quick analysis
+  'validator': 50,                  // Runs validation commands
+  'error-fixer': 80,                // May need to fix multiple files
+  'qa': 50,                         // Quality assessment
+  'build-validator': 50,            // Build validation
+  'accessibility-auditor': 50,      // Audit checks
+  'performance-profiler': 50,       // Performance checks
+  'security-scanner': 50,           // Security scans
+  'e2e-test-generator': 80,         // Generates test files
+  'preview-generator': 30,          // Quick preview setup
+  'device-tester': 100,             // Device testing takes many turns
+  'ui-interaction-tester': 80,      // UI tests
+  'visual-regression-tester': 80,   // Visual tests
+  'flow-validator': 80,             // Flow validation
+  'exploratory-tester': 150,        // AI crawling needs many turns
 };
 
 // AgentDefinition type
