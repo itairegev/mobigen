@@ -777,7 +777,8 @@ ${memoryContext ? `## Memory Context\n${memoryContext}\n` : ''}`;
             description: getMemoryContextTool.definition.description,
           },
         },
-        hooks: qaHooks as Parameters<typeof query>[0]['options']['hooks'],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        hooks: qaHooks as any,
       },
     })) {
       // Capture session ID
