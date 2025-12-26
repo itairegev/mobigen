@@ -22,6 +22,8 @@ export type AgentRole =
   | 'qa'
   // Build and Validation agents
   | 'build-validator'           // Validates build success (prebuild, metro, native config)
+  | 'apk-builder'               // Builds Android APK via EAS or local gradle
+  | 'web-deployer'              // Deploys web preview using Expo Web
   // Specialized QA/Testing agents
   | 'accessibility-auditor'
   | 'performance-profiler'
@@ -49,6 +51,8 @@ export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
   'error-fixer': 180000,            // 3 min - fix errors
   'qa': 180000,                     // 3 min - quality assessment
   'build-validator': 600000,        // 10 min - prebuild + bundle checks (expo prebuild is slow)
+  'apk-builder': 900000,            // 15 min - Android APK build can be slow
+  'web-deployer': 300000,           // 5 min - Expo web export and deploy
   'accessibility-auditor': 120000,  // 2 min
   'performance-profiler': 180000,   // 3 min
   'security-scanner': 180000,       // 3 min
@@ -75,6 +79,8 @@ export const AGENT_MAX_TURNS: Record<AgentRole, number> = {
   'error-fixer': 80,                // May need to fix multiple files
   'qa': 50,                         // Quality assessment
   'build-validator': 80,            // Build validation (multiple long-running commands)
+  'apk-builder': 50,                // APK build (mostly waiting for build commands)
+  'web-deployer': 50,               // Web export and deploy
   'accessibility-auditor': 50,      // Audit checks
   'performance-profiler': 50,       // Performance checks
   'security-scanner': 50,           // Security scans

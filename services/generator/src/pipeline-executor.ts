@@ -133,6 +133,20 @@ export const DEFAULT_PIPELINE: PipelineConfig = {
       required: true,
       continueOnError: true, // Complete even if QA finds issues
     },
+    {
+      name: 'web-preview',
+      agents: ['web-deployer'],
+      description: 'Deploy web preview using Expo Web',
+      required: false, // Optional - only if web is supported
+      continueOnError: true,
+    },
+    {
+      name: 'android-build',
+      agents: ['apk-builder'],
+      description: 'Build Android APK',
+      required: false, // Optional - can be triggered separately
+      continueOnError: true,
+    },
   ],
   maxRetries: 3,
   enableFeedbackLoop: true,
