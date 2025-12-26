@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.500.0",
+    "@mobigen/ai": "workspace:*",
     "@mobigen/db": "workspace:*",
     "appium": "^2.4.1",
     "bullmq": "^5.1.0",

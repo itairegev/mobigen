@@ -49,6 +49,14 @@ export type {
   HookOutput,
   PreToolUseHookInput,
   PostToolUseHookInput,
+  // E2E Testing types
+  E2ETestSuite,
+  E2ETest,
+  E2ETestStep,
+  TestCoverage,
+  MissingTestId,
+  DeviceProvider,
+  DeviceTestConfig,
 } from './types';
 
 // Export agents and pipeline configuration (legacy - will be deprecated)

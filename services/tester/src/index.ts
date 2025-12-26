@@ -413,7 +413,7 @@ app.post('/maestro/generate', async (req, res) => {
     res.json({
       success: true,
       testSuite,
-      filesCreated: testSuite.tests.map(t => t.file).filter((v, i, a) => a.indexOf(v) === i),
+      filesCreated: testSuite.tests.map((t: { file: string }) => t.file).filter((v: string, i: number, a: string[]) => a.indexOf(v) === i),
       coverage: testSuite.coverage,
       missingTestIds: testSuite.missingTestIds.length,
     });
