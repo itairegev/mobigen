@@ -507,7 +507,7 @@ app.get('/api/projects/:projectId/download', async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="${projectId}.zip"`);
 
     const archive = archiver('zip', { zlib: { level: 9 } });
-    archive.on('error', (err) => {
+    archive.on('error', (err: Error) => {
       throw err;
     });
 

@@ -1065,9 +1065,8 @@ function parseErrorDetails(errorMessage: string): Record<string, unknown> {
 // EXPORTS
 // ============================================================================
 
+export type { ExecutionState, EnhancedConfig };
 export {
-  ExecutionState,
-  EnhancedConfig,
   DEFAULT_ENHANCED_CONFIG,
   executeAgentWithTracking,
   runFeedbackLoop,

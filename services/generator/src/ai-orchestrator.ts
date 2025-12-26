@@ -254,7 +254,7 @@ function evaluateSuccess(
     if (log.type === 'assistant' && log.message) {
       const content = log.message.content
         .filter((b: { type: string }) => b.type === 'text')
-        .map((b: { text?: string }) => b.text || '')
+        .map((b) => (b as { type: string; text?: string }).text || '')
         .join('');
 
       const lowerContent = content.toLowerCase();
@@ -777,7 +777,7 @@ ${memoryContext ? `## Memory Context\n${memoryContext}\n` : ''}`;
             description: getMemoryContextTool.definition.description,
           },
         },
-        hooks: qaHooks,
+        hooks: qaHooks as Parameters<typeof query>[0]['options']['hooks'],
       },
     })) {
       // Capture session ID
