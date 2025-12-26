@@ -19,7 +19,47 @@ export type AgentRole =
   | 'intent-analyzer'
   | 'validator'
   | 'error-fixer'
-  | 'qa';
+  | 'qa'
+  // Build and Validation agents
+  | 'build-validator'           // Validates build success (prebuild, metro, native config)
+  // Specialized QA/Testing agents
+  | 'accessibility-auditor'
+  | 'performance-profiler'
+  | 'security-scanner'
+  | 'e2e-test-generator'
+  | 'preview-generator'
+  | 'device-tester'
+  // 2025 Specialized Testing Agents (with unique MCP tools)
+  | 'ui-interaction-tester'   // Device control, element interaction, gestures
+  | 'visual-regression-tester' // Screenshot comparison, baseline management
+  | 'flow-validator'           // User journey verification, state machine testing
+  | 'exploratory-tester';      // AI-powered crawling, anomaly detection
+
+// Per-agent timeout configuration (in milliseconds)
+// Complex agents like product-manager and architect need more time
+export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
+  'orchestrator': 900000,           // 15 min - coordinates entire workflow
+  'product-manager': 300000,        // 5 min - creates detailed PRD
+  'technical-architect': 300000,    // 5 min - designs architecture
+  'ui-ux-expert': 180000,           // 3 min - design system
+  'lead-developer': 180000,         // 3 min - task breakdown
+  'developer': 300000,              // 5 min - implementation
+  'intent-analyzer': 60000,         // 1 min - quick analysis
+  'validator': 180000,              // 3 min - run validations
+  'error-fixer': 180000,            // 3 min - fix errors
+  'qa': 180000,                     // 3 min - quality assessment
+  'build-validator': 300000,        // 5 min - prebuild + bundle checks
+  'accessibility-auditor': 120000,  // 2 min
+  'performance-profiler': 180000,   // 3 min
+  'security-scanner': 180000,       // 3 min
+  'e2e-test-generator': 180000,     // 3 min
+  'preview-generator': 120000,      // 2 min
+  'device-tester': 600000,          // 10 min - device cloud tests
+  'ui-interaction-tester': 300000,  // 5 min
+  'visual-regression-tester': 300000, // 5 min
+  'flow-validator': 300000,         // 5 min
+  'exploratory-tester': 600000,     // 10 min - AI crawling
+};
 
 // AgentDefinition type
 export type AgentDefinition = {
@@ -240,6 +280,349 @@ export interface QAFinding {
   description: string;
   location?: string;
   recommendation: string;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENHANCED QA TYPES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Accessibility Audit Types
+export interface AccessibilityAuditResult {
+  score: number; // 0-100
+  wcagLevel: 'A' | 'AA' | 'AAA' | 'non-compliant';
+  violations: AccessibilityViolation[];
+  warnings: AccessibilityWarning[];
+  passed: AccessibilityCheck[];
+  summary: string;
+}
+
+export interface AccessibilityViolation {
+  id: string;
+  impact: 'critical' | 'serious' | 'moderate' | 'minor';
+  description: string;
+  wcagCriteria: string;
+  element: string;
+  file: string;
+  line?: number;
+  fix: string;
+}
+
+export interface AccessibilityWarning {
+  id: string;
+  description: string;
+  element: string;
+  file: string;
+  suggestion: string;
+}
+
+export interface AccessibilityCheck {
+  id: string;
+  description: string;
+  count: number;
+}
+
+// Performance Profiling Types
+export interface PerformanceReport {
+  bundleAnalysis: BundleAnalysis;
+  renderAnalysis: RenderAnalysis;
+  memoryAnalysis: MemoryAnalysis;
+  startupAnalysis: StartupAnalysis;
+  score: number; // 0-100
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
+  optimizations: PerformanceOptimization[];
+  estimatedImpact: string;
+}
+
+export interface BundleAnalysis {
+  totalSize: number; // bytes
+  jsSize: number;
+  assetsSize: number;
+  nativeSize: number;
+  largestModules: ModuleSize[];
+  unusedExports: string[];
+  duplicateDependencies: string[];
+}
+
+export interface ModuleSize {
+  name: string;
+  size: number;
+  percentage: number;
+  category: 'dependency' | 'app-code' | 'asset';
+}
+
+export interface RenderAnalysis {
+  unnecessaryRerenders: RerenderIssue[];
+  missingMemoization: string[];
+  inlineFunctions: InlineFunctionIssue[];
+  largeListOptimizations: string[];
+}
+
+export interface RerenderIssue {
+  component: string;
+  file: string;
+  cause: string;
+  fix: string;
+}
+
+export interface InlineFunctionIssue {
+  component: string;
+  file: string;
+  line: number;
+  suggestion: string;
+}
+
+export interface MemoryAnalysis {
+  potentialLeaks: MemoryLeak[];
+  largeAllocations: string[];
+  subscriptionCleanup: SubscriptionIssue[];
+}
+
+export interface MemoryLeak {
+  type: 'event-listener' | 'subscription' | 'timer' | 'closure';
+  file: string;
+  description: string;
+  fix: string;
+}
+
+export interface SubscriptionIssue {
+  file: string;
+  line: number;
+  description: string;
+}
+
+export interface StartupAnalysis {
+  heavyInitializations: string[];
+  blockingOperations: string[];
+  lazyLoadCandidates: string[];
+  estimatedStartupTime: string;
+}
+
+export interface PerformanceOptimization {
+  type: 'bundle' | 'render' | 'memory' | 'startup';
+  priority: 'high' | 'medium' | 'low';
+  description: string;
+  file?: string;
+  estimatedImpact: string;
+  implementation: string;
+}
+
+// Security Scanning Types
+export interface SecurityReport {
+  score: number; // 0-100
+  riskLevel: 'critical' | 'high' | 'medium' | 'low' | 'none';
+  vulnerabilities: SecurityVulnerability[];
+  secretsFound: SecretExposure[];
+  dependencyAudit: DependencyAudit;
+  securityChecks: SecurityCheck[];
+  recommendations: string[];
+}
+
+export interface SecurityVulnerability {
+  id: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  category: 'injection' | 'auth' | 'crypto' | 'storage' | 'network' | 'other';
+  title: string;
+  description: string;
+  file: string;
+  line?: number;
+  cwe?: string; // Common Weakness Enumeration
+  fix: string;
+}
+
+export interface SecretExposure {
+  type: 'api-key' | 'password' | 'token' | 'private-key' | 'credential';
+  file: string;
+  line: number;
+  pattern: string;
+  severity: 'critical' | 'high';
+  recommendation: string;
+}
+
+export interface DependencyAudit {
+  totalDependencies: number;
+  vulnerableDependencies: VulnerableDependency[];
+  outdatedDependencies: OutdatedDependency[];
+  licensingIssues: string[];
+}
+
+export interface VulnerableDependency {
+  package: string;
+  version: string;
+  vulnerability: string;
+  severity: 'critical' | 'high' | 'moderate' | 'low';
+  fixVersion?: string;
+  advisory?: string;
+}
+
+export interface OutdatedDependency {
+  package: string;
+  current: string;
+  latest: string;
+  type: 'major' | 'minor' | 'patch';
+}
+
+export interface SecurityCheck {
+  name: string;
+  passed: boolean;
+  details?: string;
+}
+
+// E2E Test Generation Types
+export interface E2ETestSuite {
+  framework: 'maestro' | 'detox' | 'appium';
+  tests: E2ETest[];
+  coverage: TestCoverage;
+  missingTestIds: MissingTestId[];
+}
+
+export interface E2ETest {
+  name: string;
+  description: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  type: 'navigation' | 'form' | 'interaction' | 'integration';
+  file: string;
+  content: string;
+  steps: E2ETestStep[];
+}
+
+export interface E2ETestStep {
+  action: string;
+  target?: string;
+  value?: string;
+  assertion?: string;
+}
+
+export interface TestCoverage {
+  screens: { covered: number; total: number };
+  criticalPaths: { covered: number; total: number };
+  interactions: { covered: number; total: number };
+}
+
+export interface MissingTestId {
+  component: string;
+  file: string;
+  line: number;
+  suggestedId: string;
+}
+
+// Device Testing Types
+export type DeviceProvider = 'aws-device-farm' | 'browserstack' | 'firebase-test-lab' | 'maestro-cloud' | 'sauce-labs' | 'lambdatest' | 'local';
+
+export interface DeviceTestConfig {
+  provider: DeviceProvider;
+  platforms: ('ios' | 'android')[];
+  devices: DeviceSpec[];
+  parallel: boolean;
+  timeout: number;
+  retries: number;
+}
+
+export interface DeviceSpec {
+  platform: 'ios' | 'android';
+  name: string;
+  osVersion: string;
+  formFactor?: 'phone' | 'tablet';
+}
+
+export interface DeviceTestResult {
+  device: DeviceSpec;
+  status: 'passed' | 'failed' | 'error' | 'timeout';
+  duration: number;
+  tests: DeviceTestCaseResult[];
+  logs?: string;
+  video?: string;
+  screenshots?: string[];
+  artifacts?: DeviceArtifact[];
+}
+
+export interface DeviceTestCaseResult {
+  name: string;
+  status: 'passed' | 'failed' | 'skipped';
+  duration: number;
+  error?: string;
+  screenshot?: string;
+}
+
+export interface DeviceArtifact {
+  type: 'video' | 'screenshot' | 'log' | 'crash-report';
+  url: string;
+  timestamp: string;
+}
+
+export interface DeviceTestSession {
+  id: string;
+  provider: DeviceProvider;
+  projectId: string;
+  buildId: string;
+  status: 'queued' | 'running' | 'completed' | 'failed';
+  startedAt: Date;
+  completedAt?: Date;
+  results: DeviceTestResult[];
+  summary: DeviceTestSummary;
+}
+
+export interface DeviceTestSummary {
+  totalDevices: number;
+  passedDevices: number;
+  failedDevices: number;
+  totalTests: number;
+  passedTests: number;
+  failedTests: number;
+  duration: number;
+}
+
+// Preview Generation Types
+export interface PreviewConfig {
+  type: 'expo-go' | 'development-build' | 'internal-distribution';
+  platform: 'ios' | 'android' | 'both';
+  tunnel: boolean;
+  clearCache: boolean;
+}
+
+export interface PreviewResult {
+  type: PreviewConfig['type'];
+  status: 'ready' | 'building' | 'error';
+  qrCode?: string;
+  expoUrl?: string;
+  webUrl?: string;
+  buildId?: string;
+  error?: string;
+  instructions: string[];
+}
+
+// Enhanced Validation Pipeline Types
+export interface ValidationPipeline {
+  tiers: ValidationTier[];
+  parallelTiers: boolean;
+  stopOnFirstFailure: boolean;
+  autoFix: boolean;
+}
+
+export interface ValidationTier {
+  name: string;
+  timeout: number;
+  parallel: boolean;
+  checks: ValidationCheck[];
+  required: boolean;
+}
+
+export interface ValidationCheck {
+  id: string;
+  name: string;
+  category: 'syntax' | 'lint' | 'type' | 'build' | 'test' | 'security' | 'accessibility' | 'performance';
+  command?: string;
+  timeout: number;
+  required: boolean;
+  autoFix: boolean;
+}
+
+export interface EnhancedValidationResult extends ValidationResult {
+  accessibility?: AccessibilityAuditResult;
+  performance?: PerformanceReport;
+  security?: SecurityReport;
+  e2eTests?: E2ETestSuite;
+  deviceTests?: DeviceTestSession;
+  preview?: PreviewResult;
 }
 
 // Generation result types

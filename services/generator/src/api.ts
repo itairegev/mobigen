@@ -7,14 +7,49 @@ import * as fs from 'fs';
 import * as path from 'path';
 import archiver from 'archiver';
 // Use the new AI-driven orchestrator by default
-import { generateApp } from './ai-orchestrator';
+import {
+  generateApp,
+  generateAppWithPipeline,
+  getTaskStatus,
+  resumeGeneration,
+  TaskTracker,
+} from './ai-orchestrator';
+// Enhanced orchestrators with task tracking, feedback loop, and resume capabilities
+import {
+  generateAppEnhancedAI,
+  generateAppHybrid,
+} from './enhanced-orchestrator';
 // Legacy orchestrator available as fallback (set ORCHESTRATOR_MODE=legacy to use)
 import { generateApp as generateAppLegacy } from './orchestrator';
 import type { SDKMessage } from '@mobigen/ai';
 
 // Select orchestrator based on environment variable
-const useAIOrchestrator = process.env.ORCHESTRATOR_MODE !== 'legacy';
-const orchestratorGenerateApp = useAIOrchestrator ? generateApp : generateAppLegacy;
+// Options:
+//   'pipeline' (default) - Explicit phases with feedback loop
+//   'ai' - Original AI-driven workflow
+//   'ai-enhanced' - AI-driven with task tracking, feedback loop, and resume
+//   'hybrid' - Best of both: AI flexibility + pipeline reliability + full tracking
+//   'legacy' - Old hardcoded sequential pipeline
+type OrchestratorMode = 'ai' | 'ai-enhanced' | 'hybrid' | 'pipeline' | 'legacy';
+const orchestratorMode = (process.env.ORCHESTRATOR_MODE || 'pipeline') as OrchestratorMode;
+
+function getOrchestrator(mode: OrchestratorMode) {
+  switch (mode) {
+    case 'legacy':
+      return generateAppLegacy;
+    case 'pipeline':
+      return generateAppWithPipeline;
+    case 'ai-enhanced':
+      return generateAppEnhancedAI;
+    case 'hybrid':
+      return generateAppHybrid;
+    case 'ai':
+    default:
+      return generateApp;
+  }
+}
+
+const orchestratorGenerateApp = getOrchestrator(orchestratorMode);
 
 const app: Express = express();
 const httpServer = createServer(app);
@@ -118,9 +153,14 @@ app.post('/api/generate', async (req, res) => {
   try {
     const validated = GenerateRequestSchema.parse(req.body);
 
-    // Start generation in background (uses AI orchestrator by default)
-    console.log(`[api] Using ${useAIOrchestrator ? 'AI-driven' : 'legacy'} orchestrator`);
-    const resultPromise = orchestratorGenerateApp(
+    // Allow request to specify orchestrator mode
+    const requestMode = req.body.mode as OrchestratorMode | undefined;
+    const effectiveMode = requestMode || orchestratorMode;
+    const generator = getOrchestrator(effectiveMode);
+
+    // Start generation in background
+    console.log(`[api] Using ${effectiveMode} orchestrator`);
+    const resultPromise = generator(
       validated.prompt,
       validated.projectId,
       validated.config
@@ -163,6 +203,141 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// ============================================================================
+// TASK TRACKING ENDPOINTS
+// ============================================================================
+
+// Get task status for a project
+app.get('/api/projects/:projectId/tasks', (req, res) => {
+  const { projectId } = req.params;
+  const status = getTaskStatus(projectId);
+
+  if (!status) {
+    return res.status(404).json({
+      success: false,
+      error: 'No active job found for this project',
+    });
+  }
+
+  res.json({
+    success: true,
+    ...status,
+  });
+});
+
+// Get all tasks for a job
+app.get('/api/jobs/:jobId/tasks', (req, res) => {
+  const { jobId } = req.params;
+  const summary = TaskTracker.getProgressSummary(jobId);
+
+  if (!summary) {
+    return res.status(404).json({
+      success: false,
+      error: 'Job not found',
+    });
+  }
+
+  const tasks = TaskTracker.getTasksByJob(jobId);
+
+  res.json({
+    success: true,
+    summary,
+    tasks: tasks.map(t => ({
+      id: t.id,
+      phase: t.phase,
+      agent: t.agentId,
+      status: t.status,
+      duration: t.durationMs,
+      error: t.errorMessage,
+      filesModified: t.filesModified.length,
+    })),
+  });
+});
+
+// Resume a paused/failed generation
+app.post('/api/projects/:projectId/resume', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const result = await resumeGeneration(projectId);
+
+    if (!result) {
+      return res.status(400).json({
+        success: false,
+        error: 'Cannot resume - no pauseable/failed job found',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Generation resumed',
+      projectId,
+    });
+
+    // Emit progress via WebSocket
+    io.to(`project:${projectId}`).emit('generation:resumed', { projectId });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to resume',
+    });
+  }
+});
+
+// Pause a running generation
+app.post('/api/projects/:projectId/pause', (req, res) => {
+  const { projectId } = req.params;
+  const job = TaskTracker.getJobByProject(projectId);
+
+  if (!job) {
+    return res.status(404).json({
+      success: false,
+      error: 'No active job found',
+    });
+  }
+
+  const paused = TaskTracker.pauseJob(job.id);
+
+  if (!paused) {
+    return res.status(400).json({
+      success: false,
+      error: 'Failed to pause job',
+    });
+  }
+
+  res.json({
+    success: true,
+    message: 'Generation paused',
+    jobId: job.id,
+  });
+
+  // Emit progress via WebSocket
+  io.to(`project:${projectId}`).emit('generation:paused', { projectId, jobId: job.id });
+});
+
+// Get failed tasks that need fixing
+app.get('/api/projects/:projectId/errors', (req, res) => {
+  const { projectId } = req.params;
+  const job = TaskTracker.getJobByProject(projectId);
+
+  if (!job) {
+    return res.status(404).json({
+      success: false,
+      error: 'No active job found',
+    });
+  }
+
+  const analysis = TaskTracker.analyzeErrors(job.id);
+
+  res.json({
+    success: true,
+    hasErrors: analysis.hasErrors,
+    canAutoFix: analysis.canAutoFix,
+    errors: analysis.errors,
+  });
+});
+
 // Detailed config check
 app.get('/api/config', (req, res) => {
   const fs = require('fs');
@@ -202,12 +377,17 @@ app.get('/api/config', (req, res) => {
       cwd: process.cwd(),
     },
     orchestrator: {
-      mode: useAIOrchestrator ? 'ai-driven' : 'legacy',
-      description: useAIOrchestrator
-        ? 'Dynamic agent orchestration with Task tool'
-        : 'Hardcoded sequential agent pipeline',
+      mode: orchestratorMode,
+      description: {
+        'pipeline': 'Explicit phases with feedback loop',
+        'ai': 'AI-driven workflow decisions',
+        'ai-enhanced': 'AI-driven with task tracking, feedback loop, and resume',
+        'hybrid': 'AI flexibility + pipeline reliability + full tracking',
+        'legacy': 'Hardcoded sequential agent pipeline',
+      }[orchestratorMode] || 'Unknown mode',
       envVar: 'ORCHESTRATOR_MODE',
-      currentValue: process.env.ORCHESTRATOR_MODE || 'ai-driven (default)',
+      currentValue: process.env.ORCHESTRATOR_MODE || 'pipeline (default)',
+      availableModes: ['pipeline', 'ai', 'ai-enhanced', 'hybrid', 'legacy'],
     },
     ai: {
       provider: process.env.AI_PROVIDER || 'bedrock (default)',
