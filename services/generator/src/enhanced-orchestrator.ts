@@ -62,6 +62,15 @@ const TEMPLATES_BARE_DIR = path.join(MOBIGEN_ROOT, 'templates-bare');
 const TEMPLATES_WORKING_DIR = path.join(MOBIGEN_ROOT, 'templates');
 const PROJECTS_DIR = path.join(MOBIGEN_ROOT, 'projects');
 
+console.log('[enhanced-orchestrator] Resolved paths:', {
+  MOBIGEN_ROOT,
+  TEMPLATES_BARE_DIR,
+  TEMPLATES_WORKING_DIR,
+  PROJECTS_DIR,
+  agentsPath: path.join(MOBIGEN_ROOT, 'agents/builtin'),
+  agentsExists: fs.existsSync(path.join(MOBIGEN_ROOT, 'agents/builtin')),
+});
+
 // Initialize managers
 const templateManager = new TemplateManager({
   bareRepoDir: TEMPLATES_BARE_DIR,
@@ -144,10 +153,19 @@ async function executeAgentWithTracking(
     taskId: task.id,
   });
 
+  // Debug: Check registry state
+  console.log(`[executeAgentWithTracking] Getting agent: ${agentId}`);
+  console.log(`[executeAgentWithTracking] Registry initialized: ${agentRegistry.isInitialized()}`);
+  console.log(`[executeAgentWithTracking] Available agents: ${agentRegistry.getAgentIds().join(', ')}`);
+
   const agent = agentRegistry.get(agentId);
+  console.log(`[executeAgentWithTracking] Agent ${agentId} found: ${!!agent}`);
+
   if (!agent) {
-    TaskTracker.completeTask(task.id, false, undefined, undefined, `Agent ${agentId} not found`);
-    return { success: false, result: '', filesModified: [], error: `Agent not found: ${agentId}`, taskId: task.id };
+    const errorMsg = `Agent ${agentId} not found. Available: ${agentRegistry.getAgentIds().join(', ')}`;
+    console.error(`[executeAgentWithTracking] ${errorMsg}`);
+    TaskTracker.completeTask(task.id, false, undefined, undefined, errorMsg);
+    return { success: false, result: '', filesModified: [], error: errorMsg, taskId: task.id };
   }
 
   const timeout = AGENT_TIMEOUTS[agentId] || 180000;
@@ -242,7 +260,15 @@ ${agent.prompt}`,
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
     const duration = Date.now() - startTime;
+
+    // Log full error details
+    console.error(`[executeAgentWithTracking] Error executing agent ${agentId}:`, {
+      message: errorMessage,
+      stack: errorStack,
+      duration,
+    });
 
     // Parse error for structured details
     const errorDetails = parseErrorDetails(errorMessage);
@@ -775,10 +801,13 @@ export async function generateAppHybrid(
   await emitProgress(projectId, 'starting', { mode: 'hybrid', resuming });
 
   try {
+    console.log('[generateAppHybrid] Initializing registry and memory manager...');
     await Promise.all([
       agentRegistry.initialize(),
       memoryManager.initialize(projectId),
     ]);
+    console.log(`[generateAppHybrid] Registry initialized. Agent count: ${agentRegistry.count()}`);
+    console.log(`[generateAppHybrid] Available agents: ${agentRegistry.getAgentIds().join(', ')}`);
 
     // Define phase execution with AI flexibility within each phase
     const phases = [

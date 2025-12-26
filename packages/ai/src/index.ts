@@ -10,7 +10,8 @@ export {
 } from './client';
 export type { AIProvider, AIClientConfig, AIClient } from './client';
 
-// Export types
+// Export types and constants
+export { AGENT_TIMEOUTS } from './types';
 export type {
   SDKMessage,
   AgentRole,
