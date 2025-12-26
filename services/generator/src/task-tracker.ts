@@ -337,12 +337,17 @@ export function updateJob(jobId: string, updates: Partial<GenerationJob>): Gener
   Object.assign(job, updateData);
 
   // Also update database in background (with safe check)
+  // Use upsert to handle cases where DB create may have failed but in-memory exists
   if (usePrisma && prisma?.generationJob) {
-    prisma.generationJob.update({
+    prisma.generationJob.upsert({
       where: { id: jobId },
-      data: updateData,
+      update: updateData,
+      create: { ...job, ...updateData },
     }).catch((err: Error) => {
-      console.error('[task-tracker] Background DB update failed:', err.message);
+      // Only log non-trivial errors
+      if (!err.message.includes('not found')) {
+        console.error('[task-tracker] Background job DB upsert failed:', err.message);
+      }
     });
   }
 
@@ -472,12 +477,17 @@ export function updateTask(taskId: string, updates: Partial<GenerationTask>): Ge
   Object.assign(task, updateData);
 
   // Also update database in background (with safe check)
+  // Use upsert to handle cases where DB create may have failed but in-memory exists
   if (usePrisma && prisma?.generationTask) {
-    prisma.generationTask.update({
+    prisma.generationTask.upsert({
       where: { id: taskId },
-      data: updateData,
+      update: updateData,
+      create: { ...task, ...updateData },
     }).catch((err: Error) => {
-      console.error('[task-tracker] Background task DB update failed:', err.message);
+      // Only log non-trivial errors (ignore "record not found" type errors)
+      if (!err.message.includes('not found')) {
+        console.error('[task-tracker] Background task DB upsert failed:', err.message);
+      }
     });
   }
 
