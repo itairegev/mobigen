@@ -26,6 +26,12 @@ import {
 } from './task-tracker';
 import { emitProgress } from './api';
 import { createLogger, type GenerationLogger } from './logger';
+import {
+  ParallelTaskExecutor,
+  DEFAULT_PARALLEL_CONFIG,
+  type ParallelExecutionConfig,
+} from './parallel-executor';
+import type { TaskBreakdown } from '@mobigen/ai';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -47,6 +53,8 @@ export interface PipelineConfig {
   maxRetries: number;
   enableFeedbackLoop: boolean;
   validateAfterImplementation: boolean;
+  parallelImplementation: boolean;  // Use parallel task execution for implementation
+  parallelConfig?: Partial<ParallelExecutionConfig>;
 }
 
 export interface ExecutionContext {
@@ -129,6 +137,13 @@ export const DEFAULT_PIPELINE: PipelineConfig = {
   maxRetries: 3,
   enableFeedbackLoop: true,
   validateAfterImplementation: true,
+  parallelImplementation: true,  // Enable parallel task execution
+  parallelConfig: {
+    maxConcurrentAgents: 3,      // Run up to 3 developer agents in parallel
+    taskTimeout: 300000,         // 5 minutes per task
+    maxRetries: 2,
+    continueOnTaskFailure: true,
+  },
 };
 
 // ============================================================================
@@ -293,6 +308,60 @@ export class PipelineExecutor {
           input: { phaseContext: this.context.outputs },
         }
       );
+    }
+
+    // SPECIAL CASE: Parallel implementation phase
+    // Use ParallelTaskExecutor to run multiple developer agents on separate tasks
+    if (phase.name === 'implementation' && this.config.parallelImplementation) {
+      const taskBreakdown = this.context.outputs.tasks as TaskBreakdown | undefined;
+
+      if (taskBreakdown && taskBreakdown.tasks && taskBreakdown.tasks.length > 0) {
+        logger.info('Using parallel task execution for implementation', {
+          taskCount: taskBreakdown.tasks.length,
+          maxConcurrent: this.config.parallelConfig?.maxConcurrentAgents || 3,
+        });
+
+        const parallelExecutor = new ParallelTaskExecutor(
+          projectId,
+          this.context.projectPath,
+          this.context.mobigenRoot,
+          job.id,
+          this.context.agentRegistry,
+          this.context.outputs,
+          { ...DEFAULT_PARALLEL_CONFIG, ...this.config.parallelConfig }
+        );
+
+        const parallelResult = await parallelExecutor.execute(taskBreakdown);
+
+        // Convert parallel result to phase result format
+        if (parallelResult.success) {
+          outputs.implementation = {
+            filesModified: parallelResult.totalFilesModified,
+            batches: parallelResult.batches.length,
+            totalTasks: taskBreakdown.tasks.length,
+          };
+          filesModified.push(...parallelResult.totalFilesModified);
+        } else {
+          for (const failedTaskId of parallelResult.failedTasks) {
+            errors.push({
+              code: 'TASK_FAILED',
+              message: `Task ${failedTaskId} failed during parallel execution`,
+              autoFixable: true,
+            });
+          }
+        }
+
+        return {
+          phase: phase.name,
+          success: errors.length === 0,
+          outputs,
+          filesModified,
+          errors,
+          duration: Date.now() - startTime,
+        };
+      } else {
+        logger.warn('No task breakdown found, falling back to sequential implementation');
+      }
     }
 
     // Execute agents (sequentially or in parallel)
