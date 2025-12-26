@@ -48,7 +48,7 @@ export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
   'validator': 180000,              // 3 min - run validations
   'error-fixer': 180000,            // 3 min - fix errors
   'qa': 180000,                     // 3 min - quality assessment
-  'build-validator': 300000,        // 5 min - prebuild + bundle checks
+  'build-validator': 600000,        // 10 min - prebuild + bundle checks (expo prebuild is slow)
   'accessibility-auditor': 120000,  // 2 min
   'performance-profiler': 180000,   // 3 min
   'security-scanner': 180000,       // 3 min
@@ -74,7 +74,7 @@ export const AGENT_MAX_TURNS: Record<AgentRole, number> = {
   'validator': 50,                  // Runs validation commands
   'error-fixer': 80,                // May need to fix multiple files
   'qa': 50,                         // Quality assessment
-  'build-validator': 50,            // Build validation
+  'build-validator': 80,            // Build validation (multiple long-running commands)
   'accessibility-auditor': 50,      // Audit checks
   'performance-profiler': 50,       // Performance checks
   'security-scanner': 50,           // Security scans
