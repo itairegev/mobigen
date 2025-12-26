@@ -242,8 +242,13 @@ export function createJob(projectId: string, metadata: Record<string, unknown> =
   memoryTasksByJob.set(job.id, new Set());
 
   // Also persist to database in background (with safe check)
+  // Use upsert to handle restarts/retries gracefully
   if (usePrisma && prisma?.generationJob) {
-    prisma.generationJob.create({ data: job }).catch((err: Error) => {
+    prisma.generationJob.upsert({
+      where: { id: job.id },
+      update: job,
+      create: job,
+    }).catch((err: Error) => {
       console.error('[task-tracker] Background DB write failed:', err.message);
     });
   }
@@ -420,8 +425,13 @@ export function createTask(
   }
 
   // Also persist to database in background (with safe check)
+  // Use upsert to handle restarts/retries gracefully
   if (usePrisma && prisma?.generationTask) {
-    prisma.generationTask.create({ data: task }).catch((err: Error) => {
+    prisma.generationTask.upsert({
+      where: { id: task.id },
+      update: task,
+      create: task,
+    }).catch((err: Error) => {
       console.error('[task-tracker] Background task DB write failed:', err.message);
     });
   }
