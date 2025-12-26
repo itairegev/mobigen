@@ -87,9 +87,18 @@ async function initPrisma(): Promise<boolean> {
   try {
     const dbModule = await import('@mobigen/db');
     prisma = dbModule.prisma;
-    usePrisma = true;
-    console.log('[task-tracker] Using Prisma for database persistence');
-    return true;
+
+    // Verify that the GenerationJob model exists
+    if (prisma.generationJob) {
+      usePrisma = true;
+      console.log('[task-tracker] Using Prisma for database persistence');
+      return true;
+    } else {
+      console.warn('[task-tracker] GenerationJob model not found - run db:generate and db:push');
+      console.warn('[task-tracker] Using in-memory storage');
+      usePrisma = false;
+      return false;
+    }
   } catch (error) {
     console.warn('[task-tracker] Prisma not available, using in-memory storage');
     console.warn('[task-tracker] Error:', error instanceof Error ? error.message : error);
@@ -186,7 +195,7 @@ export async function createJobAsync(projectId: string, metadata: Record<string,
     updatedAt: now,
   };
 
-  if (usePrisma && prisma) {
+  if (usePrisma && prisma?.generationJob) {
     try {
       const dbJob = await prisma.generationJob.create({
         data: jobData,
@@ -232,8 +241,8 @@ export function createJob(projectId: string, metadata: Record<string, unknown> =
   memoryJobs.set(job.id, job);
   memoryTasksByJob.set(job.id, new Set());
 
-  // Also persist to database in background
-  if (usePrisma && prisma) {
+  // Also persist to database in background (with safe check)
+  if (usePrisma && prisma?.generationJob) {
     prisma.generationJob.create({ data: job }).catch((err: Error) => {
       console.error('[task-tracker] Background DB write failed:', err.message);
     });
@@ -244,7 +253,7 @@ export function createJob(projectId: string, metadata: Record<string, unknown> =
 }
 
 export async function getJobAsync(jobId: string): Promise<GenerationJob | undefined> {
-  if (usePrisma && prisma) {
+  if (usePrisma && prisma?.generationJob) {
     try {
       const dbJob = await prisma.generationJob.findUnique({ where: { id: jobId } });
       if (dbJob) return toJob(dbJob);
@@ -260,7 +269,7 @@ export function getJob(jobId: string): GenerationJob | undefined {
 }
 
 export async function getJobByProjectAsync(projectId: string): Promise<GenerationJob | undefined> {
-  if (usePrisma && prisma) {
+  if (usePrisma && prisma?.generationJob) {
     try {
       const dbJob = await prisma.generationJob.findFirst({
         where: {
@@ -296,7 +305,7 @@ export function getJobByProject(projectId: string): GenerationJob | undefined {
 export async function updateJobAsync(jobId: string, updates: Partial<GenerationJob>): Promise<GenerationJob | undefined> {
   const updateData = { ...updates, updatedAt: new Date() };
 
-  if (usePrisma && prisma) {
+  if (usePrisma && prisma?.generationJob) {
     try {
       const dbJob = await prisma.generationJob.update({
         where: { id: jobId },
@@ -327,8 +336,8 @@ export function updateJob(jobId: string, updates: Partial<GenerationJob>): Gener
   const updateData = { ...updates, updatedAt: new Date() };
   Object.assign(job, updateData);
 
-  // Also update database in background
-  if (usePrisma && prisma) {
+  // Also update database in background (with safe check)
+  if (usePrisma && prisma?.generationJob) {
     prisma.generationJob.update({
       where: { id: jobId },
       data: updateData,
@@ -405,8 +414,8 @@ export function createTask(
     updateJob(jobId, { totalTasks: job.totalTasks + 1 });
   }
 
-  // Also persist to database in background
-  if (usePrisma && prisma) {
+  // Also persist to database in background (with safe check)
+  if (usePrisma && prisma?.generationTask) {
     prisma.generationTask.create({ data: task }).catch((err: Error) => {
       console.error('[task-tracker] Background task DB write failed:', err.message);
     });
@@ -427,7 +436,7 @@ export function getTasksByJob(jobId: string): GenerationTask[] {
 }
 
 export async function getTasksByJobAsync(jobId: string): Promise<GenerationTask[]> {
-  if (usePrisma && prisma) {
+  if (usePrisma && prisma?.generationTask) {
     try {
       const dbTasks = await prisma.generationTask.findMany({
         where: { jobId },
@@ -462,8 +471,8 @@ export function updateTask(taskId: string, updates: Partial<GenerationTask>): Ge
   const updateData = { ...updates, updatedAt: new Date() };
   Object.assign(task, updateData);
 
-  // Also update database in background
-  if (usePrisma && prisma) {
+  // Also update database in background (with safe check)
+  if (usePrisma && prisma?.generationTask) {
     prisma.generationTask.update({
       where: { id: taskId },
       data: updateData,
@@ -815,7 +824,7 @@ export function resumeJob(jobId: string): { job: GenerationJob; nextTasks: Gener
 // ============================================================================
 
 export async function loadJobFromDatabase(projectId: string): Promise<GenerationJob | null> {
-  if (!usePrisma || !prisma) return null;
+  if (!usePrisma || !prisma?.generationJob) return null;
 
   try {
     const dbJob = await prisma.generationJob.findFirst({
@@ -847,7 +856,10 @@ export async function loadJobFromDatabase(projectId: string): Promise<Generation
 }
 
 export async function syncToDatabase(): Promise<void> {
-  if (!usePrisma || !prisma) return;
+  if (!usePrisma || !prisma?.generationJob || !prisma?.generationTask) {
+    console.log('[task-tracker] Database sync skipped - Prisma not available');
+    return;
+  }
 
   console.log('[task-tracker] Syncing to database...');
 
