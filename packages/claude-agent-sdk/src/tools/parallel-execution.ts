@@ -86,7 +86,8 @@ export class ParallelExecutionManager extends EventEmitter {
   constructor(options: { maxConcurrent?: number; defaultTimeoutMs?: number } = {}) {
     super();
     this.maxConcurrent = options.maxConcurrent || 5;
-    this.defaultTimeoutMs = options.defaultTimeoutMs || 300000; // 5 minutes
+    // 15 minutes default (increased from 5 minutes for complex agent tasks)
+    this.defaultTimeoutMs = options.defaultTimeoutMs || 900000;
   }
 
   /**

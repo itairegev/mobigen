@@ -72,3 +72,6 @@ android/
 *.key
 credentials.json
 secrets.tfvars
+
+# Generated projects
+projects/

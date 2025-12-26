@@ -245,11 +245,19 @@ function getModelId(alias: string): string {
   return modelMap[alias] || alias;
 }
 
-// Default timeout for API calls (5 minutes)
-const API_TIMEOUT_MS = parseInt(process.env.CLAUDE_API_TIMEOUT_MS || '300000', 10);
+// Default timeout for API calls (10 minutes - increased from 5)
+const API_TIMEOUT_MS = parseInt(process.env.CLAUDE_API_TIMEOUT_MS || '600000', 10);
 
 // Default max turns for tool execution loop
 const DEFAULT_MAX_TURNS = 50;
+
+// Retry configuration for rate limiting
+const RETRY_CONFIG = {
+  maxRetries: parseInt(process.env.CLAUDE_MAX_RETRIES || '5', 10),
+  initialDelayMs: parseInt(process.env.CLAUDE_RETRY_INITIAL_DELAY_MS || '2000', 10),
+  maxDelayMs: parseInt(process.env.CLAUDE_RETRY_MAX_DELAY_MS || '60000', 10),
+  backoffMultiplier: 2,
+};
 
 // Logging configuration
 const LOG_PREFIX = '[claude-agent-sdk]';
@@ -273,6 +281,77 @@ function log(level: 'info' | 'warn' | 'error' | 'debug', message: string, data?:
   } else {
     logFn(`${prefix} ${level.toUpperCase()}: ${message}`);
   }
+}
+
+/**
+ * Sleep for a specified duration
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Check if an error is retryable (rate limiting or transient errors)
+ */
+function isRetryableError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+
+  const e = error as Record<string, unknown>;
+
+  // Check HTTP status codes
+  const status = e.status as number | undefined;
+  if (status === 429) return true; // Rate limited
+  if (status === 503) return true; // Service unavailable
+  if (status === 502) return true; // Bad gateway
+  if (status === 500) return true; // Internal server error (sometimes transient)
+
+  // Check error messages
+  const message = (e.message as string | undefined) || '';
+  if (message.includes('Too many tokens')) return true;
+  if (message.includes('ThrottlingException')) return true;
+  if (message.includes('rate limit')) return true;
+  if (message.includes('ECONNRESET')) return true;
+  if (message.includes('ETIMEDOUT')) return true;
+
+  return false;
+}
+
+/**
+ * Execute an API call with retry and exponential backoff
+ */
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  operationName: string
+): Promise<T> {
+  let lastError: unknown;
+  let delay = RETRY_CONFIG.initialDelayMs;
+
+  for (let attempt = 1; attempt <= RETRY_CONFIG.maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+
+      if (!isRetryableError(error) || attempt >= RETRY_CONFIG.maxRetries) {
+        throw error;
+      }
+
+      log('warn', `Retryable error on ${operationName}, attempt ${attempt}/${RETRY_CONFIG.maxRetries}`, {
+        error: error instanceof Error ? error.message : String(error),
+        nextDelayMs: delay,
+      });
+
+      await sleep(delay);
+
+      // Exponential backoff with jitter
+      delay = Math.min(
+        delay * RETRY_CONFIG.backoffMultiplier + Math.random() * 1000,
+        RETRY_CONFIG.maxDelayMs
+      );
+    }
+  }
+
+  throw lastError;
 }
 
 /**
@@ -503,14 +582,17 @@ export async function* query(params: {
         requestParams.tools = toolDefinitions;
       }
 
-      // Make the API call with timeout
-      const response = await withTimeout(
-        (client.messages.create as (params: typeof requestParams) => Promise<{
-          content: ContentBlock[];
-          stop_reason: string;
-        }>)(requestParams),
-        API_TIMEOUT_MS,
-        `API call to ${modelId}`
+      // Make the API call with retry and timeout
+      const response = await withRetry(
+        () => withTimeout(
+          (client.messages.create as (params: typeof requestParams) => Promise<{
+            content: ContentBlock[];
+            stop_reason: string;
+          }>)(requestParams),
+          API_TIMEOUT_MS,
+          `API call to ${modelId}`
+        ),
+        `Turn ${turnCount} API call`
       );
 
       const elapsed = Date.now() - startTime;

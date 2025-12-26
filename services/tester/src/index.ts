@@ -5,6 +5,9 @@ import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
 import { TestService } from './test-service';
 import { ScreenshotService } from './screenshot-service';
+import { DeviceCloudService, DEFAULT_DEVICE_MATRIX } from './device-cloud-service';
+import { createMaestroGenerator } from './maestro-generator';
+import type { DeviceProvider, DeviceTestConfig } from '@mobigen/ai';
 
 const app = express();
 const server = createServer(app);
@@ -23,6 +26,49 @@ const workerRedis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379',
 // Services
 const testService = new TestService();
 const screenshotService = new ScreenshotService();
+const deviceCloudService = new DeviceCloudService();
+
+// Register cloud providers from environment
+if (process.env.AWS_DEVICE_FARM_PROJECT_ARN) {
+  deviceCloudService.registerProvider({
+    provider: 'aws-device-farm',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+      region: process.env.AWS_REGION || 'us-west-2',
+      projectArn: process.env.AWS_DEVICE_FARM_PROJECT_ARN,
+    },
+  });
+}
+
+if (process.env.BROWSERSTACK_USERNAME && process.env.BROWSERSTACK_ACCESS_KEY) {
+  deviceCloudService.registerProvider({
+    provider: 'browserstack',
+    credentials: {
+      username: process.env.BROWSERSTACK_USERNAME,
+      accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
+    },
+  });
+}
+
+if (process.env.MAESTRO_CLOUD_API_KEY) {
+  deviceCloudService.registerProvider({
+    provider: 'maestro-cloud',
+    credentials: {
+      apiKey: process.env.MAESTRO_CLOUD_API_KEY,
+    },
+  });
+}
+
+if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_SERVICE_ACCOUNT) {
+  deviceCloudService.registerProvider({
+    provider: 'firebase-test-lab',
+    credentials: {
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      serviceAccountKey: process.env.FIREBASE_SERVICE_ACCOUNT,
+    },
+  });
+}
 
 // Test Queue
 const testQueue = new Queue('device-tests', {
@@ -240,6 +286,243 @@ app.post('/screenshots/:buildId/baseline', async (req, res) => {
     res.json({ success: true, message: 'Baseline set successfully' });
   } catch (error) {
     res.status(500).json({
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DEVICE CLOUD TESTING ROUTES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Get available cloud providers
+app.get('/device-cloud/providers', (req, res) => {
+  res.json({
+    available: ['aws-device-farm', 'browserstack', 'maestro-cloud', 'firebase-test-lab', 'local'],
+    configured: [
+      ...(process.env.AWS_DEVICE_FARM_PROJECT_ARN ? ['aws-device-farm'] : []),
+      ...(process.env.BROWSERSTACK_USERNAME ? ['browserstack'] : []),
+      ...(process.env.MAESTRO_CLOUD_API_KEY ? ['maestro-cloud'] : []),
+      ...(process.env.FIREBASE_PROJECT_ID ? ['firebase-test-lab'] : []),
+      'local',
+    ],
+  });
+});
+
+// Get available device matrices
+app.get('/device-cloud/devices', async (req, res) => {
+  try {
+    const { tier = 'standard', platforms } = req.query;
+
+    const devices = deviceCloudService.getRecommendedDevices({
+      tier: tier as 'minimal' | 'standard' | 'comprehensive',
+      platforms: platforms ? (platforms as string).split(',') as ('ios' | 'android')[] : undefined,
+    });
+
+    res.json({
+      tier,
+      devices,
+      matrices: {
+        minimal: DEFAULT_DEVICE_MATRIX.minimal.length,
+        standard: DEFAULT_DEVICE_MATRIX.standard.length,
+        comprehensive: DEFAULT_DEVICE_MATRIX.comprehensive.length,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Start device cloud test session
+app.post('/device-cloud/sessions', async (req, res) => {
+  try {
+    const { projectId, buildId, appPath, testPath, config } = req.body;
+
+    // Start test session
+    const session = await deviceCloudService.startTestSession({
+      projectId,
+      buildId,
+      appPath,
+      testPath,
+      config,
+      onProgress: (session) => {
+        broadcastToProject(projectId, {
+          type: 'device-test:progress',
+          session,
+        });
+      },
+    });
+
+    res.json({
+      success: true,
+      sessionId: session.id,
+      status: session.status,
+      summary: session.summary,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get device cloud session status
+app.get('/device-cloud/sessions/:sessionId', async (req, res) => {
+  try {
+    const session = deviceCloudService.getSession(req.params.sessionId);
+
+    if (!session) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+
+    res.json(session);
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Cancel device cloud session
+app.delete('/device-cloud/sessions/:sessionId', async (req, res) => {
+  try {
+    await deviceCloudService.cancelSession(req.params.sessionId);
+    res.json({ success: true, message: 'Session cancelled' });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAESTRO TEST GENERATION ROUTES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Generate Maestro tests for a project
+app.post('/maestro/generate', async (req, res) => {
+  try {
+    const { projectPath, bundleId, appStructure } = req.body;
+
+    const generator = createMaestroGenerator(projectPath, bundleId);
+    const testSuite = await generator.generateTestSuite(appStructure);
+
+    res.json({
+      success: true,
+      testSuite,
+      filesCreated: testSuite.tests.map(t => t.file).filter((v, i, a) => a.indexOf(v) === i),
+      coverage: testSuite.coverage,
+      missingTestIds: testSuite.missingTestIds.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get Maestro test templates for a specific app template
+app.get('/maestro/templates/:templateType', (req, res) => {
+  const { templateType } = req.params;
+
+  // Return critical paths for the template
+  const criticalPaths: Record<string, object[]> = {
+    ecommerce: [
+      { name: 'Browse and Purchase', priority: 'critical' },
+      { name: 'Search and Filter', priority: 'high' },
+      { name: 'Cart Management', priority: 'high' },
+      { name: 'User Authentication', priority: 'critical' },
+    ],
+    loyalty: [
+      { name: 'View Points and Rewards', priority: 'critical' },
+      { name: 'Scan and Earn', priority: 'critical' },
+      { name: 'Redeem Reward', priority: 'high' },
+    ],
+    news: [
+      { name: 'Browse and Read Articles', priority: 'critical' },
+      { name: 'Save and Bookmark', priority: 'high' },
+      { name: 'Search and Filter', priority: 'medium' },
+    ],
+    'ai-assistant': [
+      { name: 'Chat Interaction', priority: 'critical' },
+      { name: 'View Chat History', priority: 'high' },
+      { name: 'Settings Management', priority: 'medium' },
+    ],
+  };
+
+  res.json({
+    template: templateType,
+    criticalPaths: criticalPaths[templateType] || criticalPaths['ecommerce'],
+    testTypes: ['navigation', 'critical-path', 'form', 'smoke'],
+  });
+});
+
+// Run Maestro tests locally
+app.post('/maestro/run', async (req, res) => {
+  try {
+    const { projectPath, flowPath, platform } = req.body;
+
+    // This would execute: maestro test <flowPath>
+    // For now, queue the test job
+    const job = await testQueue.add('maestro-test', {
+      type: 'maestro',
+      projectPath,
+      flowPath,
+      platform,
+    });
+
+    res.json({
+      success: true,
+      jobId: job.id,
+      message: 'Maestro test queued',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Run Maestro tests in cloud
+app.post('/maestro/cloud', async (req, res) => {
+  try {
+    const { projectId, buildId, appPath, flowsPath, devices } = req.body;
+
+    // Use Maestro Cloud provider
+    const session = await deviceCloudService.startTestSession({
+      projectId,
+      buildId,
+      appPath,
+      testPath: flowsPath,
+      config: {
+        provider: 'maestro-cloud',
+        platforms: ['ios', 'android'],
+        devices: devices || DEFAULT_DEVICE_MATRIX.minimal,
+        parallel: true,
+        timeout: 600000,
+        retries: 2,
+      },
+      onProgress: (session) => {
+        broadcastToProject(projectId, {
+          type: 'maestro-cloud:progress',
+          session,
+        });
+      },
+    });
+
+    res.json({
+      success: true,
+      sessionId: session.id,
+      status: session.status,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
