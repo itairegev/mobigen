@@ -1290,11 +1290,11 @@ class MCPTestingServer {
   private async handleGetCloudSessionStatus(args: Record<string, unknown>): Promise<DeviceTestSession | null> {
     const { sessionId } = args;
     console.log(`[MCP] Get cloud session status: ${sessionId}`);
-    return this.deviceCloudService.getSession(sessionId as string);
+    return this.deviceCloudService.getSession(sessionId as string) ?? null;
   }
 
   private async handleGetCloudDevices(args: Record<string, unknown>): Promise<{
-    devices: Array<{ platform: string; model: string; osVersion: string }>;
+    devices: Array<{ platform: string; name: string; osVersion: string }>;
     tier: string;
   }> {
     const { provider, platform, tier = 'standard' } = args;
