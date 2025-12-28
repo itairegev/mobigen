@@ -26,7 +26,7 @@ import {
 } from '@aws-sdk/client-iam';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as archiver from 'archiver';
+import archiver from 'archiver';
 
 export interface LambdaDeployerConfig {
   region: string;
