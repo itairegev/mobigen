@@ -2,6 +2,10 @@
 id: lead-developer
 description: Breaks down architecture into development tasks with priorities and dependencies.
 model: sonnet
+tier: basic
+category: planning
+timeout: 300000
+maxTurns: 100
 tools:
   - Read
   - Glob

@@ -301,8 +301,12 @@ export class ParallelTaskExecutor {
     let output: Record<string, unknown> = {};
     let error: string | undefined;
 
+    // Create AbortController for proper timeout cancellation
+    const abortController = new AbortController();
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
     // Create task in tracker
-    TaskTracker.createTask(
+    const trackerTask = TaskTracker.createTask(
       this.jobId,
       this.projectId,
       'implementation',
@@ -314,14 +318,14 @@ export class ParallelTaskExecutor {
       }
     );
 
-    const trackerTask = TaskTracker.getTasksByPhase(this.jobId, 'implementation')
+    const foundTask = TaskTracker.getTasksByPhase(this.jobId, 'implementation')
       .find(t => {
         const inputTask = t.input?.task as { id?: string } | undefined;
         return inputTask?.id === task.id;
       });
 
-    if (trackerTask) {
-      TaskTracker.startTask(trackerTask.id);
+    if (foundTask) {
+      TaskTracker.startTask(foundTask.id);
     }
 
     this.logger.info(`Starting task: ${task.id}`, {
@@ -346,22 +350,34 @@ export class ParallelTaskExecutor {
       // Build task-specific prompt
       const prompt = this.buildTaskPrompt(task);
 
-      // Execute with timeout
+      // Execute with timeout using AbortController
       const timeout = this.config.taskTimeout;
       const maxTurns = AGENT_MAX_TURNS['developer'] || 150;
 
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error(`Task ${task.id} timed out after ${timeout}ms`)), timeout)
+      // Set up timeout that will trigger abort
+      timeoutId = setTimeout(() => {
+        abortController.abort();
+        this.logger.warn(`Task ${task.id} timeout triggered after ${timeout}ms`);
+      }, timeout);
+
+      const result = await this.runTaskAgent(
+        developerAgent,
+        prompt,
+        task,
+        filesModified,
+        maxTurns,
+        abortController.signal
       );
 
-      const executionPromise = this.runTaskAgent(developerAgent, prompt, task, filesModified, maxTurns);
+      // Clear timeout on successful completion
+      clearTimeout(timeoutId);
+      timeoutId = undefined;
 
-      const result = await Promise.race([executionPromise, timeoutPromise]);
       output = result.output;
 
       // Mark task complete
-      if (trackerTask) {
-        TaskTracker.completeTask(trackerTask.id, true, output, filesModified);
+      if (foundTask) {
+        TaskTracker.completeTask(foundTask.id, true, output, filesModified);
       }
 
       this.logger.info(`Task completed: ${task.id}`, {
@@ -384,17 +400,29 @@ export class ParallelTaskExecutor {
       };
 
     } catch (err) {
-      error = err instanceof Error ? err.message : String(err);
+      // Clear timeout if still pending
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
 
-      this.logger.error(`Task failed: ${task.id}`, { error });
+      // Check if this was an abort (timeout)
+      const isAborted = abortController.signal.aborted;
+      if (isAborted) {
+        error = `Task ${task.id} timed out after ${this.config.taskTimeout}ms`;
+        this.logger.warn(`Task aborted due to timeout: ${task.id}`);
+      } else {
+        error = err instanceof Error ? err.message : String(err);
+        this.logger.error(`Task failed: ${task.id}`, { error });
+      }
 
-      if (trackerTask) {
-        TaskTracker.completeTask(trackerTask.id, false, undefined, filesModified, error);
+      if (foundTask) {
+        TaskTracker.completeTask(foundTask.id, false, undefined, filesModified, error);
       }
 
       await emitProgress(this.projectId, 'task:failed', {
         taskId: task.id,
         error,
+        timedOut: isAborted,
       });
 
       return {
@@ -416,7 +444,8 @@ export class ParallelTaskExecutor {
     prompt: string,
     task: DevelopmentTask,
     filesModified: string[],
-    maxTurns: number
+    maxTurns: number,
+    signal?: AbortSignal
   ): Promise<{ output: Record<string, unknown> }> {
     const output: Record<string, unknown> = {};
     let resultText = '';
@@ -449,6 +478,12 @@ ${agent.prompt}`,
         permissionMode: 'acceptEdits',
       },
     })) {
+      // Check if aborted before processing each message
+      if (signal?.aborted) {
+        this.logger.info(`Task ${task.id} aborted, stopping iteration`);
+        throw new Error(`Task ${task.id} was aborted`);
+      }
+
       // Track file changes
       if (message.type === 'tool' && (message.tool_name === 'Write' || message.tool_name === 'Edit')) {
         const filePath = message.tool_input?.file_path as string;

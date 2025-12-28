@@ -1,0 +1,17 @@
+{
+  "name": "@mobigen/config",
+  "version": "0.1.0",
+  "description": "Centralized configuration for Mobigen",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {}
+}

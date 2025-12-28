@@ -2,6 +2,11 @@
 id: qa
 description: Performs final quality assessment and produces QA report.
 model: sonnet
+tier: basic
+category: testing
+timeout: 600000
+maxTurns: 100
+optional: true
 tools:
   - Read
   - Grep

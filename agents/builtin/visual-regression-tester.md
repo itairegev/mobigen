@@ -2,6 +2,11 @@
 id: visual-regression-tester
 description: Performs visual regression testing by capturing and comparing screenshots, detecting UI changes, and validating visual consistency across builds and devices.
 model: sonnet
+tier: pro
+category: testing
+timeout: 600000
+maxTurns: 100
+optional: true
 tools:
   - Read
   - Bash

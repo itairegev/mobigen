@@ -14,9 +14,9 @@
 
 import * as path from 'path';
 import { EventEmitter } from 'events';
-import { AgentLoader, type AgentDefinition } from './agent-loader';
+import { AgentLoader, type AgentDefinition, type UserTier, type AgentCategory } from './agent-loader';
 
-export type { AgentDefinition } from './agent-loader';
+export type { AgentDefinition, UserTier, AgentCategory } from './agent-loader';
 
 /**
  * Options for creating the registry
@@ -189,6 +189,74 @@ export class AgentRegistry extends EventEmitter {
   }
 
   /**
+   * Find agents by category
+   */
+  findByCategory(category: AgentCategory): AgentDefinition[] {
+    return this.list().filter(agent => agent.category === category);
+  }
+
+  /**
+   * Find agents available for a given user tier
+   */
+  findByTier(userTier: UserTier): AgentDefinition[] {
+    const tierOrder: Record<UserTier, number> = {
+      basic: 0,
+      pro: 1,
+      enterprise: 2,
+    };
+
+    const userTierLevel = tierOrder[userTier];
+
+    return this.list().filter(agent => {
+      const agentTierLevel = tierOrder[agent.tier || 'basic'];
+      return agentTierLevel <= userTierLevel;
+    });
+  }
+
+  /**
+   * Check if an agent is available for a user tier
+   */
+  isAgentAvailableForTier(agentId: string, userTier: UserTier): boolean {
+    const agent = this.get(agentId);
+    if (!agent) return false;
+
+    const tierOrder: Record<UserTier, number> = {
+      basic: 0,
+      pro: 1,
+      enterprise: 2,
+    };
+
+    const agentTierLevel = tierOrder[agent.tier || 'basic'];
+    const userTierLevel = tierOrder[userTier];
+
+    return agentTierLevel <= userTierLevel;
+  }
+
+  /**
+   * Get agents available for a tier, grouped by category
+   */
+  getAgentsByTierGrouped(userTier: UserTier): Record<AgentCategory, AgentDefinition[]> {
+    const agents = this.findByTier(userTier);
+
+    const grouped: Record<AgentCategory, AgentDefinition[]> = {
+      orchestration: [],
+      planning: [],
+      implementation: [],
+      analysis: [],
+      validation: [],
+      testing: [],
+      default: [],
+    };
+
+    for (const agent of agents) {
+      const category = agent.category || 'default';
+      grouped[category].push(agent);
+    }
+
+    return grouped;
+  }
+
+  /**
    * Check if an agent exists
    */
   has(agentId: string): boolean {
@@ -205,8 +273,8 @@ export class AgentRegistry extends EventEmitter {
   /**
    * Generate catalog for AI orchestrator
    */
-  generateCatalog(): string {
-    return this.loader.generateCatalog();
+  generateCatalog(forTier?: UserTier): string {
+    return this.loader.generateCatalog(forTier);
   }
 
   /**

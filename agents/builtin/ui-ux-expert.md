@@ -2,6 +2,10 @@
 id: ui-ux-expert
 description: Creates comprehensive UI/UX design system including colors, typography, and components.
 model: sonnet
+tier: pro
+category: planning
+timeout: 300000
+maxTurns: 100
 tools:
   - Read
   - Write

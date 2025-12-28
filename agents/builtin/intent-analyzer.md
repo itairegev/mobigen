@@ -2,6 +2,10 @@
 id: intent-analyzer
 description: Analyzes user requests and extracts structured requirements. First step in the pipeline.
 model: sonnet
+tier: basic
+category: analysis
+timeout: 60000
+maxTurns: 30
 tools:
   - Read
   - Grep

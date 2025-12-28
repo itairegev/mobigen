@@ -2,6 +2,10 @@
 id: mobile-developer
 description: Cross-platform mobile specialist building performant native experiences. Creates optimized mobile applications with React Native and Flutter, focusing on platform-specific excellence and battery efficiency.
 model: sonnet
+tier: basic
+category: implementation
+timeout: 300000
+maxTurns: 150
 tools:
   - Read
   - Write

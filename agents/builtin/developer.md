@@ -2,6 +2,10 @@
 id: developer
 description: Implements specific development tasks. Creates and modifies React Native code.
 model: sonnet
+tier: basic
+category: implementation
+timeout: 300000
+maxTurns: 150
 tools:
   - Read
   - Write

@@ -2,6 +2,11 @@
 id: ui-interaction-tester
 description: Performs UI interaction testing by controlling device elements, clicking buttons, scrolling, and verifying screen states. Uses device control tools for comprehensive interaction testing.
 model: sonnet
+tier: pro
+category: testing
+timeout: 600000
+maxTurns: 100
+optional: true
 tools:
   - Read
   - Bash

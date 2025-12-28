@@ -2,6 +2,11 @@
 id: exploratory-tester
 description: Performs AI-powered exploratory testing by crawling the app, discovering screens, detecting anomalies, and finding edge cases that scripted tests miss.
 model: sonnet
+tier: enterprise
+category: testing
+timeout: 900000
+maxTurns: 200
+optional: true
 tools:
   - Read
   - Bash

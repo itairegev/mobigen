@@ -16,6 +16,7 @@
     "@anthropic-ai/claude-agent-sdk": "workspace:*",
     "@anthropic-ai/sdk": "^0.32.0",
     "@mobigen/ai": "workspace:*",
+    "@mobigen/github": "workspace:*",
     "@mobigen/storage": "workspace:*",
     "@mobigen/testing": "workspace:*",
     "@mobigen/db": "workspace:*",

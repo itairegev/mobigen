@@ -6,13 +6,85 @@ import * as path from 'path';
 const execAsync = promisify(exec);
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FILE CHANGE TRACKING
+// FILE CHANGE TRACKING (Per-Project)
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Track modified files during generation
+/**
+ * FileChangeTracker - Manages file modification tracking per project
+ * Avoids global mutable state by using a project-keyed registry
+ */
+class FileChangeTracker {
+  private static projectTrackers: Map<string, Map<string, { count: number; lastModified: Date }>> = new Map();
+
+  /**
+   * Get or create a tracker for a specific project
+   */
+  static getTracker(projectId: string): Map<string, { count: number; lastModified: Date }> {
+    let tracker = this.projectTrackers.get(projectId);
+    if (!tracker) {
+      tracker = new Map();
+      this.projectTrackers.set(projectId, tracker);
+    }
+    return tracker;
+  }
+
+  /**
+   * Record a file modification for a project
+   */
+  static recordModification(projectId: string, filePath: string): void {
+    const tracker = this.getTracker(projectId);
+    const existing = tracker.get(filePath);
+    tracker.set(filePath, {
+      count: (existing?.count || 0) + 1,
+      lastModified: new Date(),
+    });
+  }
+
+  /**
+   * Get all modified files for a project
+   */
+  static getModifiedFiles(projectId: string): Map<string, { count: number; lastModified: Date }> {
+    return new Map(this.getTracker(projectId));
+  }
+
+  /**
+   * Clear tracking for a specific project
+   */
+  static clearProject(projectId: string): void {
+    this.projectTrackers.delete(projectId);
+  }
+
+  /**
+   * Clear all trackers (for testing)
+   */
+  static clearAll(): void {
+    this.projectTrackers.clear();
+  }
+}
+
+// Legacy global tracker for backward compatibility (will be removed)
 const modifiedFiles: Map<string, { count: number; lastModified: Date }> = new Map();
 
-// Log all file modifications
+/**
+ * Create a file change logger for a specific project
+ */
+function createFileChangeLogger(projectId: string): HookCallback {
+  return async (input, toolUseId, { signal }) => {
+    const postInput = input as PostToolUseHookInput;
+    const filePath = postInput.tool_input?.file_path as string;
+
+    if (filePath) {
+      FileChangeTracker.recordModification(projectId, filePath);
+      const tracker = FileChangeTracker.getTracker(projectId);
+      const fileInfo = tracker.get(filePath);
+      console.log(`[${new Date().toISOString()}] [${projectId}] Modified: ${filePath} (${fileInfo?.count || 1}x)`);
+    }
+
+    return {};
+  };
+}
+
+// Legacy global logger for backward compatibility
 const fileChangeLogger: HookCallback = async (input, toolUseId, { signal }) => {
   const postInput = input as PostToolUseHookInput;
   const filePath = postInput.tool_input?.file_path as string;
@@ -277,6 +349,9 @@ const importValidator: HookCallback = async (input, toolUseId, context) => {
 
 // Configure hooks for query() options
 export function createQAHooks(projectId: string): HookConfig {
+  // Create a project-specific file change logger
+  const projectFileLogger = createFileChangeLogger(projectId);
+
   return {
     PreToolUse: [
       {
@@ -287,7 +362,7 @@ export function createQAHooks(projectId: string): HookConfig {
     PostToolUse: [
       {
         matcher: 'Edit|Write',
-        hooks: [fileChangeLogger, consoleLogChecker, importValidator],
+        hooks: [projectFileLogger, consoleLogChecker, importValidator],
       },
       {
         matcher: 'Edit',
@@ -299,6 +374,9 @@ export function createQAHooks(projectId: string): HookConfig {
 
 // Enhanced hooks with accessibility and performance checks
 export function createEnhancedQAHooks(projectId: string): HookConfig {
+  // Create a project-specific file change logger
+  const projectFileLogger = createFileChangeLogger(projectId);
+
   return {
     PreToolUse: [
       {
@@ -310,7 +388,7 @@ export function createEnhancedQAHooks(projectId: string): HookConfig {
       {
         matcher: 'Edit|Write',
         hooks: [
-          fileChangeLogger,
+          projectFileLogger,
           consoleLogChecker,
           importValidator,
           accessibilityChecker,
@@ -327,6 +405,9 @@ export function createEnhancedQAHooks(projectId: string): HookConfig {
 
 // Strict hooks for production-ready validation
 export function createStrictQAHooks(projectId: string, projectPath: string): HookConfig {
+  // Create a project-specific file change logger
+  const projectFileLogger = createFileChangeLogger(projectId);
+
   // Run ESLint after edits
   const eslintValidator: HookCallback = async (input, toolUseId, { signal }) => {
     const postInput = input as PostToolUseHookInput;
@@ -360,7 +441,7 @@ export function createStrictQAHooks(projectId: string, projectPath: string): Hoo
       {
         matcher: 'Edit|Write',
         hooks: [
-          fileChangeLogger,
+          projectFileLogger,
           consoleLogChecker,
           importValidator,
           accessibilityChecker,
@@ -375,14 +456,35 @@ export function createStrictQAHooks(projectId: string, projectPath: string): Hoo
   };
 }
 
-// Get list of modified files
-export function getModifiedFiles(): Map<string, { count: number; lastModified: Date }> {
+/**
+ * Get list of modified files for a specific project
+ * @param projectId - The project ID (if undefined, returns legacy global tracker)
+ */
+export function getModifiedFiles(projectId?: string): Map<string, { count: number; lastModified: Date }> {
+  if (projectId) {
+    return FileChangeTracker.getModifiedFiles(projectId);
+  }
+  // Legacy fallback
   return new Map(modifiedFiles);
 }
 
-// Clear modified files tracking
-export function clearModifiedFiles(): void {
-  modifiedFiles.clear();
+/**
+ * Clear modified files tracking
+ * @param projectId - The project ID (if undefined, clears legacy global tracker)
+ */
+export function clearModifiedFiles(projectId?: string): void {
+  if (projectId) {
+    FileChangeTracker.clearProject(projectId);
+  } else {
+    modifiedFiles.clear();
+  }
+}
+
+/**
+ * Get the list of file paths modified for a project
+ */
+export function getModifiedFilePaths(projectId: string): string[] {
+  return Array.from(FileChangeTracker.getModifiedFiles(projectId).keys());
 }
 
 // Export individual hooks for custom configurations
@@ -395,4 +497,6 @@ export {
   accessibilityChecker,
   performanceChecker,
   importValidator,
+  createFileChangeLogger,
+  FileChangeTracker,
 };

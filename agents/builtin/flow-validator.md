@@ -2,6 +2,10 @@
 id: flow-validator
 description: Validates user journeys and critical paths through the app using state machine testing. Ensures complete flows work end-to-end and match expected behavior.
 model: sonnet
+tier: basic
+category: testing
+timeout: 600000
+maxTurns: 100
 tools:
   - Read
   - Bash

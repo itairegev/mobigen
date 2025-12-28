@@ -2,6 +2,10 @@
 id: error-fixer
 description: Fixes validation errors with minimal, targeted changes.
 model: sonnet
+tier: basic
+category: validation
+timeout: 180000
+maxTurns: 50
 tools:
   - Read
   - Edit

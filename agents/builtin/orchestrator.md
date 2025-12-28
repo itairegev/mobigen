@@ -2,6 +2,10 @@
 id: orchestrator
 description: Coordinates the entire app generation pipeline. Delegates to specialized agents.
 model: opus
+tier: basic
+category: orchestration
+timeout: 900000
+maxTurns: 200
 tools:
   - Task
   - TaskOutput

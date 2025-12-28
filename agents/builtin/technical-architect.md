@@ -2,6 +2,10 @@
 id: technical-architect
 description: Designs system architecture, data models, and API structure based on PRD.
 model: opus
+tier: pro
+category: planning
+timeout: 300000
+maxTurns: 100
 tools:
   - Read
   - Glob

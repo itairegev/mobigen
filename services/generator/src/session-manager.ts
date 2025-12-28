@@ -97,6 +97,23 @@ export async function endSession(
   filesModified: string[],
   tokensUsed: number
 ): Promise<void> {
+  // First, get the session to retrieve the start time
+  const session = await prisma.projectSession.findFirst({
+    where: {
+      projectId,
+      claudeSessionId: sessionId,
+      endedAt: null,
+    },
+    select: {
+      createdAt: true,
+    },
+  });
+
+  // Calculate duration using the actual session start time
+  const durationSeconds = session
+    ? Math.floor((Date.now() - session.createdAt.getTime()) / 1000)
+    : 0;
+
   await prisma.projectSession.updateMany({
     where: {
       projectId,
@@ -108,9 +125,7 @@ export async function endSession(
       summary,
       filesModified,
       tokensUsed,
-      durationSeconds: Math.floor(
-        (Date.now() - new Date().getTime()) / 1000
-      ),
+      durationSeconds,
     },
   });
 }

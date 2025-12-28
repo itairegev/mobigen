@@ -1,0 +1,348 @@
+/**
+ * Mobigen Configuration - Centralized configuration management
+ *
+ * All magic numbers, timeouts, and settings in one place.
+ */
+
+// ═══════════════════════════════════════════════════════════════════════════
+// USER TIERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+export type UserTier = 'basic' | 'pro' | 'enterprise';
+
+export interface TierLimits {
+  maxConcurrentAgents: number;
+  maxGenerationsPerDay: number;
+  maxBuildsPerDay: number;
+  apiCallsPerMinute: number;
+  enabledAgentTiers: UserTier[];
+  features: {
+    parallelExecution: boolean;
+    advancedValidation: boolean;
+    customAgents: boolean;
+    priorityBuilds: boolean;
+    advancedAnalytics: boolean;
+    codeExport: boolean;
+  };
+}
+
+export const TIER_LIMITS: Record<UserTier, TierLimits> = {
+  basic: {
+    maxConcurrentAgents: 2,
+    maxGenerationsPerDay: 50,
+    maxBuildsPerDay: 5,
+    apiCallsPerMinute: 60,
+    enabledAgentTiers: ['basic'],
+    features: {
+      parallelExecution: false,
+      advancedValidation: false,
+      customAgents: false,
+      priorityBuilds: false,
+      advancedAnalytics: false,
+      codeExport: false,
+    },
+  },
+  pro: {
+    maxConcurrentAgents: 3,
+    maxGenerationsPerDay: 500,
+    maxBuildsPerDay: 50,
+    apiCallsPerMinute: 300,
+    enabledAgentTiers: ['basic', 'pro'],
+    features: {
+      parallelExecution: true,
+      advancedValidation: true,
+      customAgents: true,
+      priorityBuilds: false,
+      advancedAnalytics: true,
+      codeExport: false,
+    },
+  },
+  enterprise: {
+    maxConcurrentAgents: 5,
+    maxGenerationsPerDay: -1, // unlimited
+    maxBuildsPerDay: -1, // unlimited
+    apiCallsPerMinute: 1000,
+    enabledAgentTiers: ['basic', 'pro', 'enterprise'],
+    features: {
+      parallelExecution: true,
+      advancedValidation: true,
+      customAgents: true,
+      priorityBuilds: true,
+      advancedAnalytics: true,
+      codeExport: true,
+    },
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AGENT CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface AgentConfig {
+  timeout: number;       // milliseconds
+  maxTurns: number;
+  retries: number;
+  model: 'opus' | 'sonnet' | 'haiku';
+}
+
+// Default agent configurations by role category
+export const AGENT_DEFAULTS: Record<string, AgentConfig> = {
+  // Orchestration agents - long running, high complexity
+  orchestration: {
+    timeout: 900000,   // 15 min
+    maxTurns: 200,
+    retries: 3,
+    model: 'opus',
+  },
+  // Planning agents - medium complexity
+  planning: {
+    timeout: 300000,   // 5 min
+    maxTurns: 100,
+    retries: 2,
+    model: 'sonnet',
+  },
+  // Implementation agents - code generation
+  implementation: {
+    timeout: 300000,   // 5 min
+    maxTurns: 150,
+    retries: 2,
+    model: 'opus',
+  },
+  // Analysis agents - quick parsing
+  analysis: {
+    timeout: 60000,    // 1 min
+    maxTurns: 30,
+    retries: 2,
+    model: 'sonnet',
+  },
+  // Validation agents - checking code
+  validation: {
+    timeout: 180000,   // 3 min
+    maxTurns: 50,
+    retries: 3,
+    model: 'sonnet',
+  },
+  // QA/Testing agents - thorough testing
+  testing: {
+    timeout: 600000,   // 10 min
+    maxTurns: 100,
+    retries: 2,
+    model: 'sonnet',
+  },
+  // Default fallback
+  default: {
+    timeout: 180000,   // 3 min
+    maxTurns: 80,
+    retries: 2,
+    model: 'sonnet',
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SESSION CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const SESSION_CONFIG = {
+  ttlHours: 20,                    // Session expiration
+  maxSessionsPerProject: 10,       // Keep last N sessions
+  cleanupIntervalHours: 24,        // How often to clean old sessions
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VALIDATION CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const VALIDATION_CONFIG = {
+  maxRetries: 3,
+  tierTimeouts: {
+    tier1: 30000,    // 30 seconds - instant checks
+    tier2: 120000,   // 2 minutes - fast checks
+    tier3: 600000,   // 10 minutes - thorough checks
+  },
+  parallelValidators: true,
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PARALLEL EXECUTION CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const PARALLEL_CONFIG = {
+  maxConcurrentAgents: 3,
+  taskTimeout: 300000,    // 5 minutes per task
+  maxRetries: 2,
+  continueOnTaskFailure: true,
+  chunkSize: 3,           // Tasks per parallel batch
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RATE LIMITING CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const RATE_LIMIT_CONFIG = {
+  enabled: true,
+  windowMs: 60000,                    // 1 minute window
+  defaultRequestsPerWindow: 60,       // Default rate limit
+  burstMultiplier: 1.5,               // Allow burst up to 1.5x limit
+  retryAfterMs: 1000,                 // Wait before retry
+  maxRetries: 3,
+  backoffMultiplier: 2,               // Exponential backoff
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CACHING CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const CACHE_CONFIG = {
+  templateContext: {
+    enabled: true,
+    ttlMs: 300000,        // 5 minutes
+    maxEntries: 50,
+  },
+  agentCatalog: {
+    enabled: true,
+    ttlMs: 60000,         // 1 minute
+  },
+  projectFiles: {
+    enabled: true,
+    ttlMs: 30000,         // 30 seconds
+    maxSizeMb: 100,
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LOGGING CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+export const LOGGING_CONFIG = {
+  level: (process.env.LOG_LEVEL as LogLevel) || 'info',
+  structured: true,
+  includeTimestamp: true,
+  includeAgentId: true,
+  includePhase: true,
+  maxMessageLength: 1000,
+  sensitiveFields: ['apiKey', 'token', 'password', 'secret'],
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODEL CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const MODEL_CONFIG = {
+  // Model IDs for Anthropic
+  anthropic: {
+    opus: 'claude-opus-4-5-20251101',
+    sonnet: 'claude-sonnet-4-5-20251101',
+    haiku: 'claude-haiku-4-5-20251001',
+  },
+  // Model IDs for AWS Bedrock
+  bedrock: {
+    opus: 'anthropic.claude-opus-4-5-20251101-v1:0',
+    sonnet: 'anthropic.claude-sonnet-4-5-20251101-v1:0',
+    haiku: 'anthropic.claude-haiku-4-5-20251001-v1:0',
+  },
+  // Default model for each use case
+  defaults: {
+    codeGeneration: 'opus',
+    analysis: 'sonnet',
+    validation: 'sonnet',
+    quickTask: 'haiku',
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PIPELINE CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface PipelinePhase {
+  id: string;
+  name: string;
+  agents: string[];
+  parallel: boolean;
+  tier: UserTier;
+  optional: boolean;
+}
+
+export const PIPELINE_PHASES: PipelinePhase[] = [
+  { id: 'setup', name: 'Project Setup', agents: ['intent-analyzer'], parallel: false, tier: 'basic', optional: false },
+  { id: 'analysis', name: 'Intent Analysis', agents: ['intent-analyzer'], parallel: false, tier: 'basic', optional: false },
+  { id: 'product', name: 'Product Definition', agents: ['product-manager'], parallel: false, tier: 'basic', optional: false },
+  { id: 'design', name: 'Architecture & Design', agents: ['technical-architect', 'ui-ux-expert'], parallel: true, tier: 'pro', optional: false },
+  { id: 'planning', name: 'Task Planning', agents: ['lead-developer'], parallel: false, tier: 'basic', optional: false },
+  { id: 'implementation', name: 'Code Implementation', agents: ['developer'], parallel: true, tier: 'basic', optional: false },
+  { id: 'validation', name: 'Code Validation', agents: ['validator', 'error-fixer'], parallel: false, tier: 'basic', optional: false },
+  { id: 'qa', name: 'Quality Assurance', agents: ['qa'], parallel: false, tier: 'basic', optional: true },
+  { id: 'testing', name: 'Advanced Testing', agents: ['ui-interaction-tester', 'visual-regression-tester'], parallel: true, tier: 'pro', optional: true },
+  { id: 'build', name: 'Build Validation', agents: ['build-validator'], parallel: false, tier: 'pro', optional: true },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENVIRONMENT HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+export function isDevelopment(): boolean {
+  return process.env.NODE_ENV !== 'production';
+}
+
+export function isProduction(): boolean {
+  return process.env.NODE_ENV === 'production';
+}
+
+export function getEnvVar(key: string, defaultValue?: string): string {
+  const value = process.env[key];
+  if (value === undefined && defaultValue === undefined) {
+    throw new Error(`Required environment variable ${key} is not set`);
+  }
+  return value ?? defaultValue!;
+}
+
+export function getEnvNumber(key: string, defaultValue: number): number {
+  const value = process.env[key];
+  if (value === undefined) return defaultValue;
+  const parsed = parseInt(value, 10);
+  return isNaN(parsed) ? defaultValue : parsed;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CONFIGURATION VALIDATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export function validateConfig(): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+
+  // Check required env vars in production
+  if (isProduction()) {
+    const requiredEnvVars = ['ANTHROPIC_API_KEY'];
+    for (const key of requiredEnvVars) {
+      if (!process.env[key]) {
+        errors.push(`Missing required environment variable: ${key}`);
+      }
+    }
+  }
+
+  // Validate tier limits
+  for (const [tier, limits] of Object.entries(TIER_LIMITS)) {
+    if (limits.maxConcurrentAgents < 1) {
+      errors.push(`Invalid maxConcurrentAgents for tier ${tier}`);
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+// Export all as a single config object for convenience
+export const CONFIG = {
+  tiers: TIER_LIMITS,
+  agents: AGENT_DEFAULTS,
+  session: SESSION_CONFIG,
+  validation: VALIDATION_CONFIG,
+  parallel: PARALLEL_CONFIG,
+  rateLimit: RATE_LIMIT_CONFIG,
+  cache: CACHE_CONFIG,
+  logging: LOGGING_CONFIG,
+  models: MODEL_CONFIG,
+  pipeline: PIPELINE_PHASES,
+};
+
+export default CONFIG;

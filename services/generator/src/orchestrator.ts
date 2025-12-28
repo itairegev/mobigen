@@ -1,5 +1,11 @@
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { mobigenAgents, generationPipeline, agentModelConfig } from '@mobigen/ai';
+import {
+  generationPipeline,
+  agentModelConfig,
+  getDefaultRegistry,
+  type DynamicAgentDefinition,
+  type UserTier,
+} from '@mobigen/ai';
 import type {
   WhiteLabelConfig,
   GenerationResult,
@@ -17,6 +23,13 @@ import { emitProgress } from './api';
 import { flagForHumanReview } from './session-manager';
 import { createQAHooks } from './hooks/index';
 import { createLogger, type GenerationLogger } from './logger';
+import { runParallelImplementation } from './parallel-executor';
+import {
+  GitHubFileTracker,
+  triggerGitHubPhaseSync,
+  shouldSyncPhase,
+  type GitHubConfigChecker,
+} from './hooks/github-sync';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
@@ -121,6 +134,27 @@ const MOBIGEN_ROOT = resolveMobigenRoot();
 const TEMPLATES_BARE_DIR = path.join(MOBIGEN_ROOT, 'templates-bare');
 const TEMPLATES_WORKING_DIR = path.join(MOBIGEN_ROOT, 'templates');
 const PROJECTS_DIR = path.join(MOBIGEN_ROOT, 'projects');
+const AGENTS_DIR = path.join(MOBIGEN_ROOT, 'agents', 'builtin');
+
+// Initialize dynamic agent registry
+const agentRegistry = getDefaultRegistry();
+
+// Load agents from the agents/builtin folder
+async function initializeAgentRegistry(): Promise<void> {
+  try {
+    if (fs.existsSync(AGENTS_DIR)) {
+      await agentRegistry.initialize();
+      console.log(`[orchestrator] │   Agents loaded:     ${agentRegistry.count()} agents`);
+    } else {
+      console.warn(`[orchestrator] │   Agents dir missing: ${AGENTS_DIR}`);
+    }
+  } catch (error) {
+    console.error(`[orchestrator] Failed to load agents:`, error);
+  }
+}
+
+// Initialize registry at startup (non-blocking)
+initializeAgentRegistry().catch(console.error);
 
 // Log paths at startup
 console.log(`[orchestrator] ┌─────────────────────────────────────────────`);
@@ -129,6 +163,7 @@ console.log(`[orchestrator] │   MOBIGEN_ROOT:      ${MOBIGEN_ROOT}`);
 console.log(`[orchestrator] │   TEMPLATES_BARE:    ${TEMPLATES_BARE_DIR}`);
 console.log(`[orchestrator] │   TEMPLATES_WORKING: ${TEMPLATES_WORKING_DIR}`);
 console.log(`[orchestrator] │   PROJECTS_DIR:      ${PROJECTS_DIR}`);
+console.log(`[orchestrator] │   AGENTS_DIR:        ${AGENTS_DIR}`);
 console.log(`[orchestrator] │   CWD:               ${process.cwd()}`);
 console.log(`[orchestrator] │   Bare exists:       ${fs.existsSync(TEMPLATES_BARE_DIR)}`);
 console.log(`[orchestrator] │   Working exists:    ${fs.existsSync(TEMPLATES_WORKING_DIR)}`);
@@ -150,9 +185,14 @@ interface PipelineContext {
   sessionId?: string;
   metadata?: ProjectMetadata;
   generationVersion: number;
+  userTier: UserTier;
 
   // Template context - what the template already provides
   templateContext?: TemplateContext;
+
+  // GitHub sync integration
+  githubTracker?: GitHubFileTracker;
+  githubConfigChecker?: GitHubConfigChecker;
 
   // Outputs from each phase
   intent?: {
@@ -227,7 +267,7 @@ function formatTemplateContext(ctx: TemplateContext): string {
   return sections.join('\n');
 }
 
-// Helper to run a single agent
+// Helper to run a single agent using dynamic registry
 async function runAgent(
   role: AgentRole,
   prompt: string,
@@ -238,16 +278,39 @@ async function runAgent(
     permissionMode?: 'acceptEdits' | 'ask';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     hooks?: any;
+    userTier?: UserTier;
   } = {}
 ): Promise<string> {
-  const agent = mobigenAgents[role];
-  const model = agentModelConfig[role];
+  // Get agent from dynamic registry
+  const agent = agentRegistry.get(role);
+  if (!agent) {
+    throw new Error(`Agent '${role}' not found in registry. Available agents: ${agentRegistry.getAgentIds().join(', ')}`);
+  }
+
+  // Check tier availability - use context.userTier or fallback to options/default
+  const userTier = context.userTier || options.userTier || 'enterprise';
+  if (!agentRegistry.isAgentAvailableForTier(role, userTier)) {
+    throw new Error(`Agent '${role}' requires tier '${agent.tier || 'basic'}' but user has '${userTier}'`);
+  }
+
+  // Get model from agent definition or use agentModelConfig fallback
+  const model = agent.model || agentModelConfig[role] || 'sonnet';
+
+  // Convert DynamicAgentDefinition to SDK-compatible format
+  const sdkAgent = {
+    description: agent.description,
+    prompt: agent.prompt,
+    tools: agent.tools,
+  };
+
   let output = '';
   let messageCount = 0;
 
   console.log(`[orchestrator] ┌─────────────────────────────────────────────`);
   console.log(`[orchestrator] │ Agent: ${role}`);
   console.log(`[orchestrator] │ Model: ${model}`);
+  console.log(`[orchestrator] │ Tier: ${agent.tier || 'basic'}`);
+  console.log(`[orchestrator] │ Category: ${agent.category || 'default'}`);
   console.log(`[orchestrator] │ Prompt length: ${prompt.length} chars`);
   console.log(`[orchestrator] │ Has session ID: ${!!context.sessionId}`);
   console.log(`[orchestrator] └─────────────────────────────────────────────`);
@@ -259,7 +322,7 @@ async function runAgent(
       prompt,
       options: {
         resume: context.sessionId,
-        agents: { [role]: agent },
+        agents: { [role]: sdkAgent },
         allowedTools: options.allowedTools || agent.tools,
         permissionMode: options.permissionMode,
         hooks: options.hooks,
@@ -285,6 +348,11 @@ ${agent.prompt}`,
         const filePath = message.tool_input?.file_path as string;
         if (filePath && !result.files.includes(filePath)) {
           result.files.push(filePath);
+        }
+        // Also track for GitHub sync
+        if (context.githubTracker && filePath) {
+          const isWrite = message.tool_name === 'Write';
+          context.githubTracker.trackWrite(filePath, isWrite);
         }
       }
 
@@ -328,7 +396,7 @@ ${agent.prompt}`,
   return output;
 }
 
-// Parse JSON from agent output with improved handling
+// Parse JSON from agent output with improved handling (legacy function)
 function parseJSON<T extends Record<string, unknown>>(output: string, fallback: T): T {
   try {
     // First, try to find JSON in markdown code blocks
@@ -390,6 +458,11 @@ function parseJSON<T extends Record<string, unknown>>(output: string, fallback: 
   return fallback;
 }
 
+// NOTE: Zod schema validation is available in @mobigen/ai/schemas but requires
+// aligning the schema types with the existing TypeScript types in types.ts.
+// See packages/ai/src/schemas/ for the Zod schemas.
+// TODO: Align Zod schemas with TypeScript types and integrate parseAgentOutput here.
+
 // Commit changes after a phase
 async function commitPhase(
   context: PipelineContext,
@@ -410,6 +483,40 @@ async function commitPhase(
   }
 }
 
+// Trigger GitHub sync after a phase (if enabled)
+async function syncPhaseToGitHub(
+  context: PipelineContext,
+  phase: string,
+  logger: GenerationLogger
+): Promise<void> {
+  if (!context.githubTracker) {
+    return;
+  }
+
+  if (!shouldSyncPhase(phase)) {
+    return;
+  }
+
+  try {
+    const jobId = await triggerGitHubPhaseSync(
+      context.projectId,
+      phase,
+      context.githubTracker,
+      context.githubConfigChecker
+    );
+
+    if (jobId) {
+      logger.info('GitHub sync queued', { phase, jobId });
+    }
+  } catch (error) {
+    // Log but don't fail the pipeline
+    logger.warn('GitHub sync failed', {
+      phase,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // MAIN ORCHESTRATOR
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -417,7 +524,8 @@ async function commitPhase(
 export async function generateApp(
   userPrompt: string,
   projectId: string,
-  config: WhiteLabelConfig
+  config: WhiteLabelConfig,
+  userTier: UserTier = 'enterprise' // Default to enterprise to give all users access to all agents
 ): Promise<GenerationResult> {
   const projectPath = path.join(PROJECTS_DIR, projectId);
 
@@ -427,9 +535,24 @@ export async function generateApp(
     console.log(`[orchestrator] Created project directory: ${projectPath}`);
   }
 
+  // Ensure agent registry is loaded (may have been loading in background)
+  if (agentRegistry.count() === 0 && fs.existsSync(AGENTS_DIR)) {
+    console.log(`[orchestrator] Agent registry empty, loading agents...`);
+    await agentRegistry.initialize();
+    console.log(`[orchestrator] Loaded ${agentRegistry.count()} agents`);
+  }
+
   // Create logger for this generation run
   const logger = createLogger(projectId, projectPath);
-  logger.info('Starting app generation', { userPrompt: userPrompt.substring(0, 100) + '...', config });
+  logger.info('Starting app generation', {
+    userPrompt: userPrompt.substring(0, 100) + '...',
+    config,
+    userTier,
+    availableAgents: agentRegistry.count(),
+  });
+
+  // Initialize GitHub file tracker for sync integration
+  const githubTracker = new GitHubFileTracker();
 
   const context: PipelineContext = {
     userPrompt,
@@ -437,6 +560,8 @@ export async function generateApp(
     projectPath,
     config,
     generationVersion: 1,
+    userTier,
+    githubTracker,
   };
 
   const result: GenerationResult = {
@@ -634,8 +759,9 @@ Identify what the template already provides vs. what needs to be built.`,
       userStories: context.prd.userStories?.length || 0,
     });
 
-    // Commit PRD phase
+    // Commit PRD phase and sync to GitHub
     await commitPhase(context, 'product-definition', 'product-manager');
+    await syncPhaseToGitHub(context, 'product-definition', logger);
     logger.phaseEnd('product-definition', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -698,8 +824,9 @@ Follow the patterns already established in the template.`,
       dependencies: context.architecture.dependencies?.length || 0,
     });
 
-    // Commit architecture phase
+    // Commit architecture phase and sync to GitHub
     await commitPhase(context, 'architecture', 'technical-architect');
+    await syncPhaseToGitHub(context, 'architecture', logger);
     logger.phaseEnd('architecture', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -782,8 +909,9 @@ Use NativeWind/Tailwind patterns consistent with existing code.`,
       components: context.uiDesign.components?.length || 0,
     });
 
-    // Commit UI design phase
+    // Commit UI design phase and sync to GitHub
     await commitPhase(context, 'ui-design', 'ui-ux-expert');
+    await syncPhaseToGitHub(context, 'ui-design', logger);
     logger.phaseEnd('ui-design', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -846,66 +974,69 @@ Each task should specify whether it's modifying or creating a file.`,
     logger.phaseEnd('planning', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // PHASE 6: IMPLEMENTATION
+    // PHASE 6: IMPLEMENTATION (PARALLEL)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     logger.phaseStart('implementation', 'Code Implementation');
     await emitProgress(projectId, 'phase', { phase: 'implementation', index: 6 });
 
-    const qaHooks = createQAHooks(projectId);
     const tasks = context.taskBreakdown?.tasks || [];
+    logger.info('Starting parallel implementation', { totalTasks: tasks.length });
 
-    // Sort tasks by priority and dependencies
-    const sortedTasks = [...tasks].sort((a, b) => a.priority - b.priority);
-    logger.info('Starting implementation', { totalTasks: sortedTasks.length });
+    if (tasks.length > 0) {
+      // Generate a unique job ID for this implementation run
+      const jobId = `job-${projectId}-${Date.now()}`;
 
-    // Execute tasks sequentially (respecting dependencies)
-    for (let i = 0; i < sortedTasks.length; i++) {
-      const task = sortedTasks[i];
-      await emitProgress(projectId, 'task', {
-        taskId: task.id,
-        title: task.title,
-        index: i + 1,
-        total: sortedTasks.length
+      // Build context for parallel executor
+      const parallelContext = {
+        template: context.architecture?.template || 'base',
+        templateContext: context.templateContext,
+        architecture: context.architecture,
+        uiDesign: context.uiDesign,
+        prd: context.prd,
+      };
+
+      logger.info('Running parallel implementation', {
+        jobId,
+        taskCount: tasks.length,
+        parallelizableTasks: context.taskBreakdown?.parallelizableTasks?.length || 0,
       });
 
-      logger.info(`Task ${i + 1}/${sortedTasks.length}: ${task.title}`, {
-        taskId: task.id,
-        type: task.type,
-        files: task.files,
-      });
-      logger.agentStart('developer', 'implementation');
-
-      await runAgent(
-        'developer',
-        `Implement this development task:
-
-TASK: ${task.title}
-DESCRIPTION: ${task.description}
-TYPE: ${task.type}
-FILES: ${task.files.join(', ')}
-
-ACCEPTANCE CRITERIA:
-${task.acceptanceCriteria.map((c, j) => `${j + 1}. ${c}`).join('\n')}
-
-CONTEXT:
-- Template: ${context.architecture?.template || 'base'}
-- Project path: ${context.projectPath}
-
-Implement the task following React Native + Expo patterns.`,
-        context,
-        result,
+      // Execute tasks in parallel using the parallel executor
+      const parallelResult = await runParallelImplementation(
+        projectId,
+        context.projectPath,
+        MOBIGEN_ROOT,
+        jobId,
+        context.taskBreakdown!,
+        parallelContext,
         {
-          allowedTools: ['Read', 'Write', 'Edit', 'Bash', 'Glob', 'Grep'],
-          permissionMode: 'acceptEdits',
-          hooks: qaHooks,
+          maxConcurrentAgents: 3,
+          taskTimeout: 300000, // 5 minutes per task
+          maxRetries: 2,
+          continueOnTaskFailure: true,
         }
       );
 
-      logger.agentEnd('developer', true, 'implementation');
-      logger.success(`Task completed: ${task.title}`);
+      // Update result with files from parallel execution
+      result.files.push(...parallelResult.totalFilesModified);
 
-      // Commit after each task
-      await commitPhase(context, `task-${task.id}`, 'developer');
+      logger.info('Parallel implementation completed', {
+        success: parallelResult.success,
+        filesModified: parallelResult.totalFilesModified.length,
+        failedTasks: parallelResult.failedTasks.length,
+        duration: parallelResult.duration,
+      });
+
+      // Log any failed tasks
+      if (parallelResult.failedTasks.length > 0) {
+        logger.warn('Some tasks failed', {
+          failedTasks: parallelResult.failedTasks,
+        });
+      }
+
+      // Commit after implementation and sync to GitHub
+      await commitPhase(context, 'implementation-parallel', 'developer');
+      await syncPhaseToGitHub(context, 'implementation', logger);
     }
 
     logger.info('Implementation complete', { filesModified: result.files.length });
@@ -1002,8 +1133,9 @@ Project path: ${context.projectPath}`,
     logger.saveValidation(context.validation);
     logger.info('Validation complete', { passed: validationPassed, attempts });
 
-    // Commit validation phase
+    // Commit validation phase and sync to GitHub
     await commitPhase(context, 'validation', 'validator');
+    await syncPhaseToGitHub(context, 'validation', logger);
     logger.phaseEnd('validation', validationPassed);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1051,8 +1183,9 @@ Provide overall score and production readiness assessment.`,
       blockers: context.qaReport.blockers.length,
     });
 
-    // Commit QA phase
+    // Commit QA phase and sync to GitHub
     await commitPhase(context, 'quality-assurance', 'qa');
+    await syncPhaseToGitHub(context, 'quality-assurance', logger);
     logger.phaseEnd('qa', context.qaReport.readyForProduction);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1133,5 +1266,10 @@ Provide overall score and production readiness assessment.`,
 }
 
 // Export for external use
-export { templateManager, runAgent, parseJSON, PROJECTS_DIR };
+export { templateManager, runAgent, parseJSON, PROJECTS_DIR, agentRegistry, AGENTS_DIR };
 export type { PipelineContext };
+export type { UserTier } from '@mobigen/ai';
+
+// Re-export GitHub sync utilities
+export { GitHubFileTracker } from './hooks/github-sync';
+export type { GitHubConfigChecker } from './hooks/github-sync';

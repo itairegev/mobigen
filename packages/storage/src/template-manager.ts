@@ -84,24 +84,63 @@ export interface GenerationRecord {
 }
 
 /**
+ * Cached template context with metadata for invalidation
+ */
+interface CachedTemplateContext {
+  context: TemplateContext;
+  templateName: string;
+  cachedAt: number;
+  templateCommit: string;
+  templateVersion: string;
+}
+
+/**
+ * Cache options for template context
+ */
+interface CacheOptions {
+  /** Enable in-memory caching */
+  enableMemoryCache?: boolean;
+  /** Enable file-based caching */
+  enableFileCache?: boolean;
+  /** TTL for in-memory cache in milliseconds (default: 5 minutes) */
+  memoryTtlMs?: number;
+  /** Directory for file-based cache */
+  cacheDir?: string;
+}
+
+/**
  * TemplateManager handles:
  * - Bare repos (templates-bare/*.git) - Source of truth
  * - Working copies (templates/*) - For template development
  * - Project creation by cloning from bare repos
+ * - Caching of template contexts for performance
  */
 export class TemplateManager {
   private bareRepoDir: string;
   private workingCopyDir: string;
   private projectsDir: string;
+  private cacheOptions: CacheOptions;
+
+  // In-memory cache for template contexts
+  private memoryCache: Map<string, CachedTemplateContext> = new Map();
+  private readonly DEFAULT_MEMORY_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
   constructor(config: {
     bareRepoDir: string;
     workingCopyDir: string;
     projectsDir: string;
+    cacheOptions?: CacheOptions;
   }) {
     this.bareRepoDir = config.bareRepoDir;
     this.workingCopyDir = config.workingCopyDir;
     this.projectsDir = config.projectsDir;
+    this.cacheOptions = {
+      enableMemoryCache: true,
+      enableFileCache: true,
+      memoryTtlMs: 5 * 60 * 1000, // 5 minutes
+      cacheDir: path.join(config.workingCopyDir, '.cache'),
+      ...config.cacheOptions,
+    };
   }
 
   /**
@@ -201,8 +240,14 @@ export class TemplateManager {
   /**
    * Get comprehensive template context for AI agents
    * This tells agents what the template already provides
+   *
+   * Implements a two-tier caching strategy:
+   * 1. In-memory cache with TTL for fast access
+   * 2. File-based cache for persistence across restarts
+   *
+   * Cache is invalidated when template version/commit changes
    */
-  async getTemplateContext(templateName: string): Promise<TemplateContext | null> {
+  async getTemplateContext(templateName: string, forceRefresh = false): Promise<TemplateContext | null> {
     const workingCopyPath = path.join(this.workingCopyDir, templateName);
 
     try {
@@ -211,6 +256,158 @@ export class TemplateManager {
       return null;
     }
 
+    // Get current template info for cache validation
+    const templateInfo = await this.getTemplateInfo(templateName);
+    const currentCommit = templateInfo?.commit || 'unknown';
+    const currentVersion = templateInfo?.version || '1.0.0';
+
+    // Check in-memory cache first (unless forced refresh)
+    if (!forceRefresh && this.cacheOptions.enableMemoryCache) {
+      const cached = this.memoryCache.get(templateName);
+      if (cached && this.isMemoryCacheValid(cached, currentCommit)) {
+        console.log(`[TemplateManager] Cache hit (memory): ${templateName}`);
+        return cached.context;
+      }
+    }
+
+    // Check file-based cache (unless forced refresh)
+    if (!forceRefresh && this.cacheOptions.enableFileCache) {
+      const fileCached = await this.getFileCachedContext(templateName);
+      if (fileCached && this.isFileCacheValid(fileCached, currentCommit)) {
+        console.log(`[TemplateManager] Cache hit (file): ${templateName}`);
+        // Also populate memory cache
+        if (this.cacheOptions.enableMemoryCache) {
+          this.memoryCache.set(templateName, fileCached);
+        }
+        return fileCached.context;
+      }
+    }
+
+    // Cache miss - build context from scratch
+    console.log(`[TemplateManager] Cache miss: ${templateName}, building context...`);
+    const startTime = Date.now();
+
+    const context = await this.buildTemplateContext(templateName, workingCopyPath);
+
+    if (context) {
+      const cachedContext: CachedTemplateContext = {
+        context,
+        templateName,
+        cachedAt: Date.now(),
+        templateCommit: currentCommit,
+        templateVersion: currentVersion,
+      };
+
+      // Save to memory cache
+      if (this.cacheOptions.enableMemoryCache) {
+        this.memoryCache.set(templateName, cachedContext);
+      }
+
+      // Save to file cache
+      if (this.cacheOptions.enableFileCache) {
+        await this.saveFileCachedContext(templateName, cachedContext);
+      }
+
+      console.log(`[TemplateManager] Built context for ${templateName} in ${Date.now() - startTime}ms`);
+    }
+
+    return context;
+  }
+
+  /**
+   * Check if memory cache entry is valid
+   */
+  private isMemoryCacheValid(cached: CachedTemplateContext, currentCommit: string): boolean {
+    const ttl = this.cacheOptions.memoryTtlMs || this.DEFAULT_MEMORY_TTL_MS;
+    const isNotExpired = Date.now() - cached.cachedAt < ttl;
+    const commitMatches = cached.templateCommit === currentCommit;
+    return isNotExpired && commitMatches;
+  }
+
+  /**
+   * Check if file cache entry is valid (no TTL, just version check)
+   */
+  private isFileCacheValid(cached: CachedTemplateContext, currentCommit: string): boolean {
+    return cached.templateCommit === currentCommit;
+  }
+
+  /**
+   * Get template context from file cache
+   */
+  private async getFileCachedContext(templateName: string): Promise<CachedTemplateContext | null> {
+    if (!this.cacheOptions.cacheDir) return null;
+
+    const cachePath = path.join(this.cacheOptions.cacheDir, `${templateName}.context.json`);
+    try {
+      const content = await fs.readFile(cachePath, 'utf-8');
+      return JSON.parse(content) as CachedTemplateContext;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Save template context to file cache
+   */
+  private async saveFileCachedContext(templateName: string, cached: CachedTemplateContext): Promise<void> {
+    if (!this.cacheOptions.cacheDir) return;
+
+    try {
+      await fs.mkdir(this.cacheOptions.cacheDir, { recursive: true });
+      const cachePath = path.join(this.cacheOptions.cacheDir, `${templateName}.context.json`);
+      await fs.writeFile(cachePath, JSON.stringify(cached, null, 2));
+    } catch (error) {
+      console.warn(`[TemplateManager] Failed to save cache: ${error}`);
+    }
+  }
+
+  /**
+   * Clear template context cache
+   */
+  async clearCache(templateName?: string): Promise<void> {
+    if (templateName) {
+      // Clear specific template
+      this.memoryCache.delete(templateName);
+      if (this.cacheOptions.cacheDir) {
+        const cachePath = path.join(this.cacheOptions.cacheDir, `${templateName}.context.json`);
+        try {
+          await fs.unlink(cachePath);
+        } catch {
+          // File may not exist
+        }
+      }
+    } else {
+      // Clear all
+      this.memoryCache.clear();
+      if (this.cacheOptions.cacheDir) {
+        try {
+          const entries = await fs.readdir(this.cacheOptions.cacheDir);
+          for (const entry of entries) {
+            if (entry.endsWith('.context.json')) {
+              await fs.unlink(path.join(this.cacheOptions.cacheDir, entry));
+            }
+          }
+        } catch {
+          // Cache dir may not exist
+        }
+      }
+    }
+    console.log(`[TemplateManager] Cache cleared${templateName ? ` for ${templateName}` : ''}`);
+  }
+
+  /**
+   * Get cache statistics
+   */
+  getCacheStats(): { memorySize: number; cacheHits?: number } {
+    return {
+      memorySize: this.memoryCache.size,
+    };
+  }
+
+  /**
+   * Build template context from filesystem (internal, no caching)
+   */
+  private async buildTemplateContext(templateName: string, workingCopyPath: string): Promise<TemplateContext | null> {
     // Read template.json for metadata
     let templateJson: {
       name?: string;

@@ -2,6 +2,11 @@
 id: game-developer
 description: Expert game developer specializing in game engine programming, graphics optimization, and multiplayer systems. Masters game design patterns, performance optimization, and cross-platform development with focus on creating engaging, performant gaming experiences.
 model: sonnet
+tier: enterprise
+category: implementation
+timeout: 300000
+maxTurns: 150
+optional: true
 tools:
   - Read
   - Write

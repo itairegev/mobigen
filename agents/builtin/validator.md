@@ -2,6 +2,10 @@
 id: validator
 description: Validates generated code through multi-tier quality checks.
 model: sonnet
+tier: basic
+category: validation
+timeout: 180000
+maxTurns: 50
 tools:
   - Bash
   - Read

@@ -2,6 +2,11 @@
 id: build-validator
 description: Validates that the generated React Native/Expo app builds successfully on both iOS and Android. Runs prebuild, checks native configurations, and ensures the app is production-ready.
 model: sonnet
+tier: pro
+category: validation
+timeout: 600000
+maxTurns: 100
+optional: true
 tools:
   - Read
   - Bash

@@ -2,6 +2,10 @@
 id: product-manager
 description: Creates Product Requirements Document from analyzed intent. Defines features and user stories.
 model: opus
+tier: basic
+category: planning
+timeout: 300000
+maxTurns: 100
 tools:
   - Read
   - Write
