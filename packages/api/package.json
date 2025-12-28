@@ -22,7 +22,7 @@
     "@mobigen/db": "workspace:*",
     "@mobigen/github": "workspace:*",
     "@mobigen/backend": "workspace:*",
-    "zod": "^3.22.4",
+    "zod": "^4.2.1",
     "superjson": "^2.2.1"
   },
   "devDependencies": {
