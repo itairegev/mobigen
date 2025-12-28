@@ -14,8 +14,7 @@
  */
 
 // Agent Registry
-export { AgentLoader } from './agent-loader';
-export type { AgentDefinition } from './agent-loader';
+export { AgentLoader, type AgentDefinition, type UserTier, type AgentCategory } from './agent-loader';
 
 export {
   AgentRegistry,
