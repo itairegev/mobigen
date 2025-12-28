@@ -11,23 +11,23 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.500.0",
+    "@aws-sdk/client-s3": "^3.958.0",
     "@mobigen/ai": "workspace:*",
     "@mobigen/db": "workspace:*",
-    "appium": "^2.4.1",
-    "bullmq": "^5.1.0",
-    "express": "^4.18.2",
+    "appium": "^3.1.2",
+    "bullmq": "^5.66.4",
+    "express": "^5.2.1",
     "ioredis": "^5.3.2",
-    "pixelmatch": "^5.3.0",
+    "pixelmatch": "^7.1.0",
     "pngjs": "^7.0.0",
-    "sharp": "^0.33.2",
-    "webdriverio": "^8.27.0",
+    "sharp": "^0.34.5",
+    "webdriverio": "^9.22.0",
     "ws": "^8.16.0",
-    "zod": "^3.22.4"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@mobigen/tsconfig": "workspace:*",
-    "@types/express": "^4.17.21",
+    "@types/express": "^5.0.6",
     "@types/node": "^20.10.0",
     "@types/ws": "^8.5.10",
     "tsup": "^8.0.1",
