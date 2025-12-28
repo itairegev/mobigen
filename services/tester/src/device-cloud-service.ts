@@ -11,7 +11,7 @@
  * - Local Simulators/Emulators
  */
 
-export type {
+import type {
   DeviceProvider,
   DeviceTestConfig,
   DeviceTestResult,
@@ -20,6 +20,17 @@ export type {
   DeviceSpec,
   DeviceArtifact,
 } from '@mobigen/ai';
+
+// Re-export for other modules
+export type {
+  DeviceProvider,
+  DeviceTestConfig,
+  DeviceTestResult,
+  DeviceTestSession,
+  DeviceTestSummary,
+  DeviceSpec,
+  DeviceArtifact,
+};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PROVIDER CONFIGURATIONS

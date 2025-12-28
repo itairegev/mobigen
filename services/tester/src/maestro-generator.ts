@@ -5,7 +5,10 @@
  * Used by the e2e-test-generator agent to create comprehensive test suites.
  */
 
-export type { E2ETestSuite, E2ETest, E2ETestStep, TestCoverage, MissingTestId } from '@mobigen/ai';
+import type { E2ETestSuite, E2ETest, E2ETestStep, TestCoverage, MissingTestId } from '@mobigen/ai';
+
+// Re-export for other modules
+export type { E2ETestSuite, E2ETest, E2ETestStep, TestCoverage, MissingTestId };
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
