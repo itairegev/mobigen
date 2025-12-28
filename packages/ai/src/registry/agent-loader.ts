@@ -11,6 +11,23 @@ import * as path from 'path';
 import { EventEmitter } from 'events';
 
 /**
+ * User tier levels for access control
+ */
+export type UserTier = 'basic' | 'pro' | 'enterprise';
+
+/**
+ * Agent category for grouping and configuration
+ */
+export type AgentCategory =
+  | 'orchestration'
+  | 'planning'
+  | 'implementation'
+  | 'analysis'
+  | 'validation'
+  | 'testing'
+  | 'default';
+
+/**
  * Agent definition loaded from a markdown file
  */
 export interface AgentDefinition {
@@ -23,6 +40,21 @@ export interface AgentDefinition {
   canDelegate?: string[];
   outputSchema?: Record<string, unknown>;
   filePath: string;
+
+  // Tier-based access control
+  tier?: UserTier;  // Minimum tier required (defaults to 'basic')
+
+  // Agent category for configuration defaults
+  category?: AgentCategory;
+
+  // Timeout override (milliseconds)
+  timeout?: number;
+
+  // Max turns override
+  maxTurns?: number;
+
+  // Whether this agent is optional in the pipeline
+  optional?: boolean;
 }
 
 /**
@@ -36,6 +68,11 @@ interface AgentFrontmatter {
   capabilities?: string[];
   canDelegate?: string[];
   outputSchema?: Record<string, unknown>;
+  tier?: UserTier;
+  category?: AgentCategory;
+  timeout?: number;
+  maxTurns?: number;
+  optional?: boolean;
 }
 
 /**
@@ -204,7 +241,12 @@ export class AgentLoader extends EventEmitter {
         capabilities: frontmatter.capabilities,
         canDelegate: frontmatter.canDelegate,
         outputSchema: frontmatter.outputSchema,
-        filePath
+        filePath,
+        tier: frontmatter.tier || 'basic',
+        category: frontmatter.category || 'default',
+        timeout: frontmatter.timeout,
+        maxTurns: frontmatter.maxTurns,
+        optional: frontmatter.optional,
       };
 
       this.agents.set(agent.id, agent);
@@ -309,24 +351,73 @@ export class AgentLoader extends EventEmitter {
   }
 
   /**
+   * Find agents by category
+   */
+  findByCategory(category: AgentCategory): AgentDefinition[] {
+    return this.list().filter(agent => agent.category === category);
+  }
+
+  /**
+   * Find agents available for a given user tier
+   * Returns agents where agent.tier <= userTier
+   */
+  findByTier(userTier: UserTier): AgentDefinition[] {
+    const tierOrder: Record<UserTier, number> = {
+      basic: 0,
+      pro: 1,
+      enterprise: 2,
+    };
+
+    const userTierLevel = tierOrder[userTier];
+
+    return this.list().filter(agent => {
+      const agentTierLevel = tierOrder[agent.tier || 'basic'];
+      return agentTierLevel <= userTierLevel;
+    });
+  }
+
+  /**
+   * Check if an agent is available for a user tier
+   */
+  isAgentAvailableForTier(agentId: string, userTier: UserTier): boolean {
+    const agent = this.get(agentId);
+    if (!agent) return false;
+
+    const tierOrder: Record<UserTier, number> = {
+      basic: 0,
+      pro: 1,
+      enterprise: 2,
+    };
+
+    const agentTierLevel = tierOrder[agent.tier || 'basic'];
+    const userTierLevel = tierOrder[userTier];
+
+    return agentTierLevel <= userTierLevel;
+  }
+
+  /**
    * Generate a catalog string for AI orchestrator context
    */
-  generateCatalog(): string {
-    const agents = this.list();
+  generateCatalog(forTier?: UserTier): string {
+    // Filter by tier if specified
+    const agents = forTier ? this.findByTier(forTier) : this.list();
 
     if (agents.length === 0) {
       return 'No agents available.';
     }
 
-    // Group by category (inferred from capabilities)
-    const orchestration = agents.filter(a => a.capabilities?.includes('coordination'));
+    // Group by category
+    const orchestration = agents.filter(a => a.category === 'orchestration' || a.capabilities?.includes('coordination'));
     const planning = agents.filter(a =>
+      a.category === 'planning' ||
       a.capabilities?.some(c => ['prd-creation', 'architecture-design', 'ui-design', 'task-planning'].includes(c))
     );
     const implementation = agents.filter(a =>
+      a.category === 'implementation' ||
       a.capabilities?.some(c => ['code-generation', 'requirements-analysis'].includes(c))
     );
     const validation = agents.filter(a =>
+      a.category === 'validation' || a.category === 'testing' ||
       a.capabilities?.some(c => ['code-validation', 'debugging', 'quality-assessment'].includes(c))
     );
     const other = agents.filter(a =>
@@ -349,8 +440,12 @@ export class AgentLoader extends EventEmitter {
           lines.push(`- **Capabilities**: ${agent.capabilities.join(', ')}`);
         }
         lines.push(`- **Model**: ${agent.model || 'inherit'}`);
+        lines.push(`- **Tier**: ${agent.tier || 'basic'}`);
         if (agent.canDelegate?.length) {
           lines.push(`- **Can delegate to**: ${agent.canDelegate.join(', ')}`);
+        }
+        if (agent.optional) {
+          lines.push(`- **Optional**: Yes`);
         }
         lines.push('');
       }
