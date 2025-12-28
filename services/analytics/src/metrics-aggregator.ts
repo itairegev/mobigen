@@ -118,7 +118,7 @@ export class MetricsAggregator {
         name: true,
         updatedAt: true,
         _count: {
-          select: { generations: true },
+          select: { builds: true },
         },
       },
     });
@@ -148,7 +148,7 @@ export class MetricsAggregator {
       topProjects: topProjects.map((p) => ({
         id: p.id,
         name: p.name,
-        generations: p._count.generations,
+        generations: p._count.builds,
         lastActivity: p.updatedAt,
       })),
     };
