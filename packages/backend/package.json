@@ -1,0 +1,37 @@
+{
+  "name": "@mobigen/backend",
+  "version": "0.1.0",
+  "description": "AWS backend provisioning for Mobigen generated apps",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.490.0",
+    "@aws-sdk/client-lambda": "^3.490.0",
+    "@aws-sdk/client-api-gateway": "^3.490.0",
+    "@aws-sdk/client-iam": "^3.490.0",
+    "@aws-sdk/client-s3": "^3.490.0",
+    "@aws-sdk/lib-dynamodb": "^3.490.0",
+    "archiver": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.2",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.6.3",
+    "vitest": "^1.2.0"
+  }
+}

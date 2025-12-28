@@ -18,10 +18,11 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  accounts      Account[]
-  sessions      Session[]
-  projects      Project[]
-  usageEvents   UsageEvent[]
+  accounts          Account[]
+  sessions          Session[]
+  projects          Project[]
+  usageEvents       UsageEvent[]
+  githubConnections GitHubConnection[]
 
   @@map("users")
 }
@@ -67,34 +68,34 @@ model VerificationToken {
 }
 
 model Project {
-  id              String    @id @default(uuid())
-  userId          String    @map("user_id")
-  name            String
-  templateId      String?   @map("template_id")
-  status          String    @default("draft")
-  config          Json      @default("{}")
+  id         String  @id @default(uuid())
+  userId     String  @map("user_id")
+  name       String
+  templateId String? @map("template_id")
+  status     String  @default("draft")
+  config     Json    @default("{}")
 
-  bundleIdIos     String?   @map("bundle_id_ios")
-  bundleIdAndroid String?   @map("bundle_id_android")
-  branding        Json      @default("{}")
+  bundleIdIos     String? @map("bundle_id_ios")
+  bundleIdAndroid String? @map("bundle_id_android")
+  branding        Json    @default("{}")
 
-  s3Bucket        String    @map("s3_bucket")
-  s3Prefix        String    @map("s3_prefix")
+  s3Bucket String @map("s3_bucket")
+  s3Prefix String @map("s3_prefix")
 
-  currentVersion  Int       @default(1) @map("current_version")
+  currentVersion Int @default(1) @map("current_version")
 
-  claudeSessionId String?   @map("claude_session_id")
+  claudeSessionId  String?   @map("claude_session_id")
   sessionExpiresAt DateTime? @map("session_expires_at")
 
-  lastAccessedAt  DateTime  @default(now()) @map("last_accessed_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  lastAccessedAt DateTime @default(now()) @map("last_accessed_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
-  user            User      @relation(fields: [userId], references: [id])
-  sessions        ProjectSession[]
-  changes         ProjectChange[]
-  builds          Build[]
-  usageEvents     UsageEvent[]
+  user        User             @relation(fields: [userId], references: [id])
+  sessions    ProjectSession[]
+  changes     ProjectChange[]
+  builds      Build[]
+  usageEvents UsageEvent[]
 
   @@index([userId])
   @@index([lastAccessedAt])
@@ -112,29 +113,29 @@ model ProjectSession {
   createdAt       DateTime  @default(now()) @map("created_at")
   endedAt         DateTime? @map("ended_at")
 
-  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  changes         ProjectChange[]
+  project Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  changes ProjectChange[]
 
   @@index([projectId])
   @@map("project_sessions")
 }
 
 model ProjectChange {
-  id            String    @id @default(uuid())
-  projectId     String    @map("project_id")
-  sessionId     String?   @map("session_id")
+  id            String   @id @default(uuid())
+  projectId     String   @map("project_id")
+  sessionId     String?  @map("session_id")
   version       Int
   message       String
-  changeType    String?   @map("change_type")
-  filesAdded    String[]  @map("files_added")
-  filesModified String[]  @map("files_modified")
-  filesDeleted  String[]  @map("files_deleted")
-  s3SnapshotKey String?   @map("s3_snapshot_key")
-  isRevertible  Boolean   @default(true) @map("is_revertible")
-  createdAt     DateTime  @default(now()) @map("created_at")
+  changeType    String?  @map("change_type")
+  filesAdded    String[] @map("files_added")
+  filesModified String[] @map("files_modified")
+  filesDeleted  String[] @map("files_deleted")
+  s3SnapshotKey String?  @map("s3_snapshot_key")
+  isRevertible  Boolean  @default(true) @map("is_revertible")
+  createdAt     DateTime @default(now()) @map("created_at")
 
-  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  session       ProjectSession? @relation(fields: [sessionId], references: [id])
+  project Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  session ProjectSession? @relation(fields: [sessionId], references: [id])
 
   @@unique([projectId, version])
   @@index([projectId])
@@ -160,7 +161,7 @@ model Build {
   completedAt       DateTime? @map("completed_at")
   createdAt         DateTime  @default(now()) @map("created_at")
 
-  project           Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([projectId])
   @@index([status])
@@ -168,16 +169,16 @@ model Build {
 }
 
 model UsageEvent {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  projectId   String?   @map("project_id")
-  eventType   String    @map("event_type")
-  creditsUsed Int       @default(0) @map("credits_used")
-  metadata    Json      @default("{}")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  projectId   String?  @map("project_id")
+  eventType   String   @map("event_type")
+  creditsUsed Int      @default(0) @map("credits_used")
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  user        User      @relation(fields: [userId], references: [id])
-  project     Project?  @relation(fields: [projectId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -185,16 +186,16 @@ model UsageEvent {
 }
 
 model Generation {
-  id          String    @id @default(uuid())
-  projectId   String    @map("project_id")
-  status      String    @default("pending")
-  phase       String?
-  progress    Int       @default(0)
-  metadata    Json      @default("{}")
-  errorMessage String?  @map("error_message")
-  startedAt   DateTime? @map("started_at")
-  completedAt DateTime? @map("completed_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id           String    @id @default(uuid())
+  projectId    String    @map("project_id")
+  status       String    @default("pending")
+  phase        String?
+  progress     Int       @default(0)
+  metadata     Json      @default("{}")
+  errorMessage String?   @map("error_message")
+  startedAt    DateTime? @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
 
   @@index([projectId])
   @@index([status])
@@ -202,12 +203,12 @@ model Generation {
 }
 
 model AnalyticsEvent {
-  id          String    @id @default(uuid())
-  event       String
-  userId      String?   @map("user_id")
-  projectId   String?   @map("project_id")
-  metadata    Json      @default("{}")
-  timestamp   DateTime  @default(now())
+  id        String   @id @default(uuid())
+  event     String
+  userId    String?  @map("user_id")
+  projectId String?  @map("project_id")
+  metadata  Json     @default("{}")
+  timestamp DateTime @default(now())
 
   @@index([event])
   @@index([userId])
@@ -216,14 +217,14 @@ model AnalyticsEvent {
 }
 
 model ApiUsage {
-  id            String    @id @default(uuid())
-  userId        String    @map("user_id")
-  projectId     String?   @map("project_id")
-  model         String
-  inputTokens   Int       @map("input_tokens")
-  outputTokens  Int       @map("output_tokens")
-  requestId     String?   @map("request_id")
-  timestamp     DateTime  @default(now())
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  projectId    String?  @map("project_id")
+  model        String
+  inputTokens  Int      @map("input_tokens")
+  outputTokens Int      @map("output_tokens")
+  requestId    String?  @map("request_id")
+  timestamp    DateTime @default(now())
 
   @@index([userId])
   @@index([projectId])
@@ -233,29 +234,29 @@ model ApiUsage {
 }
 
 model TestResult {
-  id          String    @id @default(uuid())
-  buildId     String    @map("build_id")
-  name        String
-  status      String
-  duration    Int
-  error       String?
-  steps       Json      @default("[]")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id        String   @id @default(uuid())
+  buildId   String   @map("build_id")
+  name      String
+  status    String
+  duration  Int
+  error     String?
+  steps     Json     @default("[]")
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@index([buildId])
   @@map("test_results")
 }
 
 model Screenshot {
-  id          String    @id @default(uuid())
-  buildId     String    @map("build_id")
-  screen      String
-  platform    String
-  url         String
-  width       Int
-  height      Int
-  isBaseline  Boolean   @default(false) @map("is_baseline")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id         String   @id @default(uuid())
+  buildId    String   @map("build_id")
+  screen     String
+  platform   String
+  url        String
+  width      Int
+  height     Int
+  isBaseline Boolean  @default(false) @map("is_baseline")
+  createdAt  DateTime @default(now()) @map("created_at")
 
   @@index([buildId])
   @@map("screenshots")
@@ -266,25 +267,25 @@ model Screenshot {
 // ============================================================================
 
 model GenerationJob {
-  id              String    @id @default(uuid())
-  projectId       String    @map("project_id")
-  status          String    @default("pending") // pending, running, completed, failed, paused
-  currentPhase    String?   @map("current_phase")
-  currentAgent    String?   @map("current_agent")
-  totalTasks      Int       @default(0) @map("total_tasks")
-  completedTasks  Int       @default(0) @map("completed_tasks")
-  failedTasks     Int       @default(0) @map("failed_tasks")
-  progress        Int       @default(0) // 0-100 percentage
-  errorMessage    String?   @map("error_message")
-  retryCount      Int       @default(0) @map("retry_count")
-  maxRetries      Int       @default(3) @map("max_retries")
-  metadata        Json      @default("{}")
-  startedAt       DateTime? @map("started_at")
-  completedAt     DateTime? @map("completed_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id             String    @id @default(uuid())
+  projectId      String    @map("project_id")
+  status         String    @default("pending") // pending, running, completed, failed, paused
+  currentPhase   String?   @map("current_phase")
+  currentAgent   String?   @map("current_agent")
+  totalTasks     Int       @default(0) @map("total_tasks")
+  completedTasks Int       @default(0) @map("completed_tasks")
+  failedTasks    Int       @default(0) @map("failed_tasks")
+  progress       Int       @default(0) // 0-100 percentage
+  errorMessage   String?   @map("error_message")
+  retryCount     Int       @default(0) @map("retry_count")
+  maxRetries     Int       @default(3) @map("max_retries")
+  metadata       Json      @default("{}")
+  startedAt      DateTime? @map("started_at")
+  completedAt    DateTime? @map("completed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  tasks           GenerationTask[]
+  tasks GenerationTask[]
 
   @@index([projectId])
   @@index([status])
@@ -292,32 +293,161 @@ model GenerationJob {
 }
 
 model GenerationTask {
-  id              String    @id @default(uuid())
-  jobId           String    @map("job_id")
-  projectId       String    @map("project_id")
-  phase           String    // analysis, planning, architecture, design, implementation, validation, qa
-  agentId         String    @map("agent_id")
-  taskType        String    @map("task_type") // agent_execution, validation, fix_attempt
-  status          String    @default("pending") // pending, running, completed, failed, skipped
-  priority        Int       @default(0) // Higher = run first
-  dependsOn       String[]  @default([]) @map("depends_on") // Task IDs this depends on
-  input           Json      @default("{}") // Task input/context
-  output          Json?     // Task result
-  errorMessage    String?   @map("error_message")
-  errorDetails    Json?     @map("error_details") // Structured error info for auto-fix
-  retryCount      Int       @default(0) @map("retry_count")
-  filesModified   String[]  @default([]) @map("files_modified")
-  durationMs      Int?      @map("duration_ms")
-  startedAt       DateTime? @map("started_at")
-  completedAt     DateTime? @map("completed_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id            String    @id @default(uuid())
+  jobId         String    @map("job_id")
+  projectId     String    @map("project_id")
+  phase         String // analysis, planning, architecture, design, implementation, validation, qa
+  agentId       String    @map("agent_id")
+  taskType      String    @map("task_type") // agent_execution, validation, fix_attempt
+  status        String    @default("pending") // pending, running, completed, failed, skipped
+  priority      Int       @default(0) // Higher = run first
+  dependsOn     String[]  @default([]) @map("depends_on") // Task IDs this depends on
+  input         Json      @default("{}") // Task input/context
+  output        Json? // Task result
+  errorMessage  String?   @map("error_message")
+  errorDetails  Json?     @map("error_details") // Structured error info for auto-fix
+  retryCount    Int       @default(0) @map("retry_count")
+  filesModified String[]  @default([]) @map("files_modified")
+  durationMs    Int?      @map("duration_ms")
+  startedAt     DateTime? @map("started_at")
+  completedAt   DateTime? @map("completed_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  job             GenerationJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  job GenerationJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@index([jobId])
   @@index([projectId])
   @@index([status])
   @@index([phase])
   @@map("generation_tasks")
+}
+
+// ============================================================================
+// GITHUB INTEGRATION
+// ============================================================================
+
+model GitHubConnection {
+  id             String    @id @default(uuid())
+  userId         String    @map("user_id")
+  githubId       Int       @map("github_id")
+  username       String
+  email          String?
+  avatarUrl      String?   @map("avatar_url")
+  accessToken    String    @map("access_token") @db.Text
+  refreshToken   String?   @map("refresh_token") @db.Text
+  tokenExpiresAt DateTime? @map("token_expires_at")
+  scopes         String[]  @default([])
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  user           User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectConfigs ProjectGitHubConfig[]
+
+  @@unique([userId, githubId])
+  @@index([userId])
+  @@map("github_connections")
+}
+
+model ProjectGitHubConfig {
+  id            String    @id @default(uuid())
+  projectId     String    @unique @map("project_id")
+  connectionId  String    @map("connection_id")
+  repoOwner     String    @map("repo_owner")
+  repoName      String    @map("repo_name")
+  defaultBranch String    @default("main") @map("default_branch")
+  syncEnabled   Boolean   @default(true) @map("sync_enabled")
+  autoCommit    Boolean   @default(true) @map("auto_commit")
+  commitPrefix  String    @default("[mobigen]") @map("commit_prefix")
+  syncStatus    String    @default("idle") @map("sync_status") // idle, syncing, synced, failed
+  lastSyncAt    DateTime? @map("last_sync_at")
+  lastSyncError String?   @map("last_sync_error")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  connection  GitHubConnection    @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  syncHistory GitHubSyncHistory[]
+
+  @@index([connectionId])
+  @@map("project_github_configs")
+}
+
+model GitHubSyncHistory {
+  id            String    @id @default(uuid())
+  configId      String    @map("config_id")
+  phase         String // setup, product-definition, architecture, ui-design, implementation, validation, quality-assurance
+  commitSha     String?   @map("commit_sha")
+  commitMessage String?   @map("commit_message")
+  filesAdded    String[]  @default([]) @map("files_added")
+  filesModified String[]  @default([]) @map("files_modified")
+  filesDeleted  String[]  @default([]) @map("files_deleted")
+  status        String    @default("pending") // pending, syncing, completed, failed
+  errorMessage  String?   @map("error_message")
+  durationMs    Int?      @map("duration_ms")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  completedAt   DateTime? @map("completed_at")
+
+  config ProjectGitHubConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@index([configId])
+  @@index([createdAt])
+  @@map("github_sync_history")
+}
+
+// ============================================================================
+// AWS BACKEND PROVISIONING
+// ============================================================================
+
+model ProjectBackend {
+  id            String    @id @default(uuid())
+  projectId     String    @unique @map("project_id")
+  templateId    String    @map("template_id")
+  status        String    @default("pending") // pending, provisioning, active, failed, deprovisioning, deprovisioned
+  environment   String    @default("prod") // dev, staging, prod
+  region        String    @default("us-east-1")
+
+  // AWS Resource Identifiers
+  tablePrefix   String    @map("table_prefix")
+  tableNames    String[]  @default([]) @map("table_names")
+
+  functionName  String?   @map("function_name")
+  functionArn   String?   @map("function_arn")
+  lambdaRoleArn String?   @map("lambda_role_arn")
+
+  apiId         String?   @map("api_id")
+  apiEndpoint   String?   @map("api_endpoint")
+  apiKey        String?   @map("api_key") @db.Text
+  apiKeyId      String?   @map("api_key_id")
+  stageName     String?   @default("v1") @map("stage_name")
+
+  // Pro tier: custom database URL
+  customDbUrl   String?   @map("custom_db_url") @db.Text
+
+  // Provisioning tracking
+  provisionedAt   DateTime? @map("provisioned_at")
+  deprovisionedAt DateTime? @map("deprovisioned_at")
+  lastError       String?   @map("last_error")
+  retryCount      Int       @default(0) @map("retry_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("project_backends")
+}
+
+model BackendProvisioningLog {
+  id          String   @id @default(uuid())
+  projectId   String   @map("project_id")
+  operation   String // provision, deprovision, update
+  step        String // create_tables, deploy_lambda, create_api, seed_data
+  status      String // started, completed, failed
+  message     String?
+  details     Json     @default("{}")
+  durationMs  Int?     @map("duration_ms")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([projectId])
+  @@index([createdAt])
+  @@map("backend_provisioning_logs")
 }

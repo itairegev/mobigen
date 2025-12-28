@@ -110,6 +110,8 @@ export type PipelinePhase = {
   agents: AgentRole[];
   description: string;
   required: boolean;
+  parallel?: boolean; // Can agents in this phase run in parallel?
+  service?: 'backend' | 'storage' | 'testing'; // Uses a service instead of agents
 };
 
 // Generation pipeline configuration
@@ -279,8 +281,18 @@ export interface DevelopmentTask {
 export interface ValidationResult {
   passed: boolean;
   tier: 'tier1' | 'tier2' | 'tier3';
-  stages: Record<string, { passed: boolean; errors: ValidationError[] }>;
+  stages: Record<string, ValidationStage>;
   summary: string;
+  totalErrors?: number;
+  totalWarnings?: number;
+}
+
+export interface ValidationStage {
+  name: string;
+  passed: boolean;
+  duration?: number;
+  errors: ValidationError[];
+  warnings?: ValidationError[];
 }
 
 export interface ValidationError {
@@ -288,8 +300,9 @@ export interface ValidationError {
   line?: number;
   column?: number;
   message: string;
-  severity: 'error' | 'warning';
+  severity: 'error' | 'warning' | 'info';
   rule?: string;
+  fixable?: boolean;
   fixSuggestion?: string;
 }
 
@@ -304,11 +317,15 @@ export interface QAReport {
 export interface QACategory {
   name: string;
   score: number;
+  weight: number;
   findings: QAFinding[];
 }
 
 export interface QAFinding {
-  severity: 'critical' | 'major' | 'minor' | 'info';
+  id: string;
+  category: string;
+  severity: 'critical' | 'major' | 'minor' | 'suggestion';
+  title: string;
   description: string;
   location?: string;
   recommendation: string;

@@ -1630,6 +1630,13 @@ export const generationPipeline = {
       required: true
     },
     {
+      name: 'backend-provisioning',
+      agents: [] as AgentRole[], // No agent needed - uses BackendProvisioner directly
+      description: 'Provision AWS backend (DynamoDB, Lambda, API Gateway)',
+      required: true,
+      service: 'backend' // Indicates this phase uses a service, not an agent
+    },
+    {
       name: 'e2e-test-generation',
       agents: ['e2e-test-generator'] as AgentRole[],
       description: 'Generate Maestro E2E test suite',
