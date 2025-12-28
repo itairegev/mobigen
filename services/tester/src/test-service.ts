@@ -70,7 +70,7 @@ export class TestService {
     }
 
     // Initialize WebDriver
-    const browser = await this.initBrowser(platform, build.artifactUrl || '');
+    const browser = await this.initBrowser(platform, build.artifactS3Key || '');
 
     try {
       const flows = testConfig.flows || this.getDefaultFlows();

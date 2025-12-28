@@ -11,7 +11,7 @@
  * - Local Simulators/Emulators
  */
 
-import type {
+export type {
   DeviceProvider,
   DeviceTestConfig,
   DeviceTestResult,
@@ -699,8 +699,8 @@ export class DeviceCloudService {
       }
 
       summary.totalTests += result.tests.length;
-      summary.passedTests += result.tests.filter(t => t.status === 'passed').length;
-      summary.failedTests += result.tests.filter(t => t.status === 'failed').length;
+      summary.passedTests += result.tests.filter((t: { status: string }) => t.status === 'passed').length;
+      summary.failedTests += result.tests.filter((t: { status: string }) => t.status === 'failed').length;
       summary.duration += result.duration;
     }
 

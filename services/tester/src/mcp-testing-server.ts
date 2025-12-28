@@ -1136,7 +1136,7 @@ class MCPTestingServer {
     seed: number;
   }> {
     const { duration = 60, seed, includeGestures = true, avoidElements } = args;
-    const usedSeed = seed || Math.floor(Math.random() * 1000000);
+    const usedSeed = (typeof seed === 'number' ? seed : Math.floor(Math.random() * 1000000));
     console.log(`[MCP] Monkey test (duration: ${duration}s, seed: ${usedSeed})`);
     return {
       interactions: duration as number * 10,
@@ -1277,7 +1277,7 @@ class MCPTestingServer {
       config: {
         provider: provider as 'aws-device-farm' | 'browserstack' | 'maestro-cloud' | 'firebase-test-lab' | 'local',
         platforms: ['ios', 'android'],
-        devices: (devices as Array<{ platform: string; model: string; osVersion: string }>) || DEFAULT_DEVICE_MATRIX.minimal,
+        devices: (devices as Array<{ platform: 'ios' | 'android'; name: string; osVersion: string }>) || DEFAULT_DEVICE_MATRIX.minimal,
         parallel: parallel as boolean,
         timeout: timeout as number,
         retries: 2,

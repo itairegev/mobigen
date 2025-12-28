@@ -38,6 +38,7 @@ export type {
   TaskBreakdown,
   DevelopmentTask,
   ValidationResult,
+  ValidationStage,
   ValidationError,
   QAReport,
   QACategory,
@@ -57,6 +58,11 @@ export type {
   MissingTestId,
   DeviceProvider,
   DeviceTestConfig,
+  DeviceTestResult,
+  DeviceTestSession,
+  DeviceTestSummary,
+  DeviceSpec,
+  DeviceArtifact,
 } from './types';
 
 // Export agents and pipeline configuration (legacy - will be deprecated)
@@ -71,6 +77,8 @@ export {
   createRegistry,
   type AgentDefinition as DynamicAgentDefinition,
   type RegistryOptions,
+  type UserTier,
+  type AgentCategory,
 
   // Command Registry
   CommandLoader,
@@ -102,3 +110,37 @@ export {
   // Convenience function to initialize all registries
   initializeAllRegistries,
 } from './registry';
+
+// Export Zod schemas for runtime validation of AI outputs
+export {
+  // Schemas
+  PRDOutputSchema,
+  FeatureSchema,
+  UserStorySchema,
+  ArchitectureOutputSchema,
+  TechStackDecisionSchema,
+  DataModelSchema,
+  APIEndpointSchema,
+  FileStructureNodeSchema,
+  DependencyDecisionSchema,
+  UIDesignOutputSchema,
+  ColorPaletteSchema,
+  ColorScaleSchema,
+  TypographySpecSchema,
+  ComponentSpecSchema,
+  ScreenSpecSchema,
+  NavigationSpecSchema,
+  AnimationSpecSchema,
+  TaskBreakdownSchema,
+  DevelopmentTaskSchema,
+  ValidationResultSchema,
+  ValidationErrorSchema,
+  ValidationStageSchema,
+  QAReportSchema,
+  QACategorySchema,
+  QAFindingSchema,
+  // Helper functions
+  parseAgentOutput,
+  parseAgentOutputStrict,
+  isValidAgentOutput,
+} from './schemas';
