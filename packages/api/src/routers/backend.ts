@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { prisma as prismaClient } from '@mobigen/db';
 import {
   BackendProvisioner,
   getSchemaForTemplate,
@@ -8,6 +9,8 @@ import {
   getAvailableTemplates,
   generateApiClient,
 } from '@mobigen/backend';
+
+type PrismaClientType = typeof prismaClient;
 
 export const backendRouter = router({
   /**
@@ -300,7 +303,7 @@ export const backendRouter = router({
  * Background provisioning function
  */
 async function provisionBackendAsync(
-  prisma: typeof import('@prisma/client').PrismaClient.prototype,
+  prisma: PrismaClientType,
   projectId: string,
   templateId: string,
   config: {
@@ -386,7 +389,7 @@ async function provisionBackendAsync(
  * Background deprovisioning function
  */
 async function deprovisionBackendAsync(
-  prisma: typeof import('@prisma/client').PrismaClient.prototype,
+  prisma: PrismaClientType,
   projectId: string,
   backend: { region: string; environment: string }
 ): Promise<void> {
