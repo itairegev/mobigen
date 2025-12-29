@@ -1,0 +1,314 @@
+{
+  "template": "news",
+  "templateReason": "",
+  "techStack": [],
+  "dataModels": [
+    {
+      "name": "Article",
+      "fields": {
+        "id": "string (primary key)",
+        "title": "string (indexed)",
+        "content": "text",
+        "summary": "string",
+        "author": "string",
+        "publishedAt": "datetime (indexed)",
+        "category": "string (indexed)",
+        "imageUrl": "string?",
+        "sourceUrl": "string",
+        "readingTime": "number",
+        "tags": "string[]",
+        "isBookmarked": "boolean",
+        "isRead": "boolean",
+        "createdAt": "datetime",
+        "updatedAt": "datetime"
+      },
+      "relationships": [
+        {
+          "type": "one-to-many",
+          "related": "BookmarkedArticle",
+          "foreignKey": "articleId"
+        }
+      ],
+      "indexes": [
+        "category",
+        "publishedAt",
+        "title",
+        "tags"
+      ]
+    },
+    {
+      "name": "BookmarkedArticle",
+      "fields": {
+        "id": "string (primary key)",
+        "articleId": "string (foreign key)",
+        "bookmarkedAt": "datetime",
+        "isDownloaded": "boolean",
+        "downloadPath": "string?"
+      },
+      "relationships": [
+        {
+          "type": "many-to-one",
+          "related": "Article",
+          "foreignKey": "articleId"
+        }
+      ],
+      "indexes": [
+        "articleId",
+        "bookmarkedAt"
+      ]
+    },
+    {
+      "name": "SearchHistory",
+      "fields": {
+        "id": "string (primary key)",
+        "query": "string (indexed)",
+        "category": "string?",
+        "searchedAt": "datetime",
+        "resultCount": "number"
+      },
+      "indexes": [
+        "query",
+        "searchedAt"
+      ]
+    },
+    {
+      "name": "UserPreferences",
+      "fields": {
+        "id": "string (primary key)",
+        "theme": "string (light|dark|system)",
+        "defaultCategory": "string?",
+        "notificationsEnabled": "boolean",
+        "autoDownloadBookmarks": "boolean",
+        "preferredCategories": "string[]",
+        "readingSpeed": "number"
+      }
+    },
+    {
+      "name": "Category",
+      "fields": {
+        "id": "string (primary key)",
+        "name": "string",
+        "slug": "string (indexed)",
+        "description": "string?",
+        "color": "string",
+        "icon": "string",
+        "isEnabled": "boolean",
+        "sortOrder": "number"
+      },
+      "indexes": [
+        "slug",
+        "sortOrder"
+      ]
+    }
+  ],
+  "apiEndpoints": [],
+  "fileStructure": {
+    "src": {
+      "components": {
+        "articles": [
+          "ArticleCard.tsx",
+          "ArticleFeed.tsx",
+          "ArticleDetail.tsx",
+          "BookmarkButton.tsx",
+          "ShareButton.tsx",
+          "ReadingTimeIndicator.tsx"
+        ],
+        "categories": [
+          "CategoryTabs.tsx",
+          "CategoryFilter.tsx"
+        ],
+        "search": [
+          "SearchBar.tsx",
+          "SearchResults.tsx",
+          "SearchHistory.tsx"
+        ],
+        "ui": [
+          "PullToRefresh.tsx",
+          "LoadingSpinner.tsx",
+          "EmptyState.tsx",
+          "ErrorBoundary.tsx",
+          "ThemeToggle.tsx"
+        ]
+      },
+      "screens": [
+        "HomeScreen.tsx",
+        "ArticleDetailScreen.tsx",
+        "BookmarksScreen.tsx",
+        "SearchScreen.tsx",
+        "SettingsScreen.tsx",
+        "CategoryScreen.tsx"
+      ],
+      "hooks": [
+        "useArticles.ts",
+        "useBookmarks.ts",
+        "useSearch.ts",
+        "useOfflineSync.ts",
+        "useTheme.ts",
+        "useConnectivity.ts"
+      ],
+      "services": [
+        "api.ts",
+        "storage.ts",
+        "offline.ts",
+        "share.ts",
+        "readingTime.ts"
+      ],
+      "store": [
+        "articlesStore.ts",
+        "bookmarksStore.ts",
+        "preferencesStore.ts",
+        "searchStore.ts"
+      ],
+      "types": [
+        "article.ts",
+        "category.ts",
+        "user.ts",
+        "api.ts"
+      ],
+      "utils": [
+        "dateHelpers.ts",
+        "textHelpers.ts",
+        "storageHelpers.ts",
+        "themeHelpers.ts"
+      ]
+    }
+  },
+  "dependencies": {
+    "production": [
+      "@react-native-async-storage/async-storage@^1.19.0",
+      "expo-sqlite@~13.4.0",
+      "expo-sharing@~12.0.1",
+      "expo-linking@~6.3.1",
+      "expo-network@~6.0.1",
+      "react-native-fast-image@^8.6.3",
+      "react-native-share@^10.0.2",
+      "zustand@^4.4.1",
+      "date-fns@^2.30.0",
+      "react-native-super-grid@^4.9.6",
+      "react-native-skeleton-placeholder@^5.2.4",
+      "@react-native-community/netinfo@^11.3.1"
+    ],
+    "development": [
+      "@types/react-native-share@^7.0.0"
+    ],
+    "nativeModules": []
+  },
+  "securityConsiderations": {
+    "dataProtection": [
+      "Encrypt sensitive offline data using Expo SecureStore",
+      "Sanitize user search queries to prevent injection",
+      "Validate all API responses before processing"
+    ],
+    "secureStorage": [
+      "Use Expo SecureStore for user preferences",
+      "Implement secure key generation for offline encryption",
+      "Regular cleanup of cached sensitive data"
+    ],
+    "apiSecurity": [
+      "Implement API key rotation",
+      "Rate limiting on client side",
+      "HTTPS only communication",
+      "Certificate pinning for production"
+    ]
+  },
+  "templateSelection": {
+    "selectedTemplate": "news",
+    "justification": "Perfect match for the requirements. The news template provides the foundational structure for article feeds, categories, and content display that aligns with all core features needed for TechNews Daily."
+  },
+  "techStackDecisions": {
+    "stateManagement": "Zustand with persistence middleware for app-wide state including saved articles, user preferences, and theme settings",
+    "dataPersistence": "SQLite via Expo SQLite for offline articles and search index, AsyncStorage for user preferences and settings",
+    "authentication": "Optional anonymous usage with device-based user identification for personalization",
+    "thirdPartyIntegrations": [
+      "React Native Share for social sharing",
+      "Expo Linking for deep links",
+      "React Native Fast Image for optimized image loading",
+      "Expo Network for connectivity detection"
+    ]
+  },
+  "apiDesign": {
+    "baseUrl": "https://api.technewsdaily.com/v1",
+    "endpoints": [
+      {
+        "path": "/articles",
+        "method": "GET",
+        "description": "Get paginated articles with filters",
+        "authentication": "optional",
+        "parameters": {
+          "page": "number",
+          "limit": "number",
+          "category": "string?",
+          "search": "string?",
+          "sortBy": "string (publishedAt|popularity)",
+          "sortOrder": "string (asc|desc)"
+        },
+        "response": {
+          "articles": "Article[]",
+          "pagination": {
+            "page": "number",
+            "limit": "number",
+            "total": "number",
+            "hasMore": "boolean"
+          }
+        }
+      },
+      {
+        "path": "/articles/{id}",
+        "method": "GET",
+        "description": "Get single article with full content",
+        "authentication": "optional",
+        "response": "Article"
+      },
+      {
+        "path": "/categories",
+        "method": "GET",
+        "description": "Get available categories",
+        "authentication": "none",
+        "response": "Category[]"
+      },
+      {
+        "path": "/search",
+        "method": "GET",
+        "description": "Search articles with advanced filters",
+        "authentication": "optional",
+        "parameters": {
+          "q": "string",
+          "category": "string?",
+          "dateFrom": "string?",
+          "dateTo": "string?",
+          "page": "number",
+          "limit": "number"
+        },
+        "response": {
+          "articles": "Article[]",
+          "pagination": "PaginationInfo",
+          "suggestions": "string[]"
+        }
+      }
+    ],
+    "errorHandling": {
+      "standardErrors": [
+        "400 - Bad Request",
+        "404 - Not Found",
+        "429 - Rate Limited",
+        "500 - Server Error"
+      ],
+      "retryStrategy": "Exponential backoff for 5xx errors",
+      "offlineHandling": "Graceful fallback to cached data"
+    }
+  },
+  "performanceOptimizations": {
+    "listOptimization": "FlatList with getItemLayout and keyExtractor",
+    "imageOptimization": "FastImage with progressive loading and caching",
+    "searchOptimization": "Debounced search with local caching",
+    "offlineStrategy": "Incremental sync with conflict resolution",
+    "memoryManagement": "Lazy loading of article content and automatic cleanup"
+  },
+  "accessibilityFeatures": [
+    "VoiceOver/TalkBack support for all interactive elements",
+    "Semantic labels for articles and navigation",
+    "High contrast mode support",
+    "Scalable text support",
+    "Keyboard navigation support"
+  ]
+}

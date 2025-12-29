@@ -1,0 +1,22 @@
+{
+  "testProjectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+  "testUserId": "ffee6d9b-3940-4b9e-ae56-be3197ec3c9f",
+  "projectPath": "/Users/itairegev/projects/mobigen/projects/9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+  "timestamp": "2025-12-22T16:54:31.665Z",
+  "progressEventsCount": 7,
+  "success": false,
+  "filesGenerated": 0,
+  "files": [],
+  "qaScore": null,
+  "readyForProduction": false,
+  "requiresReview": true,
+  "phasesCompleted": [
+    "setup"
+  ],
+  "errors": [
+    {
+      "error": "Template 'news' not found at /Users/itairegev/projects/mobigen/services/generator/templates-bare/news.git",
+      "stack": "Error: Template 'news' not found at /Users/itairegev/projects/mobigen/services/generator/templates-bare/news.git\n    at TemplateManager.cloneToProject (/Users/itairegev/projects/mobigen/packages/storage/src/template-manager.ts:551:13)\n    at generateApp (/Users/itairegev/projects/mobigen/services/generator/src/orchestrator.ts:323:24)\n    at <anonymous> (/Users/itairegev/projects/mobigen/services/generator/src/api.ts:128:22)"
+    }
+  ]
+}

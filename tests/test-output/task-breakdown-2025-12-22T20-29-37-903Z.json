@@ -1,0 +1,512 @@
+{
+  "tasks": [],
+  "estimatedComplexity": "medium",
+  "criticalPath": [],
+  "parallelizableTasks": [],
+  "taskBreakdown": {
+    "tasks": [
+      {
+        "id": "config-001",
+        "title": "Configure SQLite Database Schema",
+        "type": "config",
+        "priority": "high",
+        "estimatedHours": 4,
+        "description": "Set up SQLite database with tables for articles, bookmarks, search history, user preferences, and categories",
+        "files": [
+          "src/services/database.ts",
+          "src/migrations/001_initial_schema.sql"
+        ],
+        "dependencies": [],
+        "acceptanceCriteria": [
+          "All five data models (Article, BookmarkedArticle, SearchHistory, UserPreferences, Category) are created",
+          "Proper indexes are set up for performance",
+          "Foreign key relationships are established",
+          "Migration system is in place"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "service-001",
+        "title": "Implement Article API Service",
+        "type": "service",
+        "priority": "high",
+        "estimatedHours": 6,
+        "description": "Create API service for fetching articles with pagination, filtering, and search capabilities",
+        "files": [
+          "src/services/api.ts",
+          "src/types/api.ts"
+        ],
+        "dependencies": [
+          "config-001"
+        ],
+        "acceptanceCriteria": [
+          "GET /articles endpoint with filters implemented",
+          "GET /articles/{id} for single article",
+          "GET /categories endpoint",
+          "GET /search endpoint with advanced filters",
+          "Proper error handling and retry logic",
+          "TypeScript types for all API responses"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "service-002",
+        "title": "Implement Offline Storage Service",
+        "type": "service",
+        "priority": "high",
+        "estimatedHours": 8,
+        "description": "Create service for offline data persistence using SQLite and sync management",
+        "files": [
+          "src/services/storage.ts",
+          "src/services/offline.ts"
+        ],
+        "dependencies": [
+          "config-001",
+          "service-001"
+        ],
+        "acceptanceCriteria": [
+          "Articles can be saved for offline reading",
+          "Bookmarks are persisted locally",
+          "Search history is stored",
+          "Sync mechanism for online/offline data",
+          "Data cleanup and cache management"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "store-001",
+        "title": "Create Zustand State Stores",
+        "type": "service",
+        "priority": "high",
+        "estimatedHours": 6,
+        "description": "Implement Zustand stores for articles, bookmarks, preferences, and search state",
+        "files": [
+          "src/store/articlesStore.ts",
+          "src/store/bookmarksStore.ts",
+          "src/store/preferencesStore.ts",
+          "src/store/searchStore.ts"
+        ],
+        "dependencies": [
+          "service-001",
+          "service-002"
+        ],
+        "acceptanceCriteria": [
+          "Articles store with pagination and filtering",
+          "Bookmarks store with add/remove functionality",
+          "User preferences store with persistence",
+          "Search store with history management",
+          "All stores have proper TypeScript typing"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "component-001",
+        "title": "Create Article Card Component",
+        "type": "component",
+        "priority": "medium",
+        "estimatedHours": 4,
+        "description": "Build reusable article card component with image, title, summary, and metadata",
+        "files": [
+          "src/components/articles/ArticleCard.tsx",
+          "src/components/articles/ReadingTimeIndicator.tsx"
+        ],
+        "dependencies": [
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "Displays article image, title, summary",
+          "Shows author, publish date, reading time",
+          "Bookmark and share buttons",
+          "Proper accessibility labels",
+          "Loading and error states"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "component-002",
+        "title": "Create Article Feed Component",
+        "type": "component",
+        "priority": "medium",
+        "estimatedHours": 5,
+        "description": "Build optimized feed component with pull-to-refresh and infinite scroll",
+        "files": [
+          "src/components/articles/ArticleFeed.tsx",
+          "src/components/ui/PullToRefresh.tsx"
+        ],
+        "dependencies": [
+          "component-001"
+        ],
+        "acceptanceCriteria": [
+          "FlatList with optimized rendering",
+          "Pull-to-refresh functionality",
+          "Infinite scroll with loading states",
+          "Empty state handling",
+          "Error boundary integration"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "component-003",
+        "title": "Create Category Navigation",
+        "type": "component",
+        "priority": "medium",
+        "estimatedHours": 3,
+        "description": "Build category tabs and filter components",
+        "files": [
+          "src/components/categories/CategoryTabs.tsx",
+          "src/components/categories/CategoryFilter.tsx"
+        ],
+        "dependencies": [
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "Horizontal scrollable category tabs",
+          "Active category highlighting",
+          "Category filtering functionality",
+          "Icons and colors for categories",
+          "Accessibility support"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "component-004",
+        "title": "Create Search Components",
+        "type": "component",
+        "priority": "medium",
+        "estimatedHours": 4,
+        "description": "Build search bar, results, and history components",
+        "files": [
+          "src/components/search/SearchBar.tsx",
+          "src/components/search/SearchResults.tsx",
+          "src/components/search/SearchHistory.tsx"
+        ],
+        "dependencies": [
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "Debounced search input",
+          "Search suggestions and autocomplete",
+          "Search history management",
+          "Advanced search filters",
+          "Clear search functionality"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "component-005",
+        "title": "Create Bookmark and Share Components",
+        "type": "component",
+        "priority": "medium",
+        "estimatedHours": 3,
+        "description": "Build bookmark toggle and share functionality components",
+        "files": [
+          "src/components/articles/BookmarkButton.tsx",
+          "src/components/articles/ShareButton.tsx",
+          "src/services/share.ts"
+        ],
+        "dependencies": [
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "Bookmark toggle with visual feedback",
+          "Native share integration",
+          "Share to social platforms",
+          "Copy link functionality",
+          "Offline bookmark support"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "hook-001",
+        "title": "Create Custom Hooks",
+        "type": "service",
+        "priority": "medium",
+        "estimatedHours": 5,
+        "description": "Implement custom hooks for articles, bookmarks, search, and connectivity",
+        "files": [
+          "src/hooks/useArticles.ts",
+          "src/hooks/useBookmarks.ts",
+          "src/hooks/useSearch.ts",
+          "src/hooks/useOfflineSync.ts",
+          "src/hooks/useConnectivity.ts"
+        ],
+        "dependencies": [
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "useArticles hook with pagination and filtering",
+          "useBookmarks hook for bookmark management",
+          "useSearch hook with debouncing",
+          "useOfflineSync for data synchronization",
+          "useConnectivity for network status",
+          "Proper error handling in all hooks"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "screen-001",
+        "title": "Modify Home Screen",
+        "type": "feature",
+        "priority": "high",
+        "estimatedHours": 4,
+        "description": "Update existing home screen to integrate article feed, categories, and search",
+        "files": [
+          "src/screens/HomeScreen.tsx"
+        ],
+        "dependencies": [
+          "component-001",
+          "component-002",
+          "component-003",
+          "hook-001"
+        ],
+        "acceptanceCriteria": [
+          "Article feed with category filtering",
+          "Search functionality",
+          "Pull-to-refresh integration",
+          "Loading and error states",
+          "Offline indicator"
+        ],
+        "action": "modify"
+      },
+      {
+        "id": "screen-002",
+        "title": "Create Article Detail Screen",
+        "type": "feature",
+        "priority": "high",
+        "estimatedHours": 5,
+        "description": "Build detailed article view with full content and actions",
+        "files": [
+          "src/screens/ArticleDetailScreen.tsx",
+          "src/components/articles/ArticleDetail.tsx"
+        ],
+        "dependencies": [
+          "component-005",
+          "hook-001"
+        ],
+        "acceptanceCriteria": [
+          "Full article content display",
+          "Bookmark and share functionality",
+          "Reading time and metadata",
+          "Offline reading support",
+          "Related articles section"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "screen-003",
+        "title": "Create Bookmarks Screen",
+        "type": "feature",
+        "priority": "medium",
+        "estimatedHours": 4,
+        "description": "Build bookmarks management screen with offline support",
+        "files": [
+          "src/screens/BookmarksScreen.tsx"
+        ],
+        "dependencies": [
+          "component-001",
+          "component-002",
+          "hook-001"
+        ],
+        "acceptanceCriteria": [
+          "List of bookmarked articles",
+          "Remove bookmark functionality",
+          "Offline reading indicator",
+          "Empty state for no bookmarks",
+          "Search within bookmarks"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "screen-004",
+        "title": "Create Search Screen",
+        "type": "feature",
+        "priority": "medium",
+        "estimatedHours": 4,
+        "description": "Build dedicated search screen with filters and history",
+        "files": [
+          "src/screens/SearchScreen.tsx"
+        ],
+        "dependencies": [
+          "component-004",
+          "hook-001"
+        ],
+        "acceptanceCriteria": [
+          "Advanced search interface",
+          "Search history display",
+          "Filter by category and date",
+          "Search suggestions",
+          "Results pagination"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "screen-005",
+        "title": "Modify Settings Screen",
+        "type": "feature",
+        "priority": "low",
+        "estimatedHours": 3,
+        "description": "Update existing settings screen with app-specific preferences",
+        "files": [
+          "src/screens/SettingsScreen.tsx",
+          "src/components/ui/ThemeToggle.tsx"
+        ],
+        "dependencies": [
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "Theme selection (light/dark/system)",
+          "Default category preference",
+          "Notification settings",
+          "Auto-download bookmarks toggle",
+          "Reading speed preference"
+        ],
+        "action": "modify"
+      },
+      {
+        "id": "screen-006",
+        "title": "Create Category Screen",
+        "type": "feature",
+        "priority": "low",
+        "estimatedHours": 3,
+        "description": "Build dedicated category view screen",
+        "files": [
+          "src/screens/CategoryScreen.tsx"
+        ],
+        "dependencies": [
+          "component-002",
+          "hook-001"
+        ],
+        "acceptanceCriteria": [
+          "Articles filtered by category",
+          "Category description and metadata",
+          "Same feed functionality as home",
+          "Category-specific search",
+          "Back navigation"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "util-001",
+        "title": "Create Utility Functions",
+        "type": "service",
+        "priority": "low",
+        "estimatedHours": 3,
+        "description": "Implement helper utilities for dates, text processing, and storage",
+        "files": [
+          "src/utils/dateHelpers.ts",
+          "src/utils/textHelpers.ts",
+          "src/utils/storageHelpers.ts",
+          "src/services/readingTime.ts"
+        ],
+        "dependencies": [],
+        "acceptanceCriteria": [
+          "Date formatting and relative time",
+          "Text truncation and sanitization",
+          "Storage encryption helpers",
+          "Reading time calculation",
+          "Text search utilities"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "test-001",
+        "title": "Create Core Component Tests",
+        "type": "test",
+        "priority": "low",
+        "estimatedHours": 6,
+        "description": "Write unit tests for core components and services",
+        "files": [
+          "src/components/articles/__tests__/ArticleCard.test.tsx",
+          "src/components/articles/__tests__/ArticleFeed.test.tsx",
+          "src/services/__tests__/api.test.ts",
+          "src/store/__tests__/articlesStore.test.ts"
+        ],
+        "dependencies": [
+          "component-001",
+          "component-002",
+          "service-001",
+          "store-001"
+        ],
+        "acceptanceCriteria": [
+          "ArticleCard component tests",
+          "ArticleFeed component tests",
+          "API service unit tests",
+          "Store functionality tests",
+          "Test coverage > 80%"
+        ],
+        "action": "create"
+      },
+      {
+        "id": "feature-001",
+        "title": "Implement Offline Sync",
+        "type": "feature",
+        "priority": "medium",
+        "estimatedHours": 8,
+        "description": "Complete offline synchronization feature with conflict resolution",
+        "files": [
+          "src/services/sync.ts",
+          "src/hooks/useSyncStatus.ts"
+        ],
+        "dependencies": [
+          "service-002",
+          "hook-001"
+        ],
+        "acceptanceCriteria": [
+          "Background sync when online",
+          "Conflict resolution for bookmarks",
+          "Sync status indicators",
+          "Incremental sync to save bandwidth",
+          "Error handling for failed syncs"
+        ],
+        "action": "create"
+      }
+    ],
+    "dependencies": {
+      "external": [
+        "@react-native-async-storage/async-storage",
+        "expo-sqlite",
+        "expo-sharing",
+        "expo-linking",
+        "expo-network",
+        "react-native-fast-image",
+        "react-native-share",
+        "zustand",
+        "date-fns",
+        "react-native-super-grid",
+        "react-native-skeleton-placeholder",
+        "@react-native-community/netinfo"
+      ],
+      "criticalPath": [
+        "config-001",
+        "service-001",
+        "service-002",
+        "store-001",
+        "component-001",
+        "component-002",
+        "screen-001",
+        "screen-002"
+      ]
+    },
+    "parallelizable": [
+      [
+        "component-003",
+        "component-004",
+        "component-005"
+      ],
+      [
+        "hook-001",
+        "util-001"
+      ],
+      [
+        "screen-003",
+        "screen-004",
+        "screen-006"
+      ],
+      [
+        "test-001",
+        "feature-001"
+      ]
+    ],
+    "totalEstimatedHours": 92
+  }
+}

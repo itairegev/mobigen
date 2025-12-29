@@ -1,0 +1,61 @@
+{
+  "category": "news",
+  "template": "news",
+  "appName": "TechNews Daily",
+  "features": [
+    "article-feed",
+    "article-categories",
+    "article-detail-view",
+    "offline-reading",
+    "search-functionality",
+    "dark-mode",
+    "pull-to-refresh",
+    "social-sharing",
+    "reading-time-estimation"
+  ],
+  "complexity": "high",
+  "customizations": {
+    "branding": {
+      "appName": "TechNews Daily",
+      "primaryColor": "#2563eb",
+      "secondaryColor": "#059669"
+    },
+    "features": {
+      "categories": [
+        "Technology",
+        "Business",
+        "Sports",
+        "Entertainment"
+      ],
+      "offlineCapability": true,
+      "darkModeSupport": true,
+      "socialSharingIntegration": true
+    }
+  },
+  "templateAnalysis": {
+    "templateProvides": [
+      "Basic news app structure",
+      "Article listing capability",
+      "Basic navigation"
+    ],
+    "additionalFeaturesNeeded": [
+      "Scrollable article feed with modern UI",
+      "Category-based filtering system (Tech, Business, Sports, Entertainment)",
+      "Article detail view with reading time calculation",
+      "Offline storage and reading capability",
+      "Search functionality across titles and content",
+      "Dark mode implementation with toggle",
+      "Pull-to-refresh mechanism",
+      "Social media sharing integration",
+      "Settings screen with preferences"
+    ],
+    "customizationsNeeded": [
+      "Brand colors integration (#2563eb primary, #059669 secondary)",
+      "Custom app name and display name",
+      "Category-specific content organization",
+      "Modern news reader UI/UX patterns"
+    ]
+  },
+  "confidence": 0.92,
+  "reasoning": "While using a news template as base, this requires significant additional development including offline storage, search functionality, dark mode, social sharing, and a complete modern news reader experience. The template appears to be minimal, requiring most core features to be built from scratch."
+}

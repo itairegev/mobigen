@@ -1,0 +1,27 @@
+{
+  "files": [],
+  "logs": [
+    {
+      "type": "system",
+      "subtype": "init",
+      "session_id": "session_1766429134983_u6n09qg"
+    },
+    {
+      "type": "assistant",
+      "message": {
+        "content": [
+          {
+            "type": "text",
+            "text": "```json\n{\n  \"template\": \"news\",\n  \"category\": \"news\"\n}\n```"
+          }
+        ]
+      }
+    },
+    {
+      "type": "result",
+      "session_id": "session_1766429134983_u6n09qg"
+    }
+  ],
+  "success": false,
+  "requiresReview": true
+}

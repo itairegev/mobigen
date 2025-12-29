@@ -1,0 +1,292 @@
+{
+  "appName": "TechNews Daily",
+  "description": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+  "targetUsers": [],
+  "coreFeatures": [],
+  "userStories": [
+    {
+      "persona": "Tech Professional",
+      "story": "As a tech professional, I want to browse the latest technology articles in a dedicated category so that I can stay updated on industry trends during my commute",
+      "acceptanceCriteria": [
+        "Technology category displays latest tech articles",
+        "Articles load within 3 seconds",
+        "Infinite scroll works smoothly",
+        "Pull-to-refresh updates the feed"
+      ],
+      "edgeCases": [
+        "No internet connectivity",
+        "Empty category",
+        "API rate limiting"
+      ]
+    },
+    {
+      "persona": "Business Executive",
+      "story": "As a business executive, I want to save articles for offline reading so that I can catch up on news during flights without internet",
+      "acceptanceCriteria": [
+        "Save button available on each article",
+        "Saved articles accessible offline",
+        "Articles sync when connection restored",
+        "Offline indicator shows saved status"
+      ],
+      "edgeCases": [
+        "Storage full",
+        "Sync conflicts",
+        "Corrupted offline data"
+      ]
+    },
+    {
+      "persona": "News Enthusiast",
+      "story": "As a news enthusiast, I want to search for specific topics across all articles so that I can find relevant content quickly",
+      "acceptanceCriteria": [
+        "Search works across title, content, and tags",
+        "Results appear as user types",
+        "Filter by category within search",
+        "Search history saved locally"
+      ],
+      "edgeCases": [
+        "No search results",
+        "Special characters in query",
+        "Very long search terms"
+      ]
+    },
+    {
+      "persona": "General User",
+      "story": "As a user, I want to share interesting articles on social media so that I can discuss them with friends and colleagues",
+      "acceptanceCriteria": [
+        "Share button available on article detail",
+        "Multiple social platforms supported",
+        "Article preview shows correctly",
+        "Native sharing fallback available"
+      ],
+      "edgeCases": [
+        "Social app not installed",
+        "Share API failure",
+        "Long article titles"
+      ]
+    },
+    {
+      "persona": "General User",
+      "story": "As a user, I want to toggle dark mode so that I can read comfortably in low light conditions",
+      "acceptanceCriteria": [
+        "Dark mode toggle in settings",
+        "All screens support dark theme",
+        "Automatic system theme detection",
+        "Smooth theme transition"
+      ],
+      "edgeCases": [
+        "Theme switching during article reading",
+        "Image visibility in dark mode"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [],
+  "constraints": {
+    "technical": [
+      "Must work on iOS 14+ and Android 8+",
+      "Offline storage limited to 100MB per user",
+      "Search index size constraints on mobile devices",
+      "Social sharing SDK compatibility requirements"
+    ],
+    "timeline": [
+      "MVP delivery in 8-10 weeks",
+      "Advanced search feature can be Phase 2",
+      "Social sharing integration priority over advanced features"
+    ],
+    "platform": [
+      "Cross-platform compatibility required",
+      "Native performance for scrolling and animations",
+      "Platform-specific design patterns (Material Design, iOS Guidelines)",
+      "App store compliance for both platforms"
+    ],
+    "business": [
+      "Free tier with basic functionality",
+      "Future premium features consideration",
+      "GDPR compliance for EU users",
+      "Content licensing agreements needed"
+    ]
+  },
+  "successMetrics": {
+    "userEngagement": [
+      "Daily active users (target: 70% retention after 7 days)",
+      "Average session duration (target: 5+ minutes)",
+      "Articles read per session (target: 3+ articles)"
+    ],
+    "featureUsage": [
+      "Offline reading usage (target: 40% of users)",
+      "Search functionality usage (target: 25% of users)",
+      "Social sharing rate (target: 15% of articles)"
+    ],
+    "performance": [
+      "App load time under 3 seconds",
+      "Article loading time under 2 seconds",
+      "Crash rate below 1%"
+    ],
+    "retention": [
+      "7-day retention rate above 35%",
+      "30-day retention rate above 15%",
+      "Weekly returning users above 25%"
+    ]
+  },
+  "appDefinition": {
+    "name": "TechNews Daily",
+    "description": "A modern, feature-rich news reader app providing curated technology, business, sports, and entertainment news with offline reading capabilities and social sharing functionality.",
+    "targetUsers": [
+      {
+        "persona": "Tech Professionals",
+        "description": "Software developers, product managers, and tech industry workers who need to stay updated on technology trends",
+        "needs": [
+          "Latest tech news",
+          "Quick reading",
+          "Offline access during commute"
+        ]
+      },
+      {
+        "persona": "Business Executives",
+        "description": "Business leaders and entrepreneurs who follow market trends and business news",
+        "needs": [
+          "Business insights",
+          "Market updates",
+          "Time-efficient reading"
+        ]
+      },
+      {
+        "persona": "News Enthusiasts",
+        "description": "General users who consume news across multiple categories daily",
+        "needs": [
+          "Diverse content",
+          "Easy navigation",
+          "Social sharing"
+        ]
+      }
+    ],
+    "valueProposition": "The most comprehensive mobile news experience with intelligent categorization, offline reading, and seamless social sharing - designed for busy professionals who need to stay informed on-the-go."
+  },
+  "features": [
+    {
+      "name": "Advanced Article Feed",
+      "description": "Modern scrollable feed with infinite scroll, pull-to-refresh, and optimized loading",
+      "priority": "must-have",
+      "complexity": "medium",
+      "dependencies": [
+        "API integration",
+        "Caching system"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Category-Based Filtering",
+      "description": "Filter articles by Technology, Business, Sports, and Entertainment categories",
+      "priority": "must-have",
+      "complexity": "medium",
+      "dependencies": [
+        "Article feed",
+        "Navigation system"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Enhanced Article Detail View",
+      "description": "Rich article view with reading time estimation, formatted content, and media support",
+      "priority": "must-have",
+      "complexity": "medium",
+      "dependencies": [
+        "Article parsing",
+        "Reading time algorithm"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Offline Reading System",
+      "description": "Save articles for offline access with local storage and sync management",
+      "priority": "must-have",
+      "complexity": "high",
+      "dependencies": [
+        "Local database",
+        "Background sync"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Advanced Search Functionality",
+      "description": "Search articles by title, content, author, and category with filters",
+      "priority": "should-have",
+      "complexity": "high",
+      "dependencies": [
+        "Search indexing",
+        "Full-text search"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Dark Mode Implementation",
+      "description": "System-wide dark theme with user toggle and automatic detection",
+      "priority": "should-have",
+      "complexity": "medium",
+      "dependencies": [
+        "Theme system",
+        "Settings screen"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Social Media Sharing",
+      "description": "Share articles to Facebook, Twitter, LinkedIn, WhatsApp, and native sharing",
+      "priority": "should-have",
+      "complexity": "medium",
+      "dependencies": [
+        "Social SDKs",
+        "Deep linking"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Pull-to-Refresh Mechanism",
+      "description": "Native pull-to-refresh functionality across all article lists",
+      "priority": "should-have",
+      "complexity": "low",
+      "dependencies": [
+        "Article feed"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "Reading Time Estimation",
+      "description": "Calculate and display estimated reading time for each article",
+      "priority": "should-have",
+      "complexity": "low",
+      "dependencies": [
+        "Article content parsing"
+      ],
+      "additionalToTemplate": true
+    },
+    {
+      "name": "User Settings & Preferences",
+      "description": "Settings screen for dark mode, notifications, categories, and reading preferences",
+      "priority": "must-have",
+      "complexity": "medium",
+      "dependencies": [
+        "Storage system"
+      ],
+      "additionalToTemplate": true
+    }
+  ],
+  "templateGaps": {
+    "missingFeatures": [
+      "All core features need to be built as template is minimal",
+      "Complete UI/UX implementation required",
+      "API integration and data management",
+      "Offline storage system",
+      "Search functionality",
+      "Social sharing integration",
+      "Dark mode theming system",
+      "Settings and preferences management"
+    ],
+    "customizationNeeds": [
+      "Brand color integration (#2563eb, #059669)",
+      "Custom app naming and branding",
+      "Category-specific content organization",
+      "Modern news reader UI patterns",
+      "Performance optimizations for large content lists"
+    ]
+  }
+}

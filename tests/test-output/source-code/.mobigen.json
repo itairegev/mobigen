@@ -1,0 +1,57 @@
+{
+  "projectId": "f57cf4a0-4a9a-4f58-87e7-82b13338c8d6",
+  "template": "news",
+  "templateVersion": "1.0.0",
+  "templateCommit": "3ad5776",
+  "createdAt": "2025-12-22T20:22:45.875Z",
+  "generationHistory": [
+    {
+      "version": 1,
+      "prompt": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+      "phase": "product-definition",
+      "agent": "product-manager",
+      "timestamp": "2025-12-22T20:23:28.968Z",
+      "commit": "2de780b"
+    },
+    {
+      "version": 1,
+      "prompt": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+      "phase": "architecture",
+      "agent": "technical-architect",
+      "timestamp": "2025-12-22T20:23:54.900Z",
+      "commit": "2ababbc"
+    },
+    {
+      "version": 1,
+      "prompt": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+      "phase": "ui-design",
+      "agent": "ui-ux-expert",
+      "timestamp": "2025-12-22T20:24:34.785Z",
+      "commit": "86728c0"
+    },
+    {
+      "version": 1,
+      "prompt": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+      "phase": "error-fix-attempt-1",
+      "agent": "error-fixer",
+      "timestamp": "2025-12-22T20:26:06.967Z",
+      "commit": "a046120"
+    },
+    {
+      "version": 1,
+      "prompt": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+      "phase": "validation",
+      "agent": "validator",
+      "timestamp": "2025-12-22T20:26:24.222Z",
+      "commit": "267e03d"
+    },
+    {
+      "version": 1,
+      "prompt": "Create a modern news reader app with the following features:\n      - Home screen with a scrollable feed of latest articles\n      - Categories: Technology, Business, Sports, Entertainment\n      - Article detail view with estimated reading time\n      - Save articles for offline reading\n      - Search articles by title and content\n      - Dark mode toggle in settings\n      - Pull to refresh on the feed\n      - Share articles to social media",
+      "phase": "quality-assurance",
+      "agent": "qa",
+      "timestamp": "2025-12-22T20:26:50.847Z",
+      "commit": "a8e6340"
+    }
+  ]
+}

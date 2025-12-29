@@ -1,0 +1,71 @@
+[
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "starting",
+    "timestamp": "2025-12-22T16:36:26.037Z",
+    "data": {
+      "phases": 8
+    }
+  },
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "phase",
+    "timestamp": "2025-12-22T16:36:26.039Z",
+    "data": {
+      "phase": "setup",
+      "index": 0
+    }
+  },
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "intent-analyzer",
+    "timestamp": "2025-12-22T16:36:26.042Z",
+    "data": {
+      "type": "system",
+      "subtype": "init",
+      "session_id": "session_1766421386040_1cythk9"
+    }
+  },
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "intent-analyzer",
+    "timestamp": "2025-12-22T16:36:27.659Z",
+    "data": {
+      "type": "assistant",
+      "message": {
+        "content": [
+          {
+            "type": "text",
+            "text": "```json\n{\n  \"template\": \"news\",\n  \"category\": \"news\"\n}\n```"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "intent-analyzer",
+    "timestamp": "2025-12-22T16:36:27.659Z",
+    "data": {
+      "type": "result",
+      "session_id": "session_1766421386040_1cythk9"
+    }
+  },
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "cloning",
+    "timestamp": "2025-12-22T16:36:27.660Z",
+    "data": {
+      "template": "news"
+    }
+  },
+  {
+    "projectId": "9173c59e-1bed-4b40-a09e-6e6b0d67fe93",
+    "stage": "error",
+    "timestamp": "2025-12-22T16:36:27.670Z",
+    "data": {
+      "error": "Template 'news' not found at /Users/itairegev/projects/mobigen/services/generator/templates-bare/news.git",
+      "stack": "Error: Template 'news' not found at /Users/itairegev/projects/mobigen/services/generator/templates-bare/news.git\n    at TemplateManager.cloneToProject (/Users/itairegev/projects/mobigen/packages/storage/src/template-manager.ts:551:13)\n    at generateApp (/Users/itairegev/projects/mobigen/services/generator/src/orchestrator.ts:323:24)\n    at <anonymous> (/Users/itairegev/projects/mobigen/services/generator/src/api.ts:128:22)"
+    }
+  }
+]
