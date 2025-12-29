@@ -945,11 +945,18 @@ export async function generateAppWithPipeline(
   await emitProgress(projectId, 'starting', { mode: 'pipeline' });
 
   try {
+    // Initialize registries before use
+    await agentRegistry.initialize();
+
     // Clone template first (using intent analyzer for selection)
     await emitProgress(projectId, 'setup', { phase: 'template-selection' });
 
-    // Quick intent analysis
+    // Quick intent analysis for template selection
+    await emitProgress(projectId, 'agent:start', { agent: 'intent-analyzer', phase: 'template-selection' });
+
     const intentAgent = agentRegistry.get('intent-analyzer');
+    let selectedTemplate = 'base';
+
     if (intentAgent) {
       const intentResult = await executeAgent(
         intentAgent,
@@ -957,7 +964,6 @@ export async function generateAppWithPipeline(
         { projectPath }
       );
 
-      let selectedTemplate = 'base';
       try {
         const match = intentResult.result.match(/\{[\s\S]*\}/);
         if (match) {
@@ -967,23 +973,35 @@ export async function generateAppWithPipeline(
       } catch {
         logger.warn('Could not parse intent, using base template');
       }
-
-      // Clone template
-      await templateManager.cloneToProject(selectedTemplate, projectId, {
-        appName: config.appName,
-        bundleId: config.bundleId.ios,
-      });
-
-      logger.info(`Cloned template: ${selectedTemplate}`);
     }
 
-    // Run the pipeline
+    await emitProgress(projectId, 'agent:complete', {
+      agent: 'intent-analyzer',
+      phase: 'template-selection',
+      selectedTemplate
+    });
+
+    // Clone template
+    await emitProgress(projectId, 'cloning', { template: selectedTemplate });
+    await templateManager.cloneToProject(selectedTemplate, projectId, {
+      appName: config.appName,
+      bundleId: config.bundleId.ios,
+    });
+
+    logger.info(`Cloned template: ${selectedTemplate}`);
+
+    // Run the pipeline - skip analysis phase since we already did it above
+    const pipelineWithoutAnalysis: PipelineConfig = {
+      ...DEFAULT_PIPELINE,
+      phases: DEFAULT_PIPELINE.phases.filter(p => p.name !== 'analysis'),
+    };
+
     const pipelineResult = await runPipeline(
       projectId,
       projectPath,
       config as unknown as Record<string, unknown>,
       MOBIGEN_ROOT,
-      DEFAULT_PIPELINE
+      pipelineWithoutAnalysis
     );
 
     // Build result

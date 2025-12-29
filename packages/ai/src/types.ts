@@ -41,9 +41,9 @@ export type AgentRole =
 // Complex agents like product-manager and architect need more time
 export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
   'orchestrator': 900000,           // 15 min - coordinates entire workflow
-  'product-manager': 300000,        // 5 min - creates detailed PRD
-  'technical-architect': 300000,    // 5 min - designs architecture
-  'ui-ux-expert': 300000,           // 5 min - design system (complex theme generation)
+  'product-manager': 600000,        // 10 min - creates detailed PRD (reads many files)
+  'technical-architect': 600000,    // 10 min - designs architecture (explores codebase)
+  'ui-ux-expert': 600000,           // 10 min - design system (complex theme generation)
   'lead-developer': 180000,         // 3 min - task breakdown
   'developer': 300000,              // 5 min - implementation
   'intent-analyzer': 60000,         // 1 min - quick analysis
