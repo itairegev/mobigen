@@ -1,7 +1,7 @@
 {
-  "name": "@mobigen/api",
+  "name": "@mobigen/submission",
   "version": "0.1.0",
-  "description": "tRPC API layer for Mobigen",
+  "description": "App store submission utilities for Mobigen",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,13 +18,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mobigen/backend": "workspace:*",
     "@mobigen/db": "workspace:*",
-    "@mobigen/github": "workspace:*",
-    "@mobigen/ota-updates": "workspace:*",
-    "@trpc/server": "^11.0.0",
-    "stripe": "^20.1.0",
-    "superjson": "^2.2.1",
+    "@mobigen/storage": "workspace:*",
+    "sharp": "^0.33.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

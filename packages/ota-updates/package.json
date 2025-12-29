@@ -1,7 +1,7 @@
 {
-  "name": "@mobigen/api",
+  "name": "@mobigen/ota-updates",
   "version": "0.1.0",
-  "description": "tRPC API layer for Mobigen",
+  "description": "OTA (Over-The-Air) updates service for Mobigen using Expo Updates",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,13 +18,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mobigen/backend": "workspace:*",
     "@mobigen/db": "workspace:*",
-    "@mobigen/github": "workspace:*",
-    "@mobigen/ota-updates": "workspace:*",
-    "@trpc/server": "^11.0.0",
-    "stripe": "^20.1.0",
-    "superjson": "^2.2.1",
+    "@mobigen/storage": "workspace:*",
+    "@expo/eas-build-job": "^1.0.0",
+    "execa": "^8.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

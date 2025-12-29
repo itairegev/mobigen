@@ -198,6 +198,16 @@ export class BuildService {
           resizeMode: 'contain',
           backgroundColor: (branding.backgroundColor as string) || '#FFFFFF',
         },
+        // OTA Updates configuration
+        runtimeVersion: {
+          policy: 'sdkVersion', // or use appVersion for more granular control
+        },
+        updates: {
+          enabled: true,
+          fallbackToCacheTimeout: 0, // Always try to fetch latest update
+          checkAutomatically: 'ON_LOAD', // Check for updates on app launch
+          url: process.env.EAS_UPDATE_URL || 'https://u.expo.dev',
+        },
         ios: {
           bundleIdentifier: project.bundleIdIos || bundleId,
           supportsTablet: true,
@@ -212,7 +222,22 @@ export class BuildService {
         extra: {
           primaryColor: branding.primaryColor || '#007AFF',
           secondaryColor: branding.secondaryColor || '#5856D6',
+          // Pass EAS project ID to app for OTA updates
+          eas: {
+            projectId: process.env.EAS_PROJECT_ID,
+          },
         },
+        plugins: [
+          'expo-router',
+          'expo-secure-store',
+          // Add expo-updates plugin
+          [
+            'expo-updates',
+            {
+              username: process.env.EXPO_ACCOUNT_OWNER || 'mobigen',
+            },
+          ],
+        ],
       },
     };
   }

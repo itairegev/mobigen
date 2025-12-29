@@ -237,11 +237,11 @@ export const backendRouter = router({
   getTemplates: protectedProcedure.query(async () => {
     const templateIds = getAvailableTemplates();
 
-    return templateIds.map((id) => {
+    return templateIds.map((id: string) => {
       const schema = getSchemaForTemplate(id);
       return {
         id,
-        tables: schema.tables.map((t) => ({
+        tables: schema.tables.map((t: { name: string; attributes: unknown[]; gsi?: unknown[] }) => ({
           name: t.name,
           attributeCount: t.attributes.length,
           hasGsi: (t.gsi?.length || 0) > 0,

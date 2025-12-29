@@ -18,11 +18,14 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  accounts          Account[]
-  sessions          Session[]
-  projects          Project[]
-  usageEvents       UsageEvent[]
-  githubConnections GitHubConnection[]
+  accounts           Account[]
+  sessions           Session[]
+  projects           Project[]
+  usageEvents        UsageEvent[]
+  githubConnections  GitHubConnection[]
+  publishedTemplates TemplateMarketplace[]
+  templatePurchases  TemplatePurchase[]
+  templateReviews    TemplateReview[]
 
   @@map("users")
 }
@@ -450,4 +453,439 @@ model BackendProvisioningLog {
   @@index([projectId])
   @@index([createdAt])
   @@map("backend_provisioning_logs")
+}
+
+// ============================================================================
+// OTA (OVER-THE-AIR) UPDATES
+// ============================================================================
+
+model UpdateChannel {
+  id             String    @id @default(uuid())
+  projectId      String    @map("project_id")
+  name           String // production, staging, development, beta
+  description    String?
+  isDefault      Boolean   @default(false) @map("is_default")
+
+  // Runtime version targeting
+  runtimeVersion String?   @map("runtime_version")
+
+  // Branch name in Expo
+  branchName     String    @map("branch_name")
+
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  updates        OTAUpdate[]
+
+  @@unique([projectId, name])
+  @@index([projectId])
+  @@map("update_channels")
+}
+
+model OTAUpdate {
+  id             String    @id @default(uuid())
+  projectId      String    @map("project_id")
+  channelId      String    @map("channel_id")
+  version        Int // Incremental version number
+
+  // Expo Updates integration
+  updateId       String?   @map("update_id") // Expo update ID
+  groupId        String?   @map("group_id") // Expo update group ID
+  runtimeVersion String    @map("runtime_version")
+  platform       String    @default("all") // ios, android, all
+
+  // Content
+  message        String // User-facing change description
+  changeType     String?   @map("change_type") // feature, fix, style, content
+
+  // Files changed (for tracking)
+  filesModified  String[]  @default([]) @map("files_modified")
+
+  // Rollout configuration
+  status         String    @default("draft") // draft, published, active, rolled_back, archived
+  rolloutPercent Int       @default(100) @map("rollout_percent") // 0-100
+
+  // Metrics
+  downloadCount  Int       @default(0) @map("download_count")
+  errorCount     Int       @default(0) @map("error_count")
+
+  // Rollback support
+  canRollback    Boolean   @default(true) @map("can_rollback")
+  rolledBackTo   String?   @map("rolled_back_to") // ID of update we rolled back to
+  rolledBackAt   DateTime? @map("rolled_back_at")
+
+  // Manifest URL (for direct download)
+  manifestUrl    String?   @map("manifest_url")
+
+  // Publishing info
+  publishedBy    String?   @map("published_by") // User ID
+  publishedAt    DateTime? @map("published_at")
+
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  channel        UpdateChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  metrics        OTAUpdateMetric[]
+
+  @@unique([projectId, channelId, version])
+  @@index([projectId])
+  @@index([channelId])
+  @@index([status])
+  @@index([publishedAt])
+  @@map("ota_updates")
+}
+
+model OTAUpdateMetric {
+  id              String   @id @default(uuid())
+  updateId        String   @map("update_id")
+
+  // Metrics by platform and version
+  platform        String
+  appVersion      String   @map("app_version")
+
+  // Counts
+  successCount    Int      @default(0) @map("success_count")
+  failureCount    Int      @default(0) @map("failure_count")
+  rollbackCount   Int      @default(0) @map("rollback_count")
+
+  // Performance
+  avgDownloadTime Int?     @map("avg_download_time_ms") // milliseconds
+  avgApplyTime    Int?     @map("avg_apply_time_ms") // milliseconds
+
+  // Aggregation period
+  date            DateTime @default(now())
+
+  update          OTAUpdate @relation(fields: [updateId], references: [id], onDelete: Cascade)
+
+  @@unique([updateId, platform, appVersion, date])
+  @@index([updateId])
+  @@index([date])
+  @@map("ota_update_metrics")
+}
+
+model OTAUpdateEvent {
+  id            String   @id @default(uuid())
+  updateId      String   @map("update_id")
+
+  // Event details
+  eventType     String   @map("event_type") // download_start, download_complete, download_error, apply_start, apply_complete, apply_error, rollback
+  platform      String
+  appVersion    String   @map("app_version")
+  deviceId      String?  @map("device_id") // Hashed device identifier
+
+  // Error tracking
+  errorMessage  String?  @map("error_message")
+  errorStack    String?  @map("error_stack") @db.Text
+
+  // Performance
+  durationMs    Int?     @map("duration_ms")
+
+  // Metadata
+  metadata      Json     @default("{}")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([updateId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("ota_update_events")
+}
+
+// ============================================================================
+// TEMPLATE MARKETPLACE
+// ============================================================================
+
+model TemplateCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  templates TemplateMarketplace[]
+
+  @@index([slug])
+  @@index([sortOrder])
+  @@map("template_categories")
+}
+
+model TemplateMarketplace {
+  id              String   @id @default(uuid())
+
+  // Template identification
+  name            String
+  slug            String   @unique
+  templateId      String   @unique @map("template_id") // References templates/ directory
+  version         String   @default("1.0.0")
+
+  // Category
+  categoryId      String?  @map("category_id")
+  category        TemplateCategory? @relation(fields: [categoryId], references: [id])
+
+  // Metadata
+  shortDescription String  @map("short_description")
+  fullDescription  String  @db.Text @map("full_description")
+  features         String[] @default([])
+  keywords         String[] @default([])
+  tags             String[] @default([])
+
+  // Pricing
+  tier            String   @default("free") // free, premium, enterprise
+  price           Int      @default(0) // in cents
+  currency        String   @default("usd")
+  stripePriceId   String?  @map("stripe_price_id")
+  discountPercent Int      @default(0) @map("discount_percent")
+
+  // Publisher info
+  publisherId     String   @map("publisher_id")
+  publisher       User     @relation(fields: [publisherId], references: [id])
+  isOfficial      Boolean  @default(true) @map("is_official") // Mobigen official vs third-party
+
+  // Revenue sharing (for future third-party templates)
+  revenueSharePercent Int  @default(0) @map("revenue_share_percent")
+
+  // Assets
+  thumbnailUrl    String?  @map("thumbnail_url")
+  previewImages   String[] @default([]) @map("preview_images")
+  demoUrl         String?  @map("demo_url")
+  videoUrl        String?  @map("video_url")
+
+  // Statistics
+  downloadCount   Int      @default(0) @map("download_count")
+  purchaseCount   Int      @default(0) @map("purchase_count")
+  averageRating   Float    @default(0) @map("average_rating")
+  totalRatings    Int      @default(0) @map("total_ratings")
+
+  // Status
+  status          String   @default("draft") // draft, published, archived
+  publishedAt     DateTime? @map("published_at")
+
+  // Compatibility
+  minExpoVersion  String?  @map("min_expo_version")
+  minRNVersion    String?  @map("min_rn_version")
+  platforms       String[] @default(["ios", "android"])
+
+  // Template configuration
+  capabilities    String[] @default([])
+  requiredDeps    Json     @default("[]") @map("required_deps")
+  optionalDeps    Json     @default("[]") @map("optional_deps")
+  backendFeatures String[] @default([]) @map("backend_features")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  purchases TemplatePurchase[]
+  reviews   TemplateReview[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([tier])
+  @@index([publisherId])
+  @@index([averageRating])
+  @@index([downloadCount])
+  @@map("template_marketplace")
+}
+
+model TemplatePurchase {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  templateId      String   @map("template_id")
+
+  // Pricing at purchase time
+  price           Int // in cents
+  currency        String   @default("usd")
+  discountApplied Int      @default(0) @map("discount_applied")
+  finalPrice      Int      @map("final_price")
+
+  // Payment
+  stripePaymentId String?  @unique @map("stripe_payment_id")
+  paymentStatus   String   @default("pending") // pending, succeeded, failed, refunded
+  paymentMethod   String?  @map("payment_method")
+
+  // License
+  licenseKey      String   @unique @map("license_key")
+  licenseType     String   @default("single") @map("license_type") // single, team, enterprise
+
+  // Metadata
+  metadata        Json     @default("{}")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user     User                @relation(fields: [userId], references: [id])
+  template TemplateMarketplace @relation(fields: [templateId], references: [id])
+
+  @@unique([userId, templateId])
+  @@index([userId])
+  @@index([templateId])
+  @@index([paymentStatus])
+  @@map("template_purchases")
+}
+
+model TemplateReview {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  templateId String   @map("template_id")
+
+  // Review content
+  rating     Int // 1-5
+  title      String?
+  comment    String?  @db.Text
+
+  // Metadata
+  isVerifiedPurchase Boolean @default(false) @map("is_verified_purchase")
+  isPublished        Boolean @default(true) @map("is_published")
+
+  // Helpful votes
+  helpfulCount       Int     @default(0) @map("helpful_count")
+  notHelpfulCount    Int     @default(0) @map("not_helpful_count")
+
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user     User                @relation(fields: [userId], references: [id])
+  template TemplateMarketplace @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, templateId])
+  @@index([userId])
+  @@index([templateId])
+  @@index([rating])
+  @@index([isPublished])
+  @@map("template_reviews")
+}
+
+// ============================================================================
+// APP STORE SUBMISSION (PHASE 1 MVP)
+// ============================================================================
+
+model SubmissionProgress {
+  id        String   @id @default(uuid())
+  projectId String   @unique @map("project_id")
+  platform  String // ios, android, both
+
+  // Checklist progress
+  completedSteps String[]  @default([]) @map("completed_steps")
+  totalSteps     Int       @default(0) @map("total_steps")
+  currentStep    String?   @map("current_step")
+
+  // Platform-specific status
+  iosStatus     String @default("not_started") @map("ios_status") // not_started, in_progress, review, live, rejected
+  androidStatus String @default("not_started") @map("android_status") // not_started, in_progress, review, live, rejected
+
+  // App Store Connect metadata
+  iosAppId          String? @map("ios_app_id")
+  iosAppStoreUrl    String? @map("ios_app_store_url")
+  iosReviewStatus   String? @map("ios_review_status")
+  iosRejectionNotes String? @map("ios_rejection_notes") @db.Text
+
+  // Google Play Console metadata
+  androidPackageName String? @map("android_package_name")
+  androidPlayStoreUrl String? @map("android_play_store_url")
+  androidReviewStatus String? @map("android_review_status")
+  androidRejectionNotes String? @map("android_rejection_notes") @db.Text
+
+  // Asset tracking
+  iconsGenerated       Boolean @default(false) @map("icons_generated")
+  screenshotsGenerated Boolean @default(false) @map("screenshots_generated")
+  metadataCompleted    Boolean @default(false) @map("metadata_completed")
+
+  // Submission metadata
+  appDescription      String? @db.Text @map("app_description")
+  appKeywords         String[] @default([]) @map("app_keywords")
+  appCategory         String? @map("app_category")
+  privacyPolicyUrl    String? @map("privacy_policy_url")
+  supportUrl          String? @map("support_url")
+  marketingUrl        String? @map("marketing_url")
+
+  // Submission dates
+  iosSubmittedAt   DateTime? @map("ios_submitted_at")
+  iosApprovedAt    DateTime? @map("ios_approved_at")
+  androidSubmittedAt DateTime? @map("android_submitted_at")
+  androidApprovedAt  DateTime? @map("android_approved_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([projectId])
+  @@index([iosStatus])
+  @@index([androidStatus])
+  @@map("submission_progress")
+}
+
+model StoreCredentials {
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  userId    String   @map("user_id")
+  platform  String // ios, android
+
+  // Encrypted credentials (using AES-256-GCM)
+  credentialsEncrypted String @map("credentials_encrypted") @db.Text
+  credentialsIv        String @map("credentials_iv") // Initialization vector for decryption
+  credentialsTag       String @map("credentials_tag") // Authentication tag
+
+  // Credential metadata (not encrypted)
+  credentialType String @map("credential_type") // app_store_connect_api_key, google_play_service_account, apple_developer_cert
+  description    String?
+  expiresAt      DateTime? @map("expires_at")
+
+  // Access tracking
+  lastAccessedAt DateTime? @map("last_accessed_at")
+  accessCount    Int       @default(0) @map("access_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([platform])
+  @@map("store_credentials")
+}
+
+model AppMetadata {
+  id        String @id @default(uuid())
+  projectId String @unique @map("project_id")
+
+  // App identity
+  appName        String  @map("app_name")
+  appSubtitle    String? @map("app_subtitle")
+  promotionalText String? @map("promotional_text") @db.Text
+
+  // Descriptions
+  shortDescription String @map("short_description") @db.Text // 80 chars for Play Store
+  fullDescription  String @map("full_description") @db.Text // 4000 chars
+
+  // SEO & Discovery
+  keywords String[] @default([])
+  category String
+
+  // URLs
+  privacyPolicyUrl String  @map("privacy_policy_url")
+  supportUrl       String  @map("support_url")
+  marketingUrl     String? @map("marketing_url")
+
+  // Contact
+  supportEmail String  @map("support_email")
+  supportPhone String? @map("support_phone")
+
+  // Content rating
+  contentRating   String? @map("content_rating") // 4+, 9+, 12+, 17+ (iOS), Everyone, Teen, Mature (Android)
+  contentWarnings String[] @default([]) @map("content_warnings")
+
+  // Screenshots and media
+  iosScreenshots     Json @default("{}") @map("ios_screenshots") // { "6.5inch": [...urls], "5.5inch": [...urls] }
+  androidScreenshots Json @default("{}") @map("android_screenshots") // { "phone": [...urls], "tablet": [...urls] }
+  featureGraphic     String? @map("feature_graphic") // Android only
+
+  // Release notes
+  releaseNotes Json @default("{}") @map("release_notes") // { "1.0.0": "Initial release", ... }
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([projectId])
+  @@map("app_metadata")
 }
