@@ -45,7 +45,7 @@ export const AGENT_TIMEOUTS: Record<AgentRole, number> = {
   'technical-architect': 600000,    // 10 min - designs architecture (explores codebase)
   'ui-ux-expert': 600000,           // 10 min - design system (complex theme generation)
   'lead-developer': 180000,         // 3 min - task breakdown
-  'developer': 300000,              // 5 min - implementation
+  'developer': 600000,              // 10 min - implementation (can have many files to modify)
   'intent-analyzer': 60000,         // 1 min - quick analysis
   'validator': 180000,              // 3 min - run validations
   'error-fixer': 180000,            // 3 min - fix errors
