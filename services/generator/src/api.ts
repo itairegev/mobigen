@@ -390,6 +390,214 @@ app.get('/api/projects/:projectId/errors', (req, res) => {
   });
 });
 
+// ============================================================================
+// PROGRESS & HISTORY ENDPOINTS
+// ============================================================================
+
+// Get all jobs for a project (history)
+app.get('/api/projects/:projectId/jobs', async (req, res) => {
+  const { projectId } = req.params;
+  const limit = parseInt(req.query.limit as string) || 20;
+  const includeCompleted = req.query.includeCompleted !== 'false';
+
+  try {
+    const jobs = await TaskTracker.getAllJobsForProject(projectId, { limit, includeCompleted });
+
+    res.json({
+      success: true,
+      projectId,
+      count: jobs.length,
+      jobs: jobs.map(j => ({
+        id: j.id,
+        status: j.status,
+        progress: j.progress,
+        currentPhase: j.currentPhase,
+        currentAgent: j.currentAgent,
+        totalTasks: j.totalTasks,
+        completedTasks: j.completedTasks,
+        failedTasks: j.failedTasks,
+        retryCount: j.retryCount,
+        startedAt: j.startedAt,
+        completedAt: j.completedAt,
+        createdAt: j.createdAt,
+        errorMessage: j.errorMessage,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get jobs',
+    });
+  }
+});
+
+// Get current progress summary for a project
+app.get('/api/projects/:projectId/progress', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    // First try to load from database if not in memory
+    let job = TaskTracker.getJobByProject(projectId);
+
+    if (!job) {
+      // Try loading from database
+      const dbJob = await TaskTracker.loadJobFromDatabase(projectId);
+      job = dbJob ?? undefined;
+    }
+
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        error: 'No job found for this project',
+        hint: 'Start a new generation with POST /api/generate',
+      });
+    }
+
+    const summary = TaskTracker.getProgressSummary(job.id);
+    const compact = TaskTracker.getCompactStatus(job.id);
+
+    res.json({
+      success: true,
+      projectId,
+      jobId: job.id,
+      status: job.status,
+      progress: job.progress,
+      phases: compact?.phases || [],
+      summary: summary ? {
+        currentPhase: summary.currentPhase,
+        currentAgent: summary.currentAgent,
+        phases: summary.phases,
+        errors: summary.errors.slice(0, 5), // Limit to first 5 errors
+        canResume: summary.canResume,
+      } : null,
+      timing: {
+        startedAt: job.startedAt,
+        completedAt: job.completedAt,
+        durationMs: job.completedAt && job.startedAt
+          ? job.completedAt.getTime() - job.startedAt.getTime()
+          : null,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get progress',
+    });
+  }
+});
+
+// Get detailed job information
+app.get('/api/jobs/:jobId/details', async (req, res) => {
+  const { jobId } = req.params;
+
+  try {
+    const details = await TaskTracker.getJobDetails(jobId);
+
+    if (!details) {
+      return res.status(404).json({
+        success: false,
+        error: 'Job not found',
+      });
+    }
+
+    res.json({
+      success: true,
+      job: {
+        id: details.job.id,
+        projectId: details.job.projectId,
+        status: details.job.status,
+        progress: details.job.progress,
+        currentPhase: details.job.currentPhase,
+        currentAgent: details.job.currentAgent,
+        totalTasks: details.job.totalTasks,
+        completedTasks: details.job.completedTasks,
+        failedTasks: details.job.failedTasks,
+        retryCount: details.job.retryCount,
+        maxRetries: details.job.maxRetries,
+        errorMessage: details.job.errorMessage,
+        startedAt: details.job.startedAt,
+        completedAt: details.job.completedAt,
+        createdAt: details.job.createdAt,
+      },
+      summary: details.summary,
+      tasks: details.tasks.map(t => ({
+        id: t.id,
+        phase: t.phase,
+        agentId: t.agentId,
+        taskType: t.taskType,
+        status: t.status,
+        priority: t.priority,
+        retryCount: t.retryCount,
+        durationMs: t.durationMs,
+        filesModified: t.filesModified,
+        errorMessage: t.errorMessage,
+        errorDetails: t.errorDetails,
+        startedAt: t.startedAt,
+        completedAt: t.completedAt,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get job details',
+    });
+  }
+});
+
+// Get all failed tasks for a project (across all jobs)
+app.get('/api/projects/:projectId/failed-tasks', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const failedByJob = await TaskTracker.getFailedTasksForProject(projectId);
+
+    const totalFailed = failedByJob.reduce((sum, j) => sum + j.failedTasks.length, 0);
+
+    res.json({
+      success: true,
+      projectId,
+      totalFailedTasks: totalFailed,
+      jobsWithFailures: failedByJob.length,
+      failures: failedByJob.map(j => ({
+        jobId: j.jobId,
+        jobStatus: j.jobStatus,
+        tasks: j.failedTasks.map(t => ({
+          id: t.id,
+          phase: t.phase,
+          agentId: t.agentId,
+          errorMessage: t.errorMessage,
+          errorDetails: t.errorDetails,
+          retryCount: t.retryCount,
+          durationMs: t.durationMs,
+          startedAt: t.startedAt,
+          completedAt: t.completedAt,
+        })),
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get failed tasks',
+    });
+  }
+});
+
+// Force sync to database (manual trigger)
+app.post('/api/admin/sync-database', async (req, res) => {
+  try {
+    await TaskTracker.syncToDatabase();
+    res.json({
+      success: true,
+      message: 'Database sync completed',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Sync failed',
+    });
+  }
+});
+
 // Detailed config check
 app.get('/api/config', (req, res) => {
   const fs = require('fs');

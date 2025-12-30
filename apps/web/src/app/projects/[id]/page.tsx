@@ -7,7 +7,7 @@ import { ChatInterface } from '@/components/chat/ChatInterface';
 import { useGenerator } from '@/hooks/useGenerator';
 import type { GenerationPhase, ProjectConfig } from '@/lib/types';
 
-type Tab = 'progress' | 'chat' | 'files' | 'preview';
+type Tab = 'progress' | 'chat' | 'files' | 'preview' | 'history';
 
 const GENERATOR_URL = process.env.NEXT_PUBLIC_GENERATOR_URL || 'http://localhost:4000';
 
@@ -39,12 +39,22 @@ export default function ProjectPage() {
   const {
     isConnected,
     isGenerating,
+    isLoading,
     phases,
     filesGenerated,
     progress,
     result,
     error,
+    jobId,
+    jobStatus,
+    canResume,
+    failedTasks,
+    jobHistory,
     startGeneration,
+    resumeGeneration,
+    refreshProgress,
+    fetchJobHistory,
+    fetchFailedTasks,
   } = useGenerator({ projectId, autoConnect: true });
 
   // Start generation when we have a prompt from URL and connection
@@ -242,15 +252,36 @@ export default function ProjectPage() {
             <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
               <span className="font-bold">Error:</span>
               <span>{error}</span>
-              <button
-                onClick={() => {
-                  setHasStarted(false);
-                }}
-                className="ml-auto px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-              >
-                Retry
-              </button>
+              <div className="ml-auto flex gap-2">
+                {canResume && (
+                  <button
+                    onClick={() => resumeGeneration()}
+                    className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm"
+                  >
+                    Resume
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setHasStarted(false);
+                  }}
+                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                >
+                  Start Over
+                </button>
+              </div>
             </div>
+            {failedTasks.length > 0 && (
+              <div className="mt-2 text-sm text-red-600 dark:text-red-300">
+                {failedTasks.length} failed task(s).
+                <button
+                  onClick={() => setActiveTab('history')}
+                  className="underline ml-1 hover:text-red-800"
+                >
+                  View details
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -259,10 +290,16 @@ export default function ProjectPage() {
       <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
         <div className="container mx-auto px-6">
           <div className="flex gap-6">
-            {(['progress', 'chat', 'files', 'preview'] as Tab[]).map((tab) => (
+            {(['progress', 'chat', 'files', 'preview', 'history'] as Tab[]).map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  setActiveTab(tab);
+                  if (tab === 'history') {
+                    fetchJobHistory();
+                    fetchFailedTasks();
+                  }
+                }}
                 className={`py-4 border-b-2 font-medium capitalize transition-colors ${
                   activeTab === tab
                     ? 'border-primary-500 text-primary-600 dark:text-primary-400'
@@ -273,6 +310,11 @@ export default function ProjectPage() {
                 {tab === 'files' && filesGenerated.length > 0 && (
                   <span className="ml-1 text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">
                     {filesGenerated.length}
+                  </span>
+                )}
+                {tab === 'history' && failedTasks.length > 0 && (
+                  <span className="ml-1 text-xs bg-red-500 text-white px-1.5 py-0.5 rounded">
+                    {failedTasks.length}
                   </span>
                 )}
               </button>
@@ -520,6 +562,187 @@ Example: Create a coffee shop loyalty app with rewards points, QR code scanning 
                   Launch Preview
                 </button>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* History Tab */}
+        {activeTab === 'history' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Job History */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+              <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Job History
+                </h2>
+                <button
+                  onClick={fetchJobHistory}
+                  className="text-sm text-primary-500 hover:text-primary-600"
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="p-6">
+                {jobHistory.length === 0 ? (
+                  <p className="text-slate-600 dark:text-slate-400 text-center py-8">
+                    No generation jobs yet.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {jobHistory.map((job) => (
+                      <div
+                        key={job.id}
+                        className={`p-4 rounded-lg border ${
+                          job.status === 'completed'
+                            ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20'
+                            : job.status === 'failed'
+                            ? 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20'
+                            : job.status === 'running'
+                            ? 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'
+                            : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className={`font-medium ${
+                            job.status === 'completed' ? 'text-green-700 dark:text-green-400' :
+                            job.status === 'failed' ? 'text-red-700 dark:text-red-400' :
+                            job.status === 'running' ? 'text-yellow-700 dark:text-yellow-400' :
+                            'text-slate-700 dark:text-slate-300'
+                          }`}>
+                            {job.status === 'completed' ? '✓ Completed' :
+                             job.status === 'failed' ? '✗ Failed' :
+                             job.status === 'running' ? '⏳ Running' :
+                             job.status === 'paused' ? '⏸ Paused' : '○ Pending'}
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            {new Date(job.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+                          <div className="flex justify-between">
+                            <span>Progress:</span>
+                            <span className="font-mono">{job.progress}%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Tasks:</span>
+                            <span className="font-mono">
+                              {job.completedTasks}/{job.totalTasks}
+                              {job.failedTasks > 0 && (
+                                <span className="text-red-500 ml-1">({job.failedTasks} failed)</span>
+                              )}
+                            </span>
+                          </div>
+                          {job.currentPhase && (
+                            <div className="flex justify-between">
+                              <span>Last Phase:</span>
+                              <span className="font-mono">{job.currentPhase}</span>
+                            </div>
+                          )}
+                          {job.retryCount > 0 && (
+                            <div className="flex justify-between">
+                              <span>Retries:</span>
+                              <span className="font-mono">{job.retryCount}</span>
+                            </div>
+                          )}
+                        </div>
+                        {job.errorMessage && (
+                          <div className="mt-2 p-2 bg-red-100 dark:bg-red-900/30 rounded text-sm text-red-700 dark:text-red-300">
+                            {job.errorMessage}
+                          </div>
+                        )}
+                        {(job.status === 'failed' || job.status === 'paused') && (
+                          <button
+                            onClick={() => resumeGeneration()}
+                            className="mt-3 w-full px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm font-medium"
+                          >
+                            Resume from {job.currentPhase || 'last checkpoint'}
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Failed Tasks */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+              <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Failed Tasks
+                  {failedTasks.length > 0 && (
+                    <span className="ml-2 text-sm font-normal text-red-500">
+                      ({failedTasks.length})
+                    </span>
+                  )}
+                </h2>
+                <button
+                  onClick={fetchFailedTasks}
+                  className="text-sm text-primary-500 hover:text-primary-600"
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="p-6">
+                {failedTasks.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="text-4xl mb-2">✓</div>
+                    <p className="text-slate-600 dark:text-slate-400">
+                      No failed tasks. Everything looks good!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {failedTasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="p-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-red-500">✗</span>
+                          <span className="font-medium text-slate-900 dark:text-white">
+                            {task.agentId}
+                          </span>
+                          <span className="text-xs text-slate-500 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">
+                            {task.phase}
+                          </span>
+                        </div>
+                        {task.errorMessage && (
+                          <p className="text-sm text-red-700 dark:text-red-300 mb-2">
+                            {task.errorMessage}
+                          </p>
+                        )}
+                        <div className="text-xs text-slate-500 flex gap-4">
+                          {task.retryCount > 0 && (
+                            <span>Retries: {task.retryCount}</span>
+                          )}
+                          {task.durationMs && (
+                            <span>Duration: {Math.round(task.durationMs / 1000)}s</span>
+                          )}
+                        </div>
+                        {task.errorDetails && Object.keys(task.errorDetails).length > 0 && (
+                          <details className="mt-2">
+                            <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-700">
+                              View error details
+                            </summary>
+                            <pre className="mt-2 p-2 bg-slate-100 dark:bg-slate-900 rounded text-xs overflow-auto max-h-40">
+                              {JSON.stringify(task.errorDetails, null, 2)}
+                            </pre>
+                          </details>
+                        )}
+                      </div>
+                    ))}
+                    {canResume && (
+                      <button
+                        onClick={() => resumeGeneration()}
+                        className="w-full px-4 py-3 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600"
+                      >
+                        Resume Generation
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -471,6 +471,7 @@ export class PipelineExecutor {
 
         await emitProgress(projectId, 'agent:complete', {
           agent: agentId,
+          phase: phase.name,
           success: result.success,
           filesModified: result.filesModified?.length || 0,
         });

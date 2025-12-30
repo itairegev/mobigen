@@ -875,6 +875,194 @@ export async function loadJobFromDatabase(projectId: string): Promise<Generation
   }
 }
 
+/**
+ * Get all jobs for a project (including completed/failed history)
+ */
+export async function getAllJobsForProject(projectId: string, options?: {
+  limit?: number;
+  includeCompleted?: boolean;
+}): Promise<GenerationJob[]> {
+  const limit = options?.limit || 20;
+  const includeCompleted = options?.includeCompleted ?? true;
+
+  if (usePrisma && prisma?.generationJob) {
+    try {
+      const where: Record<string, unknown> = { projectId };
+      if (!includeCompleted) {
+        where.status = { notIn: ['completed', 'failed'] };
+      }
+
+      const dbJobs = await prisma.generationJob.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      });
+      return dbJobs.map(toJob);
+    } catch (error) {
+      console.error('[task-tracker] Database read error:', error);
+    }
+  }
+
+  // Fallback to memory
+  const jobs = Array.from(memoryJobs.values())
+    .filter(j => j.projectId === projectId)
+    .filter(j => includeCompleted || (j.status !== 'completed' && j.status !== 'failed'))
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, limit);
+
+  return jobs;
+}
+
+/**
+ * Get detailed job information including all tasks
+ */
+export async function getJobDetails(jobId: string): Promise<{
+  job: GenerationJob;
+  tasks: GenerationTask[];
+  summary: ProgressSummary;
+} | null> {
+  // Try to load from database first
+  if (usePrisma && prisma?.generationJob) {
+    try {
+      const dbJob = await prisma.generationJob.findUnique({
+        where: { id: jobId },
+        include: { tasks: { orderBy: { createdAt: 'asc' } } },
+      });
+
+      if (dbJob) {
+        // Load into memory for consistency
+        const job = toJob(dbJob);
+        memoryJobs.set(job.id, job);
+        memoryTasksByJob.set(job.id, new Set());
+
+        const tasks: GenerationTask[] = [];
+        for (const dbTask of dbJob.tasks) {
+          const task = toTask(dbTask);
+          memoryTasks.set(task.id, task);
+          memoryTasksByJob.get(job.id)?.add(task.id);
+          tasks.push(task);
+        }
+
+        const summary = getProgressSummary(jobId);
+        if (!summary) return null;
+
+        return { job, tasks, summary };
+      }
+    } catch (error) {
+      console.error('[task-tracker] Database read error:', error);
+    }
+  }
+
+  // Fallback to memory
+  const job = memoryJobs.get(jobId);
+  if (!job) return null;
+
+  const tasks = getTasksByJob(jobId);
+  const summary = getProgressSummary(jobId);
+  if (!summary) return null;
+
+  return { job, tasks, summary };
+}
+
+/**
+ * Get failed tasks with error details for a project
+ */
+export async function getFailedTasksForProject(projectId: string): Promise<{
+  jobId: string;
+  jobStatus: JobStatus;
+  failedTasks: GenerationTask[];
+}[]> {
+  const jobs = await getAllJobsForProject(projectId, { includeCompleted: true, limit: 10 });
+  const results: { jobId: string; jobStatus: JobStatus; failedTasks: GenerationTask[] }[] = [];
+
+  for (const job of jobs) {
+    const tasks = await getTasksByJobAsync(job.id);
+    const failedTasks = tasks.filter(t => t.status === 'failed');
+
+    if (failedTasks.length > 0) {
+      results.push({
+        jobId: job.id,
+        jobStatus: job.status,
+        failedTasks,
+      });
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Get a compact status for display
+ */
+export function getCompactStatus(jobId: string): {
+  status: JobStatus;
+  progress: number;
+  currentPhase: string | null;
+  currentAgent: string | null;
+  completedTasks: number;
+  failedTasks: number;
+  totalTasks: number;
+  phases: { name: string; status: string; icon: string }[];
+} | null {
+  const job = memoryJobs.get(jobId);
+  if (!job) return null;
+
+  const allTasks = getTasksByJob(jobId);
+
+  // Group by phase with icons
+  const phaseOrder = ['analysis', 'planning', 'design', 'task-breakdown', 'implementation', 'validation', 'qa'];
+  const phaseIcons: Record<string, { pending: string; running: string; completed: string; failed: string }> = {
+    'analysis': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+    'planning': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+    'design': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+    'task-breakdown': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+    'implementation': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+    'validation': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+    'qa': { pending: '○', running: '◐', completed: '●', failed: '✗' },
+  };
+
+  const phaseMap = new Map<string, GenerationTask[]>();
+  for (const task of allTasks) {
+    const existing = phaseMap.get(task.phase) || [];
+    existing.push(task);
+    phaseMap.set(task.phase, existing);
+  }
+
+  const phases = phaseOrder
+    .filter(p => phaseMap.has(p))
+    .map(name => {
+      const phaseTasks = phaseMap.get(name) || [];
+      const completed = phaseTasks.filter(t => t.status === 'completed').length;
+      const failed = phaseTasks.filter(t => t.status === 'failed').length;
+      const running = phaseTasks.some(t => t.status === 'running');
+
+      let status: 'pending' | 'running' | 'completed' | 'failed';
+      if (failed > 0 && completed + failed === phaseTasks.length) {
+        status = 'failed';
+      } else if (completed === phaseTasks.length) {
+        status = 'completed';
+      } else if (running) {
+        status = 'running';
+      } else {
+        status = 'pending';
+      }
+
+      const icons = phaseIcons[name] || phaseIcons['analysis'];
+      return { name, status, icon: icons[status] };
+    });
+
+  return {
+    status: job.status,
+    progress: job.progress,
+    currentPhase: job.currentPhase,
+    currentAgent: job.currentAgent,
+    completedTasks: job.completedTasks,
+    failedTasks: job.failedTasks,
+    totalTasks: job.totalTasks,
+    phases,
+  };
+}
+
 export async function syncToDatabase(): Promise<void> {
   if (!usePrisma || !prisma?.generationJob || !prisma?.generationTask) {
     console.log('[task-tracker] Database sync skipped - Prisma not available');
@@ -952,6 +1140,12 @@ export const TaskTracker = {
 
   // Progress
   getProgressSummary,
+  getCompactStatus,
+
+  // History & Details
+  getAllJobsForProject,
+  getJobDetails,
+  getFailedTasksForProject,
 
   // Database
   loadJobFromDatabase,
