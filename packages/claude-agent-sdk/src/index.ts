@@ -264,8 +264,11 @@ const DEFAULT_MAX_TURNS = 50;
 // Retry configuration for rate limiting
 const RETRY_CONFIG = {
   maxRetries: parseInt(process.env.CLAUDE_MAX_RETRIES || '5', 10),
+  // Short delay for transient network errors
   initialDelayMs: parseInt(process.env.CLAUDE_RETRY_INITIAL_DELAY_MS || '2000', 10),
-  maxDelayMs: parseInt(process.env.CLAUDE_RETRY_MAX_DELAY_MS || '60000', 10),
+  // Longer delay for rate limit errors (429, "Too many tokens")
+  rateLimitDelayMs: parseInt(process.env.CLAUDE_RATE_LIMIT_DELAY_MS || '30000', 10),
+  maxDelayMs: parseInt(process.env.CLAUDE_RETRY_MAX_DELAY_MS || '120000', 10),
   backoffMultiplier: 2,
 };
 
@@ -301,9 +304,9 @@ function sleep(ms: number): Promise<void> {
 }
 
 /**
- * Check if an error is retryable (rate limiting or transient errors)
+ * Check if an error is a rate limit error (needs longer wait)
  */
-function isRetryableError(error: unknown): boolean {
+function isRateLimitError(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false;
 
   const e = error as Record<string, unknown>;
@@ -311,17 +314,40 @@ function isRetryableError(error: unknown): boolean {
   // Check HTTP status codes
   const status = e.status as number | undefined;
   if (status === 429) return true; // Rate limited
+
+  // Check error messages for rate limit indicators
+  const message = (e.message as string | undefined) || '';
+  if (message.toLowerCase().includes('too many tokens')) return true;
+  if (message.toLowerCase().includes('rate limit')) return true;
+  if (message.toLowerCase().includes('throttl')) return true;
+  if (message.toLowerCase().includes('overloaded')) return true;
+
+  return false;
+}
+
+/**
+ * Check if an error is retryable (rate limiting or transient errors)
+ */
+function isRetryableError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+
+  // Rate limit errors are retryable
+  if (isRateLimitError(error)) return true;
+
+  const e = error as Record<string, unknown>;
+
+  // Check HTTP status codes for transient server errors
+  const status = e.status as number | undefined;
   if (status === 503) return true; // Service unavailable
   if (status === 502) return true; // Bad gateway
   if (status === 500) return true; // Internal server error (sometimes transient)
 
-  // Check error messages
+  // Check error messages for network errors
   const message = (e.message as string | undefined) || '';
-  if (message.includes('Too many tokens')) return true;
-  if (message.includes('ThrottlingException')) return true;
-  if (message.includes('rate limit')) return true;
   if (message.includes('ECONNRESET')) return true;
   if (message.includes('ETIMEDOUT')) return true;
+  if (message.includes('ENOTFOUND')) return true;
+  if (message.includes('ECONNREFUSED')) return true;
 
   return false;
 }
@@ -349,6 +375,7 @@ async function withRetry<T>(
   let lastError: unknown;
   let delay = RETRY_CONFIG.initialDelayMs;
   let totalDelayAccumulated = 0;
+  let isRateLimit = false;
 
   const contextStr = context?.agentId
     ? ` [agent=${context.agentId}${context.phase ? `, phase=${context.phase}` : ''}${context.turnCount ? `, turn=${context.turnCount}` : ''}]`
@@ -364,6 +391,16 @@ async function withRetry<T>(
         throw error;
       }
 
+      // Use longer delay for rate limit errors
+      isRateLimit = isRateLimitError(error);
+      if (isRateLimit && attempt === 1) {
+        // Start with longer delay for rate limits
+        delay = RETRY_CONFIG.rateLimitDelayMs;
+        log('info', `Rate limit detected${contextStr}, using longer initial delay of ${delay}ms`, {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+
       // Check if retry delay would exceed remaining timeout budget
       if (context) {
         const elapsed = Date.now() - context.startTime;
@@ -376,6 +413,7 @@ async function withRetry<T>(
             elapsed,
             remaining,
             wouldDelay: delay,
+            isRateLimit,
           });
           throw new Error(`Retry would exceed timeout budget. Original error: ${error instanceof Error ? error.message : String(error)}`);
         }
@@ -388,6 +426,7 @@ async function withRetry<T>(
         agentId: context?.agentId,
         phase: context?.phase,
         turn: context?.turnCount,
+        isRateLimit,
       });
 
       await sleep(delay);
