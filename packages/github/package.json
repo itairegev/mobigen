@@ -20,9 +20,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@octokit/rest": "^20.0.2",
-    "@octokit/auth-oauth-app": "^7.0.1",
-    "bullmq": "^5.1.0"
+    "@octokit/rest": "^22.0.1",
+    "@octokit/auth-oauth-app": "^9.0.3",
+    "bullmq": "^5.66.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
