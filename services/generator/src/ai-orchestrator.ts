@@ -1103,6 +1103,73 @@ export async function resumeGeneration(projectId: string): Promise<GenerationRes
   };
 }
 
+/**
+ * Resume a pipeline from a specific phase
+ */
+export async function resumeFromPhase(
+  projectId: string,
+  startFromPhase: string,
+  previousOutputs: Record<string, unknown> = {}
+): Promise<GenerationResult> {
+  const projectPath = path.join(PROJECTS_DIR, projectId);
+
+  if (!fs.existsSync(projectPath)) {
+    throw new Error(`Project directory not found: ${projectPath}`);
+  }
+
+  console.log(`[ai-orchestrator] Resuming project ${projectId} from phase: ${startFromPhase}`);
+
+  // Load config from project if exists
+  let config: WhiteLabelConfig = {
+    appName: 'Resumed App',
+    bundleId: { ios: 'com.example.app', android: 'com.example.app' },
+    branding: {
+      displayName: 'Resumed App',
+      primaryColor: '#007AFF',
+      secondaryColor: '#5856D6',
+    },
+    identifiers: {
+      projectId,
+      easProjectId: '',
+      awsResourcePrefix: '',
+      analyticsKey: '',
+    },
+  };
+
+  const configPath = path.join(projectPath, '.mobigen', 'config.json');
+  if (fs.existsSync(configPath)) {
+    try {
+      const savedConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      config = { ...config, ...savedConfig };
+    } catch (e) {
+      console.warn('[ai-orchestrator] Could not load saved config, using defaults');
+    }
+  }
+
+  // Use resumePipeline from pipeline-executor
+  const { resumePipeline } = await import('./pipeline-executor');
+
+  const pipelineResult = await resumePipeline(
+    projectId,
+    projectPath,
+    config as unknown as Record<string, unknown>,
+    MOBIGEN_ROOT,
+    startFromPhase,
+    previousOutputs
+  );
+
+  // Build result
+  const result: GenerationResult = {
+    files: pipelineResult.filesModified,
+    logs: [],
+    success: pipelineResult.success,
+    sessionId: undefined,
+    requiresReview: !pipelineResult.success,
+  };
+
+  return result;
+}
+
 // Export for external use
 export {
   templateManager,

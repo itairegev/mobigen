@@ -12,6 +12,7 @@ import {
   generateAppWithPipeline,
   getTaskStatus,
   resumeGeneration,
+  resumeFromPhase,
   TaskTracker,
 } from './ai-orchestrator';
 // Enhanced orchestrators with task tracking, feedback loop, and resume capabilities
@@ -281,6 +282,57 @@ app.post('/api/projects/:projectId/resume', async (req, res) => {
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Failed to resume',
+    });
+  }
+});
+
+// Resume from a specific phase (useful for resuming after failures)
+app.post('/api/projects/:projectId/resume-from-phase', async (req, res) => {
+  const { projectId } = req.params;
+  const { phase, previousOutputs = {} } = req.body;
+
+  if (!phase) {
+    return res.status(400).json({
+      success: false,
+      error: 'Phase is required. Valid phases: analysis, planning, design, task-breakdown, implementation, validation, build-validation, qa',
+    });
+  }
+
+  try {
+    console.log(`[api] Resuming project ${projectId} from phase: ${phase}`);
+
+    // Send initial response
+    res.json({
+      success: true,
+      message: `Starting resume from phase: ${phase}`,
+      projectId,
+      phase,
+    });
+
+    // Emit progress via WebSocket
+    io.to(`project:${projectId}`).emit('generation:resumed', {
+      projectId,
+      fromPhase: phase,
+    });
+
+    // Run in background
+    resumeFromPhase(projectId, phase, previousOutputs)
+      .then((result) => {
+        io.to(`project:${projectId}`).emit('generation:complete', {
+          success: result.success,
+          filesModified: result.files.length,
+        });
+      })
+      .catch((error) => {
+        io.to(`project:${projectId}`).emit('generation:error', {
+          error: error instanceof Error ? error.message : 'Resume failed',
+        });
+      });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to resume from phase',
     });
   }
 });

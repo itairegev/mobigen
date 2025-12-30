@@ -828,12 +828,22 @@ PROJECT PATH: ${projectPath}
 // HELPER: Create and run pipeline
 // ============================================================================
 
+export interface RunPipelineOptions {
+  /** Start from a specific phase (skip earlier phases) */
+  startFromPhase?: string;
+  /** Pre-populated outputs from previous phases (used when resuming) */
+  previousOutputs?: Record<string, unknown>;
+  /** Existing job ID to resume */
+  resumeJobId?: string;
+}
+
 export async function runPipeline(
   projectId: string,
   projectPath: string,
   config: Record<string, unknown>,
   mobigenRoot: string,
-  pipelineConfig: PipelineConfig = DEFAULT_PIPELINE
+  pipelineConfig: PipelineConfig = DEFAULT_PIPELINE,
+  options: RunPipelineOptions = {}
 ): Promise<{
   success: boolean;
   filesModified: string[];
@@ -848,8 +858,38 @@ export async function runPipeline(
   // Create logger
   const logger = createLogger(projectId, projectPath);
 
-  // Create job
-  const job = TaskTracker.createJob(projectId, { config });
+  // Create or resume job
+  let job: GenerationJob;
+  if (options.resumeJobId) {
+    const existingJob = TaskTracker.getJob(options.resumeJobId);
+    if (existingJob) {
+      job = existingJob;
+      TaskTracker.updateJob(job.id, { status: 'running' });
+      logger.info(`Resuming job ${job.id}`);
+    } else {
+      job = TaskTracker.createJob(projectId, { config });
+    }
+  } else {
+    job = TaskTracker.createJob(projectId, { config });
+  }
+
+  // Filter phases if starting from a specific one
+  let phasesToRun = pipelineConfig.phases;
+  if (options.startFromPhase) {
+    const startIndex = pipelineConfig.phases.findIndex(p => p.name === options.startFromPhase);
+    if (startIndex >= 0) {
+      phasesToRun = pipelineConfig.phases.slice(startIndex);
+      logger.info(`Starting from phase: ${options.startFromPhase}`, {
+        skippedPhases: pipelineConfig.phases.slice(0, startIndex).map(p => p.name),
+      });
+    }
+  }
+
+  // Create modified pipeline config
+  const effectivePipelineConfig: PipelineConfig = {
+    ...pipelineConfig,
+    phases: phasesToRun,
+  };
 
   // Create context
   const context: ExecutionContext = {
@@ -860,17 +900,50 @@ export async function runPipeline(
     agentRegistry,
     mobigenRoot,
     config,
-    outputs: {},
+    outputs: options.previousOutputs || {},
   };
 
   // Create and run executor
-  const executor = new PipelineExecutor(context, pipelineConfig);
+  const executor = new PipelineExecutor(context, effectivePipelineConfig);
   const result = await executor.execute();
 
   return {
     ...result,
     job,
   };
+}
+
+/**
+ * Resume a failed pipeline from where it left off
+ */
+export async function resumePipeline(
+  projectId: string,
+  projectPath: string,
+  config: Record<string, unknown>,
+  mobigenRoot: string,
+  startFromPhase: string,
+  previousOutputs: Record<string, unknown> = {},
+  pipelineConfig: PipelineConfig = DEFAULT_PIPELINE
+): Promise<{
+  success: boolean;
+  filesModified: string[];
+  errors: TaskError[];
+  outputs: Record<string, unknown>;
+  job: GenerationJob;
+}> {
+  console.log(`[pipeline] Resuming pipeline for ${projectId} from phase: ${startFromPhase}`);
+
+  return runPipeline(
+    projectId,
+    projectPath,
+    config,
+    mobigenRoot,
+    pipelineConfig,
+    {
+      startFromPhase,
+      previousOutputs,
+    }
+  );
 }
 
 export default PipelineExecutor;
