@@ -182,9 +182,16 @@ export class PipelineExecutor {
     errors: TaskError[];
     outputs: Record<string, unknown>;
   }> {
-    const { job, logger, projectId } = this.context;
+    const { job, logger, projectId, projectPath } = this.context;
     const allFiles: string[] = [];
     const allErrors: TaskError[] = [];
+    const phaseStatuses: Record<string, 'pending' | 'running' | 'completed' | 'failed'> = {};
+    const startTime = Date.now();
+
+    // Initialize all phases as pending
+    for (const phase of this.config.phases) {
+      phaseStatuses[phase.name] = 'pending';
+    }
 
     logger.info('Starting pipeline execution', {
       phases: this.config.phases.map(p => p.name),
@@ -194,13 +201,31 @@ export class PipelineExecutor {
     TaskTracker.startJob(job.id);
     await emitProgress(projectId, 'pipeline:start', {
       phases: this.config.phases.map(p => ({ name: p.name, agents: p.agents })),
+      totalPhases: this.config.phases.length,
     });
+
+    // Emit initial status
+    await this.emitPipelineStatus(phaseStatuses, 0, this.config.phases.length);
 
     try {
       // Execute each phase sequentially
-      for (const phase of this.config.phases) {
+      for (let phaseIndex = 0; phaseIndex < this.config.phases.length; phaseIndex++) {
+        const phase = this.config.phases[phaseIndex];
+        phaseStatuses[phase.name] = 'running';
+
+        const elapsedTime = Math.round((Date.now() - startTime) / 1000);
         logger.info(`Starting phase: ${phase.name}`, { agents: phase.agents });
-        await emitProgress(projectId, 'phase:start', { phase: phase.name });
+
+        await emitProgress(projectId, 'phase:start', {
+          phase: phase.name,
+          phaseIndex: phaseIndex + 1,
+          totalPhases: this.config.phases.length,
+          elapsedTime,
+          agents: phase.agents,
+        });
+
+        // Emit detailed status
+        await this.emitPipelineStatus(phaseStatuses, phaseIndex, this.config.phases.length);
 
         TaskTracker.updateJob(job.id, { currentPhase: phase.name });
 
@@ -217,30 +242,69 @@ export class PipelineExecutor {
           if (this.config.enableFeedbackLoop && phaseResult.errors.length > 0) {
             logger.info('Entering feedback loop for error recovery');
 
+            await emitProgress(projectId, 'feedback:start', {
+              phase: phase.name,
+              errors: phaseResult.errors.length,
+            });
+
             const fixResult = await this.runFeedbackLoop(phase, phaseResult.errors);
 
             if (fixResult.success) {
               logger.info('Feedback loop recovered from errors');
               allFiles.push(...fixResult.filesModified);
+              phaseStatuses[phase.name] = 'completed';
+
+              await emitProgress(projectId, 'feedback:success', {
+                phase: phase.name,
+                filesFixed: fixResult.filesModified.length,
+              });
             } else if (phase.required && !phase.continueOnError) {
               // Phase failed and is required - stop pipeline
+              phaseStatuses[phase.name] = 'failed';
               logger.error(`Required phase ${phase.name} failed`, { errors: phaseResult.errors });
+
               await emitProgress(projectId, 'phase:failed', {
                 phase: phase.name,
                 errors: phaseResult.errors,
+                canResume: true,
+                resumeFromPhase: phase.name,
               });
+
+              // Save recovery info
+              await this.saveRecoveryInfo(phase.name, phaseResult.errors);
               break;
+            } else {
+              phaseStatuses[phase.name] = 'failed';
             }
           } else if (phase.required && !phase.continueOnError) {
+            phaseStatuses[phase.name] = 'failed';
             logger.error(`Required phase ${phase.name} failed without recovery`);
+
+            await emitProgress(projectId, 'phase:failed', {
+              phase: phase.name,
+              canResume: true,
+              resumeFromPhase: phase.name,
+            });
+
+            // Save recovery info
+            await this.saveRecoveryInfo(phase.name, phaseResult.errors);
             break;
+          } else {
+            // Phase failed but can continue
+            phaseStatuses[phase.name] = 'failed';
           }
+        } else {
+          phaseStatuses[phase.name] = 'completed';
         }
 
+        const phaseDuration = Math.round(phaseResult.duration / 1000);
         await emitProgress(projectId, 'phase:complete', {
           phase: phase.name,
           success: phaseResult.success,
           filesModified: phaseResult.filesModified.length,
+          duration: phaseDuration,
+          phaseIndex: phaseIndex + 1,
+          totalPhases: this.config.phases.length,
         });
 
         logger.info(`Phase ${phase.name} completed`, {
@@ -248,6 +312,9 @@ export class PipelineExecutor {
           files: phaseResult.filesModified.length,
           duration: phaseResult.duration,
         });
+
+        // Emit updated status
+        await this.emitPipelineStatus(phaseStatuses, phaseIndex + 1, this.config.phases.length);
       }
 
       // Determine overall success
@@ -441,7 +508,7 @@ export class PipelineExecutor {
   }
 
   /**
-   * Execute a single agent
+   * Execute a single agent with retry logic
    */
   private async executeAgent(
     agentId: AgentRole,
@@ -453,7 +520,8 @@ export class PipelineExecutor {
     error?: string;
     errorDetails?: Record<string, unknown>;
   }> {
-    const { job, projectPath, logger, agentRegistry, mobigenRoot } = this.context;
+    const { job, projectPath, logger, agentRegistry } = this.context;
+    const { projectId } = this.context;
 
     // Get task for this agent
     const tasks = TaskTracker.getTasksByPhase(job.id, phase);
@@ -472,73 +540,278 @@ export class PipelineExecutor {
     TaskTracker.startTask(task.id);
     TaskTracker.updateJob(job.id, { currentAgent: agentId });
 
-    const timeout = AGENT_TIMEOUTS[agentId] || 180000; // Default 3 min
-    const filesModified: string[] = [];
-    let output: Record<string, unknown> = {};
-    let resultText = '';
-
+    const baseTimeout = AGENT_TIMEOUTS[agentId] || 180000; // Default 3 min
+    const maxRetries = 3;
     const maxTurns = AGENT_MAX_TURNS[agentId] || 50;
-    logger.info(`Executing agent ${agentId}`, { timeout, maxTurns, phase });
 
-    try {
-      // Build prompt with context from previous phases
-      const prompt = this.buildAgentPrompt(agent, phase);
+    logger.info(`Executing agent ${agentId}`, { timeout: baseTimeout, maxTurns, phase, maxRetries });
 
-      // Execute with timeout
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error(`Agent ${agentId} timed out after ${timeout}ms`)), timeout)
-      );
+    let lastError: string = '';
+    let lastErrorDetails: Record<string, unknown> = {};
+    const allFilesModified: string[] = [];
 
-      const executionPromise = this.runAgentQuery(agent, prompt, filesModified, agentId);
+    // Retry loop with exponential backoff
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      const filesModified: string[] = [];
+      let output: Record<string, unknown> = {};
+      let resultText = '';
 
-      const result = await Promise.race([executionPromise, timeoutPromise]);
-      resultText = result.text;
-      output = result.output;
-
-      // Try to parse structured output
-      try {
-        const jsonMatch = resultText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          output = { ...output, ...parsed };
-        }
-      } catch {
-        // Not JSON, that's fine
-      }
-
-      // Mark task complete
-      TaskTracker.completeTask(task.id, true, output, filesModified);
-
-      logger.info(`Agent ${agentId} completed successfully`, {
-        filesModified: filesModified.length,
+      // Emit retry progress
+      await emitProgress(projectId, 'agent:attempt', {
+        agent: agentId,
+        phase,
+        attempt,
+        maxRetries,
+        status: attempt === 1 ? 'starting' : 'retrying',
       });
 
-      return { success: true, output, filesModified };
+      try {
+        // Build prompt with context from previous phases
+        let prompt = this.buildAgentPrompt(agent, phase);
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+        // If retrying, add context about previous failure
+        if (attempt > 1) {
+          prompt += `\n\n⚠️ RETRY ATTEMPT ${attempt}/${maxRetries}\nPrevious attempt failed: ${lastError}\nPlease try a different approach or be more careful with the implementation.\n`;
+          logger.warn(`Retrying agent ${agentId}`, { attempt, previousError: lastError });
+        }
 
-      logger.error(`Agent ${agentId} failed`, { error: errorMessage });
+        // Calculate timeout (increase slightly on retries)
+        const timeout = baseTimeout + (attempt - 1) * 60000; // Add 1 min per retry
 
-      // Extract error details for potential auto-fix
-      const errorDetails = this.parseErrorDetails(errorMessage);
+        // Execute with timeout
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error(`Agent ${agentId} timed out after ${timeout}ms`)), timeout)
+        );
 
-      TaskTracker.completeTask(
-        task.id,
-        false,
-        undefined,
+        const executionPromise = this.runAgentQuery(agent, prompt, filesModified, agentId);
+
+        const result = await Promise.race([executionPromise, timeoutPromise]);
+        resultText = result.text;
+        output = result.output;
+
+        // Try to parse structured output
+        try {
+          const jsonMatch = resultText.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            output = { ...output, ...parsed };
+          }
+        } catch {
+          // Not JSON, that's fine
+        }
+
+        // Success! Mark task complete
+        allFilesModified.push(...filesModified);
+        TaskTracker.completeTask(task.id, true, output, allFilesModified);
+
+        // Save checkpoint on success
+        await this.saveCheckpoint(phase, agentId, output, allFilesModified);
+
+        logger.info(`Agent ${agentId} completed successfully`, {
+          filesModified: filesModified.length,
+          attempt,
+        });
+
+        await emitProgress(projectId, 'agent:success', {
+          agent: agentId,
+          phase,
+          attempt,
+          filesModified: filesModified.length,
+        });
+
+        return { success: true, output, filesModified: allFilesModified };
+
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        lastError = errorMessage;
+        lastErrorDetails = this.parseErrorDetails(errorMessage);
+        allFilesModified.push(...filesModified);
+
+        const isTimeout = errorMessage.includes('timed out');
+        const isRateLimit = errorMessage.toLowerCase().includes('rate limit') ||
+                          errorMessage.toLowerCase().includes('too many');
+
+        logger.error(`Agent ${agentId} failed (attempt ${attempt}/${maxRetries})`, {
+          error: errorMessage,
+          isTimeout,
+          isRateLimit,
+        });
+
+        await emitProgress(projectId, 'agent:error', {
+          agent: agentId,
+          phase,
+          attempt,
+          maxRetries,
+          error: errorMessage,
+          isTimeout,
+          isRateLimit,
+          willRetry: attempt < maxRetries,
+        });
+
+        // If not the last attempt, wait before retrying
+        if (attempt < maxRetries) {
+          // Longer wait for rate limits, shorter for other errors
+          const waitTime = isRateLimit ? 30000 : (isTimeout ? 10000 : 5000);
+          logger.info(`Waiting ${waitTime}ms before retry...`);
+
+          await emitProgress(projectId, 'agent:waiting', {
+            agent: agentId,
+            phase,
+            waitTime,
+            reason: isRateLimit ? 'rate_limit' : (isTimeout ? 'timeout' : 'error'),
+          });
+
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+        }
+      }
+    }
+
+    // All retries exhausted
+    logger.error(`Agent ${agentId} failed after ${maxRetries} attempts`, { error: lastError });
+
+    TaskTracker.completeTask(
+      task.id,
+      false,
+      undefined,
+      allFilesModified,
+      `Failed after ${maxRetries} attempts: ${lastError}`,
+      lastErrorDetails
+    );
+
+    await emitProgress(projectId, 'agent:failed', {
+      agent: agentId,
+      phase,
+      totalAttempts: maxRetries,
+      error: lastError,
+      filesModified: allFilesModified.length,
+    });
+
+    return {
+      success: false,
+      output: {},
+      filesModified: allFilesModified,
+      error: `Failed after ${maxRetries} attempts: ${lastError}`,
+      errorDetails: lastErrorDetails,
+    };
+  }
+
+  /**
+   * Save checkpoint for recovery
+   */
+  private async saveCheckpoint(
+    phase: string,
+    agentId: string,
+    output: Record<string, unknown>,
+    filesModified: string[]
+  ): Promise<void> {
+    const { projectPath, logger } = this.context;
+    const checkpointDir = path.join(projectPath, '.mobigen', 'checkpoints');
+
+    try {
+      if (!fs.existsSync(checkpointDir)) {
+        fs.mkdirSync(checkpointDir, { recursive: true });
+      }
+
+      const checkpoint = {
+        phase,
+        agentId,
+        output,
         filesModified,
-        errorMessage,
-        errorDetails
-      );
-
-      return {
-        success: false,
-        output: {},
-        filesModified,
-        error: errorMessage,
-        errorDetails,
+        timestamp: new Date().toISOString(),
+        outputs: this.context.outputs, // Save all accumulated outputs
       };
+
+      const checkpointPath = path.join(checkpointDir, `${phase}-${agentId}.json`);
+      fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2));
+
+      // Also save a "latest" checkpoint
+      const latestPath = path.join(checkpointDir, 'latest.json');
+      fs.writeFileSync(latestPath, JSON.stringify({
+        ...checkpoint,
+        completedPhases: this.getCompletedPhases(),
+      }, null, 2));
+
+      logger.debug(`Checkpoint saved: ${phase}/${agentId}`);
+    } catch (error) {
+      logger.warn(`Failed to save checkpoint: ${error}`);
+    }
+  }
+
+  /**
+   * Get list of completed phases
+   */
+  private getCompletedPhases(): string[] {
+    const { job } = this.context;
+    const tasks = TaskTracker.getTasksByJob(job.id);
+    const completedAgents = tasks.filter(t => t.status === 'completed').map(t => t.phase);
+    return [...new Set(completedAgents)];
+  }
+
+  /**
+   * Emit detailed pipeline status
+   */
+  private async emitPipelineStatus(
+    phaseStatuses: Record<string, 'pending' | 'running' | 'completed' | 'failed'>,
+    currentPhaseIndex: number,
+    totalPhases: number
+  ): Promise<void> {
+    const { projectId, job } = this.context;
+    const tasks = TaskTracker.getTasksByJob(job.id);
+
+    // Build detailed status
+    const status = {
+      phases: Object.entries(phaseStatuses).map(([name, state]) => ({
+        name,
+        status: state,
+        icon: state === 'completed' ? '✅' : state === 'failed' ? '❌' : state === 'running' ? '🔄' : '⏳',
+      })),
+      progress: Math.round((currentPhaseIndex / totalPhases) * 100),
+      tasks: {
+        total: tasks.length,
+        completed: tasks.filter(t => t.status === 'completed').length,
+        failed: tasks.filter(t => t.status === 'failed').length,
+        running: tasks.filter(t => t.status === 'running').length,
+        pending: tasks.filter(t => t.status === 'pending').length,
+      },
+      currentPhase: Object.entries(phaseStatuses).find(([_, s]) => s === 'running')?.[0] || null,
+      completedPhases: Object.entries(phaseStatuses).filter(([_, s]) => s === 'completed').map(([n]) => n),
+      failedPhases: Object.entries(phaseStatuses).filter(([_, s]) => s === 'failed').map(([n]) => n),
+    };
+
+    await emitProgress(projectId, 'pipeline:status', status);
+  }
+
+  /**
+   * Save recovery info for resuming later
+   */
+  private async saveRecoveryInfo(failedPhase: string, errors: TaskError[]): Promise<void> {
+    const { projectPath, logger, job } = this.context;
+    const recoveryDir = path.join(projectPath, '.mobigen');
+
+    try {
+      if (!fs.existsSync(recoveryDir)) {
+        fs.mkdirSync(recoveryDir, { recursive: true });
+      }
+
+      const recoveryInfo = {
+        failedPhase,
+        errors,
+        outputs: this.context.outputs,
+        timestamp: new Date().toISOString(),
+        jobId: job.id,
+        completedPhases: this.getCompletedPhases(),
+        resumeCommand: `POST /api/projects/${this.context.projectId}/resume-from-phase { "phase": "${failedPhase}" }`,
+      };
+
+      const recoveryPath = path.join(recoveryDir, 'recovery.json');
+      fs.writeFileSync(recoveryPath, JSON.stringify(recoveryInfo, null, 2));
+
+      logger.info(`Recovery info saved for phase: ${failedPhase}`, {
+        completedPhases: recoveryInfo.completedPhases,
+        resumeCommand: recoveryInfo.resumeCommand,
+      });
+    } catch (error) {
+      logger.warn(`Failed to save recovery info: ${error}`);
     }
   }
 
@@ -697,7 +970,7 @@ PROJECT PATH: ${projectPath}
     failedAgentId: AgentRole,
     errors: TaskError[]
   ): Promise<{ success: boolean; filesModified?: string[] }> {
-    const { job, logger } = this.context;
+    const { job, logger, projectId } = this.context;
     const retriesLeft = this.config.maxRetries - (job.retryCount || 0);
 
     if (retriesLeft <= 0) {
@@ -705,20 +978,77 @@ PROJECT PATH: ${projectPath}
       return { success: false };
     }
 
-    logger.info(`Attempting auto-fix for ${failedAgentId}`, { retriesLeft, errors: errors.length });
+    // Check if errors are auto-fixable
+    const autoFixableErrors = errors.filter(e => e.autoFixable);
+    const timeoutErrors = errors.filter(e =>
+      e.message.toLowerCase().includes('timeout') ||
+      e.message.toLowerCase().includes('timed out')
+    );
+    const rateLimitErrors = errors.filter(e =>
+      e.message.toLowerCase().includes('rate limit') ||
+      e.message.toLowerCase().includes('too many')
+    );
 
-    // Execute error-fixer with context about what failed
-    const result = await this.executeAgent('error-fixer', 'fix');
+    logger.info(`Attempting auto-fix for ${failedAgentId}`, {
+      retriesLeft,
+      totalErrors: errors.length,
+      autoFixable: autoFixableErrors.length,
+      timeouts: timeoutErrors.length,
+      rateLimits: rateLimitErrors.length,
+    });
 
-    if (result.success) {
-      // Update retry count
-      TaskTracker.updateJob(job.id, { retryCount: (job.retryCount || 0) + 1 });
+    await emitProgress(projectId, 'fix:start', {
+      failedAgent: failedAgentId,
+      errorCount: errors.length,
+      autoFixable: autoFixableErrors.length,
+    });
+
+    // For timeout errors, we can retry the original agent rather than using error-fixer
+    if (timeoutErrors.length > 0 && autoFixableErrors.length === 0) {
+      logger.info('Timeout error detected - will retry original agent');
+
+      // Wait before retrying for rate limits
+      if (rateLimitErrors.length > 0) {
+        logger.info('Rate limit detected - waiting 30s before retry');
+        await emitProgress(projectId, 'fix:waiting', { reason: 'rate_limit', waitTime: 30000 });
+        await new Promise(resolve => setTimeout(resolve, 30000));
+      } else {
+        logger.info('Waiting 10s before retry');
+        await emitProgress(projectId, 'fix:waiting', { reason: 'timeout', waitTime: 10000 });
+        await new Promise(resolve => setTimeout(resolve, 10000));
+      }
+
+      // The retry will happen at the agent level
+      await emitProgress(projectId, 'fix:retry', { agent: failedAgentId });
+      return { success: false }; // Let the caller retry
     }
 
-    return {
-      success: result.success,
-      filesModified: result.filesModified,
-    };
+    // For other errors, use error-fixer
+    if (autoFixableErrors.length > 0) {
+      const result = await this.executeAgent('error-fixer', 'fix');
+
+      if (result.success) {
+        TaskTracker.updateJob(job.id, { retryCount: (job.retryCount || 0) + 1 });
+
+        await emitProgress(projectId, 'fix:success', {
+          filesModified: result.filesModified?.length || 0,
+        });
+      } else {
+        await emitProgress(projectId, 'fix:failed', {
+          error: result.error,
+        });
+      }
+
+      return {
+        success: result.success,
+        filesModified: result.filesModified,
+      };
+    }
+
+    // No auto-fixable errors
+    logger.info('No auto-fixable errors found');
+    await emitProgress(projectId, 'fix:skipped', { reason: 'no_fixable_errors' });
+    return { success: false };
   }
 
   /**
