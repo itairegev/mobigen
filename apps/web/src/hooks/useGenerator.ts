@@ -730,6 +730,12 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
 
   // Resume generation
   const resumeGeneration = useCallback(async (phase?: string) => {
+    // Prevent duplicate calls
+    if (isGenerating) {
+      console.log('[useGenerator] Resume already in progress, skipping');
+      return;
+    }
+
     setError(null);
     setIsGenerating(true);
 
@@ -748,6 +754,10 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
 
       if (!response.ok) {
         const errorData = await response.json();
+        // If 400 (nothing to resume), disable the resume button
+        if (response.status === 400) {
+          setCanResume(false);
+        }
         throw new Error(errorData.error || 'Failed to resume generation');
       }
 
@@ -756,7 +766,7 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       setError(err instanceof Error ? err.message : 'Failed to resume');
       setIsGenerating(false);
     }
-  }, [projectId]);
+  }, [projectId, isGenerating]);
 
   // Disconnect
   const disconnect = useCallback(() => {
