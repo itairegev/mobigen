@@ -540,15 +540,46 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
 
     const socket = io(GENERATOR_URL, {
       transports: ['websocket', 'polling'],
+      // Reconnection settings
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      // Timeout settings to match server
+      timeout: 60000,
+      // Enable credentials for CORS
+      withCredentials: true,
     });
 
     socket.on('connect', () => {
+      console.log('[useGenerator] WebSocket connected');
       setIsConnected(true);
       socket.emit('subscribe', projectId);
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', (reason) => {
+      console.log('[useGenerator] WebSocket disconnected:', reason);
       setIsConnected(false);
+      // If disconnected during generation, try to refresh progress
+      if (reason === 'io server disconnect' || reason === 'transport close') {
+        // Server initiated disconnect or transport failure - will auto-reconnect
+      }
+    });
+
+    socket.on('reconnect', (attemptNumber) => {
+      console.log('[useGenerator] WebSocket reconnected after', attemptNumber, 'attempts');
+      setIsConnected(true);
+      socket.emit('subscribe', projectId);
+      // Refresh progress after reconnection
+      refreshProgress();
+    });
+
+    socket.on('reconnect_attempt', (attemptNumber) => {
+      console.log('[useGenerator] WebSocket reconnection attempt', attemptNumber);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('[useGenerator] WebSocket connection error:', error.message);
     });
 
     socket.on('generation:progress', handleProgress);

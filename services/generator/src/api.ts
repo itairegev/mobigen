@@ -102,9 +102,17 @@ const app: Express = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || ['http://localhost:3000', 'http://localhost:3333'],
     methods: ['GET', 'POST'],
+    credentials: true,
   },
+  // Keep connections alive during long-running generation
+  pingTimeout: 60000,      // 60s before considering connection dead
+  pingInterval: 25000,     // Ping every 25s to keep connection alive
+  // Allow both transports
+  transports: ['websocket', 'polling'],
+  // Increase buffer sizes for large progress updates
+  maxHttpBufferSize: 1e6,  // 1MB
 });
 
 app.use(cors());
@@ -115,14 +123,15 @@ const projectSockets = new Map<string, Set<string>>();
 
 // WebSocket connection handling
 io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id);
+  const clientInfo = `${socket.id} (${socket.handshake.address})`;
+  console.log(`[WebSocket] Client connected: ${clientInfo}`);
 
   socket.on('subscribe', (projectId: string) => {
     socket.join(`project:${projectId}`);
     const sockets = projectSockets.get(projectId) || new Set();
     sockets.add(socket.id);
     projectSockets.set(projectId, sockets);
-    console.log(`Socket ${socket.id} subscribed to project ${projectId}`);
+    console.log(`[WebSocket] ${socket.id} subscribed to project ${projectId} (${sockets.size} subscribers)`);
   });
 
   socket.on('unsubscribe', (projectId: string) => {
@@ -130,15 +139,23 @@ io.on('connection', (socket) => {
     const sockets = projectSockets.get(projectId);
     if (sockets) {
       sockets.delete(socket.id);
+      console.log(`[WebSocket] ${socket.id} unsubscribed from project ${projectId}`);
     }
   });
 
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
+  socket.on('disconnect', (reason) => {
+    console.log(`[WebSocket] Client disconnected: ${socket.id} (reason: ${reason})`);
     // Clean up from all project subscriptions
     projectSockets.forEach((sockets, projectId) => {
-      sockets.delete(socket.id);
+      if (sockets.has(socket.id)) {
+        sockets.delete(socket.id);
+        console.log(`[WebSocket] Cleaned up ${socket.id} from project ${projectId}`);
+      }
     });
+  });
+
+  socket.on('error', (error) => {
+    console.error(`[WebSocket] Socket error for ${socket.id}:`, error);
   });
 });
 
