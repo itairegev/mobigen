@@ -34,6 +34,7 @@ import {
 import type { TaskBreakdown } from '@mobigen/ai';
 import * as path from 'path';
 import * as fs from 'fs';
+import { verifyGeneratedApp, type VerificationResult } from './verification';
 
 // ============================================================================
 // TYPES
@@ -325,7 +326,95 @@ export class PipelineExecutor {
           return tasks.some(t => t.status === 'failed');
         });
 
-      const success = !failedRequired;
+      let success = !failedRequired;
+
+      // Run verification on generated app
+      if (success) {
+        await emitProgress(projectId, 'verification:start', {});
+        logger.info('Running generation verification...');
+
+        try {
+          const verification = await verifyGeneratedApp(this.context.projectPath);
+
+          await emitProgress(projectId, 'verification:complete', {
+            passed: verification.passed,
+            checks: verification.checks.map(c => ({
+              name: c.name,
+              passed: c.passed,
+              message: c.message,
+            })),
+            summary: verification.summary,
+            duration: verification.duration,
+          });
+
+          if (!verification.passed) {
+            logger.warn('Generation verification failed', {
+              summary: verification.summary,
+              failedChecks: verification.checks.filter(c => !c.passed).map(c => c.name),
+            });
+
+            // Add verification errors to the error list
+            verification.checks
+              .filter(c => !c.passed)
+              .forEach(c => {
+                allErrors.push({
+                  code: `VERIFICATION_${c.name.toUpperCase()}`,
+                  message: c.message || `${c.name} check failed`,
+                  autoFixable: true,
+                });
+              });
+
+            // If feedback loop is enabled, try to fix
+            if (this.config.enableFeedbackLoop) {
+              logger.info('Attempting to fix verification failures...');
+              await emitProgress(projectId, 'verification:fixing', {});
+
+              // Create a verification phase for the feedback loop
+              const verificationPhase: PipelinePhase = {
+                name: 'verification',
+                agents: ['error-fixer'],
+                description: 'Fix verification errors',
+                required: true,
+              };
+
+              // Run feedback loop for verification errors
+              const verificationErrors = allErrors.slice(-verification.checks.filter(c => !c.passed).length);
+              const fixResult = await this.runFeedbackLoop(verificationPhase, verificationErrors);
+
+              if (fixResult.success) {
+                // Re-verify after fixing
+                const reVerification = await verifyGeneratedApp(this.context.projectPath);
+                if (reVerification.passed) {
+                  logger.info('Verification passed after auto-fix');
+                  await emitProgress(projectId, 'verification:fixed', {
+                    summary: reVerification.summary,
+                  });
+                } else {
+                  success = false;
+                  logger.error('Verification still failing after auto-fix');
+                }
+              } else {
+                success = false;
+              }
+            } else {
+              success = false;
+            }
+          } else {
+            logger.info('Generation verification passed', {
+              summary: verification.summary,
+            });
+          }
+        } catch (verifyError) {
+          const errorMessage = verifyError instanceof Error ? verifyError.message : String(verifyError);
+          logger.error('Verification error', { error: errorMessage });
+          allErrors.push({
+            code: 'VERIFICATION_ERROR',
+            message: `Verification failed: ${errorMessage}`,
+            autoFixable: false,
+          });
+          // Don't fail the whole pipeline for verification errors, just log
+        }
+      }
 
       // Complete job
       TaskTracker.completeJob(job.id, success, success ? undefined : 'Pipeline completed with errors');

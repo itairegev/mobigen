@@ -2,6 +2,12 @@ import { prisma } from '@mobigen/db';
 import { BuildRequest, BuildStatus } from './types';
 import { getEASClient } from './eas-client';
 import { enqueueBuild } from './queue';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import * as path from 'path';
+import * as fs from 'fs';
+
+const execAsync = promisify(exec);
 
 interface WhiteLabelConfig {
   appName: string;
@@ -244,11 +250,258 @@ export class BuildService {
 
   /**
    * Run Tier 3 validation before triggering build
+   * Includes: TypeScript check, ESLint, Expo prebuild, Metro bundle check
    */
   private async runTier3Validation(projectId: string): Promise<ValidationResult> {
-    // TODO: Implement full Tier 3 validation using @mobigen/testing
     console.log(`Running Tier 3 validation for project ${projectId}`);
-    return { passed: true };
+
+    const projectPath = await this.getProjectPath(projectId);
+    if (!projectPath) {
+      return {
+        passed: false,
+        errors: [{ file: 'project', message: `Project path not found for ${projectId}` }],
+      };
+    }
+
+    const errors: Array<{ file: string; line?: number; message: string }> = [];
+
+    // 1. TypeScript check
+    console.log('  [1/4] Running TypeScript check...');
+    const tsResult = await this.runTypeScriptCheck(projectPath);
+    if (!tsResult.passed && tsResult.errors) {
+      errors.push(...tsResult.errors);
+      console.log(`  [1/4] TypeScript check failed: ${tsResult.errors.length} errors`);
+    } else {
+      console.log('  [1/4] TypeScript check passed');
+    }
+
+    // 2. ESLint check
+    console.log('  [2/4] Running ESLint check...');
+    const eslintResult = await this.runESLintCheck(projectPath);
+    if (!eslintResult.passed && eslintResult.errors) {
+      errors.push(...eslintResult.errors);
+      console.log(`  [2/4] ESLint check failed: ${eslintResult.errors.length} errors`);
+    } else {
+      console.log('  [2/4] ESLint check passed');
+    }
+
+    // 3. Expo prebuild check
+    console.log('  [3/4] Running Expo prebuild check...');
+    const prebuildResult = await this.runExpoPrebuild(projectPath);
+    if (!prebuildResult.passed && prebuildResult.errors) {
+      errors.push(...prebuildResult.errors);
+      console.log(`  [3/4] Expo prebuild check failed`);
+    } else {
+      console.log('  [3/4] Expo prebuild check passed');
+    }
+
+    // 4. Metro bundle check
+    console.log('  [4/4] Running Metro bundle check...');
+    const bundleResult = await this.runMetroBundleCheck(projectPath);
+    if (!bundleResult.passed && bundleResult.errors) {
+      errors.push(...bundleResult.errors);
+      console.log(`  [4/4] Metro bundle check failed`);
+    } else {
+      console.log('  [4/4] Metro bundle check passed');
+    }
+
+    const passed = errors.length === 0;
+    console.log(`Tier 3 validation ${passed ? 'PASSED' : 'FAILED'} (${errors.length} errors)`);
+
+    return {
+      passed,
+      errors: errors.length > 0 ? errors : undefined,
+    };
+  }
+
+  /**
+   * Get the project path from storage
+   */
+  private async getProjectPath(projectId: string): Promise<string | null> {
+    // Projects are stored in the projects directory
+    const projectsRoot = process.env.PROJECTS_ROOT || path.join(process.cwd(), 'projects');
+    const projectPath = path.join(projectsRoot, projectId);
+
+    if (fs.existsSync(projectPath)) {
+      return projectPath;
+    }
+
+    // Check for S3 path in project config
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { s3Prefix: true },
+    });
+
+    if (project?.s3Prefix) {
+      // For S3-stored projects, we'd need to download first
+      // For now, return null if not found locally
+      console.warn(`Project ${projectId} is stored in S3 but not locally available`);
+    }
+
+    return null;
+  }
+
+  /**
+   * Run TypeScript type check
+   */
+  private async runTypeScriptCheck(projectPath: string): Promise<ValidationResult> {
+    try {
+      await execAsync('npx tsc --noEmit', { cwd: projectPath, timeout: 60000 });
+      return { passed: true };
+    } catch (error: unknown) {
+      const execError = error as { stdout?: string; stderr?: string; message?: string };
+      const output = execError.stderr || execError.stdout || '';
+      return {
+        passed: false,
+        errors: this.parseTypeScriptErrors(output),
+      };
+    }
+  }
+
+  /**
+   * Run ESLint check
+   */
+  private async runESLintCheck(projectPath: string): Promise<ValidationResult> {
+    try {
+      // Check if src directory exists
+      const srcPath = path.join(projectPath, 'src');
+      if (!fs.existsSync(srcPath)) {
+        return { passed: true }; // No src to lint
+      }
+
+      await execAsync('npx eslint src/ --ext .ts,.tsx --max-warnings 0', {
+        cwd: projectPath,
+        timeout: 60000,
+      });
+      return { passed: true };
+    } catch (error: unknown) {
+      const execError = error as { stdout?: string; stderr?: string; message?: string };
+      const output = execError.stdout || '';
+      return {
+        passed: false,
+        errors: this.parseESLintErrors(output),
+      };
+    }
+  }
+
+  /**
+   * Run Expo prebuild to validate native configuration
+   */
+  private async runExpoPrebuild(projectPath: string): Promise<ValidationResult> {
+    try {
+      await execAsync('npx expo prebuild --clean --no-install', {
+        cwd: projectPath,
+        timeout: 120000,
+      });
+      return { passed: true };
+    } catch (error: unknown) {
+      const execError = error as { message?: string };
+      return {
+        passed: false,
+        errors: [{ file: 'expo-prebuild', message: execError.message || 'Expo prebuild failed' }],
+      };
+    }
+  }
+
+  /**
+   * Run Metro bundle check to validate bundling
+   */
+  private async runMetroBundleCheck(projectPath: string): Promise<ValidationResult> {
+    try {
+      const outputDir = path.join('/tmp', `bundle-check-${Date.now()}`);
+      await execAsync(`npx expo export --platform web --output-dir ${outputDir}`, {
+        cwd: projectPath,
+        timeout: 120000,
+      });
+
+      // Clean up the temporary bundle
+      try {
+        await execAsync(`rm -rf ${outputDir}`);
+      } catch {
+        // Ignore cleanup errors
+      }
+
+      return { passed: true };
+    } catch (error: unknown) {
+      const execError = error as { message?: string };
+      return {
+        passed: false,
+        errors: [{ file: 'metro-bundle', message: execError.message || 'Metro bundle failed' }],
+      };
+    }
+  }
+
+  /**
+   * Parse TypeScript error output into structured errors
+   */
+  private parseTypeScriptErrors(output: string): Array<{ file: string; line?: number; message: string }> {
+    const errors: Array<{ file: string; line?: number; message: string }> = [];
+    const lines = output.split('\n');
+
+    // TypeScript error format: file.ts(line,col): error TS1234: message
+    const errorRegex = /^(.+?)\((\d+),\d+\):\s*error\s+TS\d+:\s*(.+)$/;
+
+    for (const line of lines) {
+      const match = line.match(errorRegex);
+      if (match) {
+        errors.push({
+          file: match[1],
+          line: parseInt(match[2], 10),
+          message: match[3],
+        });
+      }
+    }
+
+    // If no structured errors found but we know there was an error
+    if (errors.length === 0 && output.includes('error TS')) {
+      errors.push({
+        file: 'typescript',
+        message: output.substring(0, 500), // First 500 chars
+      });
+    }
+
+    return errors;
+  }
+
+  /**
+   * Parse ESLint error output into structured errors
+   */
+  private parseESLintErrors(output: string): Array<{ file: string; line?: number; message: string }> {
+    const errors: Array<{ file: string; line?: number; message: string }> = [];
+    const lines = output.split('\n');
+
+    // ESLint format: /path/to/file.ts
+    //   line:col  error  message  rule-name
+    let currentFile = '';
+    const fileRegex = /^(\/.*?\.tsx?)$/;
+    const errorRegex = /^\s+(\d+):\d+\s+error\s+(.+?)\s+\S+$/;
+
+    for (const line of lines) {
+      const fileMatch = line.match(fileRegex);
+      if (fileMatch) {
+        currentFile = fileMatch[1];
+        continue;
+      }
+
+      const errorMatch = line.match(errorRegex);
+      if (errorMatch && currentFile) {
+        errors.push({
+          file: currentFile,
+          line: parseInt(errorMatch[1], 10),
+          message: errorMatch[2],
+        });
+      }
+    }
+
+    // If no structured errors found but we know there was an error
+    if (errors.length === 0 && output.includes('error')) {
+      errors.push({
+        file: 'eslint',
+        message: output.substring(0, 500),
+      });
+    }
+
+    return errors;
   }
 
   /**
