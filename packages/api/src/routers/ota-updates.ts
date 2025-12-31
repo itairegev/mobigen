@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '../trpc.js';
+import { router, protectedProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { OTAUpdatesService } from '@mobigen/ota-updates';
 import {
+  OTAUpdatesService,
   CreateChannelSchema,
   PublishUpdateSchema,
   RollbackUpdateSchema,

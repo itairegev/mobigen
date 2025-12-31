@@ -1,3 +1,3 @@
-export * from './types.js';
-export * from './ota-updates-service.js';
-export * from './expo-updates-client.js';
+export * from './types';
+export * from './ota-updates-service';
+export * from './expo-updates-client';

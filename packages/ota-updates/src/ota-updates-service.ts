@@ -7,8 +7,8 @@ import type {
   OTAUpdate,
   UpdateMetrics,
   TrackUpdateEventInput,
-} from './types.js';
-import { ExpoUpdatesClient } from './expo-updates-client.js';
+} from './types';
+import { ExpoUpdatesClient } from './expo-updates-client';
 
 /**
  * Service for managing OTA (Over-The-Air) updates using Expo Updates

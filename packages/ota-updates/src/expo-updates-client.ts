@@ -1,5 +1,5 @@
 import { execa } from 'execa';
-import type { ExpoPublishOptions, ExpoUpdateResponse } from './types.js';
+import type { ExpoPublishOptions, ExpoUpdateResponse } from './types';
 
 /**
  * Client for interacting with Expo Updates API
