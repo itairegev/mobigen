@@ -1,7 +1,7 @@
 {
-  "name": "@mobigen/testing",
+  "name": "@mobigen/resilience",
   "version": "0.1.0",
-  "description": "QA Pipeline with 3-tier validation for Mobigen",
+  "description": "Resilience patterns for Mobigen - circuit breakers, retries, bulkheads",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,17 +17,9 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "execa": "^8.0.1"
-  },
-  "optionalDependencies": {
-    "pixelmatch": "^5.3.0",
-    "pngjs": "^7.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "@types/pixelmatch": "^5.2.6",
-    "@types/pngjs": "^6.0.4",
     "typescript": "^5.3.3"
   }
 }

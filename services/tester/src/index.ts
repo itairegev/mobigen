@@ -528,6 +528,235 @@ app.post('/maestro/cloud', async (req, res) => {
   }
 });
 
+// ═══════════════════════════════════════════════════════════════════════════
+// TIERED VALIDATION ROUTES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Run Tier 1 validation (instant, <30s)
+// - TypeScript check
+// - ESLint
+// - Navigation graph validation
+// - Import resolution validation
+app.post('/api/test/tier1', async (req, res) => {
+  try {
+    const { projectPath, projectId } = req.body;
+
+    if (!projectPath) {
+      return res.status(400).json({
+        success: false,
+        error: 'projectPath is required',
+      });
+    }
+
+    // Import the tier runner dynamically
+    const { runTier1 } = await import('@mobigen/testing');
+
+    const result = await runTier1({
+      projectPath,
+      tier: 'tier1',
+      timeout: 30000,
+    });
+
+    // Broadcast progress if projectId is provided
+    if (projectId) {
+      broadcastToProject(projectId, {
+        type: 'validation:tier1',
+        result,
+      });
+    }
+
+    res.json({
+      success: result.passed,
+      tier: 'tier1',
+      duration: result.duration,
+      stages: result.stages,
+      errors: result.errors,
+      warnings: result.warnings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Run Tier 2 validation (fast, <2min)
+// - All Tier 1 checks
+// - Expo prebuild validation
+// - Jest tests
+app.post('/api/test/tier2', async (req, res) => {
+  try {
+    const { projectPath, projectId } = req.body;
+
+    if (!projectPath) {
+      return res.status(400).json({
+        success: false,
+        error: 'projectPath is required',
+      });
+    }
+
+    const { runTier2 } = await import('@mobigen/testing');
+
+    const result = await runTier2({
+      projectPath,
+      tier: 'tier2',
+      timeout: 120000,
+    });
+
+    if (projectId) {
+      broadcastToProject(projectId, {
+        type: 'validation:tier2',
+        result,
+      });
+    }
+
+    res.json({
+      success: result.passed,
+      tier: 'tier2',
+      duration: result.duration,
+      stages: result.stages,
+      errors: result.errors,
+      warnings: result.warnings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Run Tier 3 validation (thorough, <10min)
+// - All Tier 2 checks
+// - Maestro E2E tests
+app.post('/api/test/tier3', async (req, res) => {
+  try {
+    const { projectPath, projectId } = req.body;
+
+    if (!projectPath) {
+      return res.status(400).json({
+        success: false,
+        error: 'projectPath is required',
+      });
+    }
+
+    const { runTier3 } = await import('@mobigen/testing');
+
+    const result = await runTier3({
+      projectPath,
+      tier: 'tier3',
+      timeout: 600000,
+    });
+
+    if (projectId) {
+      broadcastToProject(projectId, {
+        type: 'validation:tier3',
+        result,
+      });
+    }
+
+    res.json({
+      success: result.passed,
+      tier: 'tier3',
+      duration: result.duration,
+      stages: result.stages,
+      errors: result.errors,
+      warnings: result.warnings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Run progressive validation (stops at first failure)
+app.post('/api/test/progressive', async (req, res) => {
+  try {
+    const { projectPath, projectId, stopOnFailure = true } = req.body;
+
+    if (!projectPath) {
+      return res.status(400).json({
+        success: false,
+        error: 'projectPath is required',
+      });
+    }
+
+    const { validateProgressive } = await import('@mobigen/testing');
+
+    const results = await validateProgressive({
+      projectPath,
+      stopOnFailure,
+      onTierComplete: (tier, result) => {
+        if (projectId) {
+          broadcastToProject(projectId, {
+            type: `validation:${tier}`,
+            result,
+          });
+        }
+      },
+    });
+
+    const allPassed = results.every(r => r.passed);
+    const totalDuration = results.reduce((sum, r) => sum + r.duration, 0);
+
+    res.json({
+      success: allPassed,
+      totalDuration,
+      results: results.map(r => ({
+        tier: r.tier,
+        passed: r.passed,
+        duration: r.duration,
+        errorCount: r.errors.length,
+        warningCount: r.warnings.length,
+      })),
+      fullResults: results,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get validation summary for a project
+app.get('/api/test/summary/:projectId', async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    // Retrieve latest validation results from Redis
+    const cached = await redis.get(`validation:${projectId}:latest`);
+
+    if (!cached) {
+      return res.json({
+        projectId,
+        lastValidation: null,
+        message: 'No validation results found',
+      });
+    }
+
+    const results = JSON.parse(cached);
+
+    res.json({
+      projectId,
+      lastValidation: results.timestamp,
+      summary: {
+        tier1: results.tier1?.passed ?? null,
+        tier2: results.tier2?.passed ?? null,
+        tier3: results.tier3?.passed ?? null,
+      },
+      details: results,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
 const PORT = process.env.PORT || 6000;
 
 server.listen(PORT, () => {

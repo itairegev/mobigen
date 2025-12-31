@@ -1,11 +1,15 @@
 import type { ValidatorConfig, ValidationResult, StageResult } from '../types';
 import { typescriptValidator } from '../validators/typescript';
 import { eslintValidator } from '../validators/eslint';
+import { navigationValidator } from '../validators/navigation';
+import { importsValidator } from '../validators/imports';
 
 /**
  * Tier 1: Instant validation (<30 seconds)
  * - TypeScript compilation check
  * - ESLint linting
+ * - Navigation graph validation
+ * - Import resolution validation
  */
 export async function runTier1(config: ValidatorConfig): Promise<ValidationResult> {
   const start = Date.now();
@@ -24,6 +28,18 @@ export async function runTier1(config: ValidatorConfig): Promise<ValidationResul
   stages.eslint = eslintResult;
   allErrors.push(...eslintResult.errors.filter((e) => e.severity === 'error'));
   allWarnings.push(...eslintResult.errors.filter((e) => e.severity === 'warning'));
+
+  // Run Navigation validation
+  const navResult = await navigationValidator.run(config);
+  stages.navigation = navResult;
+  allErrors.push(...navResult.errors.filter((e) => e.severity === 'error'));
+  allWarnings.push(...navResult.errors.filter((e) => e.severity === 'warning'));
+
+  // Run Imports validation
+  const importsResult = await importsValidator.run(config);
+  stages.imports = importsResult;
+  allErrors.push(...importsResult.errors.filter((e) => e.severity === 'error'));
+  allWarnings.push(...importsResult.errors.filter((e) => e.severity === 'warning'));
 
   const passed = Object.values(stages).every((s) => s.passed);
 
