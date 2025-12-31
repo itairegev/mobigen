@@ -166,6 +166,12 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
 
   const socketRef = useRef<Socket | null>(null);
 
+  // Refs to hold latest callback versions without causing effect re-runs
+  const handleProgressRef = useRef<(data: GenerationProgress) => void>(() => {});
+  const refreshProgressRef = useRef<() => Promise<void>>(async () => {});
+  const fetchJobHistoryRef = useRef<() => Promise<void>>(async () => {});
+  const fetchFailedTasksRef = useRef<() => Promise<void>>(async () => {});
+
   // Calculate progress
   const completedPhases = phases.filter((p) => p.status === 'completed').length;
   const progress = phases.length > 0 ? (completedPhases / phases.length) * 100 : 0;
@@ -471,14 +477,14 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
         }
         setCanResume(!progressData.success);
         // Refresh data after completion
-        fetchJobHistory();
+        fetchJobHistoryRef.current();
         break;
 
       case 'pipeline:error':
         setIsGenerating(false);
         setError(progressData.error || 'Pipeline failed');
         setCanResume(true);
-        fetchFailedTasks();
+        fetchFailedTasksRef.current();
         break;
 
       // Handle pipeline status updates
@@ -506,8 +512,8 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
         setError(progressData.error || 'An error occurred');
         setIsGenerating(false);
         // Refresh to get latest state
-        refreshProgress();
-        fetchFailedTasks();
+        refreshProgressRef.current();
+        fetchFailedTasksRef.current();
         break;
 
       case 'complete':
@@ -528,15 +534,26 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
           }
         }
     }
-  }, [handlePhaseUpdate, refreshProgress, fetchFailedTasks]);
+  }, [handlePhaseUpdate]);
 
-  // Connect to socket
+  // Keep refs updated with latest callbacks (this effect runs on every render but doesn't reconnect socket)
+  useEffect(() => {
+    handleProgressRef.current = handleProgress;
+    refreshProgressRef.current = refreshProgress;
+    fetchJobHistoryRef.current = fetchJobHistory;
+    fetchFailedTasksRef.current = fetchFailedTasks;
+  });
+
+  // Connect to socket - ONLY depends on projectId and autoConnect
+  // Uses refs for callbacks to avoid reconnection on callback changes
   useEffect(() => {
     if (!autoConnect || !projectId) return;
 
-    // Fetch existing progress first
-    refreshProgress();
-    fetchJobHistory();
+    // Fetch existing progress first (using current ref values)
+    refreshProgressRef.current();
+    fetchJobHistoryRef.current();
+
+    console.log('[useGenerator] Setting up WebSocket connection for project:', projectId);
 
     const socket = io(GENERATOR_URL, {
       transports: ['websocket', 'polling'],
@@ -560,10 +577,6 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
     socket.on('disconnect', (reason) => {
       console.log('[useGenerator] WebSocket disconnected:', reason);
       setIsConnected(false);
-      // If disconnected during generation, try to refresh progress
-      if (reason === 'io server disconnect' || reason === 'transport close') {
-        // Server initiated disconnect or transport failure - will auto-reconnect
-      }
     });
 
     socket.on('reconnect', (attemptNumber) => {
@@ -571,7 +584,7 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       setIsConnected(true);
       socket.emit('subscribe', projectId);
       // Refresh progress after reconnection
-      refreshProgress();
+      refreshProgressRef.current();
     });
 
     socket.on('reconnect_attempt', (attemptNumber) => {
@@ -582,26 +595,29 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       console.error('[useGenerator] WebSocket connection error:', error.message);
     });
 
-    socket.on('generation:progress', handleProgress);
+    // Use wrapper functions that call the refs to always get latest handlers
+    socket.on('generation:progress', (data: GenerationProgress) => {
+      handleProgressRef.current(data);
+    });
 
     socket.on('generation:complete', (genResult: GenerationResult) => {
       setResult(genResult);
       setIsGenerating(false);
       setPhases((prev) => prev.map((p) => ({ ...p, status: 'completed' })));
-      fetchJobHistory(); // Refresh history after completion
+      fetchJobHistoryRef.current();
     });
 
     socket.on('generation:error', (errorData: { error: string }) => {
       setError(errorData.error);
       setIsGenerating(false);
-      refreshProgress();
-      fetchFailedTasks();
+      refreshProgressRef.current();
+      fetchFailedTasksRef.current();
     });
 
     socket.on('generation:resumed', () => {
       setIsGenerating(true);
       setError(null);
-      refreshProgress();
+      refreshProgressRef.current();
     });
 
     socket.on('generation:paused', () => {
@@ -612,11 +628,12 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
     socketRef.current = socket;
 
     return () => {
+      console.log('[useGenerator] Cleaning up WebSocket for project:', projectId);
       socket.emit('unsubscribe', projectId);
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [projectId, autoConnect, handleProgress, refreshProgress, fetchJobHistory, fetchFailedTasks]);
+  }, [projectId, autoConnect]); // Only reconnect when projectId or autoConnect changes
 
   // Simulate generation for development/demo mode
   const simulateGeneration = useCallback(async () => {
