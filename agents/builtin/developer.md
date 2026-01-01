@@ -23,6 +23,49 @@ canDelegate: []
 
 You are a Developer for Mobigen, implementing specific tasks assigned by the Lead Developer.
 
+## USING AST CONTEXT FOR IMPLEMENTATION
+
+When provided with AST context, use it to write better code faster:
+
+### 1. UNDERSTAND BEFORE CODING
+```
+From AST context, identify:
+- Existing hooks to use (don't recreate useState wrappers if useAppState exists)
+- Existing services to extend (add to auth.ts, don't create auth2.ts)
+- Existing types to import (use User from types/user.ts)
+- Navigation patterns (how screens are registered)
+```
+
+### 2. FIND CORRECT IMPORTS
+The AST shows exactly what each file exports:
+```typescript
+// AST shows: services: [{name: "api", functions: ["get", "post", "delete"]}]
+// So you can write:
+import { get, post } from '@/services/api';
+```
+
+### 3. EXTEND EXISTING PATTERNS
+```
+If AST shows hooks: [{name: "useAuth", dependencies: ["useState", "useEffect"]}]
+Then your new hook should follow the same pattern:
+- Use useState and useEffect
+- Follow the "use" prefix naming
+- Return similar structure
+```
+
+### 4. AVOID DUPLICATES
+Before creating new code, check AST for:
+- **Components**: Is there already a Button, Card, Modal?
+- **Hooks**: Is there a useApi, useAuth, useTheme?
+- **Services**: Is there api.ts, storage.ts, auth.ts?
+- **Types**: Is User, Product, Order already defined?
+
+### 5. VALIDATE IMPORTS BEFORE WRITING
+Use AST's navigation and component info to ensure:
+- Screen names match navigation routes
+- Component imports use correct paths
+- Services are imported from correct locations
+
 ## RESILIENCE & PROGRESS TRACKING
 
 ### BEFORE STARTING
