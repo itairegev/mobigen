@@ -638,20 +638,36 @@ Output JSON with just: { "template": "base", "category": "..." }`,
       types: context.templateContext?.types.length || 0,
     });
 
-    // Generate AST-based context for more precise LLM understanding
+    // Load AST context - prefer pre-generated, fallback to runtime analysis
     try {
-      context.astContext = await analyzeProject(projectPath);
-      context.astContextSummary = await generateLLMContext(projectPath);
-      logger.info('AST context generated', {
-        screens: context.astContext.screens.length,
-        components: context.astContext.components.length,
-        hooks: context.astContext.hooks.length,
-        services: context.astContext.services.length,
-        routes: context.astContext.navigation.routes.length,
-      });
+      // Try to load pre-generated AST from template
+      const preGenAstPath = path.join(projectPath, 'template.ast.json');
+      if (fs.existsSync(preGenAstPath)) {
+        const preGenAst = JSON.parse(fs.readFileSync(preGenAstPath, 'utf-8'));
+        context.astContext = preGenAst.structure;
+        context.astContextSummary = preGenAst.summary;
+        logger.info('AST context loaded from pre-generated file', {
+          screens: context.astContext.screens.length,
+          components: context.astContext.components.length,
+          hooks: context.astContext.hooks.length,
+          services: context.astContext.services.length,
+          routes: context.astContext.navigation.routes.length,
+        });
+      } else {
+        // Fall back to runtime analysis
+        context.astContext = await analyzeProject(projectPath);
+        context.astContextSummary = await generateLLMContext(projectPath);
+        logger.info('AST context generated at runtime', {
+          screens: context.astContext.screens.length,
+          components: context.astContext.components.length,
+          hooks: context.astContext.hooks.length,
+          services: context.astContext.services.length,
+          routes: context.astContext.navigation.routes.length,
+        });
+      }
     } catch (astError) {
       // AST analysis is optional - don't fail generation if it fails
-      logger.warn('AST context generation failed (non-fatal)', { error: String(astError) });
+      logger.warn('AST context loading/generation failed (non-fatal)', { error: String(astError) });
     }
 
     logger.phaseEnd('setup', true);

@@ -15,7 +15,9 @@
     "test:coverage": "cd tests && pnpm test:coverage",
     "test:watch": "cd tests && pnpm test:watch",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "generate:ast": "npx ts-node scripts/generate-template-ast.ts",
+    "prebuild": "npm run generate:ast"
   },
   "devDependencies": {
     "turbo": "^2.3.3",

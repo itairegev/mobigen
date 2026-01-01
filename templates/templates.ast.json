@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-01-01T10:57:25.422Z",
+  "templates": [
+    {
+      "id": "ai-assistant",
+      "stats": {
+        "totalFiles": 26,
+        "totalScreens": 5,
+        "totalComponents": 9,
+        "totalHooks": 4,
+        "totalServices": 0,
+        "totalTypes": 7
+      }
+    },
+    {
+      "id": "base",
+      "stats": {
+        "totalFiles": 19,
+        "totalScreens": 4,
+        "totalComponents": 5,
+        "totalHooks": 2,
+        "totalServices": 1,
+        "totalTypes": 0
+      }
+    },
+    {
+      "id": "ecommerce",
+      "stats": {
+        "totalFiles": 25,
+        "totalScreens": 7,
+        "totalComponents": 6,
+        "totalHooks": 4,
+        "totalServices": 0,
+        "totalTypes": 6
+      }
+    },
+    {
+      "id": "loyalty",
+      "stats": {
+        "totalFiles": 28,
+        "totalScreens": 8,
+        "totalComponents": 8,
+        "totalHooks": 4,
+        "totalServices": 0,
+        "totalTypes": 4
+      }
+    },
+    {
+      "id": "news",
+      "stats": {
+        "totalFiles": 27,
+        "totalScreens": 7,
+        "totalComponents": 8,
+        "totalHooks": 4,
+        "totalServices": 0,
+        "totalTypes": 5
+      }
+    }
+  ]
+}
