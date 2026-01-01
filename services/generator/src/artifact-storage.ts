@@ -10,8 +10,8 @@ import * as path from 'path';
 
 const execAsync = promisify(exec);
 
-// S3 Configuration
-const ARTIFACTS_BUCKET = process.env.ARTIFACTS_S3_BUCKET || 'mobigen-artifacts';
+// S3 Configuration (uses existing ARTIFACTS_BUCKET env var)
+const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET || 'mobigen-artifacts';
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const S3_ENABLED = process.env.S3_ARTIFACTS_ENABLED !== 'false';
 

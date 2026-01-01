@@ -30,6 +30,7 @@ import {
   shouldSyncPhase,
   type GitHubConfigChecker,
 } from './hooks/github-sync';
+import { generateLLMContext, analyzeProject, type ProjectStructure } from './ast-utils';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
@@ -189,6 +190,10 @@ interface PipelineContext {
 
   // Template context - what the template already provides
   templateContext?: TemplateContext;
+
+  // AST-based project structure (more precise than file listing)
+  astContext?: ProjectStructure;
+  astContextSummary?: string;
 
   // GitHub sync integration
   githubTracker?: GitHubFileTracker;
@@ -632,6 +637,23 @@ Output JSON with just: { "template": "base", "category": "..." }`,
       hooks: context.templateContext?.hooks.length || 0,
       types: context.templateContext?.types.length || 0,
     });
+
+    // Generate AST-based context for more precise LLM understanding
+    try {
+      context.astContext = await analyzeProject(projectPath);
+      context.astContextSummary = await generateLLMContext(projectPath);
+      logger.info('AST context generated', {
+        screens: context.astContext.screens.length,
+        components: context.astContext.components.length,
+        hooks: context.astContext.hooks.length,
+        services: context.astContext.services.length,
+        routes: context.astContext.navigation.routes.length,
+      });
+    } catch (astError) {
+      // AST analysis is optional - don't fail generation if it fails
+      logger.warn('AST context generation failed (non-fatal)', { error: String(astError) });
+    }
+
     logger.phaseEnd('setup', true);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -648,6 +670,11 @@ ${formatTemplateContext(context.templateContext)}
 Analyze what ADDITIONAL features are needed beyond what the template provides.`
       : '';
 
+    // Add AST context if available (more precise code understanding)
+    const astCtxForIntent = context.astContextSummary
+      ? `\n\nAST-ANALYZED PROJECT STRUCTURE:\n${context.astContextSummary}`
+      : '';
+
     logger.agentStart('intent-analyzer', 'intent-analysis');
     const intentOutput = await runAgent(
       'intent-analyzer',
@@ -662,7 +689,7 @@ APP CONFIG:
 - Secondary Color: ${config.branding.secondaryColor}
 
 SELECTED TEMPLATE: ${selectedTemplate}
-${templateCtxForIntent}
+${templateCtxForIntent}${astCtxForIntent}
 
 Provide detailed analysis with:
 - Features the template already provides (from template context)
