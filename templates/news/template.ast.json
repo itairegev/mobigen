@@ -1,0 +1,988 @@
+{
+  "templateId": "news",
+  "generatedAt": "2026-01-01T10:57:25.421Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Compass",
+              "Bookmark",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Compass",
+          "Bookmark",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "BookmarksScreen",
+        "filePath": "src/app/(tabs)/bookmarks.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useBookmarks",
+          "useArticles"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Bookmark"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ArticleCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useArticles",
+              "useBookmarks"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "BookmarksScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "ScrollView",
+          "View",
+          "Bookmark",
+          "Text",
+          "ArticleCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "DiscoverScreen",
+        "filePath": "src/app/(tabs)/discover.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useCategories",
+          "useArticles"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ArticleCard",
+              "CategoryPill"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useArticles",
+              "useCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "DiscoverScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ScrollView",
+          "CategoryPill",
+          "ActivityIndicator",
+          "Text",
+          "ArticleCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useArticles",
+          "useFeaturedArticles",
+          "useCallback"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "RefreshControl",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useCallback"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ArticleCard",
+              "FeaturedArticle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useArticles",
+              "useFeaturedArticles"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "ScrollView",
+          "RefreshControl",
+          "View",
+          "Text",
+          "FeaturedArticle",
+          "ArticleCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable",
+              "Switch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Bell",
+              "Moon",
+              "HelpCircle",
+              "FileText",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "View",
+          "Text",
+          "ChevronRight",
+          "SafeAreaView",
+          "ScrollView",
+          "User",
+          "SettingItem",
+          "Bell",
+          "Switch",
+          "Moon",
+          "HelpCircle",
+          "FileText",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ArticleDetailScreen",
+        "filePath": "src/app/article/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useArticle"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "ActivityIndicator",
+              "Pressable",
+              "Share"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter",
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ArrowLeft",
+              "Share2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "BookmarkButton"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useArticle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ArticleDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "Stack.Screen",
+          "Pressable",
+          "ArrowLeft",
+          "View",
+          "Share2",
+          "BookmarkButton",
+          "ScrollView",
+          "Image"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "ArticleCard",
+        "filePath": "src/components/ArticleCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Article"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./BookmarkButton",
+            "specifiers": [
+              "BookmarkButton"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ArticleCard"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "Image",
+          "View",
+          "Text",
+          "BookmarkButton"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "BookmarkButton",
+        "filePath": "src/components/BookmarkButton.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useBookmarks"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Bookmark"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useBookmarks"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "BookmarkButton"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "Bookmark"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CategoryPill",
+        "filePath": "src/components/CategoryPill.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "Text",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Category"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CategoryPill"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "FeaturedArticle",
+        "filePath": "src/components/FeaturedArticle.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "Pressable",
+              "Dimensions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-linear-gradient",
+            "specifiers": [
+              "LinearGradient"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Article"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "FeaturedArticle"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "Image",
+          "LinearGradient",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "Card",
+          "Input",
+          "ArticleCard",
+          "FeaturedArticle",
+          "CategoryPill",
+          "BookmarkButton"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useArticles",
+        "filePath": "src/hooks/useArticles.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useBookmarks",
+        "filePath": "src/hooks/useBookmarks.ts",
+        "dependencies": [
+          "useBookmarksStore"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useCategories",
+        "filePath": "src/hooks/useCategories.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "bookmarks",
+          "screen": "Bookmarks",
+          "filePath": "src/app/(tabs)/bookmarks.tsx"
+        },
+        {
+          "name": "discover",
+          "screen": "Discover",
+          "filePath": "src/app/(tabs)/discover.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/article/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Category",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Author",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Article",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "Category"
+          },
+          {
+            "name": "author",
+            "type": "Author"
+          },
+          {
+            "name": "publishedAt",
+            "type": "string"
+          },
+          {
+            "name": "readTime",
+            "type": "number"
+          },
+          {
+            "name": "isFeatured",
+            "type": "boolean"
+          },
+          {
+            "name": "isBookmarked",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "Bookmark",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "articleId",
+            "type": "string"
+          },
+          {
+            "name": "savedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "UserPreferences",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "categories",
+            "type": "string[]"
+          },
+          {
+            "name": "notificationsEnabled",
+            "type": "boolean"
+          },
+          {
+            "name": "darkMode",
+            "type": "boolean"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: news\n\n### Screens (7)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Compass, Bookmark...\n- **BookmarksScreen** (src/app/(tabs)/bookmarks.tsx)\n  - Hooks: useBookmarks, useArticles\n  - JSX: SafeAreaView, ActivityIndicator, ScrollView, View, Bookmark...\n- **DiscoverScreen** (src/app/(tabs)/discover.tsx)\n  - Hooks: useState, useCategories, useArticles\n  - JSX: SafeAreaView, View, ScrollView, CategoryPill, ActivityIndicator...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useState, useArticles, useFeaturedArticles, useCallback\n  - JSX: SafeAreaView, ActivityIndicator, ScrollView, RefreshControl, View...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useState\n  - JSX: Pressable, View, Text, ChevronRight, SafeAreaView...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **ArticleDetailScreen** (src/app/article/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useArticle\n  - JSX: SafeAreaView, ActivityIndicator, Text, Stack.Screen, Pressable...\n\n### Components (8)\n- **ArticleCard**: 1 hooks, 5 elements\n- **BookmarkButton**: 1 hooks, 2 elements\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 2 elements\n- **CategoryPill**: 0 hooks, 2 elements\n- **FeaturedArticle**: 1 hooks, 5 elements\n- **Input**: 0 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **useArticles**: deps [useQuery]\n- **useBookmarks**: deps [useBookmarksStore]\n- **useCategories**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (0)\n\n### Navigation (expo-router)\n- bookmarks -> Bookmarks\n- discover -> Discover\n- index -> Index\n- profile -> Profile\n- [id] -> [id]\n\n### Types (5)\n- interface Category\n- interface Author\n- interface Article\n- interface Bookmark\n- interface UserPreferences",
+  "stats": {
+    "totalFiles": 27,
+    "totalScreens": 7,
+    "totalComponents": 8,
+    "totalHooks": 4,
+    "totalServices": 0,
+    "totalTypes": 5
+  }
+}

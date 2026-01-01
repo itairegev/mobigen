@@ -1,0 +1,41 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "E-commerce template with product catalog, cart, and checkout",
+  "category": "ecommerce",
+  "features": [
+    "product-catalog",
+    "product-details",
+    "shopping-cart",
+    "checkout",
+    "order-history",
+    "user-profile",
+    "search",
+    "categories",
+    "favorites"
+  ],
+  "screens": [
+    "home",
+    "products",
+    "product-details",
+    "cart",
+    "checkout",
+    "orders",
+    "profile"
+  ],
+  "components": [
+    "ProductCard",
+    "CartItem",
+    "CategoryCard",
+    "PriceTag",
+    "QuantitySelector",
+    "OrderCard"
+  ],
+  "dataModels": [
+    "Product",
+    "Category",
+    "CartItem",
+    "Order",
+    "User"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "news",
+  "version": "1.0.0",
+  "description": "News and content reader template with articles, categories, and bookmarks",
+  "category": "news",
+  "features": [
+    "expo-router",
+    "nativewind",
+    "react-query",
+    "zustand",
+    "expo-secure-store",
+    "article-feed",
+    "categories",
+    "bookmarks",
+    "share"
+  ],
+  "screens": ["home", "discover", "bookmarks", "profile", "article-detail"],
+  "components": ["ArticleCard", "FeaturedArticle", "CategoryPill", "BookmarkButton"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "base",
+  "version": "1.0.0",
+  "description": "Base React Native + Expo template with NativeWind styling",
+  "category": "starter",
+  "features": [
+    "expo-router",
+    "nativewind",
+    "react-query",
+    "zustand",
+    "expo-secure-store"
+  ],
+  "screens": ["home", "settings"],
+  "components": ["Button", "Card", "Input"]
+}

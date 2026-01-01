@@ -1,0 +1,19 @@
+{
+  "name": "ai-assistant",
+  "version": "1.0.0",
+  "description": "AI Chat Assistant template with conversation history and streaming responses",
+  "category": "ai",
+  "features": [
+    "expo-router",
+    "nativewind",
+    "react-query",
+    "zustand",
+    "expo-secure-store",
+    "chat-interface",
+    "conversation-history",
+    "streaming-responses",
+    "voice-input"
+  ],
+  "screens": ["chat", "history", "settings"],
+  "components": ["ChatBubble", "ChatInput", "ConversationList", "TypingIndicator"]
+}

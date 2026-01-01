@@ -1,0 +1,37 @@
+{
+  "name": "loyalty",
+  "version": "1.0.0",
+  "description": "Loyalty program template with points, rewards, and tiers",
+  "category": "loyalty",
+  "features": [
+    "points-balance",
+    "rewards-catalog",
+    "qr-scanner",
+    "tier-system",
+    "transaction-history",
+    "reward-redemption",
+    "push-notifications",
+    "referral-program"
+  ],
+  "screens": [
+    "home",
+    "rewards",
+    "scan",
+    "history",
+    "profile"
+  ],
+  "components": [
+    "PointsCard",
+    "RewardCard",
+    "TierBadge",
+    "TransactionItem",
+    "QRScanner"
+  ],
+  "dataModels": [
+    "User",
+    "Points",
+    "Reward",
+    "Transaction",
+    "Tier"
+  ]
+}

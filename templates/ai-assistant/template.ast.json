@@ -1,0 +1,851 @@
+{
+  "templateId": "ai-assistant",
+  "generatedAt": "2026-01-01T10:57:25.168Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MessageSquare",
+              "History",
+              "Settings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "MessageSquare",
+          "History",
+          "Settings"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HistoryScreen",
+        "filePath": "src/app/(tabs)/history.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useChat"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Plus",
+              "Trash2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ConversationItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useChat"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HistoryScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Pressable",
+          "Plus",
+          "Text",
+          "Trash2",
+          "ScrollView",
+          "ConversationItem"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ChatScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRef",
+          "useChat",
+          "useSuggestions",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "KeyboardAvoidingView",
+              "Platform"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useRef",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ChatBubble",
+              "ChatInput",
+              "TypingIndicator",
+              "SuggestionCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useChat",
+              "useSuggestions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ChatScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "KeyboardAvoidingView",
+          "ScrollView",
+          "View",
+          "Text",
+          "SuggestionCard",
+          "ChatBubble",
+          "TypingIndicator",
+          "ChatInput"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SettingsScreen",
+        "filePath": "src/app/(tabs)/settings.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useSettings"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Switch",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Bot",
+              "Mic",
+              "Smartphone",
+              "Info",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useSettings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SettingsScreen"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "View",
+          "Text",
+          "ChevronRight",
+          "SafeAreaView",
+          "ScrollView",
+          "SettingRow",
+          "Bot",
+          "Mic",
+          "Switch",
+          "Smartphone",
+          "Info"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ChatBubble",
+        "filePath": "src/components/ChatBubble.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Message"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ChatBubble"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ChatInput",
+        "filePath": "src/components/ChatInput.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useRef"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "TextInput",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useRef"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Send",
+              "Mic"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ChatInput"
+        ],
+        "jsxElements": [
+          "View",
+          "TextInput",
+          "Pressable",
+          "Send",
+          "Mic"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ConversationItem",
+        "filePath": "src/components/ConversationItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MessageSquare",
+              "Trash2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Conversation"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ConversationItem"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "View",
+          "MessageSquare",
+          "Text",
+          "Trash2"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SuggestionCard",
+        "filePath": "src/components/SuggestionCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "SuggestedPrompt"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SuggestionCard"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TypingIndicator",
+        "filePath": "src/components/TypingIndicator.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useSharedValue",
+          "useEffect",
+          "useAnimatedStyle"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-reanimated",
+            "specifiers": [
+              "Animated",
+              "useSharedValue",
+              "useAnimatedStyle",
+              "withRepeat",
+              "withSequence",
+              "withTiming",
+              "withDelay"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TypingIndicator"
+        ],
+        "jsxElements": [
+          "Animated.View",
+          "View",
+          "Dot"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "Card",
+          "Input",
+          "ChatBubble",
+          "ChatInput",
+          "ConversationItem",
+          "TypingIndicator",
+          "SuggestionCard"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useChat",
+        "filePath": "src/hooks/useChat.ts",
+        "dependencies": [
+          "useChatStore"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSettings",
+        "filePath": "src/hooks/useSettings.ts",
+        "dependencies": [
+          "useSettingsStore"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSuggestions",
+        "filePath": "src/hooks/useSuggestions.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "history",
+          "screen": "History",
+          "filePath": "src/app/(tabs)/history.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "settings",
+          "screen": "Settings",
+          "filePath": "src/app/(tabs)/settings.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "MessageRole",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "MessageStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Message",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "type": "MessageRole"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "Date"
+          },
+          {
+            "name": "status",
+            "type": "MessageStatus"
+          }
+        ]
+      },
+      {
+        "name": "Conversation",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "messages",
+            "type": "Message[]"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "AIModel",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "contextWindow",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "UserSettings",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "selectedModel",
+            "type": "string"
+          },
+          {
+            "name": "temperature",
+            "type": "number"
+          },
+          {
+            "name": "maxTokens",
+            "type": "number"
+          },
+          {
+            "name": "systemPrompt",
+            "type": "string"
+          },
+          {
+            "name": "voiceEnabled",
+            "type": "boolean"
+          },
+          {
+            "name": "hapticFeedback",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "SuggestedPrompt",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "prompt",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: ai-assistant\n\n### Screens (5)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, MessageSquare, History, Settings\n- **HistoryScreen** (src/app/(tabs)/history.tsx)\n  - Hooks: useRouter, useChat\n  - JSX: SafeAreaView, View, Pressable, Plus, Text...\n- **ChatScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRef, useChat, useSuggestions, useEffect\n  - JSX: SafeAreaView, KeyboardAvoidingView, ScrollView, View, Text...\n- **SettingsScreen** (src/app/(tabs)/settings.tsx)\n  - Hooks: useSettings\n  - JSX: Pressable, View, Text, ChevronRight, SafeAreaView...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n\n### Components (9)\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 2 elements\n- **ChatBubble**: 0 hooks, 2 elements\n- **ChatInput**: 2 hooks, 5 elements\n- **ConversationItem**: 0 hooks, 5 elements\n- **Input**: 0 hooks, 3 elements\n- **SuggestionCard**: 0 hooks, 2 elements\n- **TypingIndicator**: 3 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **useChat**: deps [useChatStore]\n- **useSettings**: deps [useSettingsStore]\n- **useSuggestions**: deps []\n- **useTheme**: deps [useColorScheme]\n\n### Services (0)\n\n### Navigation (expo-router)\n- history -> History\n- index -> Index\n- settings -> Settings\n\n### Types (7)\n- type MessageRole\n- type MessageStatus\n- interface Message\n- interface Conversation\n- interface AIModel\n- interface UserSettings\n- interface SuggestedPrompt",
+  "stats": {
+    "totalFiles": 26,
+    "totalScreens": 5,
+    "totalComponents": 9,
+    "totalHooks": 4,
+    "totalServices": 0,
+    "totalTypes": 7
+  }
+}

@@ -1,0 +1,919 @@
+{
+  "templateId": "loyalty",
+  "generatedAt": "2026-01-01T10:57:25.378Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Gift",
+              "QrCode",
+              "Clock",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Gift",
+          "QrCode",
+          "Clock",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HistoryScreen",
+        "filePath": "src/app/(tabs)/history.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTransactions"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "TransactionItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useTransactions",
+            "specifiers": [
+              "useTransactions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HistoryScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "FlatList",
+          "TransactionItem",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePoints"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PointsCard",
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/usePoints",
+            "specifiers": [
+              "usePoints"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "PointsCard",
+          "View",
+          "Text",
+          "TierBadge",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePoints"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/usePoints",
+            "specifiers": [
+              "usePoints"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TierBadge",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RewardsScreen",
+        "filePath": "src/app/(tabs)/rewards.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRewards",
+          "usePoints"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "RewardCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useRewards",
+            "specifiers": [
+              "useRewards"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/usePoints",
+            "specifiers": [
+              "usePoints"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RewardsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "FlatList",
+          "RewardCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ScanScreen",
+        "filePath": "src/app/(tabs)/scan.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Camera"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ScanScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Camera",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SettingsScreen",
+        "filePath": "src/app/(tabs)/settings.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Switch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SettingsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "Switch"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PointsCard",
+        "filePath": "src/components/PointsCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./TierBadge",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Tier"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PointsCard"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TierBadge"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "RewardCard",
+        "filePath": "src/components/RewardCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Reward"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RewardCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TierBadge",
+        "filePath": "src/components/TierBadge.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TierBadge"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TransactionItem",
+        "filePath": "src/components/TransactionItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Transaction"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TransactionItem"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "Card",
+          "Input",
+          "PointsCard",
+          "TierBadge",
+          "RewardCard",
+          "TransactionItem"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "usePoints",
+        "filePath": "src/hooks/usePoints.ts",
+        "dependencies": [
+          "usePointsStore"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useRewards",
+        "filePath": "src/hooks/useRewards.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTransactions",
+        "filePath": "src/hooks/useTransactions.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "history",
+          "screen": "History",
+          "filePath": "src/app/(tabs)/history.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "rewards",
+          "screen": "Rewards",
+          "filePath": "src/app/(tabs)/rewards.tsx"
+        },
+        {
+          "name": "scan",
+          "screen": "Scan",
+          "filePath": "src/app/(tabs)/scan.tsx"
+        },
+        {
+          "name": "settings",
+          "screen": "Settings",
+          "filePath": "src/app/(tabs)/settings.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Tier",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "'bronze' | 'silver' | 'gold' | 'platinum'"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "minPoints",
+            "type": "number"
+          },
+          {
+            "name": "benefits",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Reward",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "pointsCost",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "expiresAt",
+            "type": "Date"
+          },
+          {
+            "name": "termsAndConditions",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Transaction",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'earn' | 'redeem'"
+          },
+          {
+            "name": "points",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "points",
+            "type": "number"
+          },
+          {
+            "name": "tier",
+            "type": "Tier"
+          },
+          {
+            "name": "memberSince",
+            "type": "Date"
+          },
+          {
+            "name": "referralCode",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: loyalty\n\n### Screens (8)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Gift, QrCode...\n- **HistoryScreen** (src/app/(tabs)/history.tsx)\n  - Hooks: useTransactions\n  - JSX: SafeAreaView, FlatList, TransactionItem, View, Text\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, usePoints\n  - JSX: SafeAreaView, ScrollView, PointsCard, View, Text...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter, usePoints\n  - JSX: SafeAreaView, ScrollView, View, Text, TierBadge...\n- **RewardsScreen** (src/app/(tabs)/rewards.tsx)\n  - Hooks: useRewards, usePoints\n  - JSX: SafeAreaView, View, Text, FlatList, RewardCard\n- **ScanScreen** (src/app/(tabs)/scan.tsx)\n  - JSX: SafeAreaView, View, Camera, Text, TouchableOpacity\n- **SettingsScreen** (src/app/(tabs)/settings.tsx)\n  - Hooks: useState\n  - JSX: SafeAreaView, View, Text, Switch\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n\n### Components (8)\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 2 elements\n- **Input**: 0 hooks, 3 elements\n- **PointsCard**: 0 hooks, 3 elements\n- **RewardCard**: 1 hooks, 4 elements\n- **TierBadge**: 0 hooks, 2 elements\n- **TransactionItem**: 0 hooks, 2 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **usePoints**: deps [usePointsStore]\n- **useRewards**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n- **useTransactions**: deps [useQuery]\n\n### Services (0)\n\n### Navigation (expo-router)\n- history -> History\n- index -> Index\n- profile -> Profile\n- rewards -> Rewards\n- scan -> Scan\n- settings -> Settings\n\n### Types (4)\n- interface Tier\n- interface Reward\n- interface Transaction\n- interface User",
+  "stats": {
+    "totalFiles": 28,
+    "totalScreens": 8,
+    "totalComponents": 8,
+    "totalHooks": 4,
+    "totalServices": 0,
+    "totalTypes": 4
+  }
+}

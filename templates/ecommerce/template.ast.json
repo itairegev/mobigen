@@ -1,0 +1,895 @@
+{
+  "templateId": "ecommerce",
+  "generatedAt": "2026-01-01T10:57:25.323Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Grid",
+              "ShoppingCart",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Grid",
+          "ShoppingCart",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CartScreen",
+        "filePath": "src/app/(tabs)/cart.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCart"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button",
+              "CartItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useCart",
+            "specifiers": [
+              "useCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "Button",
+          "FlatList",
+          "CartItem",
+          "View"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CategoriesScreen",
+        "filePath": "src/app/(tabs)/categories.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCategories"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useCategories",
+            "specifiers": [
+              "useCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CategoriesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "FlatList",
+          "TouchableOpacity",
+          "Text",
+          "View"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useProducts"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ProductCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProducts",
+            "specifiers": [
+              "useProducts"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "TextInput",
+          "FlatList",
+          "ProductCard",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SettingsScreen",
+        "filePath": "src/app/(tabs)/settings.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Switch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SettingsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "Switch"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CartItem",
+        "filePath": "src/components/CartItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Minus",
+              "Plus",
+              "Trash2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "CartItemType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartItem"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity",
+          "Minus",
+          "Plus",
+          "Trash2"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ProductCard",
+        "filePath": "src/components/ProductCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Product"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProductCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Heart",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "Card",
+          "Input",
+          "ProductCard",
+          "CartItem"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useCart",
+        "filePath": "src/hooks/useCart.ts",
+        "dependencies": [
+          "useCartStore"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useCategories",
+        "filePath": "src/hooks/useCategories.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useProducts",
+        "filePath": "src/hooks/useProducts.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "cart",
+          "screen": "Cart",
+          "filePath": "src/app/(tabs)/cart.tsx"
+        },
+        {
+          "name": "categories",
+          "screen": "Categories",
+          "filePath": "src/app/(tabs)/categories.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "settings",
+          "screen": "Settings",
+          "filePath": "src/app/(tabs)/settings.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Product",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "originalPrice",
+            "type": "number"
+          },
+          {
+            "name": "discount",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "type": "string"
+          },
+          {
+            "name": "inStock",
+            "type": "boolean"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Category",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "productCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "CartItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "product",
+            "type": "Product"
+          },
+          {
+            "name": "quantity",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Order",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "items",
+            "type": "CartItem[]"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "status",
+            "type": "'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "shippingAddress",
+            "type": "Address"
+          }
+        ]
+      },
+      {
+        "name": "Address",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "street",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "zipCode",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "isDefault",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "addresses",
+            "type": "Address[]"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: ecommerce\n\n### Screens (7)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Grid, ShoppingCart...\n- **CartScreen** (src/app/(tabs)/cart.tsx)\n  - Hooks: useRouter, useCart\n  - JSX: SafeAreaView, Text, Button, FlatList, CartItem...\n- **CategoriesScreen** (src/app/(tabs)/categories.tsx)\n  - Hooks: useRouter, useCategories\n  - JSX: SafeAreaView, FlatList, TouchableOpacity, Text, View\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useState, useProducts\n  - JSX: SafeAreaView, View, TextInput, FlatList, ProductCard...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity\n- **SettingsScreen** (src/app/(tabs)/settings.tsx)\n  - Hooks: useState\n  - JSX: SafeAreaView, View, Text, Switch\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n\n### Components (6)\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 2 elements\n- **CartItem**: 0 hooks, 7 elements\n- **Input**: 0 hooks, 3 elements\n- **ProductCard**: 1 hooks, 5 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **useCart**: deps [useCartStore]\n- **useCategories**: deps [useQuery]\n- **useProducts**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (0)\n\n### Navigation (expo-router)\n- cart -> Cart\n- categories -> Categories\n- index -> Index\n- profile -> Profile\n- settings -> Settings\n\n### Types (6)\n- interface Product\n- interface Category\n- interface CartItem\n- interface Order\n- interface Address\n- interface User",
+  "stats": {
+    "totalFiles": 25,
+    "totalScreens": 7,
+    "totalComponents": 6,
+    "totalHooks": 4,
+    "totalServices": 0,
+    "totalTypes": 6
+  }
+}

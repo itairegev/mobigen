@@ -1,0 +1,446 @@
+{
+  "templateId": "base",
+  "generatedAt": "2026-01-01T10:57:25.243Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Settings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Settings"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SettingsScreen",
+        "filePath": "src/app/(tabs)/settings.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Switch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SettingsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "Switch"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SilentUpdateHandler",
+        "filePath": "src/components/UpdatePrompt.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useUpdates"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks/useUpdates",
+            "specifiers": [
+              "useUpdates"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "UpdatePrompt",
+          "SilentUpdateHandler"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ActivityIndicator"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "Card",
+          "Input"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useUpdates",
+        "filePath": "src/hooks/useUpdates.ts",
+        "dependencies": [
+          "useState",
+          "useCallback",
+          "useEffect"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "updates",
+        "filePath": "src/services/updates.ts",
+        "functions": [
+          {
+            "name": "isUpdatesEnabled",
+            "params": [],
+            "returnType": "boolean",
+            "isAsync": false
+          },
+          {
+            "name": "getCurrentUpdate",
+            "params": [],
+            "returnType": "{\n  updateId?: string;\n  createdAt?: Date;\n  isEmbeddedLaunch: boolean;\n  isEmergencyLaunch: boolean;\n  channel?: string;\n  runtimeVersion?: string;\n}",
+            "isAsync": false
+          },
+          {
+            "name": "checkForUpdates",
+            "params": [],
+            "returnType": "Promise<UpdateCheckResult>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchUpdate",
+            "params": [],
+            "returnType": "Promise<{\n  success: boolean;\n  manifest?: Updates.Manifest;\n  error?: string;\n}>",
+            "isAsync": true
+          },
+          {
+            "name": "reloadApp",
+            "params": [],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          },
+          {
+            "name": "checkAndDownloadUpdate",
+            "params": [],
+            "returnType": "Promise<{\n  updateAvailable: boolean;\n  updateDownloaded: boolean;\n  manifest?: Updates.Manifest;\n  error?: string;\n}>",
+            "isAsync": true
+          },
+          {
+            "name": "trackUpdateEvent",
+            "params": [
+              {
+                "name": "event",
+                "type": "{\n  eventType: 'download_start' | 'download_complete' | 'download_error' |\n             'apply_start' | 'apply_complete' | 'apply_error' | 'rollback';\n  errorMessage?: string;\n  errorStack?: string;\n  durationMs?: number;\n}"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          },
+          {
+            "name": "initializeUpdates",
+            "params": [
+              {
+                "name": "options",
+                "type": "{\n  checkOnLaunch?: boolean;\n  showUpdatePrompt?: boolean;\n  onUpdateAvailable?: (manifest: Updates.Manifest) => void;\n  onUpdateDownloaded?: (manifest: Updates.Manifest) => void;\n  onError?: (error: Error) => void;\n}"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "settings",
+          "screen": "Settings",
+          "filePath": "src/app/(tabs)/settings.tsx"
+        }
+      ]
+    },
+    "types": []
+  },
+  "summary": "## Template: base\n\n### Screens (4)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Settings\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - JSX: SafeAreaView, View, Text, Button\n- **SettingsScreen** (src/app/(tabs)/settings.tsx)\n  - Hooks: useState\n  - JSX: SafeAreaView, View, Text, Switch\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n\n### Components (5)\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 2 elements\n- **Input**: 0 hooks, 3 elements\n- **SilentUpdateHandler**: 1 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (2)\n- **useTheme**: deps [useColorScheme]\n- **useUpdates**: deps [useState, useCallback, useEffect]\n\n### Services (1)\n- **updates**: isUpdatesEnabled(), getCurrentUpdate(), checkForUpdates(async), fetchUpdate(async), reloadApp(async), checkAndDownloadUpdate(async), trackUpdateEvent(async), initializeUpdates(async)\n\n### Navigation (expo-router)\n- index -> Index\n- settings -> Settings\n\n### Types (0)",
+  "stats": {
+    "totalFiles": 19,
+    "totalScreens": 4,
+    "totalComponents": 5,
+    "totalHooks": 2,
+    "totalServices": 1,
+    "totalTypes": 0
+  }
+}
