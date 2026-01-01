@@ -6,6 +6,14 @@ import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
 import archiver from 'archiver';
+// S3 artifact storage
+import {
+  uploadArtifact,
+  uploadProjectZip,
+  getArtifactDownloadUrl,
+  listProjectArtifacts,
+  checkS3Availability,
+} from './artifact-storage';
 // Use the new AI-driven orchestrator by default
 import {
   generateApp,
@@ -859,17 +867,56 @@ function getProjectPath(projectId: string): string {
   return path.join(mobigenRoot, 'projects', projectId);
 }
 
-// Download project as ZIP
+// Download project as ZIP (supports S3 redirect or local streaming)
 app.get('/api/projects/:projectId/download', async (req, res) => {
   const { projectId } = req.params;
+  const { format = 'zip', upload = 'false' } = req.query;
   const projectPath = getProjectPath(projectId);
 
+  // Check S3 availability
+  const s3Status = await checkS3Availability();
+
+  // If S3 is available and upload is requested, upload to S3 first
+  if (s3Status.available && upload === 'true') {
+    console.log(`[api] Uploading project ${projectId} to S3...`);
+    const uploadResult = await uploadProjectZip(projectPath, projectId);
+
+    if (uploadResult.success && uploadResult.artifact) {
+      return res.json({
+        success: true,
+        message: 'Project uploaded to S3',
+        downloadUrl: uploadResult.artifact.downloadUrl,
+        s3Key: uploadResult.artifact.s3Key,
+        size: uploadResult.artifact.size,
+        expiresAt: uploadResult.artifact.expiresAt,
+      });
+    }
+    // Fall through to local download if S3 upload fails
+  }
+
+  // Check if S3 already has this artifact
+  if (s3Status.available) {
+    const existingUrl = await getArtifactDownloadUrl(projectId, 'latest', 'zip');
+    if (existingUrl) {
+      return res.json({
+        success: true,
+        message: 'Artifact available on S3',
+        downloadUrl: existingUrl,
+        source: 's3',
+      });
+    }
+  }
+
+  // Fall back to local file streaming
   if (!fs.existsSync(projectPath)) {
     return res.status(404).json({
       success: false,
       error: 'Project not found',
       projectId,
       path: projectPath,
+      suggestion: s3Status.available
+        ? 'Project not found locally. Try uploading with ?upload=true'
+        : 'Project not found locally and S3 is not configured',
     });
   }
 
@@ -892,6 +939,84 @@ app.get('/api/projects/:projectId/download', async (req, res) => {
       error: error instanceof Error ? error.message : 'Failed to create archive',
     });
   }
+});
+
+// Upload project to S3 and get download URL
+app.post('/api/projects/:projectId/upload-to-s3', async (req, res) => {
+  const { projectId } = req.params;
+  const projectPath = getProjectPath(projectId);
+
+  const s3Status = await checkS3Availability();
+  if (!s3Status.available) {
+    return res.status(503).json({
+      success: false,
+      error: 'S3 storage is not available',
+      details: s3Status.error,
+    });
+  }
+
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found locally',
+      projectId,
+    });
+  }
+
+  try {
+    const result = await uploadProjectZip(projectPath, projectId);
+
+    if (result.success && result.artifact) {
+      res.json({
+        success: true,
+        downloadUrl: result.artifact.downloadUrl,
+        s3Key: result.artifact.s3Key,
+        size: result.artifact.size,
+        filename: result.artifact.filename,
+        expiresAt: result.artifact.expiresAt,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: result.error || 'Upload failed',
+      });
+    }
+  } catch (error) {
+    console.error('S3 upload error:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Upload failed',
+    });
+  }
+});
+
+// List all artifacts for a project
+app.get('/api/projects/:projectId/artifacts', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const artifacts = await listProjectArtifacts(projectId);
+    res.json({
+      success: true,
+      projectId,
+      count: artifacts.length,
+      artifacts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to list artifacts',
+    });
+  }
+});
+
+// Get S3 storage status
+app.get('/api/storage/status', async (req, res) => {
+  const status = await checkS3Availability();
+  res.json({
+    success: true,
+    s3: status,
+  });
 });
 
 // Get project files list
