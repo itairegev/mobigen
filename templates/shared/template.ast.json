@@ -1,0 +1,959 @@
+{
+  "templateId": "shared",
+  "generatedAt": "2026-01-02T14:47:22.928Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [],
+    "components": [
+      {
+        "name": "DetailRow",
+        "filePath": "components/booking/BookingConfirmation.tsx",
+        "type": "arrow",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "BookingConfirmation"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ScrollView",
+          "DetailRow"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CalendarPicker",
+        "filePath": "components/booking/CalendarPicker.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CalendarPicker"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TimeSlotGrid",
+        "filePath": "components/booking/TimeSlotGrid.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TimeSlotGrid"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ScrollView",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/booking/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "CalendarPicker",
+          "CalendarPickerProps",
+          "TimeSlotGrid",
+          "TimeSlotGridProps",
+          "TimeSlot",
+          "BookingConfirmation",
+          "BookingConfirmationProps",
+          "BookingDetails"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CartItem",
+        "filePath": "components/cart/CartItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./CartProvider",
+            "specifiers": [
+              "CartItemType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartItem"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CartProvider",
+        "filePath": "components/cart/CartProvider.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useContext"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "createContext",
+              "useContext",
+              "useState",
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartProvider",
+          "useCart"
+        ],
+        "jsxElements": [
+          "CartContext.Provider"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SummaryRow",
+        "filePath": "components/cart/CartSummary.tsx",
+        "type": "arrow",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartSummary"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "SummaryRow"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/cart/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "CartProvider",
+          "useCart",
+          "CartProviderProps",
+          "CartContextValue",
+          "CartItem",
+          "CartModifier",
+          "CartItemComponent",
+          "CartItemComponentProps",
+          "CartSummary",
+          "CartSummaryProps"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ChatBubble",
+        "filePath": "components/chat/ChatBubble.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ChatBubble"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ChatInput",
+        "filePath": "components/chat/ChatInput.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "TextInput",
+              "TouchableOpacity",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ChatInput"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ConversationList",
+        "filePath": "components/chat/ConversationList.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "FlatList",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ConversationList"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Text",
+          "FlatList"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/chat/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "ChatBubble",
+          "ChatBubbleProps",
+          "ChatMessage",
+          "ChatAttachment",
+          "ChatInput",
+          "ChatInputProps",
+          "ConversationList",
+          "ConversationListProps",
+          "Conversation"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "FeedList",
+        "filePath": "components/feed/FeedList.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "FlatList",
+              "RefreshControl",
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "FeedList"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "FlatList",
+          "RefreshControl"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PostCard",
+        "filePath": "components/feed/PostCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PostCard"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "Image",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/feed/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "FeedList",
+          "FeedListProps",
+          "FeedItem",
+          "PostCard",
+          "PostCardProps",
+          "Post"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "AudioPlayer",
+        "filePath": "components/media/AudioPlayer.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AudioPlayer"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ImageGallery",
+        "filePath": "components/media/ImageGallery.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "FlatList",
+              "TouchableOpacity",
+              "Dimensions",
+              "Modal"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ImageGallery"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "FlatList",
+          "Modal",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "VideoPlayer",
+        "filePath": "components/media/VideoPlayer.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useRef"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "VideoPlayer"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "TouchableOpacity",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/media/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "VideoPlayer",
+          "VideoPlayerProps",
+          "AudioPlayer",
+          "AudioPlayerProps",
+          "ImageGallery",
+          "ImageGalleryProps"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Avatar",
+        "filePath": "components/ui/Avatar.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "ImageSourcePropType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Avatar"
+        ],
+        "jsxElements": [
+          "Image",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Badge",
+        "filePath": "components/ui/Badge.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Badge"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Button",
+        "filePath": "components/ui/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator",
+              "View"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "components/ui/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "EmptyState",
+        "filePath": "components/ui/EmptyState.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EmptyState"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "components/ui/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode",
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "LoadingSpinner",
+        "filePath": "components/ui/LoadingSpinner.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "ActivityIndicator",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "LoadingSpinner"
+        ],
+        "jsxElements": [
+          "ActivityIndicator",
+          "Text",
+          "View"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Modal",
+        "filePath": "components/ui/Modal.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "RNModal",
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Pressable",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Modal"
+        ],
+        "jsxElements": [
+          "RNModal",
+          "View",
+          "Pressable",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "components/ui/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "ButtonProps",
+          "Card",
+          "CardProps",
+          "Input",
+          "InputProps",
+          "Modal",
+          "ModalProps",
+          "Badge",
+          "BadgeProps",
+          "Avatar",
+          "AvatarProps",
+          "EmptyState",
+          "EmptyStateProps",
+          "LoadingSpinner",
+          "LoadingSpinnerProps"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [],
+    "services": [],
+    "navigation": {
+      "type": "stack",
+      "routes": []
+    },
+    "types": []
+  },
+  "summary": "## Template: shared\n\n### Screens (0)\n\n### Components (29)\n- **DetailRow**: 0 hooks, 4 elements\n- **CalendarPicker**: 1 hooks, 3 elements\n- **TimeSlotGrid**: 0 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n- **CartItem**: 0 hooks, 4 elements\n- **CartProvider**: 2 hooks, 1 elements\n- **SummaryRow**: 0 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n- **ChatBubble**: 0 hooks, 3 elements\n- **ChatInput**: 1 hooks, 4 elements\n- **ConversationList**: 0 hooks, 5 elements\n- **index**: 0 hooks, 0 elements\n- **FeedList**: 0 hooks, 4 elements\n- **PostCard**: 0 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n- **index**: 0 hooks, 0 elements\n- **AudioPlayer**: 1 hooks, 4 elements\n- **ImageGallery**: 1 hooks, 6 elements\n- **VideoPlayer**: 1 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n- **Avatar**: 0 hooks, 3 elements\n- **Badge**: 0 hooks, 2 elements\n- **Button**: 0 hooks, 4 elements\n- **Card**: 0 hooks, 3 elements\n- **EmptyState**: 0 hooks, 2 elements\n- **Input**: 1 hooks, 4 elements\n- **LoadingSpinner**: 0 hooks, 3 elements\n- **Modal**: 0 hooks, 5 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (0)\n\n### Services (0)\n\n### Navigation (stack)\n\n### Types (0)",
+  "stats": {
+    "totalFiles": 51,
+    "totalScreens": 0,
+    "totalComponents": 29,
+    "totalHooks": 0,
+    "totalServices": 0,
+    "totalTypes": 0
+  }
+}

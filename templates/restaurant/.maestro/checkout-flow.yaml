@@ -1,0 +1,40 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - checkout
+---
+# Test: Complete Checkout Flow
+- launchApp:
+    clearState: true
+
+# Add item to cart
+- tapOn: "Menu"
+- tapOn:
+    id: "menu-item-1"
+- tapOn:
+    id: "add-to-cart-button"
+
+# Go to cart
+- tapOn: "Cart"
+- assertVisible: "Your Cart"
+- assertVisible: "Proceed to Checkout"
+
+# Proceed to checkout
+- tapOn:
+    id: "checkout-button"
+- assertVisible: "Order Type"
+
+# Select pickup
+- tapOn:
+    id: "delivery-toggle-pickup"
+
+# Select tip
+- tapOn:
+    id: "tip-selector-15%"
+
+# Place order
+- tapOn:
+    id: "place-order-button"
+
+# Verify success (alert should appear)
+- assertVisible: "Order Placed"

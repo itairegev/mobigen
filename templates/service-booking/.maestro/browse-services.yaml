@@ -1,0 +1,35 @@
+appId: com.mobigen.servicebooking
+tags:
+  - smoke
+  - services
+---
+# Browse Services Flow
+- launchApp:
+    clearState: true
+
+# Check home screen loads
+- assertVisible: "Book Your Next Appointment"
+- assertVisible: "Categories"
+- assertVisible: "Popular Services"
+
+# Navigate to Services tab
+- tapOn: "Services"
+- assertVisible: "All Services"
+
+# Test category filter
+- tapOn:
+    id: "category-filter-1"
+- assertVisible: "available"
+
+# View service detail
+- tapOn:
+    id: "service-card-1"
+- assertVisible: "Service Details"
+- assertVisible: "Duration"
+- assertVisible: "Price"
+- assertVisible: "Available Staff"
+
+# Close service detail
+- tapOn:
+    id: "close-button"
+- assertVisible: "Services"

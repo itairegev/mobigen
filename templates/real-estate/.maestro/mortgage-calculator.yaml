@@ -1,0 +1,39 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - calculator
+---
+# Real Estate - Mortgage Calculator Flow
+- launchApp:
+    clearState: true
+
+# Navigate to calculator from home
+- tapOn:
+    id: "home-calculator-button"
+- assertVisible: "Mortgage Calculator"
+
+# Verify default values loaded
+- assertVisible: "Monthly Payment"
+- assertVisible: "Loan Amount"
+
+# Update home price
+- tapOn:
+    id: "mortgage-calculator-home-price"
+- clearTextField
+- inputText: "750000"
+
+# Update down payment
+- tapOn:
+    id: "mortgage-calculator-down-payment"
+- clearTextField
+- inputText: "15"
+
+# Update interest rate
+- tapOn:
+    id: "mortgage-calculator-interest-rate"
+- clearTextField
+- inputText: "7"
+
+# Verify calculation updated
+- assertVisible: "Monthly Payment"
+- assertVisible: "Total Payment"
+- assertVisible: "Total Interest"

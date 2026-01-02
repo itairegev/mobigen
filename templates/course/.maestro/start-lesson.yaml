@@ -1,0 +1,37 @@
+appId: com.mobigen.course
+tags:
+  - critical
+  - lesson
+---
+# Start Lesson Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Courses
+- tapOn: "Courses"
+- assertVisible: "Courses"
+
+# Open first course
+- tapOn:
+    id: "course-1"
+- assertVisible: "Course Content"
+
+# Check lessons are displayed
+- assertVisible:
+    id: "lesson-1-1"
+- assertVisible:
+    id: "lesson-1-2"
+
+# Start first lesson
+- tapOn:
+    id: "lesson-1-1"
+- assertVisible:
+    id: "lesson-video"
+
+# Wait for video to load
+- waitForAnimationToEnd
+
+# Mark lesson complete
+- tapOn:
+    id: "complete-lesson-button"
+- assertVisible: "Lesson Complete!"

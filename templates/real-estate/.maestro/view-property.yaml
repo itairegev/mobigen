@@ -1,0 +1,39 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - property-details
+---
+# Real Estate - View Property Details Flow
+- launchApp:
+    clearState: true
+
+# View featured property from home
+- assertVisible: "Find Your Dream Home"
+- tapOn:
+    id: "featured-property-1"
+
+# Verify property details loaded
+- assertVisible: "For Sale"
+- assertVisible: "Schedule Tour"
+- assertVisible: "Property Details"
+
+# View image gallery
+- tapOn:
+    id: "property-gallery-image-0"
+- assertVisible:
+    id: "property-gallery-close"
+- tapOn:
+    id: "property-gallery-close"
+
+# Save property
+- tapOn:
+    id: "property-save-button"
+- assertVisible: "Saved"
+
+# View agent details
+- assertVisible: "Contact Agent"
+
+# Navigate to schedule tour
+- tapOn:
+    id: "schedule-tour-button"
+- assertVisible: "Schedule a Tour"

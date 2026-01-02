@@ -1,0 +1,1805 @@
+{
+  "templateId": "sports-team",
+  "generatedAt": "2026-01-02T14:47:22.961Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Calendar",
+              "Users",
+              "Newspaper",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Calendar",
+          "Users",
+          "Newspaper",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useNextGame",
+          "useRecentGames",
+          "useLatestNews",
+          "useStandings"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "GameCard",
+              "NewsItem",
+              "StandingsTable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useGames",
+            "specifiers": [
+              "useNextGame",
+              "useRecentGames"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useNews",
+            "specifiers": [
+              "useLatestNews"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useStandings",
+            "specifiers": [
+              "useStandings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ShoppingBag",
+              "Trophy"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ShoppingBag",
+          "ActivityIndicator",
+          "GameCard",
+          "Trophy",
+          "StandingsTable",
+          "NewsItem"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "NewsScreen",
+        "filePath": "src/app/(tabs)/news.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useNews"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "NewsItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useNews",
+            "specifiers": [
+              "useNews"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "NewsArticle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "NewsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "ActivityIndicator",
+          "NewsItem"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Switch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Bell",
+              "ShoppingBag",
+              "Settings",
+              "LogOut",
+              "Trophy",
+              "Heart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "User",
+          "Text",
+          "TouchableOpacity",
+          "ShoppingBag",
+          "Heart",
+          "Bell",
+          "Switch",
+          "Settings",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RosterScreen",
+        "filePath": "src/app/(tabs)/roster.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "usePlayers"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PlayerCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/usePlayers",
+            "specifiers": [
+              "usePlayers"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "PlayerPosition"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RosterScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "ActivityIndicator",
+          "PlayerCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ScheduleScreen",
+        "filePath": "src/app/(tabs)/schedule.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useGames"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "GameCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useGames",
+            "specifiers": [
+              "useGames"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ScheduleScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "TouchableOpacity",
+          "Text",
+          "ScrollView",
+          "ActivityIndicator",
+          "GameCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "StatRow",
+        "filePath": "src/app/games/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useGame"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ScoreBoard",
+              "StatsGrid"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useGames",
+            "specifiers": [
+              "useGame"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Tv",
+              "Radio",
+              "Ticket"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GameDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "MapPin",
+          "ScoreBoard",
+          "StatRow",
+          "Tv",
+          "Radio",
+          "TouchableOpacity",
+          "Ticket"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PlayerProfileScreen",
+        "filePath": "src/app/players/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "usePlayer"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "Image",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "StatsGrid"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/usePlayers",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Twitter",
+              "Instagram"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PlayerProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "Image",
+          "TouchableOpacity",
+          "Twitter",
+          "Instagram",
+          "StatsGrid"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProductCard",
+        "filePath": "src/app/shop.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useProducts"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useShop",
+            "specifiers": [
+              "useProducts"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Product"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ShoppingCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ShopScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "ActivityIndicator",
+          "ProductCard",
+          "TouchableOpacity",
+          "Image",
+          "ShoppingCart"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "GameCard",
+        "filePath": "src/components/GameCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Game",
+              "GameLocation"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "MapPin"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GameCard"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "View",
+          "Text",
+          "Image",
+          "MapPin"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "NewsItem",
+        "filePath": "src/components/NewsItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "NewsArticle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "NewsItem"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Image",
+          "View",
+          "Text",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PlayerCard",
+        "filePath": "src/components/PlayerCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Player"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PlayerCard"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "View",
+          "Image",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ScoreBoard",
+        "filePath": "src/components/ScoreBoard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Game"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ScoreBoard"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StandingsTable",
+        "filePath": "src/components/StandingsTable.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Standing"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StandingsTable"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ScrollView",
+          "Image"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StatsGrid",
+        "filePath": "src/components/StatsGrid.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StatsGrid"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "GameCard",
+          "PlayerCard",
+          "ScoreBoard",
+          "NewsItem",
+          "StandingsTable",
+          "StatsGrid"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useGames",
+        "filePath": "src/hooks/useGames.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useNews",
+        "filePath": "src/hooks/useNews.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePlayers",
+        "filePath": "src/hooks/usePlayers.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useShop",
+        "filePath": "src/hooks/useShop.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useStandings",
+        "filePath": "src/hooks/useStandings.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "games",
+        "filePath": "src/services/games.ts",
+        "functions": [
+          {
+            "name": "getGames",
+            "params": [],
+            "returnType": "Promise<Game[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getGame",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Game | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingGames",
+            "params": [],
+            "returnType": "Promise<Game[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getRecentGames",
+            "params": [
+              {
+                "name": "limit",
+                "type": "any"
+              }
+            ],
+            "returnType": "Promise<Game[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getNextGame",
+            "params": [],
+            "returnType": "Promise<Game | undefined>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "news",
+        "filePath": "src/services/news.ts",
+        "functions": [
+          {
+            "name": "getNews",
+            "params": [],
+            "returnType": "Promise<NewsArticle[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getNewsArticle",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<NewsArticle | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getNewsByCategory",
+            "params": [
+              {
+                "name": "category",
+                "type": "NewsArticle['category']"
+              }
+            ],
+            "returnType": "Promise<NewsArticle[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getLatestNews",
+            "params": [
+              {
+                "name": "limit",
+                "type": "any"
+              }
+            ],
+            "returnType": "Promise<NewsArticle[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "players",
+        "filePath": "src/services/players.ts",
+        "functions": [
+          {
+            "name": "getPlayers",
+            "params": [],
+            "returnType": "Promise<Player[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getPlayer",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Player | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getPlayersByPosition",
+            "params": [
+              {
+                "name": "position",
+                "type": "PlayerPosition"
+              }
+            ],
+            "returnType": "Promise<Player[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getTopScorers",
+            "params": [
+              {
+                "name": "limit",
+                "type": "any"
+              }
+            ],
+            "returnType": "Promise<Player[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "shop",
+        "filePath": "src/services/shop.ts",
+        "functions": [
+          {
+            "name": "getProducts",
+            "params": [],
+            "returnType": "Promise<Product[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getProduct",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Product | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getFeaturedProducts",
+            "params": [],
+            "returnType": "Promise<Product[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getProductsByCategory",
+            "params": [
+              {
+                "name": "category",
+                "type": "Product['category']"
+              }
+            ],
+            "returnType": "Promise<Product[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "standings",
+        "filePath": "src/services/standings.ts",
+        "functions": [
+          {
+            "name": "getStandings",
+            "params": [],
+            "returnType": "Promise<Standing[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getTeamStanding",
+            "params": [
+              {
+                "name": "teamId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Standing | undefined>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "teams",
+        "filePath": "src/services/teams.ts",
+        "functions": [
+          {
+            "name": "getTeam",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Team | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getAllTeams",
+            "params": [],
+            "returnType": "Promise<Team[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "news",
+          "screen": "News",
+          "filePath": "src/app/(tabs)/news.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "roster",
+          "screen": "Roster",
+          "filePath": "src/app/(tabs)/roster.tsx"
+        },
+        {
+          "name": "schedule",
+          "screen": "Schedule",
+          "filePath": "src/app/(tabs)/schedule.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/games/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/players/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "shop",
+          "screen": "Shop",
+          "filePath": "src/app/shop.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "GameStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "GameLocation",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "PlayerPosition",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Team",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "logo",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "abbreviation",
+            "type": "string"
+          },
+          {
+            "name": "colors",
+            "type": "{\n    primary: string;\n    secondary: string;\n  }"
+          }
+        ]
+      },
+      {
+        "name": "Score",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "home",
+            "type": "number"
+          },
+          {
+            "name": "away",
+            "type": "number"
+          },
+          {
+            "name": "periods",
+            "type": "{\n    period: number;\n    home: number;\n    away: number;\n  }[]"
+          }
+        ]
+      },
+      {
+        "name": "Game",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "homeTeam",
+            "type": "Team"
+          },
+          {
+            "name": "awayTeam",
+            "type": "Team"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "time",
+            "type": "string"
+          },
+          {
+            "name": "venue",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "GameStatus"
+          },
+          {
+            "name": "score",
+            "type": "Score"
+          },
+          {
+            "name": "stats",
+            "type": "GameStats"
+          },
+          {
+            "name": "tickets",
+            "type": "{\n    available: boolean;\n    url?: string;\n    price?: string;\n  }"
+          },
+          {
+            "name": "broadcast",
+            "type": "{\n    tv?: string;\n    radio?: string;\n    streaming?: string;\n  }"
+          }
+        ]
+      },
+      {
+        "name": "GameStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "possession",
+            "type": "{\n    home: number;\n    away: number;\n  }"
+          },
+          {
+            "name": "shots",
+            "type": "{\n    home: number;\n    away: number;\n  }"
+          },
+          {
+            "name": "fouls",
+            "type": "{\n    home: number;\n    away: number;\n  }"
+          },
+          {
+            "name": "corners",
+            "type": "{\n    home: number;\n    away: number;\n  }"
+          },
+          {
+            "name": "yellowCards",
+            "type": "{\n    home: number;\n    away: number;\n  }"
+          },
+          {
+            "name": "redCards",
+            "type": "{\n    home: number;\n    away: number;\n  }"
+          }
+        ]
+      },
+      {
+        "name": "Player",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "number",
+            "type": "number"
+          },
+          {
+            "name": "position",
+            "type": "PlayerPosition"
+          },
+          {
+            "name": "photo",
+            "type": "string"
+          },
+          {
+            "name": "age",
+            "type": "number"
+          },
+          {
+            "name": "height",
+            "type": "string"
+          },
+          {
+            "name": "weight",
+            "type": "string"
+          },
+          {
+            "name": "nationality",
+            "type": "string"
+          },
+          {
+            "name": "stats",
+            "type": "PlayerStats"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "socialMedia",
+            "type": "{\n    twitter?: string;\n    instagram?: string;\n  }"
+          }
+        ]
+      },
+      {
+        "name": "PlayerStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "gamesPlayed",
+            "type": "number"
+          },
+          {
+            "name": "gamesStarted",
+            "type": "number"
+          },
+          {
+            "name": "minutes",
+            "type": "number"
+          },
+          {
+            "name": "goals",
+            "type": "number"
+          },
+          {
+            "name": "assists",
+            "type": "number"
+          },
+          {
+            "name": "yellowCards",
+            "type": "number"
+          },
+          {
+            "name": "redCards",
+            "type": "number"
+          },
+          {
+            "name": "points",
+            "type": "number"
+          },
+          {
+            "name": "rebounds",
+            "type": "number"
+          },
+          {
+            "name": "steals",
+            "type": "number"
+          },
+          {
+            "name": "blocks",
+            "type": "number"
+          },
+          {
+            "name": "touchdowns",
+            "type": "number"
+          },
+          {
+            "name": "yards",
+            "type": "number"
+          },
+          {
+            "name": "tackles",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "NewsArticle",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "publishedAt",
+            "type": "Date"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "'match-report' | 'transfer' | 'injury' | 'interview' | 'announcement' | 'general'"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Standing",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "position",
+            "type": "number"
+          },
+          {
+            "name": "team",
+            "type": "Team"
+          },
+          {
+            "name": "played",
+            "type": "number"
+          },
+          {
+            "name": "won",
+            "type": "number"
+          },
+          {
+            "name": "drawn",
+            "type": "number"
+          },
+          {
+            "name": "lost",
+            "type": "number"
+          },
+          {
+            "name": "goalsFor",
+            "type": "number"
+          },
+          {
+            "name": "goalsAgainst",
+            "type": "number"
+          },
+          {
+            "name": "goalDifference",
+            "type": "number"
+          },
+          {
+            "name": "points",
+            "type": "number"
+          },
+          {
+            "name": "form",
+            "type": "('W' | 'D' | 'L')[]"
+          }
+        ]
+      },
+      {
+        "name": "Product",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "'jersey' | 'apparel' | 'accessories' | 'memorabilia'"
+          },
+          {
+            "name": "sizes",
+            "type": "string[]"
+          },
+          {
+            "name": "colors",
+            "type": "string[]"
+          },
+          {
+            "name": "inStock",
+            "type": "boolean"
+          },
+          {
+            "name": "featured",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "favoritePlayer",
+            "type": "string"
+          },
+          {
+            "name": "memberSince",
+            "type": "Date"
+          },
+          {
+            "name": "loyaltyPoints",
+            "type": "number"
+          },
+          {
+            "name": "notifications",
+            "type": "{\n    gameReminders: boolean;\n    news: boolean;\n    promotions: boolean;\n  }"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: sports-team\n\n### Screens (10)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Calendar, Users...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useNextGame, useRecentGames, useLatestNews, useStandings\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **NewsScreen** (src/app/(tabs)/news.tsx)\n  - Hooks: useState, useNews\n  - JSX: SafeAreaView, View, ScrollView, TouchableOpacity, Text...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useState\n  - JSX: SafeAreaView, ScrollView, View, User, Text...\n- **RosterScreen** (src/app/(tabs)/roster.tsx)\n  - Hooks: useState, usePlayers\n  - JSX: SafeAreaView, View, ScrollView, TouchableOpacity, Text...\n- **ScheduleScreen** (src/app/(tabs)/schedule.tsx)\n  - Hooks: useState, useGames\n  - JSX: SafeAreaView, View, TouchableOpacity, Text, ScrollView...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **StatRow** (src/app/games/[id].tsx)\n  - Hooks: useLocalSearchParams, useGame\n  - JSX: SafeAreaView, View, ActivityIndicator, Text, ScrollView...\n- **PlayerProfileScreen** (src/app/players/[id].tsx)\n  - Hooks: useLocalSearchParams, usePlayer\n  - JSX: SafeAreaView, View, ActivityIndicator, Text, ScrollView...\n- **ProductCard** (src/app/shop.tsx)\n  - Hooks: useProducts\n  - JSX: SafeAreaView, ScrollView, View, Text, ActivityIndicator...\n\n### Components (7)\n- **GameCard**: 0 hooks, 5 elements\n- **NewsItem**: 0 hooks, 5 elements\n- **PlayerCard**: 0 hooks, 4 elements\n- **ScoreBoard**: 0 hooks, 3 elements\n- **StandingsTable**: 0 hooks, 4 elements\n- **StatsGrid**: 0 hooks, 2 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useGames**: deps [useQuery]\n- **useNews**: deps [useQuery]\n- **usePlayers**: deps [useQuery]\n- **useShop**: deps [useQuery]\n- **useStandings**: deps [useQuery]\n\n### Services (6)\n- **games**: getGames(async), getGame(async), getUpcomingGames(async), getRecentGames(async), getNextGame(async)\n- **news**: getNews(async), getNewsArticle(async), getNewsByCategory(async), getLatestNews(async)\n- **players**: getPlayers(async), getPlayer(async), getPlayersByPosition(async), getTopScorers(async)\n- **shop**: getProducts(async), getProduct(async), getFeaturedProducts(async), getProductsByCategory(async)\n- **standings**: getStandings(async), getTeamStanding(async)\n- **teams**: getTeam(async), getAllTeams(async)\n\n### Navigation (expo-router)\n- index -> Index\n- news -> News\n- profile -> Profile\n- roster -> Roster\n- schedule -> Schedule\n- [id] -> [id]\n- [id] -> [id]\n- shop -> Shop\n\n### Types (13)\n- type GameStatus\n- type GameLocation\n- type PlayerPosition\n- interface Team\n- interface Score\n- interface Game\n- interface GameStats\n- interface Player\n- interface PlayerStats\n- interface NewsArticle\n- interface Standing\n- interface Product\n- interface User",
+  "stats": {
+    "totalFiles": 35,
+    "totalScreens": 10,
+    "totalComponents": 7,
+    "totalHooks": 5,
+    "totalServices": 6,
+    "totalTypes": 13
+  }
+}

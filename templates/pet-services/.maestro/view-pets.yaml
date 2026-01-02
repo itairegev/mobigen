@@ -1,0 +1,33 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - pets
+---
+# View Pets Flow
+- launchApp:
+    clearState: true
+
+# Navigate to pets tab
+- tapOn: "My Pets"
+- assertVisible: "My Pets"
+
+# Check that pets are displayed
+- assertVisible:
+    id: "pet-card-1"
+- assertVisible:
+    text: "Max"
+
+# Tap on a pet to view details
+- tapOn:
+    id: "pet-card-1"
+- assertVisible: "Max"
+- assertVisible: "Golden Retriever"
+
+# Check health records section
+- scrollUntilVisible:
+    element: "Health Records"
+- assertVisible: "Health Records"
+
+# Go back
+- tapOn: "Back"
+- assertVisible: "My Pets"

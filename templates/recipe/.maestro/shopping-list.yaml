@@ -1,0 +1,51 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - shopping
+---
+# Shopping List Flow
+- launchApp:
+    clearState: true
+
+# Navigate to a recipe
+- tapOn: "Categories"
+- tapOn:
+    id: "categories-recipe-2"
+- assertVisible: "Avocado Toast with Poached Egg"
+
+# Add ingredients to shopping list
+- scrollUntilVisible:
+    element:
+      id: "recipe-detail-add-to-shopping"
+    direction: DOWN
+- tapOn:
+    id: "recipe-detail-add-to-shopping"
+
+# Verify alert
+- assertVisible: "Added to Shopping List"
+- tapOn: "View List"
+
+# Verify shopping list
+- assertVisible: "Shopping"
+- assertVisible:
+    text: ".*items to buy"
+    regex: true
+
+# Check off an item
+- tapOn:
+    id: "shopping-item-2-1"
+
+# Verify item is checked
+- assertVisible:
+    text: "Checked.*"
+    regex: true
+
+# Clear checked items
+- tapOn:
+    id: "shopping-clear-checked-btn"
+- tapOn: "Clear"
+
+# Verify items cleared
+- assertVisible:
+    text: ".*items to buy"
+    regex: true

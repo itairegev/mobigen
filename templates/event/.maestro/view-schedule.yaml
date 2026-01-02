@@ -1,0 +1,38 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - schedule
+---
+# View Schedule Flow
+- launchApp:
+    clearState: true
+
+# Navigate to schedule tab
+- tapOn: "Schedule"
+- assertVisible: "track-filter"
+
+# Filter by Technology track
+- tapOn: "Technology"
+- assertVisible:
+    text: ".*Session.*"
+    regex: true
+
+# View a session detail
+- tapOn:
+    id: "session-2"
+- assertVisible: "Session Details"
+- assertVisible: "Add to My Agenda"
+
+# Add to agenda
+- tapOn:
+    id: "add-to-agenda-button"
+- assertVisible: "Remove from Agenda"
+
+# Go back
+- back
+
+# Filter by all tracks
+- tapOn: "All Tracks"
+- assertVisible:
+    text: ".*Session.*"
+    regex: true

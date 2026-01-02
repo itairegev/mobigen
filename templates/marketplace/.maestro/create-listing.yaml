@@ -1,0 +1,46 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - create
+---
+# Create Listing Flow
+- launchApp:
+    clearState: true
+
+# Tap FAB to create listing
+- tapOn:
+    id: "create-listing-fab"
+
+# Verify create screen
+- assertVisible: "Create Listing"
+
+# Fill in title
+- tapOn:
+    id: "title-input"
+- inputText: "Vintage Camera"
+
+# Fill in description
+- tapOn:
+    id: "description-input"
+- inputText: "Beautiful vintage film camera in excellent condition"
+
+# Fill in price
+- tapOn:
+    id: "price-input"
+- inputText: "250"
+
+# Select category
+- tapOn:
+    id: "category-electronics"
+
+# Select condition
+- tapOn:
+    id: "condition-good"
+
+# Fill in location
+- tapOn:
+    id: "location-input"
+- inputText: "San Francisco, CA"
+
+# Note: Image upload would require camera permissions in E2E
+# Submit button would be disabled without images in real scenario

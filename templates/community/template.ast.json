@@ -1,0 +1,1913 @@
+{
+  "templateId": "community",
+  "generatedAt": "2026-01-02T14:47:22.016Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Calendar",
+              "Users",
+              "MessageCircle",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Calendar",
+          "Users",
+          "MessageCircle",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "EventsScreen",
+        "filePath": "src/app/(tabs)/events.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useUpcomingEvents"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "RefreshControl",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "MapPin",
+              "Video"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useUpcomingEvents"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "EventCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EventsScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Video",
+          "MapPin",
+          "FlatList",
+          "EventCard",
+          "RefreshControl",
+          "Calendar"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePosts",
+          "useToggleReaction"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "RefreshControl",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Plus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePosts",
+              "useToggleReaction"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "PostCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "ReactionType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "FlatList",
+          "PostCard",
+          "RefreshControl",
+          "TouchableOpacity",
+          "Plus"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MembersScreen",
+        "filePath": "src/app/(tabs)/members.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useMembers",
+          "useSearchMembers"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Search",
+              "Users"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useMembers",
+              "useSearchMembers"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "MemberCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MembersScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Search",
+          "TextInput",
+          "FlatList",
+          "MemberCard",
+          "RefreshControl",
+          "Users"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MessagesScreen",
+        "filePath": "src/app/(tabs)/messages.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MessageCircle",
+              "Send"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../utils",
+            "specifiers": [
+              "formatRelativeTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MessagesScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "FlatList",
+          "TouchableOpacity",
+          "Image",
+          "MessageCircle"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MenuItem",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Settings",
+              "Bell",
+              "HelpCircle",
+              "LogOut",
+              "Crown",
+              "Calendar",
+              "MessageCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../utils",
+            "specifiers": [
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Image",
+          "Text",
+          "TierBadge",
+          "Calendar",
+          "TouchableOpacity",
+          "Crown",
+          "MenuItem",
+          "Icon"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-status-bar",
+            "specifiers": [
+              "StatusBar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "StatusBar",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "EventDetailScreen",
+        "filePath": "src/app/events/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useEvent",
+          "useUpdateRSVP"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "MapPin",
+              "Video",
+              "Users",
+              "Clock",
+              "ExternalLink"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../utils",
+            "specifiers": [
+              "formatEventDate",
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useEvent",
+              "useUpdateRSVP"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "RSVPStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EventDetailScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "Image",
+          "TierBadge",
+          "Calendar",
+          "Clock",
+          "Video",
+          "TouchableOpacity",
+          "ExternalLink",
+          "MapPin",
+          "Users"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ConversationScreen",
+        "filePath": "src/app/messages/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput",
+              "TouchableOpacity",
+              "Image",
+              "KeyboardAvoidingView",
+              "Platform"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Send"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ConversationScreen"
+        ],
+        "jsxElements": [
+          "KeyboardAvoidingView",
+          "FlatList",
+          "View",
+          "Text",
+          "TextInput",
+          "TouchableOpacity",
+          "Send"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PostDetailScreen",
+        "filePath": "src/app/posts/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "usePost",
+          "useComments",
+          "useToggleReaction"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../utils",
+            "specifiers": [
+              "formatRelativeTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePost",
+              "useComments",
+              "useToggleReaction"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "TierBadge",
+              "ReactionBar",
+              "CommentThread"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "ReactionType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PostDetailScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "Image",
+          "TierBadge",
+          "ReactionBar",
+          "CommentThread"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CreatePostScreen",
+        "filePath": "src/app/posts/create.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCreatePost"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "CreatePostForm"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useCreatePost"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CreatePostScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "CreatePostForm"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "CommentThread",
+        "filePath": "src/components/CommentThread.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Comment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatRelativeTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./TierBadge",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CommentThread"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text",
+          "TierBadge",
+          "FlatList"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CreatePostForm",
+        "filePath": "src/components/CreatePostForm.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Image",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CreatePostForm"
+        ],
+        "jsxElements": [
+          "View",
+          "TextInput",
+          "TouchableOpacity",
+          "X",
+          "Image",
+          "Text",
+          "ActivityIndicator"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "EventCard",
+        "filePath": "src/components/EventCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "MapPin",
+              "Video",
+              "Users",
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Event"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatEventDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./TierBadge",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EventCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "TierBadge",
+          "Text",
+          "Calendar",
+          "Video",
+          "MapPin",
+          "Users"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MemberCard",
+        "filePath": "src/components/MemberCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Calendar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Member"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./TierBadge",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MemberCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Text",
+          "TierBadge",
+          "MapPin",
+          "Calendar"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PostCard",
+        "filePath": "src/components/PostCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart",
+              "MessageCircle",
+              "Flame",
+              "Sparkles",
+              "Lightbulb"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Post",
+              "ReactionType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatRelativeTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./TierBadge",
+            "specifiers": [
+              "TierBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PostCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Text",
+          "TierBadge",
+          "ScrollView",
+          "Icon",
+          "Heart",
+          "MessageCircle"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ReactionBar",
+        "filePath": "src/components/ReactionBar.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "TouchableOpacity",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart",
+              "Flame",
+              "Sparkles",
+              "Lightbulb"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "ReactionType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ReactionBar"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "Icon",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TierBadge",
+        "filePath": "src/components/TierBadge.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Crown",
+              "Star",
+              "Heart",
+              "CircleDot"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "MembershipTier"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "getTierColor",
+              "getTierLabel"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TierBadge"
+        ],
+        "jsxElements": [
+          "View",
+          "Icon",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useEvents",
+        "filePath": "src/hooks/useEvents.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useMembers",
+        "filePath": "src/hooks/useMembers.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useMessages",
+        "filePath": "src/hooks/useMessages.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePosts",
+        "filePath": "src/hooks/usePosts.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "events",
+        "filePath": "src/services/events.ts",
+        "functions": [
+          {
+            "name": "getEvents",
+            "params": [],
+            "returnType": "Promise<Event[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getEvent",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Event | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingEvents",
+            "params": [],
+            "returnType": "Promise<Event[]>",
+            "isAsync": true
+          },
+          {
+            "name": "updateRSVP",
+            "params": [
+              {
+                "name": "eventId",
+                "type": "string"
+              },
+              {
+                "name": "userId",
+                "type": "string"
+              },
+              {
+                "name": "status",
+                "type": "RSVPStatus"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          },
+          {
+            "name": "getMyEvents",
+            "params": [
+              {
+                "name": "userId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Event[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "members",
+        "filePath": "src/services/members.ts",
+        "functions": [
+          {
+            "name": "getMembers",
+            "params": [],
+            "returnType": "Promise<Member[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getMember",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Member | null>",
+            "isAsync": true
+          },
+          {
+            "name": "searchMembers",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Member[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getMembersByTier",
+            "params": [
+              {
+                "name": "tier",
+                "type": "MembershipTier"
+              }
+            ],
+            "returnType": "Promise<Member[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "posts",
+        "filePath": "src/services/posts.ts",
+        "functions": [
+          {
+            "name": "getPosts",
+            "params": [
+              {
+                "name": "page",
+                "type": "number"
+              },
+              {
+                "name": "limit",
+                "type": "number"
+              }
+            ],
+            "returnType": "Promise<Post[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getPost",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Post | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getComments",
+            "params": [
+              {
+                "name": "postId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Comment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "createPost",
+            "params": [
+              {
+                "name": "content",
+                "type": "string"
+              },
+              {
+                "name": "images",
+                "type": "string[]"
+              }
+            ],
+            "returnType": "Promise<Post>",
+            "isAsync": true
+          },
+          {
+            "name": "toggleReaction",
+            "params": [
+              {
+                "name": "postId",
+                "type": "string"
+              },
+              {
+                "name": "type",
+                "type": "ReactionType"
+              },
+              {
+                "name": "userId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "events",
+          "screen": "Events",
+          "filePath": "src/app/(tabs)/events.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "members",
+          "screen": "Members",
+          "filePath": "src/app/(tabs)/members.tsx"
+        },
+        {
+          "name": "messages",
+          "screen": "Messages",
+          "filePath": "src/app/(tabs)/messages.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/events/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/messages/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/posts/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "create",
+          "screen": "Create",
+          "filePath": "src/app/posts/create.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Member",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "tier",
+            "type": "MembershipTier"
+          },
+          {
+            "name": "joinedAt",
+            "type": "Date"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "badges",
+            "type": "string[]"
+          },
+          {
+            "name": "verified",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "MembershipTier",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Membership",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "memberId",
+            "type": "string"
+          },
+          {
+            "name": "tier",
+            "type": "MembershipTier"
+          },
+          {
+            "name": "startDate",
+            "type": "Date"
+          },
+          {
+            "name": "expiresAt",
+            "type": "Date"
+          },
+          {
+            "name": "autoRenew",
+            "type": "boolean"
+          },
+          {
+            "name": "benefits",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Post",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "authorId",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "type": "Member"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          },
+          {
+            "name": "reactions",
+            "type": "Reaction[]"
+          },
+          {
+            "name": "commentCount",
+            "type": "number"
+          },
+          {
+            "name": "pinned",
+            "type": "boolean"
+          },
+          {
+            "name": "tier",
+            "type": "MembershipTier"
+          }
+        ]
+      },
+      {
+        "name": "Comment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "postId",
+            "type": "string"
+          },
+          {
+            "name": "authorId",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "type": "Member"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          },
+          {
+            "name": "reactions",
+            "type": "Reaction[]"
+          },
+          {
+            "name": "parentId",
+            "type": "string"
+          },
+          {
+            "name": "replyCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "ReactionType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Reaction",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "ReactionType"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Event",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'virtual' | 'in-person' | 'hybrid'"
+          },
+          {
+            "name": "startDate",
+            "type": "Date"
+          },
+          {
+            "name": "endDate",
+            "type": "Date"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "meetingLink",
+            "type": "string"
+          },
+          {
+            "name": "coverImage",
+            "type": "string"
+          },
+          {
+            "name": "hostId",
+            "type": "string"
+          },
+          {
+            "name": "host",
+            "type": "Member"
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "attendeeCount",
+            "type": "number"
+          },
+          {
+            "name": "rsvpStatus",
+            "type": "RSVPStatus"
+          },
+          {
+            "name": "tier",
+            "type": "MembershipTier"
+          }
+        ]
+      },
+      {
+        "name": "RSVPStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "RSVP",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "RSVPStatus"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Conversation",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "participantIds",
+            "type": "string[]"
+          },
+          {
+            "name": "participants",
+            "type": "Member[]"
+          },
+          {
+            "name": "lastMessage",
+            "type": "Message"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          },
+          {
+            "name": "unreadCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Message",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "conversationId",
+            "type": "string"
+          },
+          {
+            "name": "senderId",
+            "type": "string"
+          },
+          {
+            "name": "sender",
+            "type": "Member"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "read",
+            "type": "boolean"
+          },
+          {
+            "name": "attachments",
+            "type": "MessageAttachment[]"
+          }
+        ]
+      },
+      {
+        "name": "MessageAttachment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'image' | 'file'"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "TierBenefit",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "tier",
+            "type": "MembershipTier"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "benefits",
+            "type": "string[]"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: community\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Calendar, Users...\n- **EventsScreen** (src/app/(tabs)/events.tsx)\n  - Hooks: useUpcomingEvents\n  - JSX: View, Text, TouchableOpacity, Video, MapPin...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, usePosts, useToggleReaction\n  - JSX: View, Text, FlatList, PostCard, RefreshControl...\n- **MembersScreen** (src/app/(tabs)/members.tsx)\n  - Hooks: useState, useMembers, useSearchMembers\n  - JSX: View, Text, Search, TextInput, FlatList...\n- **MessagesScreen** (src/app/(tabs)/messages.tsx)\n  - JSX: View, Text, FlatList, TouchableOpacity, Image...\n- **MenuItem** (src/app/(tabs)/profile.tsx)\n  - JSX: ScrollView, View, Image, Text, TierBadge...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, StatusBar, Stack, Stack.Screen\n- **EventDetailScreen** (src/app/events/[id].tsx)\n  - Hooks: useLocalSearchParams, useEvent, useUpdateRSVP\n  - JSX: View, ActivityIndicator, Text, ScrollView, Image...\n- **ConversationScreen** (src/app/messages/[id].tsx)\n  - Hooks: useState\n  - JSX: KeyboardAvoidingView, FlatList, View, Text, TextInput...\n- **PostDetailScreen** (src/app/posts/[id].tsx)\n  - Hooks: useLocalSearchParams, usePost, useComments, useToggleReaction\n  - JSX: View, ActivityIndicator, Text, ScrollView, Image...\n- **CreatePostScreen** (src/app/posts/create.tsx)\n  - Hooks: useRouter, useCreatePost\n  - JSX: View, CreatePostForm\n\n### Components (8)\n- **CommentThread**: 0 hooks, 5 elements\n- **CreatePostForm**: 1 hooks, 7 elements\n- **EventCard**: 1 hooks, 9 elements\n- **MemberCard**: 0 hooks, 7 elements\n- **PostCard**: 1 hooks, 9 elements\n- **ReactionBar**: 0 hooks, 4 elements\n- **TierBadge**: 0 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useEvents**: deps [useQuery, useQueryClient, useMutation]\n- **useMembers**: deps [useQuery]\n- **useMessages**: deps []\n- **usePosts**: deps [useQuery, useQueryClient, useMutation]\n- **useTheme**: deps [useColorScheme]\n\n### Services (3)\n- **events**: getEvents(async), getEvent(async), getUpcomingEvents(async), updateRSVP(async), getMyEvents(async)\n- **members**: getMembers(async), getMember(async), searchMembers(async), getMembersByTier(async)\n- **posts**: getPosts(async), getPost(async), getComments(async), createPost(async), toggleReaction(async)\n\n### Navigation (expo-router)\n- events -> Events\n- index -> Index\n- members -> Members\n- messages -> Messages\n- profile -> Profile\n- [id] -> [id]\n- [id] -> [id]\n- [id] -> [id]\n- create -> Create\n\n### Types (14)\n- interface Member\n- type MembershipTier\n- interface Membership\n- interface Post\n- interface Comment\n- type ReactionType\n- interface Reaction\n- interface Event\n- type RSVPStatus\n- interface RSVP\n- interface Conversation\n- interface Message\n- interface MessageAttachment\n- interface TierBenefit",
+  "stats": {
+    "totalFiles": 35,
+    "totalScreens": 11,
+    "totalComponents": 8,
+    "totalHooks": 5,
+    "totalServices": 3,
+    "totalTypes": 14
+  }
+}

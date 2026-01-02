@@ -1,0 +1,65 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - messaging
+---
+# Contact Seller Flow
+- launchApp:
+    clearState: true
+
+# Navigate to a listing
+- tapOn:
+    id: "listing-1"
+
+# Verify listing detail
+- assertVisible: "Listing Details"
+
+# Add to favorites
+- tapOn:
+    id: "favorite-button"
+
+# Contact seller
+- tapOn:
+    id: "contact-seller-button"
+
+# Verify chat screen
+- assertVisible: "Chat"
+
+# Type a message
+- tapOn:
+    id: "message-input"
+- inputText: "Is this still available?"
+
+# Send message
+- tapOn:
+    id: "send-button"
+
+# Go back
+- back
+- back
+
+# Navigate to Messages tab
+- tapOn: "Messages"
+- assertVisible: "Messages"
+
+# Verify conversation appears
+- assertVisible:
+    id: "conversation-1"
+
+# Open conversation
+- tapOn:
+    id: "conversation-1"
+
+# Verify messages
+- assertVisible: "Chat"
+
+# Go back
+- back
+
+# Navigate to Favorites
+- tapOn: "Favorites"
+- assertVisible: "Favorites"
+
+# Verify favorited item appears
+- assertVisible:
+    id: "favorite-listing-1"

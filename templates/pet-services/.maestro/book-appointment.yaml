@@ -1,0 +1,37 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - booking
+---
+# Book Appointment Flow
+- launchApp:
+    clearState: true
+
+# Navigate to home
+- tapOn: "Home"
+- assertVisible: "Welcome Back!"
+
+# Tap on Book quick action
+- tapOn:
+    id: "quick-action-book"
+- assertVisible: "Book Appointment"
+
+# Step 1: Select a pet
+- assertVisible: "Step 1: Select Pet"
+- tapOn:
+    id: "select-pet-1"
+- assertVisible: "Step 2: Select Service"
+
+# Step 2: Select a service
+- scrollUntilVisible:
+    element:
+      id: "service-1"
+- tapOn:
+    id: "service-1"
+
+# Continue to next step
+- tapOn:
+    id: "continue-button"
+
+# Should go back to home (in a real app, would go to date/time selection)
+- assertVisible: "Home"

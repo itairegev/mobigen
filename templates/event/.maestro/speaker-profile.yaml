@@ -1,0 +1,38 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - speakers
+---
+# Speaker Profile Flow
+- launchApp:
+    clearState: true
+
+# Navigate to speakers tab
+- tapOn: "Speakers"
+- assertVisible:
+    id: "search-input"
+
+# Search for a speaker
+- tapOn:
+    id: "search-input"
+- inputText: "Sarah"
+- assertVisible: "Dr. Sarah Chen"
+
+# View speaker profile
+- tapOn:
+    id: "speaker-1"
+- assertVisible: "About"
+- assertVisible:
+    text: "Sessions.*"
+    regex: true
+
+# View a speaker's session
+- tapOn:
+    id: "session-1"
+- assertVisible: "Session Details"
+- assertVisible: "Keynote"
+
+# Go back to speakers
+- back
+- back
+- assertVisible: "Speakers"

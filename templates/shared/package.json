@@ -1,0 +1,22 @@
+{
+  "name": "@mobigen/shared",
+  "version": "1.0.0",
+  "description": "Shared components library for Mobigen templates",
+  "main": "index.ts",
+  "types": "index.ts",
+  "private": true,
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-native": "^0.76.5",
+    "@react-native-async-storage/async-storage": "^1.23.0"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "mobigen",
+    "components",
+    "ui"
+  ],
+  "author": "Mobigen",
+  "license": "PRIVATE"
+}

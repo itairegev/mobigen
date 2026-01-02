@@ -1,0 +1,33 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - episodes
+  - navigation
+---
+# Browse Episodes Flow
+- launchApp:
+    clearState: true
+
+# Start on home screen
+- assertVisible: "Home"
+
+# Navigate to Episodes tab
+- tapOn: "Episodes"
+- assertVisible: "Search episodes..."
+
+# Search for episodes
+- tapOn:
+    id: "search-input"
+- inputText: "AI"
+- assertVisible: "The Future of AI"
+
+# Clear search
+- tapOn:
+    id: "search-input"
+- clearField
+- assertVisible: "Quantum Computing"
+
+# Verify episode cards are displayed
+- assertVisible:
+    id: "episode-ep-1"
+- assertVisible:
+    id: "episode-ep-2"

@@ -1,0 +1,26 @@
+appId: com.mobigen.servicebooking
+tags:
+  - smoke
+  - appointments
+---
+# View Appointments Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Appointments tab
+- tapOn: "Appointments"
+- assertVisible: "Upcoming"
+
+# View appointment detail
+- tapOn:
+    id: "appointment-1"
+- assertVisible: "Appointment Details"
+- assertVisible: "Appointment Information"
+- assertVisible: "Staff Member"
+- assertVisible: "Date"
+- assertVisible: "Time"
+
+# Go back to list
+- tapOn:
+    id: "back-button"
+- assertVisible: "Appointments"

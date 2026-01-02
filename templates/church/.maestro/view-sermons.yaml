@@ -1,0 +1,30 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - sermons
+---
+# View Sermons Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Sermons tab
+- tapOn: "Sermons"
+- assertVisible: "Sermons"
+
+# Select a series
+- tapOn:
+    id: "series-1"
+- assertVisible: "The Gospel of John"
+
+# View a sermon
+- tapOn:
+    id: "sermon-1"
+- assertVisible: "The Word Became Flesh"
+- assertVisible: "Watch Video"
+- assertVisible: "Listen to Audio"
+
+# Go back
+- back
+
+# Verify we're back at sermons list
+- assertVisible: "The Gospel of John"

@@ -1,0 +1,2122 @@
+{
+  "templateId": "school",
+  "generatedAt": "2026-01-02T14:47:22.856Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "BookOpen",
+              "Award",
+              "Calendar",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "BookOpen",
+          "Award",
+          "Calendar",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CalendarScreen",
+        "filePath": "src/app/(tabs)/calendar.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useCalendarEvents",
+          "useEventsByDate"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "MapPin"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useCalendar",
+            "specifiers": [
+              "useCalendarEvents",
+              "useEventsByDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components/CalendarView",
+            "specifiers": [
+              "CalendarView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "CalendarEvent"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CalendarScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ScrollView",
+          "RefreshControl",
+          "CalendarView",
+          "Text",
+          "Clock",
+          "MapPin"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "GradesScreen",
+        "filePath": "src/app/(tabs)/grades.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useGPA",
+          "useSubjectGradesSummary"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "TrendingUp",
+              "Award"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useGrades",
+            "specifiers": [
+              "useGPA",
+              "useSubjectGradesSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components/GradeItem",
+            "specifiers": [
+              "SubjectGradeSummaryCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GradesScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ScrollView",
+          "RefreshControl",
+          "Award",
+          "Text",
+          "SubjectGradeSummaryCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeworkScreen",
+        "filePath": "src/app/(tabs)/homework.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useState",
+          "useAssignments"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useAssignments",
+            "specifiers": [
+              "useAssignments"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components/AssignmentCard",
+            "specifiers": [
+              "AssignmentCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "AssignmentStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeworkScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ScrollView",
+          "Pressable",
+          "Text",
+          "RefreshControl",
+          "AssignmentCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useUpcomingAssignments",
+          "useUnreadAnnouncements",
+          "useGPA",
+          "useSubjectGradesSummary",
+          "useUpcomingEvents"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Bell",
+              "BookOpen",
+              "TrendingUp",
+              "CalendarIcon",
+              "AlertCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useAssignments",
+            "specifiers": [
+              "useUpcomingAssignments"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useAnnouncements",
+            "specifiers": [
+              "useUnreadAnnouncements"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useGrades",
+            "specifiers": [
+              "useGPA",
+              "useSubjectGradesSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useCalendar",
+            "specifiers": [
+              "useUpcomingEvents"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components/AssignmentCard",
+            "specifiers": [
+              "AssignmentCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components/AnnouncementCard",
+            "specifiers": [
+              "AnnouncementCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "RefreshControl",
+          "View",
+          "Text",
+          "TrendingUp",
+          "BookOpen",
+          "Bell",
+          "Pressable",
+          "AssignmentCard",
+          "AnnouncementCard",
+          "CalendarIcon"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useSubjects",
+          "useGPA"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Mail",
+              "GraduationCap",
+              "Calendar",
+              "TrendingUp",
+              "LogOut",
+              "Settings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useSubjects",
+            "specifiers": [
+              "useSubjects"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useGrades",
+            "specifiers": [
+              "useGPA"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "TrendingUp",
+          "Calendar",
+          "GraduationCap",
+          "User",
+          "Mail",
+          "Pressable",
+          "Settings",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AnnouncementsScreen",
+        "filePath": "src/app/announcements.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useState",
+          "useAnnouncements"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks/useAnnouncements",
+            "specifiers": [
+              "useAnnouncements"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../components/AnnouncementCard",
+            "specifiers": [
+              "AnnouncementCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "AnnouncementCategory"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AnnouncementsScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ScrollView",
+          "Pressable",
+          "Text",
+          "RefreshControl",
+          "AnnouncementCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AssignmentDetailScreen",
+        "filePath": "src/app/homework/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useAssignment"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "Calendar",
+              "FileText",
+              "CheckCircle2",
+              "AlertCircle",
+              "Paperclip"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useAssignments",
+            "specifiers": [
+              "useAssignment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "formatDistanceToNow",
+              "isPast"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AssignmentDetailScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Pressable",
+          "AlertCircle",
+          "CheckCircle2",
+          "ScrollView",
+          "Calendar",
+          "FileText",
+          "Paperclip"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MessagesScreen",
+        "filePath": "src/app/messages.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Mail",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MessagesScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ScrollView",
+          "Pressable",
+          "Text",
+          "Mail"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ResourcesScreen",
+        "filePath": "src/app/resources.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "FileText",
+              "Video",
+              "LinkIcon",
+              "ImageIcon",
+              "Download"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ResourcesScreen"
+        ],
+        "jsxElements": [
+          "FileText",
+          "Video",
+          "LinkIcon",
+          "ImageIcon",
+          "ScrollView",
+          "View",
+          "Text",
+          "Pressable",
+          "Download"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AnnouncementCard",
+        "filePath": "src/components/AnnouncementCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "AlertCircle",
+              "Megaphone",
+              "CalendarIcon",
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Announcement"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AnnouncementCard"
+        ],
+        "jsxElements": [
+          "AlertCircle",
+          "Megaphone",
+          "Pressable",
+          "View",
+          "Text",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "AssignmentCard",
+        "filePath": "src/components/AssignmentCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "BookOpen",
+              "Clock",
+              "CheckCircle2",
+              "AlertCircle",
+              "FileText"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Assignment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "formatDistanceToNow",
+              "isPast"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AssignmentCard"
+        ],
+        "jsxElements": [
+          "View",
+          "AlertCircle",
+          "Text",
+          "CheckCircle2",
+          "FileText",
+          "BookOpen",
+          "Pressable",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CalendarView",
+        "filePath": "src/components/CalendarView.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronLeft",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "CalendarEvent"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "startOfMonth",
+              "endOfMonth",
+              "startOfWeek",
+              "endOfWeek",
+              "addDays",
+              "addMonths",
+              "subMonths",
+              "format",
+              "isSameMonth",
+              "isSameDay",
+              "isToday"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CalendarView"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "View",
+          "Text",
+          "ChevronLeft",
+          "ChevronRight"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SubjectGradeSummaryCard",
+        "filePath": "src/components/GradeItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Pressable"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "TrendingUp",
+              "TrendingDown",
+              "Minus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Grade",
+              "SubjectGradesSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GradeItem",
+          "SubjectGradeSummaryCard"
+        ],
+        "jsxElements": [
+          "Pressable",
+          "View",
+          "Text",
+          "TrendingUp",
+          "TrendingDown",
+          "Minus"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useAnnouncements",
+        "filePath": "src/hooks/useAnnouncements.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useAssignments",
+        "filePath": "src/hooks/useAssignments.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useCalendar",
+        "filePath": "src/hooks/useCalendar.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useGrades",
+        "filePath": "src/hooks/useGrades.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSubjects",
+        "filePath": "src/hooks/useSubjects.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "announcements",
+        "filePath": "src/services/announcements.ts",
+        "functions": [
+          {
+            "name": "getAnnouncements",
+            "params": [
+              {
+                "name": "category",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Announcement[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAnnouncementById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Announcement | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getUnreadAnnouncements",
+            "params": [],
+            "returnType": "Promise<Announcement[]>",
+            "isAsync": true
+          },
+          {
+            "name": "markAnnouncementRead",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Announcement>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "assignments",
+        "filePath": "src/services/assignments.ts",
+        "functions": [
+          {
+            "name": "getAssignments",
+            "params": [
+              {
+                "name": "status",
+                "type": "'pending' | 'in-progress' | 'submitted' | 'graded' | 'overdue'"
+              }
+            ],
+            "returnType": "Promise<Assignment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAssignmentById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Assignment | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingAssignments",
+            "params": [
+              {
+                "name": "limit",
+                "type": "number"
+              }
+            ],
+            "returnType": "Promise<Assignment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAssignmentsBySubject",
+            "params": [
+              {
+                "name": "subjectId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Assignment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "submitAssignment",
+            "params": [
+              {
+                "name": "assignmentId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Assignment>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "calendar",
+        "filePath": "src/services/calendar.ts",
+        "functions": [
+          {
+            "name": "getDateOffset",
+            "params": [
+              {
+                "name": "days",
+                "type": "number"
+              }
+            ],
+            "returnType": "void",
+            "isAsync": false
+          },
+          {
+            "name": "getCalendarEvents",
+            "params": [
+              {
+                "name": "startDate",
+                "type": "string"
+              },
+              {
+                "name": "endDate",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<CalendarEvent[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getEventsByDate",
+            "params": [
+              {
+                "name": "date",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<CalendarEvent[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingEvents",
+            "params": [
+              {
+                "name": "limit",
+                "type": "number"
+              }
+            ],
+            "returnType": "Promise<CalendarEvent[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getEventsByType",
+            "params": [
+              {
+                "name": "type",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<CalendarEvent[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "grades",
+        "filePath": "src/services/grades.ts",
+        "functions": [
+          {
+            "name": "getGrades",
+            "params": [],
+            "returnType": "Promise<Grade[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getGradesBySubject",
+            "params": [
+              {
+                "name": "subjectId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Grade[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getSubjectGradesSummary",
+            "params": [],
+            "returnType": "Promise<SubjectGradesSummary[]>",
+            "isAsync": true
+          },
+          {
+            "name": "calculateGPA",
+            "params": [],
+            "returnType": "Promise<number>",
+            "isAsync": true
+          },
+          {
+            "name": "percentageToLetterGrade",
+            "params": [
+              {
+                "name": "percentage",
+                "type": "number"
+              }
+            ],
+            "returnType": "LetterGrade",
+            "isAsync": false
+          },
+          {
+            "name": "letterGradeToGPA",
+            "params": [
+              {
+                "name": "grade",
+                "type": "LetterGrade"
+              }
+            ],
+            "returnType": "number",
+            "isAsync": false
+          }
+        ]
+      },
+      {
+        "name": "subjects",
+        "filePath": "src/services/subjects.ts",
+        "functions": [
+          {
+            "name": "getSubjects",
+            "params": [],
+            "returnType": "Promise<Subject[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getSubjectById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Subject | null>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "calendar",
+          "screen": "Calendar",
+          "filePath": "src/app/(tabs)/calendar.tsx"
+        },
+        {
+          "name": "grades",
+          "screen": "Grades",
+          "filePath": "src/app/(tabs)/grades.tsx"
+        },
+        {
+          "name": "homework",
+          "screen": "Homework",
+          "filePath": "src/app/(tabs)/homework.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "announcements",
+          "screen": "Announcements",
+          "filePath": "src/app/announcements.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/homework/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "messages",
+          "screen": "Messages",
+          "filePath": "src/app/messages.tsx"
+        },
+        {
+          "name": "resources",
+          "screen": "Resources",
+          "filePath": "src/app/resources.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Assignment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "subjectId",
+            "type": "string"
+          },
+          {
+            "name": "subjectName",
+            "type": "string"
+          },
+          {
+            "name": "subjectColor",
+            "type": "string"
+          },
+          {
+            "name": "dueDate",
+            "type": "string"
+          },
+          {
+            "name": "assignedDate",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "AssignmentStatus"
+          },
+          {
+            "name": "type",
+            "type": "AssignmentType"
+          },
+          {
+            "name": "points",
+            "type": "number"
+          },
+          {
+            "name": "earnedPoints",
+            "type": "number"
+          },
+          {
+            "name": "attachments",
+            "type": "Attachment[]"
+          },
+          {
+            "name": "instructions",
+            "type": "string"
+          },
+          {
+            "name": "submittedAt",
+            "type": "string"
+          },
+          {
+            "name": "feedback",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "AssignmentStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "AssignmentType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Announcement",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "postedBy",
+            "type": "string"
+          },
+          {
+            "name": "postedByRole",
+            "type": "'teacher' | 'admin' | 'principal'"
+          },
+          {
+            "name": "postedAt",
+            "type": "string"
+          },
+          {
+            "name": "priority",
+            "type": "'low' | 'normal' | 'high' | 'urgent'"
+          },
+          {
+            "name": "category",
+            "type": "AnnouncementCategory"
+          },
+          {
+            "name": "read",
+            "type": "boolean"
+          },
+          {
+            "name": "attachments",
+            "type": "Attachment[]"
+          },
+          {
+            "name": "expiresAt",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "AnnouncementCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Grade",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "subjectId",
+            "type": "string"
+          },
+          {
+            "name": "subjectName",
+            "type": "string"
+          },
+          {
+            "name": "subjectColor",
+            "type": "string"
+          },
+          {
+            "name": "assignmentId",
+            "type": "string"
+          },
+          {
+            "name": "assignmentName",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "maxScore",
+            "type": "number"
+          },
+          {
+            "name": "percentage",
+            "type": "number"
+          },
+          {
+            "name": "letterGrade",
+            "type": "LetterGrade"
+          },
+          {
+            "name": "gradedDate",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "GradeCategory"
+          },
+          {
+            "name": "weight",
+            "type": "number"
+          },
+          {
+            "name": "feedback",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "LetterGrade",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "GradeCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Subject",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "teacher",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "room",
+            "type": "string"
+          },
+          {
+            "name": "period",
+            "type": "number"
+          },
+          {
+            "name": "currentGrade",
+            "type": "number"
+          },
+          {
+            "name": "letterGrade",
+            "type": "LetterGrade"
+          }
+        ]
+      },
+      {
+        "name": "CalendarEvent",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "EventType"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "subjectId",
+            "type": "string"
+          },
+          {
+            "name": "subjectName",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "allDay",
+            "type": "boolean"
+          },
+          {
+            "name": "recurring",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "EventType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Resource",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "ResourceType"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "subjectId",
+            "type": "string"
+          },
+          {
+            "name": "subjectName",
+            "type": "string"
+          },
+          {
+            "name": "uploadedBy",
+            "type": "string"
+          },
+          {
+            "name": "uploadedAt",
+            "type": "string"
+          },
+          {
+            "name": "fileSize",
+            "type": "number"
+          },
+          {
+            "name": "downloads",
+            "type": "number"
+          },
+          {
+            "name": "thumbnail",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "ResourceType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Message",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "threadId",
+            "type": "string"
+          },
+          {
+            "name": "subject",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "senderId",
+            "type": "string"
+          },
+          {
+            "name": "senderName",
+            "type": "string"
+          },
+          {
+            "name": "senderRole",
+            "type": "'teacher' | 'student' | 'parent' | 'admin'"
+          },
+          {
+            "name": "receiverId",
+            "type": "string"
+          },
+          {
+            "name": "sentAt",
+            "type": "string"
+          },
+          {
+            "name": "read",
+            "type": "boolean"
+          },
+          {
+            "name": "attachments",
+            "type": "Attachment[]"
+          },
+          {
+            "name": "replyTo",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "MessageThread",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "subject",
+            "type": "string"
+          },
+          {
+            "name": "participants",
+            "type": "Participant[]"
+          },
+          {
+            "name": "lastMessage",
+            "type": "string"
+          },
+          {
+            "name": "lastMessageAt",
+            "type": "string"
+          },
+          {
+            "name": "unreadCount",
+            "type": "number"
+          },
+          {
+            "name": "messages",
+            "type": "Message[]"
+          }
+        ]
+      },
+      {
+        "name": "Participant",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "type": "'teacher' | 'student' | 'parent' | 'admin'"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Attachment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "StudentProfile",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "grade",
+            "type": "string"
+          },
+          {
+            "name": "studentId",
+            "type": "string"
+          },
+          {
+            "name": "gpa",
+            "type": "number"
+          },
+          {
+            "name": "subjects",
+            "type": "Subject[]"
+          },
+          {
+            "name": "attendance",
+            "type": "AttendanceStats"
+          }
+        ]
+      },
+      {
+        "name": "AttendanceStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "present",
+            "type": "number"
+          },
+          {
+            "name": "absent",
+            "type": "number"
+          },
+          {
+            "name": "tardy",
+            "type": "number"
+          },
+          {
+            "name": "excused",
+            "type": "number"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "percentage",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "AcademicStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "overallGPA",
+            "type": "number"
+          },
+          {
+            "name": "subjectCount",
+            "type": "number"
+          },
+          {
+            "name": "assignmentsDue",
+            "type": "number"
+          },
+          {
+            "name": "assignmentsOverdue",
+            "type": "number"
+          },
+          {
+            "name": "unreadAnnouncements",
+            "type": "number"
+          },
+          {
+            "name": "unreadMessages",
+            "type": "number"
+          },
+          {
+            "name": "upcomingEvents",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "SubjectGradesSummary",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "subject",
+            "type": "Subject"
+          },
+          {
+            "name": "grades",
+            "type": "Grade[]"
+          },
+          {
+            "name": "average",
+            "type": "number"
+          },
+          {
+            "name": "letterGrade",
+            "type": "LetterGrade"
+          },
+          {
+            "name": "trend",
+            "type": "'up' | 'down' | 'stable'"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: school\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, BookOpen, Award...\n- **CalendarScreen** (src/app/(tabs)/calendar.tsx)\n  - Hooks: useState, useCalendarEvents, useEventsByDate\n  - JSX: View, ScrollView, RefreshControl, CalendarView, Text...\n- **GradesScreen** (src/app/(tabs)/grades.tsx)\n  - Hooks: useRouter, useGPA, useSubjectGradesSummary\n  - JSX: View, ScrollView, RefreshControl, Award, Text...\n- **HomeworkScreen** (src/app/(tabs)/homework.tsx)\n  - Hooks: useRouter, useState, useAssignments\n  - JSX: View, ScrollView, Pressable, Text, RefreshControl...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useUpcomingAssignments, useUnreadAnnouncements, useGPA, useSubjectGradesSummary, useUpcomingEvents\n  - JSX: ScrollView, RefreshControl, View, Text, TrendingUp...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useSubjects, useGPA\n  - JSX: ScrollView, View, Text, TrendingUp, Calendar...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **AnnouncementsScreen** (src/app/announcements.tsx)\n  - Hooks: useRouter, useState, useAnnouncements\n  - JSX: View, ScrollView, Pressable, Text, RefreshControl...\n- **AssignmentDetailScreen** (src/app/homework/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useAssignment\n  - JSX: View, Text, Pressable, AlertCircle, CheckCircle2...\n- **MessagesScreen** (src/app/messages.tsx)\n  - JSX: View, ScrollView, Pressable, Text, Mail\n- **ResourcesScreen** (src/app/resources.tsx)\n  - JSX: FileText, Video, LinkIcon, ImageIcon, ScrollView...\n\n### Components (5)\n- **AnnouncementCard**: 0 hooks, 6 elements\n- **AssignmentCard**: 0 hooks, 8 elements\n- **CalendarView**: 1 hooks, 5 elements\n- **SubjectGradeSummaryCard**: 0 hooks, 6 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useAnnouncements**: deps [useQuery]\n- **useAssignments**: deps [useQuery]\n- **useCalendar**: deps [useQuery]\n- **useGrades**: deps [useQuery]\n- **useSubjects**: deps [useQuery]\n\n### Services (5)\n- **announcements**: getAnnouncements(async), getAnnouncementById(async), getUnreadAnnouncements(async), markAnnouncementRead(async)\n- **assignments**: getAssignments(async), getAssignmentById(async), getUpcomingAssignments(async), getAssignmentsBySubject(async), submitAssignment(async)\n- **calendar**: getDateOffset(), getCalendarEvents(async), getEventsByDate(async), getUpcomingEvents(async), getEventsByType(async)\n- **grades**: getGrades(async), getGradesBySubject(async), getSubjectGradesSummary(async), calculateGPA(async), percentageToLetterGrade(), letterGradeToGPA()\n- **subjects**: getSubjects(async), getSubjectById(async)\n\n### Navigation (expo-router)\n- calendar -> Calendar\n- grades -> Grades\n- homework -> Homework\n- index -> Index\n- profile -> Profile\n- announcements -> Announcements\n- [id] -> [id]\n- messages -> Messages\n- resources -> Resources\n\n### Types (21)\n- interface Assignment\n- type AssignmentStatus\n- type AssignmentType\n- interface Announcement\n- type AnnouncementCategory\n- interface Grade\n- type LetterGrade\n- type GradeCategory\n- interface Subject\n- interface CalendarEvent\n- type EventType\n- interface Resource\n- type ResourceType\n- interface Message\n- interface MessageThread\n- interface Participant\n- interface Attachment\n- interface StudentProfile\n- interface AttendanceStats\n- interface AcademicStats\n- interface SubjectGradesSummary",
+  "stats": {
+    "totalFiles": 31,
+    "totalScreens": 11,
+    "totalComponents": 5,
+    "totalHooks": 5,
+    "totalServices": 5,
+    "totalTypes": 21
+  }
+}

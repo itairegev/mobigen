@@ -1,0 +1,54 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - tour-booking
+---
+# Real Estate - Schedule Tour Flow
+- launchApp:
+    clearState: true
+
+# Navigate to home
+- assertVisible: "Find Your Dream Home"
+
+# Select a property
+- tapOn:
+    id: "featured-property-1"
+- assertVisible: "Schedule Tour"
+
+# Go to tour scheduling
+- tapOn:
+    id: "schedule-tour-button"
+- assertVisible: "Schedule a Tour"
+
+# Select date (tomorrow)
+- tapOn:
+    id: "tour-scheduler-date-${TODAY_PLUS_1}"
+- assertVisible:
+    id: "tour-scheduler-date-${TODAY_PLUS_1}"
+
+# Select time
+- tapOn:
+    id: "tour-scheduler-time-10:00"
+- assertVisible:
+    id: "tour-scheduler-time-10:00"
+
+# Fill in contact information
+- tapOn:
+    id: "tour-scheduler-name"
+- inputText: "John Doe"
+
+- tapOn:
+    id: "tour-scheduler-email"
+- inputText: "john@example.com"
+
+- tapOn:
+    id: "tour-scheduler-phone"
+- inputText: "5551234567"
+
+# Submit tour request
+- tapOn:
+    id: "tour-scheduler-submit"
+- assertVisible: "Tour Scheduled!"
+
+# Confirm
+- tapOn: "OK"

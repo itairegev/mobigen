@@ -1,0 +1,1817 @@
+{
+  "templateId": "marketplace",
+  "generatedAt": "2026-01-02T14:47:22.435Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useConversations"
+        ],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Grid3x3",
+              "MessageCircle",
+              "Heart",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useConversations"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Grid3x3",
+          "MessageCircle",
+          "MessagesBadge",
+          "Heart",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CategoriesScreen",
+        "filePath": "src/app/(tabs)/categories.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useCategories",
+          "useState",
+          "useListings",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ListingCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useCategories",
+              "useListings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CategoriesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "FlatList",
+          "TouchableOpacity",
+          "Text",
+          "ListingCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "FavoritesScreen",
+        "filePath": "src/app/(tabs)/favorites.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useFavorites",
+          "useListings"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ListingCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useListings",
+              "useFavorites"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "FavoritesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "FlatList",
+          "View",
+          "ListingCard",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useState",
+          "useListings",
+          "useCategories"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Search",
+              "Plus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ListingCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useListings",
+              "useCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Search",
+          "TextInput",
+          "TouchableOpacity",
+          "Text",
+          "FlatList",
+          "ListingCard",
+          "Plus"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MessagesScreen",
+        "filePath": "src/app/(tabs)/messages.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useConversations"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useConversations"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDate",
+              "formatPrice"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MessagesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "FlatList",
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useFavorites",
+          "useConversations"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Package",
+              "Heart",
+              "MessageCircle",
+              "Settings",
+              "LogOut"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useFavorites",
+              "useConversations"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity",
+          "item.icon",
+          "Settings",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ListingDetailScreen",
+        "filePath": "src/app/listings/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useListing",
+          "useFavorites",
+          "useCreateConversation",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "Dimensions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Heart",
+              "MessageCircle",
+              "Share2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useListing",
+              "useFavorites",
+              "useCreateConversation"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SellerCard",
+              "ConditionBadge",
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatPrice",
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ListingDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "ScrollView",
+          "View",
+          "Image",
+          "TouchableOpacity",
+          "Heart",
+          "Share2",
+          "ConditionBadge",
+          "MapPin",
+          "SellerCard",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CreateListingScreen",
+        "filePath": "src/app/listings/create.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCategories",
+          "useCreateListing",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "ScrollView",
+              "Text",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Input",
+              "Button",
+              "ImageUploader",
+              "PriceInput"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useCategories",
+              "useCreateListing"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "ListingCondition"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CreateListingScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "Text",
+          "ImageUploader",
+          "Input",
+          "PriceInput",
+          "View",
+          "TouchableOpacity",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ConversationScreen",
+        "filePath": "src/app/messages/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useConversation",
+          "useMessages",
+          "useSendMessage",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput",
+              "TouchableOpacity",
+              "KeyboardAvoidingView",
+              "Platform"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Send"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useConversation",
+              "useMessages",
+              "useSendMessage"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ChatBubble"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatPrice"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ConversationScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "KeyboardAvoidingView",
+          "View",
+          "FlatList",
+          "ChatBubble",
+          "TextInput",
+          "TouchableOpacity",
+          "Send"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MyListingsScreen",
+        "filePath": "src/app/my-listings.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useListings"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ListingCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useListings"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MyListingsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "FlatList",
+          "View",
+          "ListingCard",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "ReactNode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CategoryGrid",
+        "filePath": "src/components/CategoryGrid.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Icons"
+            ],
+            "isDefault": false,
+            "isNamespace": true
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Category"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CategoryGrid"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Icon",
+          "Text",
+          "FlatList"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ChatBubble",
+        "filePath": "src/components/ChatBubble.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Message"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ChatBubble"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ConditionBadge",
+        "filePath": "src/components/ConditionBadge.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "ListingCondition"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ConditionBadge"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ImageUploader",
+        "filePath": "src/components/ImageUploader.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Camera",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-image-picker",
+            "specifiers": [
+              "ImagePicker"
+            ],
+            "isDefault": false,
+            "isNamespace": true
+          }
+        ],
+        "exports": [
+          "ImageUploader"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ScrollView",
+          "Image",
+          "TouchableOpacity",
+          "X",
+          "Camera"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ListingCard",
+        "filePath": "src/components/ListingCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useFavorites"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Heart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Listing"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatPrice",
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useFavorites"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./ConditionBadge",
+            "specifiers": [
+              "ConditionBadge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ListingCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Heart",
+          "ConditionBadge",
+          "Text",
+          "MapPin"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PriceInput",
+        "filePath": "src/components/PriceInput.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "DollarSign"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PriceInput"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "DollarSign",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SellerCard",
+        "filePath": "src/components/SellerCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Star"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Seller"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SellerCard"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Image",
+          "Star"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "Button",
+          "Card",
+          "Input",
+          "ListingCard",
+          "CategoryGrid",
+          "ConditionBadge",
+          "SellerCard",
+          "ChatBubble",
+          "ImageUploader",
+          "PriceInput"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useCategories",
+        "filePath": "src/hooks/useCategories.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useConversations",
+        "filePath": "src/hooks/useConversations.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useFavorites",
+        "filePath": "src/hooks/useFavorites.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useListings",
+        "filePath": "src/hooks/useListings.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "categories",
+        "filePath": "src/services/categories.ts",
+        "functions": [
+          {
+            "name": "fetchCategories",
+            "params": [],
+            "returnType": "Promise<Category[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchCategory",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Category | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "listings",
+        "filePath": "src/services/listings.ts",
+        "functions": [
+          {
+            "name": "fetchListings",
+            "params": [
+              {
+                "name": "categoryId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Listing[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchListing",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Listing | null>",
+            "isAsync": true
+          },
+          {
+            "name": "searchListings",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Listing[]>",
+            "isAsync": true
+          },
+          {
+            "name": "createListing",
+            "params": [
+              {
+                "name": "listing",
+                "type": "Omit<Listing, 'id' | 'createdAt' | 'updatedAt'>"
+              }
+            ],
+            "returnType": "Promise<Listing>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "messages",
+        "filePath": "src/services/messages.ts",
+        "functions": [
+          {
+            "name": "fetchConversations",
+            "params": [],
+            "returnType": "Promise<Conversation[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchConversation",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Conversation | null>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchMessages",
+            "params": [
+              {
+                "name": "conversationId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Message[]>",
+            "isAsync": true
+          },
+          {
+            "name": "sendMessage",
+            "params": [
+              {
+                "name": "conversationId",
+                "type": "string"
+              },
+              {
+                "name": "text",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Message>",
+            "isAsync": true
+          },
+          {
+            "name": "createConversation",
+            "params": [
+              {
+                "name": "listingId",
+                "type": "string"
+              },
+              {
+                "name": "message",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Conversation>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "categories",
+          "screen": "Categories",
+          "filePath": "src/app/(tabs)/categories.tsx"
+        },
+        {
+          "name": "favorites",
+          "screen": "Favorites",
+          "filePath": "src/app/(tabs)/favorites.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "messages",
+          "screen": "Messages",
+          "filePath": "src/app/(tabs)/messages.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/listings/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "create",
+          "screen": "Create",
+          "filePath": "src/app/listings/create.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/messages/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "my-listings",
+          "screen": "My-listings",
+          "filePath": "src/app/my-listings.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "ListingCondition",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Listing",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "categoryId",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "condition",
+            "type": "ListingCondition"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "sellerId",
+            "type": "string"
+          },
+          {
+            "name": "seller",
+            "type": "Seller"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          },
+          {
+            "name": "isFavorite",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "Category",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "listingCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Seller",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewCount",
+            "type": "number"
+          },
+          {
+            "name": "joinedDate",
+            "type": "Date"
+          },
+          {
+            "name": "activeListings",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Conversation",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "listingId",
+            "type": "string"
+          },
+          {
+            "name": "listing",
+            "type": "{\n    id: string;\n    title: string;\n    price: number;\n    image: string;\n  }"
+          },
+          {
+            "name": "otherUser",
+            "type": "{\n    id: string;\n    name: string;\n    avatar: string;\n  }"
+          },
+          {
+            "name": "lastMessage",
+            "type": "Message"
+          },
+          {
+            "name": "unreadCount",
+            "type": "number"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Message",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "conversationId",
+            "type": "string"
+          },
+          {
+            "name": "senderId",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "Date"
+          },
+          {
+            "name": "read",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "joinedDate",
+            "type": "Date"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: marketplace\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - Hooks: useConversations\n  - JSX: View, Text, Tabs, Tabs.Screen, Home...\n- **CategoriesScreen** (src/app/(tabs)/categories.tsx)\n  - Hooks: useLocalSearchParams, useCategories, useState, useListings, useEffect\n  - JSX: SafeAreaView, View, FlatList, TouchableOpacity, Text...\n- **FavoritesScreen** (src/app/(tabs)/favorites.tsx)\n  - Hooks: useFavorites, useListings\n  - JSX: SafeAreaView, FlatList, View, ListingCard, Text\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useState, useListings, useCategories\n  - JSX: SafeAreaView, View, Search, TextInput, TouchableOpacity...\n- **MessagesScreen** (src/app/(tabs)/messages.tsx)\n  - Hooks: useRouter, useConversations\n  - JSX: SafeAreaView, FlatList, TouchableOpacity, Image, View...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter, useFavorites, useConversations\n  - JSX: SafeAreaView, ScrollView, View, Image, Text...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **ListingDetailScreen** (src/app/listings/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useListing, useFavorites, useCreateConversation, useState\n  - JSX: SafeAreaView, Text, ScrollView, View, Image...\n- **CreateListingScreen** (src/app/listings/create.tsx)\n  - Hooks: useRouter, useCategories, useCreateListing, useState\n  - JSX: SafeAreaView, ScrollView, Text, ImageUploader, Input...\n- **ConversationScreen** (src/app/messages/[id].tsx)\n  - Hooks: useLocalSearchParams, useConversation, useMessages, useSendMessage, useState\n  - JSX: SafeAreaView, Text, KeyboardAvoidingView, View, FlatList...\n- **MyListingsScreen** (src/app/my-listings.tsx)\n  - Hooks: useListings\n  - JSX: SafeAreaView, FlatList, View, ListingCard, Text\n\n### Components (11)\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 2 elements\n- **CategoryGrid**: 1 hooks, 5 elements\n- **ChatBubble**: 0 hooks, 2 elements\n- **ConditionBadge**: 0 hooks, 2 elements\n- **ImageUploader**: 0 hooks, 7 elements\n- **Input**: 0 hooks, 3 elements\n- **ListingCard**: 2 hooks, 7 elements\n- **PriceInput**: 0 hooks, 4 elements\n- **SellerCard**: 0 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useCategories**: deps [useQuery]\n- **useConversations**: deps [useQuery, useQueryClient, useMutation]\n- **useFavorites**: deps []\n- **useListings**: deps [useQuery, useQueryClient, useMutation]\n- **useTheme**: deps [useColorScheme]\n\n### Services (3)\n- **categories**: fetchCategories(async), fetchCategory(async)\n- **listings**: fetchListings(async), fetchListing(async), searchListings(async), createListing(async)\n- **messages**: fetchConversations(async), fetchConversation(async), fetchMessages(async), sendMessage(async), createConversation(async)\n\n### Navigation (expo-router)\n- categories -> Categories\n- favorites -> Favorites\n- index -> Index\n- messages -> Messages\n- profile -> Profile\n- [id] -> [id]\n- create -> Create\n- [id] -> [id]\n- my-listings -> My-listings\n\n### Types (7)\n- type ListingCondition\n- interface Listing\n- interface Category\n- interface Seller\n- interface Conversation\n- interface Message\n- interface User",
+  "stats": {
+    "totalFiles": 38,
+    "totalScreens": 11,
+    "totalComponents": 11,
+    "totalHooks": 5,
+    "totalServices": 3,
+    "totalTypes": 7
+  }
+}

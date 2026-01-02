@@ -1,0 +1,32 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - portfolio
+---
+# View Projects Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Portfolio tab
+- tapOn: "Portfolio"
+- assertVisible: "Portfolio"
+
+# View all projects
+- assertVisible:
+    id: "project-1"
+
+# Filter by category
+- tapOn:
+    id: "category-mobile"
+- assertVisible: "projects"
+
+# Open project detail
+- tapOn:
+    id: "project-1"
+- assertVisible: "About the Project"
+- assertVisible:
+    id: "project-gallery"
+
+# Verify project details
+- assertVisible: "Technologies Used"
+- assertVisible: "Key Achievements"

@@ -1,0 +1,1782 @@
+{
+  "templateId": "field-service",
+  "generatedAt": "2026-01-02T14:47:22.273Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Briefcase",
+              "Clock",
+              "MessageSquare",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Briefcase",
+          "Clock",
+          "MessageSquare",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "QuickActionCard",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useJobs",
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect",
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "RefreshControl",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useJobs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "JobCard",
+              "JobStats"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services/jobs",
+            "specifiers": [
+              "getJobStats"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "JobStatsType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "RefreshControl",
+          "View",
+          "Text",
+          "Calendar",
+          "JobStats",
+          "TouchableOpacity",
+          "JobCard",
+          "QuickActionCard",
+          "Briefcase",
+          "TrendingUp"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "JobsScreen",
+        "filePath": "src/app/(tabs)/jobs.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useJobs",
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect",
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Filter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useJobs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "JobCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "JobStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "JobsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "RefreshControl",
+          "View",
+          "JobCard",
+          "Filter"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ConversationCard",
+        "filePath": "src/app/(tabs)/messages.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useClients"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MessageSquare"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useClients"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "getInitials",
+              "formatRelativeTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MessagesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "RefreshControl",
+          "View",
+          "ConversationCard",
+          "MessageSquare",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MenuItem",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Settings",
+              "Bell",
+              "HelpCircle",
+              "FileText",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "MenuItem",
+          "User",
+          "Settings",
+          "Bell",
+          "HelpCircle",
+          "FileText",
+          "LogOut",
+          "TouchableOpacity",
+          "ChevronRight"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "TimeEntryCard",
+        "filePath": "src/app/(tabs)/timelog.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTimeLog",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "RefreshControl"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "Calendar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTimeLog"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDuration",
+              "formatDate",
+              "formatTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TimeLogScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "RefreshControl",
+          "View",
+          "Text",
+          "Calendar",
+          "TimeEntryCard",
+          "Clock"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-status-bar",
+            "specifiers": [
+              "StatusBar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "StatusBar",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "JobPhotosScreen",
+        "filePath": "src/app/jobs/[id]/photos.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useJobs",
+          "usePhotos"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ArrowLeft"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useJobs",
+              "usePhotos"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PhotoCapture"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "JobPhotosScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "TouchableOpacity",
+          "ArrowLeft",
+          "Text",
+          "PhotoCapture"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "UpdateStatusScreen",
+        "filePath": "src/app/jobs/[id]/status.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useJobs",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ArrowLeft"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useJobs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "StatusSelector"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "JobStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "UpdateStatusScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "TouchableOpacity",
+          "ArrowLeft",
+          "Text",
+          "StatusSelector"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "JobDetailScreen",
+        "filePath": "src/app/jobs/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useJobs",
+          "useTimeLog",
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect",
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ArrowLeft",
+              "Edit",
+              "Camera"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useJobs",
+              "useTimeLog"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ClientCard",
+              "MapView",
+              "TimeTracker"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDateTimeRange",
+              "getStatusLabel",
+              "getPriorityLabel"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/theme",
+            "specifiers": [
+              "statusColors",
+              "priorityColors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "JobDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ArrowLeft",
+          "Edit",
+          "ScrollView",
+          "TimeTracker",
+          "ClientCard",
+          "MapView",
+          "Camera"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "ClientCard",
+        "filePath": "src/components/ClientCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Phone",
+              "Mail",
+              "Building2",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Client"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatPhoneNumber",
+              "getInitials"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ClientCard"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Building2",
+          "Phone",
+          "Mail",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "JobCard",
+        "filePath": "src/components/JobCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Clock",
+              "AlertCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Job"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatTime",
+              "formatDuration",
+              "getStatusLabel"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../theme",
+            "specifiers": [
+              "statusColors",
+              "priorityColors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "JobCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Text",
+          "MapPin",
+          "Clock",
+          "AlertCircle"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StatCard",
+        "filePath": "src/components/JobStats.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "CheckCircle",
+              "Clock",
+              "DollarSign",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "JobStatsType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "JobStats"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "StatCard",
+          "CheckCircle",
+          "Clock",
+          "TrendingUp",
+          "DollarSign"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MapView",
+        "filePath": "src/components/MapView.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Linking",
+              "Platform"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Navigation"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Location"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MapView"
+        ],
+        "jsxElements": [
+          "View",
+          "MapPin",
+          "Text",
+          "TouchableOpacity",
+          "Navigation"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PhotoCapture",
+        "filePath": "src/components/PhotoCapture.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Camera",
+              "ImageIcon",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Photo"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PhotoCapture"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Camera",
+          "ImageIcon",
+          "ScrollView",
+          "Image",
+          "X"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StatusSelector",
+        "filePath": "src/components/StatusSelector.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Navigation",
+              "PlayCircle",
+              "PauseCircle",
+              "CheckCircle",
+              "XCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "JobStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../theme",
+            "specifiers": [
+              "statusColors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StatusSelector"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ScrollView",
+          "TouchableOpacity",
+          "Icon",
+          "CheckCircle"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TimeTracker",
+        "filePath": "src/components/TimeTracker.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect",
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Square",
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "TimeEntry"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatElapsedTime",
+              "calculateElapsedTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TimeTracker"
+        ],
+        "jsxElements": [
+          "View",
+          "Clock",
+          "Text",
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Square",
+          "Play"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useClients",
+        "filePath": "src/hooks/useClients.ts",
+        "dependencies": [
+          "useState",
+          "useEffect"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useJobs",
+        "filePath": "src/hooks/useJobs.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePhotos",
+        "filePath": "src/hooks/usePhotos.ts",
+        "dependencies": [
+          "useState"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTimeLog",
+        "filePath": "src/hooks/useTimeLog.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "jobs",
+        "filePath": "src/services/jobs.ts",
+        "functions": [
+          {
+            "name": "getJobs",
+            "params": [
+              {
+                "name": "filter",
+                "type": "{\n  status?: string;\n  date?: string;\n}"
+              }
+            ],
+            "returnType": "Promise<Job[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getJobById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Job | null>",
+            "isAsync": true
+          },
+          {
+            "name": "updateJobStatus",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              },
+              {
+                "name": "status",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Job>",
+            "isAsync": true
+          },
+          {
+            "name": "getTimeEntries",
+            "params": [
+              {
+                "name": "jobId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<TimeEntry[]>",
+            "isAsync": true
+          },
+          {
+            "name": "clockIn",
+            "params": [
+              {
+                "name": "jobId",
+                "type": "string"
+              },
+              {
+                "name": "notes",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<TimeEntry>",
+            "isAsync": true
+          },
+          {
+            "name": "clockOut",
+            "params": [
+              {
+                "name": "entryId",
+                "type": "string"
+              },
+              {
+                "name": "notes",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<TimeEntry>",
+            "isAsync": true
+          },
+          {
+            "name": "getConversations",
+            "params": [],
+            "returnType": "Promise<Conversation[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getJobStats",
+            "params": [],
+            "returnType": "Promise<JobStats>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "jobs",
+          "screen": "Jobs",
+          "filePath": "src/app/(tabs)/jobs.tsx"
+        },
+        {
+          "name": "messages",
+          "screen": "Messages",
+          "filePath": "src/app/(tabs)/messages.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "timelog",
+          "screen": "Timelog",
+          "filePath": "src/app/(tabs)/timelog.tsx"
+        },
+        {
+          "name": "photos",
+          "screen": "Photos",
+          "filePath": "src/app/jobs/[id]/photos.tsx"
+        },
+        {
+          "name": "status",
+          "screen": "Status",
+          "filePath": "src/app/jobs/[id]/status.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/jobs/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "JobStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "JobPriority",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Job",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "JobStatus"
+          },
+          {
+            "name": "priority",
+            "type": "JobPriority"
+          },
+          {
+            "name": "scheduledDate",
+            "type": "string"
+          },
+          {
+            "name": "scheduledTime",
+            "type": "string"
+          },
+          {
+            "name": "estimatedDuration",
+            "type": "number"
+          },
+          {
+            "name": "actualDuration",
+            "type": "number"
+          },
+          {
+            "name": "client",
+            "type": "Client"
+          },
+          {
+            "name": "location",
+            "type": "Location"
+          },
+          {
+            "name": "assignedTechnician",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "completedAt",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "string"
+          },
+          {
+            "name": "updatedAt",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Client",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Location",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "zip",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "instructions",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "TimeEntry",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "jobId",
+            "type": "string"
+          },
+          {
+            "name": "technicianId",
+            "type": "string"
+          },
+          {
+            "name": "clockIn",
+            "type": "string"
+          },
+          {
+            "name": "clockOut",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Photo",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "jobId",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'before' | 'during' | 'after' | 'issue' | 'completion'"
+          },
+          {
+            "name": "uploadedAt",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Message",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "jobId",
+            "type": "string"
+          },
+          {
+            "name": "clientId",
+            "type": "string"
+          },
+          {
+            "name": "senderId",
+            "type": "string"
+          },
+          {
+            "name": "senderName",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "string"
+          },
+          {
+            "name": "read",
+            "type": "boolean"
+          },
+          {
+            "name": "type",
+            "type": "'text' | 'system'"
+          }
+        ]
+      },
+      {
+        "name": "Conversation",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "clientId",
+            "type": "string"
+          },
+          {
+            "name": "clientName",
+            "type": "string"
+          },
+          {
+            "name": "clientAvatar",
+            "type": "string"
+          },
+          {
+            "name": "lastMessage",
+            "type": "string"
+          },
+          {
+            "name": "lastMessageTime",
+            "type": "string"
+          },
+          {
+            "name": "unreadCount",
+            "type": "number"
+          },
+          {
+            "name": "jobId",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "JobStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "today",
+            "type": "{\n    total: number;\n    completed: number;\n    inProgress: number;\n    scheduled: number;\n  }"
+          },
+          {
+            "name": "week",
+            "type": "{\n    total: number;\n    completed: number;\n    hoursWorked: number;\n  }"
+          },
+          {
+            "name": "month",
+            "type": "{\n    total: number;\n    completed: number;\n    revenue: number;\n  }"
+          }
+        ]
+      },
+      {
+        "name": "DailySchedule",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "jobs",
+            "type": "Job[]"
+          },
+          {
+            "name": "totalDuration",
+            "type": "number"
+          },
+          {
+            "name": "firstJobTime",
+            "type": "string"
+          },
+          {
+            "name": "lastJobTime",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: field-service\n\n### Screens (10)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Briefcase, Clock...\n- **QuickActionCard** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useJobs, useState, useEffect\n  - JSX: SafeAreaView, ScrollView, RefreshControl, View, Text...\n- **JobsScreen** (src/app/(tabs)/jobs.tsx)\n  - Hooks: useRouter, useJobs, useState, useEffect\n  - JSX: SafeAreaView, ScrollView, TouchableOpacity, Text, RefreshControl...\n- **ConversationCard** (src/app/(tabs)/messages.tsx)\n  - Hooks: useClients\n  - JSX: SafeAreaView, ScrollView, RefreshControl, View, ConversationCard...\n- **MenuItem** (src/app/(tabs)/profile.tsx)\n  - JSX: SafeAreaView, ScrollView, View, Text, MenuItem...\n- **TimeEntryCard** (src/app/(tabs)/timelog.tsx)\n  - Hooks: useTimeLog, useEffect\n  - JSX: SafeAreaView, ScrollView, RefreshControl, View, Text...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: StatusBar, Stack, Stack.Screen\n- **JobPhotosScreen** (src/app/jobs/[id]/photos.tsx)\n  - Hooks: useRouter, useLocalSearchParams, useJobs, usePhotos\n  - JSX: SafeAreaView, View, TouchableOpacity, ArrowLeft, Text...\n- **UpdateStatusScreen** (src/app/jobs/[id]/status.tsx)\n  - Hooks: useRouter, useLocalSearchParams, useJobs, useState\n  - JSX: SafeAreaView, View, TouchableOpacity, ArrowLeft, Text...\n- **JobDetailScreen** (src/app/jobs/[id].tsx)\n  - Hooks: useRouter, useLocalSearchParams, useJobs, useTimeLog, useState, useEffect\n  - JSX: SafeAreaView, View, Text, TouchableOpacity, ArrowLeft...\n\n### Components (8)\n- **ClientCard**: 0 hooks, 6 elements\n- **JobCard**: 0 hooks, 6 elements\n- **StatCard**: 0 hooks, 7 elements\n- **MapView**: 0 hooks, 5 elements\n- **PhotoCapture**: 0 hooks, 8 elements\n- **StatusSelector**: 0 hooks, 6 elements\n- **TimeTracker**: 2 hooks, 7 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useClients**: deps [useState, useEffect]\n- **useJobs**: deps []\n- **usePhotos**: deps [useState]\n- **useTheme**: deps []\n- **useTimeLog**: deps []\n\n### Services (1)\n- **jobs**: getJobs(async), getJobById(async), updateJobStatus(async), getTimeEntries(async), clockIn(async), clockOut(async), getConversations(async), getJobStats(async)\n\n### Navigation (expo-router)\n- index -> Index\n- jobs -> Jobs\n- messages -> Messages\n- profile -> Profile\n- timelog -> Timelog\n- photos -> Photos\n- status -> Status\n- [id] -> [id]\n\n### Types (11)\n- type JobStatus\n- type JobPriority\n- interface Job\n- interface Client\n- interface Location\n- interface TimeEntry\n- interface Photo\n- interface Message\n- interface Conversation\n- interface JobStats\n- interface DailySchedule",
+  "stats": {
+    "totalFiles": 33,
+    "totalScreens": 10,
+    "totalComponents": 8,
+    "totalHooks": 5,
+    "totalServices": 1,
+    "totalTypes": 11
+  }
+}

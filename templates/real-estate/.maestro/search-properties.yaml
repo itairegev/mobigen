@@ -1,0 +1,50 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - search
+---
+# Real Estate - Search Properties Flow
+- launchApp:
+    clearState: true
+
+# Navigate to search tab
+- tapOn: "Search"
+- assertVisible: "Search"
+
+# Enter search query
+- tapOn:
+    id: "search-input"
+- inputText: "Seattle"
+
+# Wait for results
+- assertVisible: "properties found"
+
+# Open filters
+- tapOn:
+    id: "filters-button"
+- assertVisible: "Filters"
+
+# Select property type
+- tapOn:
+    id: "filter-panel-type-house"
+- assertVisible:
+    id: "filter-panel-type-house"
+
+# Set price range
+- tapOn:
+    id: "filter-panel-price-min"
+- inputText: "500000"
+- tapOn:
+    id: "filter-panel-price-max"
+- inputText: "1000000"
+
+# Set bedrooms
+- tapOn:
+    id: "filter-panel-bedrooms-3"
+
+# Apply filters
+- tapOn:
+    id: "filter-panel-apply"
+
+# Verify results updated
+- assertVisible: "properties found"

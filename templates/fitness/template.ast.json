@@ -1,0 +1,2023 @@
+{
+  "templateId": "fitness",
+  "generatedAt": "2026-01-02T14:47:22.349Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Calendar",
+              "Dumbbell",
+              "TrendingUp",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Calendar",
+          "Dumbbell",
+          "TrendingUp",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ClassesScreen",
+        "filePath": "src/app/(tabs)/classes.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useClasses"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ClassCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useClasses"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "ClassCategory",
+              "ClassDifficulty"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ClassesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "ClassCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useProgress"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Activity",
+              "Calendar",
+              "Dumbbell",
+              "Target"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "StatsCard",
+              "StreakBadge",
+              "Button",
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "StreakBadge",
+          "StatsCard",
+          "Card",
+          "TouchableOpacity",
+          "Dumbbell",
+          "Calendar",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Mail",
+              "Phone",
+              "MapPin",
+              "CreditCard",
+              "Bell",
+              "Lock",
+              "HelpCircle",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Card",
+          "User",
+          "Text",
+          "Mail",
+          "Phone",
+          "MapPin",
+          "TouchableOpacity",
+          "item.icon",
+          "ChevronRight",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProgressScreen",
+        "filePath": "src/app/(tabs)/progress.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useProgress"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Activity",
+              "Clock",
+              "Flame",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "StatsCard",
+              "StreakBadge",
+              "GoalProgress",
+              "ProgressChart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProgressScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "StreakBadge",
+          "StatsCard",
+          "ProgressChart",
+          "GoalProgress",
+          "Clock",
+          "Flame"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "WorkoutsScreen",
+        "filePath": "src/app/(tabs)/workouts.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useWorkouts"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "WorkoutCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useWorkouts"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "WorkoutCategory"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "WorkoutsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "WorkoutCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ClassDetailScreen",
+        "filePath": "src/app/classes/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useClass",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "ActivityIndicator",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "Users",
+              "MapPin",
+              "UserIcon"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button",
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useClass"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services/classes",
+            "specifiers": [
+              "bookClass"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ClassDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "Button",
+          "ScrollView",
+          "Image",
+          "View",
+          "Card",
+          "UserIcon",
+          "Calendar",
+          "Clock",
+          "MapPin",
+          "Users"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ExerciseDetailScreen",
+        "filePath": "src/app/exercises/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useExercise"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Dumbbell",
+              "Target",
+              "Wrench"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button",
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useExercise"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ExerciseDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "Button",
+          "ScrollView",
+          "Image",
+          "View",
+          "Card",
+          "Target",
+          "Wrench",
+          "Dumbbell"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "LogWorkoutScreen",
+        "filePath": "src/app/log-workout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useProgress",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TextInput",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "Flame",
+              "Save"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button",
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "WorkoutLog"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "LogWorkoutScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "Card",
+          "TextInput",
+          "Clock",
+          "Flame",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "WorkoutDetailScreen",
+        "filePath": "src/app/workouts/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useWorkout",
+          "useExercises"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "Flame",
+              "Dumbbell"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button",
+              "Card",
+              "ExerciseItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useWorkout",
+              "useExercises"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "WorkoutDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "Button",
+          "ScrollView",
+          "Image",
+          "View",
+          "Card",
+          "Clock",
+          "Dumbbell",
+          "Flame",
+          "ExerciseItem"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "ViewProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "View"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ClassCard",
+        "filePath": "src/components/ClassCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "Users",
+              "MapPin"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "FitnessClass"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ClassCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Card",
+          "Image",
+          "View",
+          "Text",
+          "Calendar",
+          "Clock",
+          "MapPin",
+          "Users"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ExerciseItem",
+        "filePath": "src/components/ExerciseItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Exercise"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ExerciseItem"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ChevronRight",
+          "TouchableOpacity",
+          "Card"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "GoalProgress",
+        "filePath": "src/components/GoalProgress.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Target",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Goal"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GoalProgress"
+        ],
+        "jsxElements": [
+          "Card",
+          "View",
+          "Target",
+          "Text",
+          "TrendingUp"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ProgressChart",
+        "filePath": "src/components/ProgressChart.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "WeeklyStats"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProgressChart"
+        ],
+        "jsxElements": [
+          "Card",
+          "Text",
+          "View"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SetLogger",
+        "filePath": "src/components/SetLogger.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Check",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "SetLog"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SetLogger"
+        ],
+        "jsxElements": [
+          "Card",
+          "View",
+          "Text",
+          "TextInput",
+          "TouchableOpacity",
+          "Check",
+          "X"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StatsCard",
+        "filePath": "src/components/StatsCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "LucideIcon"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StatsCard"
+        ],
+        "jsxElements": [
+          "Card",
+          "View",
+          "Text",
+          "Icon"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StreakBadge",
+        "filePath": "src/components/StreakBadge.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Flame"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StreakBadge"
+        ],
+        "jsxElements": [
+          "Card",
+          "View",
+          "Text",
+          "Flame"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "WorkoutCard",
+        "filePath": "src/components/WorkoutCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "Flame",
+              "Dumbbell"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Workout"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "WorkoutCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Card",
+          "Image",
+          "View",
+          "Text",
+          "Clock",
+          "Dumbbell",
+          "Flame"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [
+          "ClassCard",
+          "WorkoutCard",
+          "ExerciseItem",
+          "SetLogger",
+          "ProgressChart",
+          "StatsCard",
+          "StreakBadge",
+          "GoalProgress",
+          "Button",
+          "Card"
+        ],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useClasses",
+        "filePath": "src/hooks/useClasses.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useExercises",
+        "filePath": "src/hooks/useExercises.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useProgress",
+        "filePath": "src/hooks/useProgress.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useWorkouts",
+        "filePath": "src/hooks/useWorkouts.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "classes",
+        "filePath": "src/services/classes.ts",
+        "functions": [
+          {
+            "name": "getClasses",
+            "params": [
+              {
+                "name": "category",
+                "type": "string"
+              },
+              {
+                "name": "difficulty",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<FitnessClass[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getClassById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<FitnessClass | null>",
+            "isAsync": true
+          },
+          {
+            "name": "bookClass",
+            "params": [
+              {
+                "name": "classId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<boolean>",
+            "isAsync": true
+          },
+          {
+            "name": "cancelBooking",
+            "params": [
+              {
+                "name": "classId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<boolean>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "exercises",
+        "filePath": "src/services/exercises.ts",
+        "functions": [
+          {
+            "name": "getExercises",
+            "params": [
+              {
+                "name": "category",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Exercise[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getExerciseById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Exercise | null>",
+            "isAsync": true
+          },
+          {
+            "name": "searchExercises",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Exercise[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "workouts",
+        "filePath": "src/services/workouts.ts",
+        "functions": [
+          {
+            "name": "getWorkouts",
+            "params": [
+              {
+                "name": "category",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Workout[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getWorkoutById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Workout | null>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "classes",
+          "screen": "Classes",
+          "filePath": "src/app/(tabs)/classes.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "progress",
+          "screen": "Progress",
+          "filePath": "src/app/(tabs)/progress.tsx"
+        },
+        {
+          "name": "workouts",
+          "screen": "Workouts",
+          "filePath": "src/app/(tabs)/workouts.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/classes/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/exercises/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "log-workout",
+          "screen": "Log-workout",
+          "filePath": "src/app/log-workout.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/workouts/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "FitnessClass",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "instructor",
+            "type": "string"
+          },
+          {
+            "name": "instructorImage",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "enrolled",
+            "type": "number"
+          },
+          {
+            "name": "datetime",
+            "type": "Date"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "'yoga' | 'hiit' | 'strength' | 'cardio' | 'pilates' | 'spin' | 'crossfit'"
+          },
+          {
+            "name": "difficulty",
+            "type": "'beginner' | 'intermediate' | 'advanced'"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Workout",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "difficulty",
+            "type": "'beginner' | 'intermediate' | 'advanced'"
+          },
+          {
+            "name": "exercises",
+            "type": "WorkoutExercise[]"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "caloriesBurned",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "WorkoutExercise",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "exerciseId",
+            "type": "string"
+          },
+          {
+            "name": "sets",
+            "type": "number"
+          },
+          {
+            "name": "reps",
+            "type": "number"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "restTime",
+            "type": "number"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Exercise",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "muscleGroups",
+            "type": "string[]"
+          },
+          {
+            "name": "equipment",
+            "type": "string[]"
+          },
+          {
+            "name": "instructions",
+            "type": "string[]"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "video",
+            "type": "string"
+          },
+          {
+            "name": "difficulty",
+            "type": "'beginner' | 'intermediate' | 'advanced'"
+          },
+          {
+            "name": "category",
+            "type": "'strength' | 'cardio' | 'flexibility' | 'balance'"
+          }
+        ]
+      },
+      {
+        "name": "WorkoutLog",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "workoutId",
+            "type": "string"
+          },
+          {
+            "name": "workoutName",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "exercises",
+            "type": "ExerciseLog[]"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "caloriesBurned",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "ExerciseLog",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "exerciseId",
+            "type": "string"
+          },
+          {
+            "name": "exerciseName",
+            "type": "string"
+          },
+          {
+            "name": "sets",
+            "type": "SetLog[]"
+          },
+          {
+            "name": "completed",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "SetLog",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "setNumber",
+            "type": "number"
+          },
+          {
+            "name": "reps",
+            "type": "number"
+          },
+          {
+            "name": "weight",
+            "type": "number"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "completed",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "ProgressStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "totalWorkouts",
+            "type": "number"
+          },
+          {
+            "name": "thisWeek",
+            "type": "number"
+          },
+          {
+            "name": "thisMonth",
+            "type": "number"
+          },
+          {
+            "name": "streak",
+            "type": "number"
+          },
+          {
+            "name": "longestStreak",
+            "type": "number"
+          },
+          {
+            "name": "totalMinutes",
+            "type": "number"
+          },
+          {
+            "name": "totalCalories",
+            "type": "number"
+          },
+          {
+            "name": "averageWorkoutDuration",
+            "type": "number"
+          },
+          {
+            "name": "favoriteCategory",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "WeeklyStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "week",
+            "type": "string"
+          },
+          {
+            "name": "workouts",
+            "type": "number"
+          },
+          {
+            "name": "minutes",
+            "type": "number"
+          },
+          {
+            "name": "calories",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Goal",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'workouts-per-week' | 'minutes-per-week' | 'weight-loss' | 'strength-gain'"
+          },
+          {
+            "name": "target",
+            "type": "number"
+          },
+          {
+            "name": "current",
+            "type": "number"
+          },
+          {
+            "name": "startDate",
+            "type": "Date"
+          },
+          {
+            "name": "endDate",
+            "type": "Date"
+          },
+          {
+            "name": "completed",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "ClassBooking",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "classId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "'booked' | 'attended' | 'cancelled'"
+          },
+          {
+            "name": "bookedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "ClassCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "ClassDifficulty",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "WorkoutCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      }
+    ]
+  },
+  "summary": "## Template: fitness\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Calendar, Dumbbell...\n- **ClassesScreen** (src/app/(tabs)/classes.tsx)\n  - Hooks: useState, useClasses\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useProgress\n  - JSX: SafeAreaView, ScrollView, View, Text, StreakBadge...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - JSX: SafeAreaView, ScrollView, View, Card, User...\n- **ProgressScreen** (src/app/(tabs)/progress.tsx)\n  - Hooks: useProgress\n  - JSX: SafeAreaView, ScrollView, View, Text, StreakBadge...\n- **WorkoutsScreen** (src/app/(tabs)/workouts.tsx)\n  - Hooks: useState, useWorkouts\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **ClassDetailScreen** (src/app/classes/[id].tsx)\n  - Hooks: useLocalSearchParams, useClass, useState\n  - JSX: SafeAreaView, ActivityIndicator, Text, Button, ScrollView...\n- **ExerciseDetailScreen** (src/app/exercises/[id].tsx)\n  - Hooks: useLocalSearchParams, useExercise\n  - JSX: SafeAreaView, ActivityIndicator, Text, Button, ScrollView...\n- **LogWorkoutScreen** (src/app/log-workout.tsx)\n  - Hooks: useProgress, useState\n  - JSX: SafeAreaView, ScrollView, View, Text, Card...\n- **WorkoutDetailScreen** (src/app/workouts/[id].tsx)\n  - Hooks: useLocalSearchParams, useWorkout, useExercises\n  - JSX: SafeAreaView, ActivityIndicator, Text, Button, ScrollView...\n\n### Components (11)\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 1 elements\n- **ClassCard**: 0 hooks, 9 elements\n- **ExerciseItem**: 0 hooks, 5 elements\n- **GoalProgress**: 0 hooks, 5 elements\n- **ProgressChart**: 0 hooks, 3 elements\n- **SetLogger**: 0 hooks, 7 elements\n- **StatsCard**: 0 hooks, 4 elements\n- **StreakBadge**: 0 hooks, 4 elements\n- **WorkoutCard**: 0 hooks, 8 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **useClasses**: deps [useQuery]\n- **useExercises**: deps [useQuery]\n- **useProgress**: deps []\n- **useWorkouts**: deps [useQuery]\n\n### Services (3)\n- **classes**: getClasses(async), getClassById(async), bookClass(async), cancelBooking(async)\n- **exercises**: getExercises(async), getExerciseById(async), searchExercises(async)\n- **workouts**: getWorkouts(async), getWorkoutById(async)\n\n### Navigation (expo-router)\n- classes -> Classes\n- index -> Index\n- profile -> Profile\n- progress -> Progress\n- workouts -> Workouts\n- [id] -> [id]\n- [id] -> [id]\n- log-workout -> Log-workout\n- [id] -> [id]\n\n### Types (14)\n- interface FitnessClass\n- interface Workout\n- interface WorkoutExercise\n- interface Exercise\n- interface WorkoutLog\n- interface ExerciseLog\n- interface SetLog\n- interface ProgressStats\n- interface WeeklyStats\n- interface Goal\n- interface ClassBooking\n- type ClassCategory\n- type ClassDifficulty\n- type WorkoutCategory",
+  "stats": {
+    "totalFiles": 32,
+    "totalScreens": 11,
+    "totalComponents": 11,
+    "totalHooks": 4,
+    "totalServices": 3,
+    "totalTypes": 14
+  }
+}

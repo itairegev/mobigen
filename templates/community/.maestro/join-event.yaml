@@ -1,0 +1,27 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - events
+---
+# Join Event Flow
+- launchApp:
+    clearState: true
+
+# Navigate to events tab
+- tapOn: "Events"
+- assertVisible: "Upcoming Events"
+- assertVisible:
+    id: "events-list"
+
+# Select first event
+- tapOn:
+    id: "event-1"
+- assertVisible: "About this event"
+
+# RSVP for event
+- tapOn:
+    id: "rsvp-going-button"
+- assertVisible: "You're going!"
+
+# Verify RSVP status
+- assertVisible: "Cancel RSVP"

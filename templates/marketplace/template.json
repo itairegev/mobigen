@@ -1,0 +1,47 @@
+{
+  "id": "marketplace",
+  "name": "Local Marketplace",
+  "description": "Buy and sell locally with categories, messaging, and favorites",
+  "category": "organizations",
+  "features": [
+    "listings-browsing",
+    "categories",
+    "search-filter",
+    "seller-messaging",
+    "favorites",
+    "create-listing",
+    "image-upload",
+    "seller-profiles"
+  ],
+  "screens": [
+    { "name": "Home", "path": "(tabs)/index" },
+    { "name": "Categories", "path": "(tabs)/categories" },
+    { "name": "Messages", "path": "(tabs)/messages" },
+    { "name": "Favorites", "path": "(tabs)/favorites" },
+    { "name": "Profile", "path": "(tabs)/profile" },
+    { "name": "Listing Detail", "path": "listings/[id]" },
+    { "name": "Create Listing", "path": "listings/create" },
+    { "name": "Conversation", "path": "messages/[id]" },
+    { "name": "My Listings", "path": "my-listings" }
+  ],
+  "components": [
+    "ListingCard",
+    "CategoryGrid",
+    "ImageUploader",
+    "SellerCard",
+    "PriceInput",
+    "ChatBubble",
+    "ConditionBadge"
+  ],
+  "mockData": {
+    "listings": 20,
+    "categories": 8,
+    "conversations": 5
+  },
+  "backendTables": ["listings", "categories", "messages", "favorites"],
+  "testFlows": [
+    "browse-listings",
+    "create-listing",
+    "contact-seller"
+  ]
+}

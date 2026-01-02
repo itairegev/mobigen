@@ -1,0 +1,30 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - smoke
+  - orders
+---
+# Test: Track Order
+- launchApp:
+    clearState: true
+
+# Navigate to Orders tab
+- tapOn: "Orders"
+- assertVisible: "Active Orders"
+
+# Open an active order
+- tapOn:
+    id: "active-order-ORD-003"
+- assertVisible: "Order #ORD-003"
+- assertVisible:
+    id: "order-status"
+
+# Verify order details
+- assertVisible: "Order Items"
+- assertVisible: "Order Summary"
+
+# Go back
+- back
+
+# Check past orders
+- scrollDown
+- assertVisible: "Past Orders"

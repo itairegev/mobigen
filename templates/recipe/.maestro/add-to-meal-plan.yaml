@@ -1,0 +1,44 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - meal-plan
+---
+# Add Recipe to Meal Plan Flow
+- launchApp:
+    clearState: true
+
+# Navigate to categories
+- tapOn: "Categories"
+- assertVisible: "Filter by Category"
+
+# Select dinner category
+- tapOn:
+    id: "category-chip-3"
+- assertVisible: "Dinner"
+
+# Open a recipe
+- tapOn:
+    id: "categories-recipe-8"
+- assertVisible: "Spaghetti Carbonara"
+
+# View ingredients
+- scrollUntilVisible:
+    element: "Ingredients"
+    direction: DOWN
+- assertVisible: "spaghetti"
+- assertVisible: "pancetta"
+
+# View instructions
+- scrollUntilVisible:
+    element: "Instructions"
+    direction: DOWN
+- assertVisible:
+    text: ".*pot.*salted.*water.*"
+    regex: true
+
+# Navigate to meal plan
+- tapOn: "Meal Plan"
+- assertVisible: "This Week's Meals"
+
+# Verify empty state
+- assertVisible: "No meals planned yet"

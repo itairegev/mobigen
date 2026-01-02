@@ -1,0 +1,1895 @@
+{
+  "templateId": "church",
+  "generatedAt": "2026-01-02T14:47:21.917Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "PlayCircle",
+              "Calendar",
+              "Heart",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "PlayCircle",
+          "Calendar",
+          "Heart",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "EventsScreen",
+        "filePath": "src/app/(tabs)/events.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useEvents"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEvents",
+            "specifiers": [
+              "useEvents"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "EventCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EventsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "EventCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "GiveScreen",
+        "filePath": "src/app/(tabs)/give.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useGivingFunds",
+          "useSubmitDonation"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useGiving",
+            "specifiers": [
+              "useGivingFunds",
+              "useSubmitDonation"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "GivingForm"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GiveScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "GivingForm",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useRecentSermons",
+          "useUpcomingEvents",
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Heart",
+              "Users",
+              "BookOpen"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useSermons",
+            "specifiers": [
+              "useRecentSermons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEvents",
+            "specifiers": [
+              "useUpcomingEvents"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "SermonCard",
+              "EventCard",
+              "AnnouncementBanner"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../services/announcements",
+            "specifiers": [
+              "getAnnouncements"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "AnnouncementBanner",
+          "TouchableOpacity",
+          "Heart",
+          "Users",
+          "Calendar",
+          "BookOpen",
+          "ActivityIndicator",
+          "SermonCard",
+          "EventCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Heart",
+              "Calendar",
+              "Users",
+              "Settings",
+              "LogOut"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "User",
+          "Text",
+          "TouchableOpacity",
+          "Icon",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SermonsScreen",
+        "filePath": "src/app/(tabs)/sermons.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useSeries",
+          "useState",
+          "useSermonsBySeries"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useSermons",
+            "specifiers": [
+              "useSeries",
+              "useSermonsBySeries"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "SermonCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SermonsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "SermonCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "EventDetailScreen",
+        "filePath": "src/app/events/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useEvent"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "MapPin",
+              "Users",
+              "CheckCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEvents",
+            "specifiers": [
+              "useEvent"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EventDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "Image",
+          "Calendar",
+          "Clock",
+          "MapPin",
+          "Users",
+          "TouchableOpacity",
+          "CheckCircle"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "GroupsScreen",
+        "filePath": "src/app/groups.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useGroups"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks/useGroups",
+            "specifiers": [
+              "useGroups"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../components",
+            "specifiers": [
+              "GroupCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Filter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GroupsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Filter",
+          "ScrollView",
+          "ActivityIndicator",
+          "GroupCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PrayerScreen",
+        "filePath": "src/app/prayer.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "usePrayerRequests",
+          "useSubmitPrayer",
+          "usePrayFor",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "TextInput",
+              "Modal",
+              "ActivityIndicator",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Plus",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks/usePrayers",
+            "specifiers": [
+              "usePrayerRequests",
+              "useSubmitPrayer",
+              "usePrayFor"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../components",
+            "specifiers": [
+              "PrayerCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "PrayerCategory"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PrayerScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Plus",
+          "ScrollView",
+          "ActivityIndicator",
+          "PrayerCard",
+          "Modal",
+          "X",
+          "TextInput"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SermonDetailScreen",
+        "filePath": "src/app/sermons/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useSermon"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Volume2",
+              "Calendar",
+              "User",
+              "Clock",
+              "BookOpen"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useSermons",
+            "specifiers": [
+              "useSermon"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SermonDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "Image",
+          "User",
+          "Calendar",
+          "Clock",
+          "BookOpen",
+          "TouchableOpacity",
+          "Play",
+          "Volume2"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AnnouncementBanner",
+        "filePath": "src/components/AnnouncementBanner.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "AlertCircle",
+              "Info",
+              "CheckCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Announcement"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AnnouncementBanner"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Icon",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "EventCard",
+        "filePath": "src/components/EventCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "MapPin"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Event"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EventCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "Calendar",
+          "Clock",
+          "MapPin"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "GivingForm",
+        "filePath": "src/components/GivingForm.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "TextInput",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "GivingFund"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GivingForm"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "GroupCard",
+        "filePath": "src/components/GroupCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "MapPin",
+              "Users"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Group"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "GroupCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "Calendar",
+          "MapPin",
+          "Users"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PrayerCard",
+        "filePath": "src/components/PrayerCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart",
+              "CheckCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "PrayerRequest"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PrayerCard"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "CheckCircle",
+          "TouchableOpacity",
+          "Heart"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SermonCard",
+        "filePath": "src/components/SermonCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Sermon"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SermonCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "User",
+          "Calendar",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useEvents",
+        "filePath": "src/hooks/useEvents.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useGiving",
+        "filePath": "src/hooks/useGiving.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useGroups",
+        "filePath": "src/hooks/useGroups.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePrayers",
+        "filePath": "src/hooks/usePrayers.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSermons",
+        "filePath": "src/hooks/useSermons.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "announcements",
+        "filePath": "src/services/announcements.ts",
+        "functions": [
+          {
+            "name": "getAnnouncements",
+            "params": [],
+            "returnType": "Promise<Announcement[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAnnouncementById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Announcement | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "events",
+        "filePath": "src/services/events.ts",
+        "functions": [
+          {
+            "name": "getEvents",
+            "params": [],
+            "returnType": "Promise<Event[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingEvents",
+            "params": [
+              {
+                "name": "limit",
+                "type": "number"
+              }
+            ],
+            "returnType": "Promise<Event[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getEventById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Event | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getEventsByCategory",
+            "params": [
+              {
+                "name": "category",
+                "type": "EventCategory"
+              }
+            ],
+            "returnType": "Promise<Event[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "giving",
+        "filePath": "src/services/giving.ts",
+        "functions": [
+          {
+            "name": "getGivingFunds",
+            "params": [],
+            "returnType": "Promise<GivingFund[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getDonationHistory",
+            "params": [],
+            "returnType": "Promise<Donation[]>",
+            "isAsync": true
+          },
+          {
+            "name": "submitDonation",
+            "params": [
+              {
+                "name": "amount",
+                "type": "number"
+              },
+              {
+                "name": "frequency",
+                "type": "'one-time' | 'weekly' | 'monthly'"
+              },
+              {
+                "name": "fundId",
+                "type": "string"
+              },
+              {
+                "name": "method",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Donation>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "groups",
+        "filePath": "src/services/groups.ts",
+        "functions": [
+          {
+            "name": "getGroups",
+            "params": [],
+            "returnType": "Promise<Group[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getGroupById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Group | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getOpenGroups",
+            "params": [],
+            "returnType": "Promise<Group[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "prayers",
+        "filePath": "src/services/prayers.ts",
+        "functions": [
+          {
+            "name": "getPrayerRequests",
+            "params": [],
+            "returnType": "Promise<PrayerRequest[]>",
+            "isAsync": true
+          },
+          {
+            "name": "submitPrayerRequest",
+            "params": [
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "name": "description",
+                "type": "string"
+              },
+              {
+                "name": "category",
+                "type": "string"
+              },
+              {
+                "name": "isPrivate",
+                "type": "boolean"
+              }
+            ],
+            "returnType": "Promise<PrayerRequest>",
+            "isAsync": true
+          },
+          {
+            "name": "prayForRequest",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "sermons",
+        "filePath": "src/services/sermons.ts",
+        "functions": [
+          {
+            "name": "getSeries",
+            "params": [],
+            "returnType": "Promise<Series[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getSermonsBySeries",
+            "params": [
+              {
+                "name": "seriesId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Sermon[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getRecentSermons",
+            "params": [
+              {
+                "name": "limit",
+                "type": "number"
+              }
+            ],
+            "returnType": "Promise<Sermon[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getSermonById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Sermon | null>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "events",
+          "screen": "Events",
+          "filePath": "src/app/(tabs)/events.tsx"
+        },
+        {
+          "name": "give",
+          "screen": "Give",
+          "filePath": "src/app/(tabs)/give.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "sermons",
+          "screen": "Sermons",
+          "filePath": "src/app/(tabs)/sermons.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/events/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "groups",
+          "screen": "Groups",
+          "filePath": "src/app/groups.tsx"
+        },
+        {
+          "name": "prayer",
+          "screen": "Prayer",
+          "filePath": "src/app/prayer.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/sermons/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Sermon",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "speaker",
+            "type": "string"
+          },
+          {
+            "name": "seriesId",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "videoUrl",
+            "type": "string"
+          },
+          {
+            "name": "audioUrl",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "thumbnail",
+            "type": "string"
+          },
+          {
+            "name": "scripture",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Series",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "thumbnail",
+            "type": "string"
+          },
+          {
+            "name": "sermonCount",
+            "type": "number"
+          },
+          {
+            "name": "startDate",
+            "type": "Date"
+          },
+          {
+            "name": "endDate",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Event",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "endDate",
+            "type": "Date"
+          },
+          {
+            "name": "time",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "EventCategory"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "registrationRequired",
+            "type": "boolean"
+          },
+          {
+            "name": "registrationUrl",
+            "type": "string"
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "registered",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "EventCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Donation",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "number"
+          },
+          {
+            "name": "frequency",
+            "type": "DonationFrequency"
+          },
+          {
+            "name": "fund",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "status",
+            "type": "'pending' | 'completed' | 'failed'"
+          },
+          {
+            "name": "method",
+            "type": "PaymentMethod"
+          }
+        ]
+      },
+      {
+        "name": "DonationFrequency",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "PaymentMethod",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "PrayerRequest",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "PrayerCategory"
+          },
+          {
+            "name": "isPrivate",
+            "type": "boolean"
+          },
+          {
+            "name": "submittedBy",
+            "type": "string"
+          },
+          {
+            "name": "submittedAt",
+            "type": "Date"
+          },
+          {
+            "name": "status",
+            "type": "'pending' | 'praying' | 'answered'"
+          },
+          {
+            "name": "prayerCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "PrayerCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Group",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "GroupCategory"
+          },
+          {
+            "name": "leader",
+            "type": "string"
+          },
+          {
+            "name": "leaderContact",
+            "type": "string"
+          },
+          {
+            "name": "meetingDay",
+            "type": "string"
+          },
+          {
+            "name": "meetingTime",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "members",
+            "type": "number"
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "isOpen",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "GroupCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Announcement",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "message",
+            "type": "string"
+          },
+          {
+            "name": "priority",
+            "type": "'low' | 'medium' | 'high'"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "expiresAt",
+            "type": "Date"
+          },
+          {
+            "name": "imageUrl",
+            "type": "string"
+          },
+          {
+            "name": "actionUrl",
+            "type": "string"
+          },
+          {
+            "name": "actionLabel",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "GivingFund",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "goal",
+            "type": "number"
+          },
+          {
+            "name": "raised",
+            "type": "number"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "memberSince",
+            "type": "Date"
+          },
+          {
+            "name": "groups",
+            "type": "string[]"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: church\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, PlayCircle, Calendar...\n- **EventsScreen** (src/app/(tabs)/events.tsx)\n  - Hooks: useRouter, useEvents\n  - JSX: SafeAreaView, ScrollView, View, ActivityIndicator, Text...\n- **GiveScreen** (src/app/(tabs)/give.tsx)\n  - Hooks: useGivingFunds, useSubmitDonation\n  - JSX: SafeAreaView, View, ActivityIndicator, GivingForm, Text\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useRecentSermons, useUpcomingEvents, useQuery\n  - JSX: SafeAreaView, ScrollView, View, Text, AnnouncementBanner...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter\n  - JSX: SafeAreaView, ScrollView, View, User, Text...\n- **SermonsScreen** (src/app/(tabs)/sermons.tsx)\n  - Hooks: useRouter, useSeries, useState, useSermonsBySeries\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, TouchableOpacity...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **EventDetailScreen** (src/app/events/[id].tsx)\n  - Hooks: useLocalSearchParams, useEvent\n  - JSX: SafeAreaView, View, ActivityIndicator, Text, ScrollView...\n- **GroupsScreen** (src/app/groups.tsx)\n  - Hooks: useGroups\n  - JSX: SafeAreaView, View, Text, TouchableOpacity, Filter...\n- **PrayerScreen** (src/app/prayer.tsx)\n  - Hooks: usePrayerRequests, useSubmitPrayer, usePrayFor, useState\n  - JSX: SafeAreaView, View, Text, TouchableOpacity, Plus...\n- **SermonDetailScreen** (src/app/sermons/[id].tsx)\n  - Hooks: useLocalSearchParams, useSermon\n  - JSX: SafeAreaView, View, ActivityIndicator, Text, ScrollView...\n\n### Components (7)\n- **AnnouncementBanner**: 0 hooks, 5 elements\n- **EventCard**: 0 hooks, 7 elements\n- **GivingForm**: 1 hooks, 5 elements\n- **GroupCard**: 0 hooks, 7 elements\n- **PrayerCard**: 0 hooks, 5 elements\n- **SermonCard**: 0 hooks, 7 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useEvents**: deps [useQuery]\n- **useGiving**: deps [useQuery, useQueryClient, useMutation]\n- **useGroups**: deps [useQuery]\n- **usePrayers**: deps [useQuery, useQueryClient, useMutation]\n- **useSermons**: deps [useQuery]\n\n### Services (6)\n- **announcements**: getAnnouncements(async), getAnnouncementById(async)\n- **events**: getEvents(async), getUpcomingEvents(async), getEventById(async), getEventsByCategory(async)\n- **giving**: getGivingFunds(async), getDonationHistory(async), submitDonation(async)\n- **groups**: getGroups(async), getGroupById(async), getOpenGroups(async)\n- **prayers**: getPrayerRequests(async), submitPrayerRequest(async), prayForRequest(async)\n- **sermons**: getSeries(async), getSermonsBySeries(async), getRecentSermons(async), getSermonById(async)\n\n### Navigation (expo-router)\n- events -> Events\n- give -> Give\n- index -> Index\n- profile -> Profile\n- sermons -> Sermons\n- [id] -> [id]\n- groups -> Groups\n- prayer -> Prayer\n- [id] -> [id]\n\n### Types (14)\n- interface Sermon\n- interface Series\n- interface Event\n- type EventCategory\n- interface Donation\n- type DonationFrequency\n- type PaymentMethod\n- interface PrayerRequest\n- type PrayerCategory\n- interface Group\n- type GroupCategory\n- interface Announcement\n- interface GivingFund\n- interface User",
+  "stats": {
+    "totalFiles": 38,
+    "totalScreens": 11,
+    "totalComponents": 7,
+    "totalHooks": 5,
+    "totalServices": 6,
+    "totalTypes": 14
+  }
+}

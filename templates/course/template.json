@@ -1,0 +1,105 @@
+{
+  "id": "course",
+  "name": "Course/Learning Platform",
+  "description": "Complete course and learning platform app with video lessons, quizzes, and progress tracking. Perfect for educators, coaches, and corporate trainers.",
+  "category": "creator-economy",
+  "features": [
+    "course-catalog",
+    "video-lessons",
+    "quizzes",
+    "progress-tracking",
+    "notes",
+    "certificates",
+    "downloadable-resources"
+  ],
+  "screens": [
+    {
+      "name": "Home",
+      "path": "(tabs)/index",
+      "description": "Enrolled courses and continue learning"
+    },
+    {
+      "name": "Courses",
+      "path": "(tabs)/courses",
+      "description": "Browse all courses with category filters"
+    },
+    {
+      "name": "Progress",
+      "path": "(tabs)/progress",
+      "description": "Learning statistics and certificates"
+    },
+    {
+      "name": "Profile",
+      "path": "(tabs)/profile",
+      "description": "User profile and settings"
+    },
+    {
+      "name": "Course Detail",
+      "path": "courses/[id]",
+      "description": "Course information and lessons list"
+    },
+    {
+      "name": "Lesson Player",
+      "path": "lessons/[id]",
+      "description": "Video player with notes and resources"
+    },
+    {
+      "name": "Quiz",
+      "path": "quiz/[id]",
+      "description": "Interactive quiz with instant feedback"
+    }
+  ],
+  "components": [
+    "CourseCard",
+    "LessonItem",
+    "VideoPlayer",
+    "QuizQuestion",
+    "ProgressBar",
+    "Certificate",
+    "NotesEditor"
+  ],
+  "hooks": [
+    "useCourses",
+    "useLessons",
+    "useProgress",
+    "useQuiz",
+    "useTheme"
+  ],
+  "mockData": {
+    "courses": 4,
+    "lessons": 20,
+    "quizzes": 2
+  },
+  "backendTables": [
+    "courses",
+    "lessons",
+    "quizzes",
+    "questions",
+    "enrollments",
+    "progress",
+    "certificates",
+    "notes"
+  ],
+  "testFlows": [
+    "browse-courses",
+    "start-lesson",
+    "take-quiz"
+  ],
+  "theme": {
+    "primary": "#6366f1",
+    "secondary": "#8b5cf6",
+    "style": "educational"
+  },
+  "bundleId": {
+    "ios": "com.mobigen.course",
+    "android": "com.mobigen.course"
+  },
+  "targetUsers": [
+    "Coaches & Educators",
+    "Corporate Trainers",
+    "Content Creators",
+    "Influencers"
+  ],
+  "estimatedComplexity": "medium",
+  "estimatedLOC": 2400
+}

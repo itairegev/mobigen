@@ -1,0 +1,37 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - schedule
+---
+# View Schedule Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Schedule tab
+- tapOn: "Schedule"
+- assertVisible: "All Games"
+
+# Test filters
+- tapOn:
+    id: "filter-upcoming"
+- assertVisible: "Upcoming"
+
+- tapOn:
+    id: "filter-completed"
+- assertVisible: "Results"
+
+- tapOn:
+    id: "filter-all"
+- assertVisible: "All Games"
+
+# View a game detail
+- tapOn:
+    id: "game-card-game-1"
+- assertVisible: "Game Details"
+- assertVisible: "Thunder Stadium"
+
+# Go back
+- back
+
+# Verify we're back on schedule
+- assertVisible: "All Games"

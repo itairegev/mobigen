@@ -1,0 +1,44 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - progress
+  - stats
+---
+# View Progress Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Progress tab
+- tapOn: "Progress"
+- assertVisible: "Your Progress"
+
+# Verify streak display
+- assertVisible:
+    id: "progress-streak"
+- assertVisible:
+    text: ".*[Ss]treak"
+    regex: true
+
+# Verify stats cards
+- assertVisible:
+    id: "stat-total-workouts"
+- assertVisible:
+    id: "stat-total-minutes"
+- assertVisible:
+    id: "stat-total-calories"
+- assertVisible:
+    id: "stat-avg-duration"
+
+# Verify weekly chart
+- assertVisible:
+    id: "weekly-chart"
+- assertVisible: "This Week's Activity"
+
+# Verify goals section
+- assertVisible:
+    text: ".*[Gg]oal.*"
+    regex: true
+
+# Verify recent workouts
+- assertVisible:
+    text: ".*[Rr]ecent [Ww]orkout.*"
+    regex: true

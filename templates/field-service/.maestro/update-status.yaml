@@ -1,0 +1,33 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - status
+---
+# Update Job Status Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Jobs
+- tapOn: "Jobs"
+- assertVisible: "All"
+
+# Open first job
+- tapOn:
+    id: "job-card-1"
+- assertVisible: "Job Details"
+
+# Open status editor
+- tapOn:
+    id: "edit-status-button"
+- assertVisible: "Update Status"
+
+# Select "In Progress" status
+- tapOn:
+    id: "status-option-in-progress"
+- assertVisible:
+    text: "In Progress"
+
+# Save changes
+- tapOn:
+    id: "save-status-button"
+- assertVisible: "Job Details"

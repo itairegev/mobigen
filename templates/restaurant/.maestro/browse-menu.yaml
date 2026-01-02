@@ -1,0 +1,28 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - smoke
+  - menu
+---
+# Test: Browse Menu
+- launchApp:
+    clearState: true
+
+# Navigate to Menu tab
+- tapOn: "Menu"
+- assertVisible: "All"
+
+# Browse all categories
+- tapOn:
+    id: "category-all"
+- assertVisible:
+    id: "menu-item-1"
+
+# Filter by category
+- tapOn:
+    id: "category-1"
+- assertVisible: "Appetizers"
+
+# View another category
+- tapOn:
+    id: "category-2"
+- assertVisible: "Main Courses"

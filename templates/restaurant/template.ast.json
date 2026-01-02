@@ -1,0 +1,1858 @@
+{
+  "templateId": "restaurant",
+  "generatedAt": "2026-01-02T14:47:22.802Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useCart"
+        ],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "UtensilsCrossed",
+              "ShoppingCart",
+              "ClipboardList",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "UtensilsCrossed",
+          "View",
+          "ShoppingCart",
+          "Text",
+          "ClipboardList",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CartScreen",
+        "filePath": "src/app/(tabs)/cart.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useCart"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "CartItem",
+              "CartSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ShoppingCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ShoppingCart",
+          "Text",
+          "TouchableOpacity",
+          "ScrollView",
+          "CartItem",
+          "CartSummary"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useFeaturedItems",
+          "useCategories"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useFeaturedItems",
+              "useCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "MenuItem",
+              "MenuCategory"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Sparkles"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "Text",
+          "Sparkles",
+          "MenuItem",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MenuScreen",
+        "filePath": "src/app/(tabs)/menu.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useCategories",
+          "useMenuItems"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useCategories",
+              "useMenuItems"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "MenuItem",
+              "MenuCategory"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MenuScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "MenuCategory",
+          "MenuItem",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "OrdersScreen",
+        "filePath": "src/app/(tabs)/orders.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useOrders",
+          "useActiveOrders"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useOrders",
+              "useActiveOrders"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "OrderCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ClipboardList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "OrdersScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ClipboardList",
+          "Text",
+          "ScrollView",
+          "OrderCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "MapPin",
+              "CreditCard",
+              "Bell",
+              "HelpCircle",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "User",
+          "Text",
+          "TouchableOpacity",
+          "item.icon",
+          "ChevronRight",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CheckoutScreen",
+        "filePath": "src/app/checkout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useCart",
+          "useQuery",
+          "usePlaceOrder",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "TextInput",
+              "ActivityIndicator",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useCart",
+              "usePlaceOrder"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "DeliveryToggle",
+              "AddressSelector",
+              "TipSelector",
+              "CartSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getAddresses"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CheckoutScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ScrollView",
+          "Text",
+          "DeliveryToggle",
+          "AddressSelector",
+          "TipSelector",
+          "TextInput",
+          "CartSummary",
+          "TouchableOpacity",
+          "ActivityIndicator"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MenuItemDetailScreen",
+        "filePath": "src/app/menu/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useMenuItem",
+          "useCart",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "TextInput",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useMenuItem",
+              "useCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ModifierSelector"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "SelectedModifier"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Minus",
+              "Plus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MenuItemDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "Image",
+          "Text",
+          "ModifierSelector",
+          "TextInput",
+          "TouchableOpacity",
+          "Minus",
+          "Plus"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "OrderDetailScreen",
+        "filePath": "src/app/orders/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useOrder"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useOrder"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "OrderStatus",
+              "CartSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatRelativeTime",
+              "formatTimeUntil",
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "MapPin"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "OrderDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "Text",
+          "Clock",
+          "MapPin",
+          "OrderStatus",
+          "Image",
+          "CartSummary"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AddressSelector",
+        "filePath": "src/components/AddressSelector.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Address"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Check"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AddressSelector"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "MapPin",
+          "Check"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CartItem",
+        "filePath": "src/components/CartItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Minus",
+              "Plus",
+              "Trash2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "CartItemType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartItem"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity",
+          "Trash2",
+          "Minus",
+          "Plus"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CartSummary",
+        "filePath": "src/components/CartSummary.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CartSummary"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "DeliveryToggle",
+        "filePath": "src/components/DeliveryToggle.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ShoppingBag",
+              "Bike"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "DeliveryToggle"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "ShoppingBag",
+          "Text",
+          "Bike"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MenuCategory",
+        "filePath": "src/components/MenuCategory.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MenuCategory"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MenuItem",
+        "filePath": "src/components/MenuItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "View",
+              "Text",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "MenuItemType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MenuItem"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ModifierSelector",
+        "filePath": "src/components/ModifierSelector.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "ModifierGroup",
+              "Modifier",
+              "SelectedModifier"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Check"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ModifierSelector"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Check"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "OrderCard",
+        "filePath": "src/components/OrderCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Order"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency",
+              "formatRelativeTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getOrderStatusDisplay"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "OrderCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Text",
+          "ChevronRight"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "OrderStatus",
+        "filePath": "src/components/OrderStatus.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "OrderStatusType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getOrderStatusDisplay"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Check"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "OrderStatus"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Check"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TipSelector",
+        "filePath": "src/components/TipSelector.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TipSelector"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useCart",
+        "filePath": "src/hooks/useCart.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useMenu",
+        "filePath": "src/hooks/useMenu.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useOrders",
+        "filePath": "src/hooks/useOrders.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "menu",
+        "filePath": "src/services/menu.ts",
+        "functions": [
+          {
+            "name": "getCategories",
+            "params": [],
+            "returnType": "Promise<Category[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getMenuItems",
+            "params": [
+              {
+                "name": "categoryId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<MenuItem[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getFeaturedItems",
+            "params": [],
+            "returnType": "Promise<MenuItem[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getMenuItem",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<MenuItem | null>",
+            "isAsync": true
+          },
+          {
+            "name": "searchMenuItems",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<MenuItem[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "orders",
+        "filePath": "src/services/orders.ts",
+        "functions": [
+          {
+            "name": "getOrders",
+            "params": [],
+            "returnType": "Promise<Order[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getOrder",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Order | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getActiveOrders",
+            "params": [],
+            "returnType": "Promise<Order[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAddresses",
+            "params": [],
+            "returnType": "Promise<Address[]>",
+            "isAsync": true
+          },
+          {
+            "name": "placeOrder",
+            "params": [
+              {
+                "name": "items",
+                "type": "CartItem[]"
+              },
+              {
+                "name": "type",
+                "type": "'pickup' | 'delivery'"
+              },
+              {
+                "name": "addressId",
+                "type": "string"
+              },
+              {
+                "name": "tip",
+                "type": "number"
+              },
+              {
+                "name": "customerNotes",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Order>",
+            "isAsync": true
+          },
+          {
+            "name": "getOrderStatusDisplay",
+            "params": [
+              {
+                "name": "status",
+                "type": "OrderStatus"
+              }
+            ],
+            "returnType": "{\n  label: string;\n  description: string;\n  color: string;\n}",
+            "isAsync": false
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "cart",
+          "screen": "Cart",
+          "filePath": "src/app/(tabs)/cart.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "menu",
+          "screen": "Menu",
+          "filePath": "src/app/(tabs)/menu.tsx"
+        },
+        {
+          "name": "orders",
+          "screen": "Orders",
+          "filePath": "src/app/(tabs)/orders.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "checkout",
+          "screen": "Checkout",
+          "filePath": "src/app/checkout.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/menu/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/orders/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "MenuItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "type": "string"
+          },
+          {
+            "name": "modifierGroups",
+            "type": "ModifierGroup[]"
+          },
+          {
+            "name": "dietaryTags",
+            "type": "DietaryTag[]"
+          },
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "prepTime",
+            "type": "number"
+          },
+          {
+            "name": "calories",
+            "type": "number"
+          },
+          {
+            "name": "featured",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "ModifierGroup",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "type": "boolean"
+          },
+          {
+            "name": "minSelections",
+            "type": "number"
+          },
+          {
+            "name": "maxSelections",
+            "type": "number"
+          },
+          {
+            "name": "modifiers",
+            "type": "Modifier[]"
+          }
+        ]
+      },
+      {
+        "name": "Modifier",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "DietaryTag",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Category",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "sortOrder",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "CartItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "menuItemId",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "quantity",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "selectedModifiers",
+            "type": "SelectedModifier[]"
+          },
+          {
+            "name": "specialInstructions",
+            "type": "string"
+          },
+          {
+            "name": "subtotal",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "SelectedModifier",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "groupId",
+            "type": "string"
+          },
+          {
+            "name": "groupName",
+            "type": "string"
+          },
+          {
+            "name": "modifierId",
+            "type": "string"
+          },
+          {
+            "name": "modifierName",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Order",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "items",
+            "type": "OrderItem[]"
+          },
+          {
+            "name": "subtotal",
+            "type": "number"
+          },
+          {
+            "name": "tax",
+            "type": "number"
+          },
+          {
+            "name": "tip",
+            "type": "number"
+          },
+          {
+            "name": "deliveryFee",
+            "type": "number"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "status",
+            "type": "OrderStatus"
+          },
+          {
+            "name": "type",
+            "type": "'pickup' | 'delivery'"
+          },
+          {
+            "name": "address",
+            "type": "Address"
+          },
+          {
+            "name": "estimatedTime",
+            "type": "string"
+          },
+          {
+            "name": "placedAt",
+            "type": "string"
+          },
+          {
+            "name": "updatedAt",
+            "type": "string"
+          },
+          {
+            "name": "customerNotes",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "OrderItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "menuItemId",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "quantity",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "modifiers",
+            "type": "SelectedModifier[]"
+          },
+          {
+            "name": "specialInstructions",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "OrderStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Address",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "street",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "zipCode",
+            "type": "string"
+          },
+          {
+            "name": "deliveryInstructions",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "CartState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "items",
+            "type": "CartItem[]"
+          },
+          {
+            "name": "subtotal",
+            "type": "number"
+          },
+          {
+            "name": "itemCount",
+            "type": "number"
+          },
+          {
+            "name": "addItem",
+            "type": "(item: MenuItem, quantity: number, modifiers?: SelectedModifier[], instructions?: string) => void"
+          },
+          {
+            "name": "updateQuantity",
+            "type": "(itemId: string, quantity: number) => void"
+          },
+          {
+            "name": "removeItem",
+            "type": "(itemId: string) => void"
+          },
+          {
+            "name": "clearCart",
+            "type": "() => void"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: restaurant\n\n### Screens (10)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - Hooks: useCart\n  - JSX: Tabs, Tabs.Screen, Home, UtensilsCrossed, View...\n- **CartScreen** (src/app/(tabs)/cart.tsx)\n  - Hooks: useCart\n  - JSX: SafeAreaView, View, ShoppingCart, Text, TouchableOpacity...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useFeaturedItems, useCategories\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, Text...\n- **MenuScreen** (src/app/(tabs)/menu.tsx)\n  - Hooks: useState, useCategories, useMenuItems\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, MenuCategory...\n- **OrdersScreen** (src/app/(tabs)/orders.tsx)\n  - Hooks: useOrders, useActiveOrders\n  - JSX: SafeAreaView, View, ActivityIndicator, ClipboardList, Text...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - JSX: SafeAreaView, ScrollView, View, User, Text...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **CheckoutScreen** (src/app/checkout.tsx)\n  - Hooks: useCart, useQuery, usePlaceOrder, useState\n  - JSX: SafeAreaView, View, ScrollView, Text, DeliveryToggle...\n- **MenuItemDetailScreen** (src/app/menu/[id].tsx)\n  - Hooks: useLocalSearchParams, useMenuItem, useCart, useState\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, Image...\n- **OrderDetailScreen** (src/app/orders/[id].tsx)\n  - Hooks: useLocalSearchParams, useOrder\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, Text...\n\n### Components (11)\n- **AddressSelector**: 0 hooks, 5 elements\n- **CartItem**: 0 hooks, 7 elements\n- **CartSummary**: 0 hooks, 2 elements\n- **DeliveryToggle**: 0 hooks, 5 elements\n- **MenuCategory**: 0 hooks, 2 elements\n- **MenuItem**: 0 hooks, 4 elements\n- **ModifierSelector**: 0 hooks, 4 elements\n- **OrderCard**: 0 hooks, 4 elements\n- **OrderStatus**: 0 hooks, 3 elements\n- **TipSelector**: 0 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (3)\n- **useCart**: deps []\n- **useMenu**: deps [useQuery]\n- **useOrders**: deps [useQuery, useQueryClient, useMutation]\n\n### Services (2)\n- **menu**: getCategories(async), getMenuItems(async), getFeaturedItems(async), getMenuItem(async), searchMenuItems(async)\n- **orders**: getOrders(async), getOrder(async), getActiveOrders(async), getAddresses(async), placeOrder(async), getOrderStatusDisplay()\n\n### Navigation (expo-router)\n- cart -> Cart\n- index -> Index\n- menu -> Menu\n- orders -> Orders\n- profile -> Profile\n- checkout -> Checkout\n- [id] -> [id]\n- [id] -> [id]\n\n### Types (12)\n- interface MenuItem\n- interface ModifierGroup\n- interface Modifier\n- type DietaryTag\n- interface Category\n- interface CartItem\n- interface SelectedModifier\n- interface Order\n- interface OrderItem\n- type OrderStatus\n- interface Address\n- interface CartState",
+  "stats": {
+    "totalFiles": 32,
+    "totalScreens": 10,
+    "totalComponents": 11,
+    "totalHooks": 3,
+    "totalServices": 2,
+    "totalTypes": 12
+  }
+}

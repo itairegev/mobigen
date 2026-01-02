@@ -1,0 +1,1497 @@
+{
+  "templateId": "podcast",
+  "generatedAt": "2026-01-02T14:47:22.573Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePlayer"
+        ],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Mic",
+              "Lock",
+              "MessageCircle",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "MiniPlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "View",
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Mic",
+          "Lock",
+          "MessageCircle",
+          "User",
+          "MiniPlayer"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CommunityScreen",
+        "filePath": "src/app/(tabs)/community.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MessageCircle",
+              "Heart",
+              "Share2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CommunityScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "Image",
+          "TouchableOpacity",
+          "Heart",
+          "MessageCircle",
+          "Share2"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "EpisodesScreen",
+        "filePath": "src/app/(tabs)/episodes.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useState",
+          "useEpisodes",
+          "useSearchEpisodes",
+          "usePlayer"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEpisodes",
+            "specifiers": [
+              "useEpisodes",
+              "useSearchEpisodes"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "EpisodeCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Search"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EpisodesScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Search",
+          "TextInput",
+          "ActivityIndicator",
+          "FlatList",
+          "EpisodeCard",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ExclusivesScreen",
+        "filePath": "src/app/(tabs)/exclusives.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useExclusiveEpisodes",
+          "usePlayer"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEpisodes",
+            "specifiers": [
+              "useExclusiveEpisodes"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "EpisodeCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Lock",
+              "Crown"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ExclusivesScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Crown",
+          "Text",
+          "ActivityIndicator",
+          "Lock",
+          "FlatList",
+          "EpisodeCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useFeaturedEpisodes",
+          "usePlayer"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEpisodes",
+            "specifiers": [
+              "useFeaturedEpisodes"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "EpisodeCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "Image",
+          "Text",
+          "TouchableOpacity",
+          "Play",
+          "EpisodeCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "usePlayer"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Switch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Settings",
+              "Download",
+              "Bell",
+              "Moon",
+              "HelpCircle",
+              "LogOut"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "User",
+          "Text",
+          "TouchableOpacity",
+          "Switch",
+          "Bell",
+          "Moon",
+          "Download",
+          "Settings",
+          "HelpCircle",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootContent",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useDownloads",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks",
+            "specifiers": [
+              "useDownloads"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "RootContent",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "EpisodeDetailScreen",
+        "filePath": "src/app/episodes/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useEpisode",
+          "usePlayer",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks/useEpisodes",
+            "specifiers": [
+              "useEpisode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "ShowNotes"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../utils",
+            "specifiers": [
+              "formatDuration",
+              "formatRelativeDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Download",
+              "Share2",
+              "Lock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EpisodeDetailScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "Image",
+          "Lock",
+          "TouchableOpacity",
+          "Play",
+          "Download",
+          "Share2"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PlayerScreen",
+        "filePath": "src/app/player.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePlayer",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks",
+            "specifiers": [
+              "usePlayer"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../components",
+            "specifiers": [
+              "PlaybackSpeed"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatDuration"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronDown",
+              "MoreVertical",
+              "Play",
+              "Pause",
+              "SkipBack",
+              "SkipForward",
+              "Gauge"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../components",
+            "specifiers": [
+              "ProgressSlider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PlayerScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "ChevronDown",
+          "Text",
+          "MoreVertical",
+          "ScrollView",
+          "Image",
+          "ProgressSlider",
+          "SkipBack",
+          "Pause",
+          "Play",
+          "SkipForward",
+          "Gauge",
+          "PlaybackSpeed"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AudioPlayer",
+        "filePath": "src/components/AudioPlayer.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Episode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatDuration"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Pause",
+              "SkipBack",
+              "SkipForward",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./ProgressSlider",
+            "specifiers": [
+              "ProgressSlider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AudioPlayer"
+        ],
+        "jsxElements": [
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity",
+          "X",
+          "ProgressSlider",
+          "SkipBack",
+          "Pause",
+          "Play",
+          "SkipForward"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "EpisodeCard",
+        "filePath": "src/components/EpisodeCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Episode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../utils",
+            "specifiers": [
+              "formatDuration",
+              "formatRelativeDate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Download",
+              "Lock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "EpisodeCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Lock",
+          "Text",
+          "Play"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MiniPlayer",
+        "filePath": "src/components/MiniPlayer.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Episode"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Pause"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MiniPlayer"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Text",
+          "Pause",
+          "Play"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PlaybackControls",
+        "filePath": "src/components/PlaybackControls.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Pause",
+              "SkipBack",
+              "SkipForward"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PlaybackControls"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "SkipBack",
+          "Text",
+          "Pause",
+          "Play",
+          "SkipForward"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PlaybackSpeed",
+        "filePath": "src/components/PlaybackSpeed.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Modal"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PlaybackSpeed"
+        ],
+        "jsxElements": [
+          "Modal",
+          "TouchableOpacity",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ProgressSlider",
+        "filePath": "src/components/ProgressSlider.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProgressSlider"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ShowNotes",
+        "filePath": "src/components/ShowNotes.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ShowNotes"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useDownloads",
+        "filePath": "src/hooks/useDownloads.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useEpisodes",
+        "filePath": "src/hooks/useEpisodes.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePlayback",
+        "filePath": "src/hooks/usePlayback.ts",
+        "dependencies": [
+          "usePlayer",
+          "useRef",
+          "useEffect"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePlayer",
+        "filePath": "src/hooks/usePlayer.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "api",
+        "filePath": "src/services/api.ts",
+        "functions": [
+          {
+            "name": "request",
+            "params": [
+              {
+                "name": "endpoint",
+                "type": "string"
+              },
+              {
+                "name": "options",
+                "type": "RequestOptions"
+              }
+            ],
+            "returnType": "Promise<T>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "episodes",
+        "filePath": "src/services/episodes.ts",
+        "functions": [
+          {
+            "name": "getAllEpisodes",
+            "params": [],
+            "returnType": "Promise<Episode[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getEpisodeById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Episode | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getEpisodesBySeries",
+            "params": [
+              {
+                "name": "seriesId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Episode[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAllSeries",
+            "params": [],
+            "returnType": "Promise<Series[]>",
+            "isAsync": true
+          },
+          {
+            "name": "searchEpisodes",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Episode[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getFeaturedEpisodes",
+            "params": [
+              {
+                "name": "limit",
+                "type": "number"
+              }
+            ],
+            "returnType": "Promise<Episode[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getExclusiveEpisodes",
+            "params": [],
+            "returnType": "Promise<Episode[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "community",
+          "screen": "Community",
+          "filePath": "src/app/(tabs)/community.tsx"
+        },
+        {
+          "name": "episodes",
+          "screen": "Episodes",
+          "filePath": "src/app/(tabs)/episodes.tsx"
+        },
+        {
+          "name": "exclusives",
+          "screen": "Exclusives",
+          "filePath": "src/app/(tabs)/exclusives.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/episodes/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "player",
+          "screen": "Player",
+          "filePath": "src/app/player.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Episode",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "seriesId",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "publishedAt",
+            "type": "Date"
+          },
+          {
+            "name": "audioUrl",
+            "type": "string"
+          },
+          {
+            "name": "imageUrl",
+            "type": "string"
+          },
+          {
+            "name": "showNotes",
+            "type": "string"
+          },
+          {
+            "name": "exclusive",
+            "type": "boolean"
+          },
+          {
+            "name": "downloadable",
+            "type": "boolean"
+          },
+          {
+            "name": "playCount",
+            "type": "number"
+          },
+          {
+            "name": "season",
+            "type": "number"
+          },
+          {
+            "name": "episodeNumber",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Series",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "imageUrl",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "episodeCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "PlayState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "isPlaying",
+            "type": "boolean"
+          },
+          {
+            "name": "currentEpisode",
+            "type": "Episode | null"
+          },
+          {
+            "name": "position",
+            "type": "number"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "isLoading",
+            "type": "boolean"
+          },
+          {
+            "name": "error",
+            "type": "string | null"
+          }
+        ]
+      },
+      {
+        "name": "PlaybackSettings",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "speed",
+            "type": "number"
+          },
+          {
+            "name": "volume",
+            "type": "number"
+          },
+          {
+            "name": "skipForward",
+            "type": "number"
+          },
+          {
+            "name": "skipBackward",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Comment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "episodeId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "userName",
+            "type": "string"
+          },
+          {
+            "name": "userAvatar",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "number"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "likes",
+            "type": "number"
+          },
+          {
+            "name": "replies",
+            "type": "Comment[]"
+          }
+        ]
+      },
+      {
+        "name": "Download",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "episodeId",
+            "type": "string"
+          },
+          {
+            "name": "downloadedAt",
+            "type": "Date"
+          },
+          {
+            "name": "fileSize",
+            "type": "number"
+          },
+          {
+            "name": "localUri",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "isSubscriber",
+            "type": "boolean"
+          },
+          {
+            "name": "favoriteEpisodeIds",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "PlayerUIState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "showMiniPlayer",
+            "type": "boolean"
+          },
+          {
+            "name": "showFullPlayer",
+            "type": "boolean"
+          },
+          {
+            "name": "showSpeed",
+            "type": "boolean"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: podcast\n\n### Screens (9)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - Hooks: useRouter, usePlayer\n  - JSX: View, Tabs, Tabs.Screen, Home, Mic...\n- **CommunityScreen** (src/app/(tabs)/community.tsx)\n  - JSX: ScrollView, View, Text, Image, TouchableOpacity...\n- **EpisodesScreen** (src/app/(tabs)/episodes.tsx)\n  - Hooks: useRouter, useState, useEpisodes, useSearchEpisodes, usePlayer\n  - JSX: View, Search, TextInput, ActivityIndicator, FlatList...\n- **ExclusivesScreen** (src/app/(tabs)/exclusives.tsx)\n  - Hooks: useRouter, useExclusiveEpisodes, usePlayer\n  - JSX: View, Crown, Text, ActivityIndicator, Lock...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useFeaturedEpisodes, usePlayer\n  - JSX: View, ActivityIndicator, ScrollView, Image, Text...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useState, usePlayer\n  - JSX: ScrollView, View, User, Text, TouchableOpacity...\n- **RootContent** (src/app/_layout.tsx)\n  - Hooks: useDownloads, useEffect\n  - JSX: QueryClientProvider, RootContent, Stack, Stack.Screen\n- **EpisodeDetailScreen** (src/app/episodes/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useEpisode, usePlayer, useState\n  - JSX: View, ActivityIndicator, Text, ScrollView, Image...\n- **PlayerScreen** (src/app/player.tsx)\n  - Hooks: useRouter, usePlayer, useState\n  - JSX: View, TouchableOpacity, ChevronDown, Text, MoreVertical...\n\n### Components (8)\n- **AudioPlayer**: 0 hooks, 10 elements\n- **EpisodeCard**: 0 hooks, 6 elements\n- **MiniPlayer**: 0 hooks, 6 elements\n- **PlaybackControls**: 0 hooks, 7 elements\n- **PlaybackSpeed**: 0 hooks, 4 elements\n- **ProgressSlider**: 0 hooks, 2 elements\n- **ShowNotes**: 0 hooks, 2 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useDownloads**: deps []\n- **useEpisodes**: deps [useQuery]\n- **usePlayback**: deps [usePlayer, useRef, useEffect]\n- **usePlayer**: deps []\n- **useTheme**: deps [useColorScheme]\n\n### Services (2)\n- **api**: request(async)\n- **episodes**: getAllEpisodes(async), getEpisodeById(async), getEpisodesBySeries(async), getAllSeries(async), searchEpisodes(async), getFeaturedEpisodes(async), getExclusiveEpisodes(async)\n\n### Navigation (expo-router)\n- community -> Community\n- episodes -> Episodes\n- exclusives -> Exclusives\n- index -> Index\n- profile -> Profile\n- [id] -> [id]\n- player -> Player\n\n### Types (8)\n- interface Episode\n- interface Series\n- interface PlayState\n- interface PlaybackSettings\n- interface Comment\n- interface Download\n- interface User\n- interface PlayerUIState",
+  "stats": {
+    "totalFiles": 32,
+    "totalScreens": 9,
+    "totalComponents": 8,
+    "totalHooks": 5,
+    "totalServices": 2,
+    "totalTypes": 8
+  }
+}

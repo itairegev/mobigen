@@ -1,0 +1,1936 @@
+{
+  "templateId": "pet-services",
+  "generatedAt": "2026-01-02T14:47:22.540Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "PawPrint",
+              "Calendar",
+              "ShoppingBag",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "PawPrint",
+          "Calendar",
+          "ShoppingBag",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AppointmentsScreen",
+        "filePath": "src/app/(tabs)/appointments.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePets",
+          "useAppointments",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useAppointments",
+              "usePets"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "AppointmentCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Plus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AppointmentsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Plus",
+          "AppointmentCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePets",
+          "useUpcomingAppointments",
+          "useUpcomingReminders",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "usePets",
+              "useUpcomingAppointments",
+              "useUpcomingReminders"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PetCard",
+              "AppointmentCard",
+              "ReminderItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getPetById",
+              "getServiceById"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Plus",
+              "FileText"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "FileText",
+          "Plus",
+          "PetCard",
+          "ReminderItem",
+          "AppointmentCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PetsScreen",
+        "filePath": "src/app/(tabs)/pets.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePets",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "usePets"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PetCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Plus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PetsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Plus",
+          "PetCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Bell",
+              "CreditCard",
+              "HelpCircle",
+              "Settings",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Icon",
+          "ChevronRight",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ShopScreen",
+        "filePath": "src/app/(tabs)/shop.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getProducts"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "PetProduct"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Star",
+              "ShoppingCart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ShopScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "Image",
+          "Star",
+          "ShoppingCart"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "SafeAreaProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ArticlesScreen",
+        "filePath": "src/app/articles.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getArticles",
+              "ARTICLE_CATEGORIES"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ArticleCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ArticlesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "ScrollView",
+          "TouchableOpacity",
+          "ArticleCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "BookAppointmentScreen",
+        "filePath": "src/app/book.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "usePets",
+          "useState",
+          "useEffect",
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "usePets"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getServices",
+              "getServicesForPet"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ServiceSelector"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "BookAppointmentScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ServiceSelector"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PetDetailScreen",
+        "filePath": "src/app/pets/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getPetById",
+              "getHealthRecords",
+              "getReminders",
+              "getAppointments"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "HealthRecordComponent",
+              "ReminderItem",
+              "AppointmentCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Edit",
+              "Calendar",
+              "FileText"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PetDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "ScrollView",
+          "View",
+          "Image",
+          "TouchableOpacity",
+          "Edit",
+          "Calendar",
+          "FileText",
+          "ReminderItem",
+          "AppointmentCard",
+          "HealthRecordComponent"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AddPetScreen",
+        "filePath": "src/app/pets/add.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "TextInput"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "PetSpecies"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AddPetScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TextInput",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AppointmentCard",
+        "filePath": "src/components/AppointmentCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Appointment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AppointmentCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Text",
+          "Calendar",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ArticleCard",
+        "filePath": "src/components/ArticleCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Article"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ArticleCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "HealthRecord",
+        "filePath": "src/components/HealthRecord.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "HealthRecordType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "FileText",
+              "Syringe",
+              "Stethoscope",
+              "Activity",
+              "Pill"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HealthRecord"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Icon",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PetCard",
+        "filePath": "src/components/PetCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Pet"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PetCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ReminderItem",
+        "filePath": "src/components/ReminderItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Reminder"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "differenceInDays"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Bell",
+              "CheckCircle2",
+              "Syringe",
+              "Pill",
+              "Stethoscope",
+              "Scissors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ReminderItem"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Icon",
+          "Text",
+          "CheckCircle2"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ServiceSelector",
+        "filePath": "src/components/ServiceSelector.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Service"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ServiceSelector"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useAppointments",
+        "filePath": "src/hooks/useAppointments.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "usePets",
+        "filePath": "src/hooks/usePets.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useRecords",
+        "filePath": "src/hooks/useRecords.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useReminders",
+        "filePath": "src/hooks/useReminders.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "appointments",
+        "filePath": "src/services/appointments.ts",
+        "functions": [
+          {
+            "name": "getAppointments",
+            "params": [
+              {
+                "name": "petId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Appointment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingAppointments",
+            "params": [],
+            "returnType": "Promise<Appointment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAppointmentById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Appointment | null>",
+            "isAsync": true
+          },
+          {
+            "name": "bookAppointment",
+            "params": [
+              {
+                "name": "appointment",
+                "type": "Omit<Appointment, 'id' | 'createdAt'>"
+              }
+            ],
+            "returnType": "Promise<Appointment>",
+            "isAsync": true
+          },
+          {
+            "name": "cancelAppointment",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "articles",
+        "filePath": "src/services/articles.ts",
+        "functions": [
+          {
+            "name": "getArticles",
+            "params": [
+              {
+                "name": "category",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Article[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getArticleById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Article | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "pets",
+        "filePath": "src/services/pets.ts",
+        "functions": [
+          {
+            "name": "getPets",
+            "params": [],
+            "returnType": "Promise<Pet[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getPetById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Pet | null>",
+            "isAsync": true
+          },
+          {
+            "name": "addPet",
+            "params": [
+              {
+                "name": "pet",
+                "type": "Omit<Pet, 'id' | 'createdAt'>"
+              }
+            ],
+            "returnType": "Promise<Pet>",
+            "isAsync": true
+          },
+          {
+            "name": "updatePet",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              },
+              {
+                "name": "updates",
+                "type": "Partial<Pet>"
+              }
+            ],
+            "returnType": "Promise<Pet>",
+            "isAsync": true
+          },
+          {
+            "name": "deletePet",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "products",
+        "filePath": "src/services/products.ts",
+        "functions": [
+          {
+            "name": "getProducts",
+            "params": [
+              {
+                "name": "category",
+                "type": "PetProduct['category']"
+              }
+            ],
+            "returnType": "Promise<PetProduct[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getProductById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<PetProduct | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "records",
+        "filePath": "src/services/records.ts",
+        "functions": [
+          {
+            "name": "getHealthRecords",
+            "params": [
+              {
+                "name": "petId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<HealthRecord[]>",
+            "isAsync": true
+          },
+          {
+            "name": "addHealthRecord",
+            "params": [
+              {
+                "name": "record",
+                "type": "Omit<HealthRecord, 'id' | 'createdAt'>"
+              }
+            ],
+            "returnType": "Promise<HealthRecord>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "reminders",
+        "filePath": "src/services/reminders.ts",
+        "functions": [
+          {
+            "name": "getReminders",
+            "params": [
+              {
+                "name": "petId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Reminder[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getUpcomingReminders",
+            "params": [],
+            "returnType": "Promise<Reminder[]>",
+            "isAsync": true
+          },
+          {
+            "name": "completeReminder",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          },
+          {
+            "name": "addReminder",
+            "params": [
+              {
+                "name": "reminder",
+                "type": "Omit<Reminder, 'id' | 'createdAt'>"
+              }
+            ],
+            "returnType": "Promise<Reminder>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "services",
+        "filePath": "src/services/services.ts",
+        "functions": [
+          {
+            "name": "getServices",
+            "params": [
+              {
+                "name": "type",
+                "type": "Service['type']"
+              }
+            ],
+            "returnType": "Promise<Service[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getServiceById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Service | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getServicesForPet",
+            "params": [
+              {
+                "name": "petSpecies",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Service[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "appointments",
+          "screen": "Appointments",
+          "filePath": "src/app/(tabs)/appointments.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "pets",
+          "screen": "Pets",
+          "filePath": "src/app/(tabs)/pets.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "shop",
+          "screen": "Shop",
+          "filePath": "src/app/(tabs)/shop.tsx"
+        },
+        {
+          "name": "articles",
+          "screen": "Articles",
+          "filePath": "src/app/articles.tsx"
+        },
+        {
+          "name": "book",
+          "screen": "Book",
+          "filePath": "src/app/book.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/pets/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "add",
+          "screen": "Add",
+          "filePath": "src/app/pets/add.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "PetSpecies",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "AppointmentStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "ServiceType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "ReminderType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Pet",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "species",
+            "type": "PetSpecies"
+          },
+          {
+            "name": "breed",
+            "type": "string"
+          },
+          {
+            "name": "age",
+            "type": "number"
+          },
+          {
+            "name": "weight",
+            "type": "number"
+          },
+          {
+            "name": "gender",
+            "type": "'male' | 'female'"
+          },
+          {
+            "name": "photo",
+            "type": "string"
+          },
+          {
+            "name": "microchipId",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "ownerId",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Service",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "ServiceType"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "availableFor",
+            "type": "PetSpecies[]"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Appointment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "petId",
+            "type": "string"
+          },
+          {
+            "name": "serviceId",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "AppointmentStatus"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "veterinarian",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "HealthRecord",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "petId",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'vaccination' | 'checkup' | 'surgery' | 'medication' | 'other'"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "Date"
+          },
+          {
+            "name": "veterinarian",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "attachments",
+            "type": "string[]"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Reminder",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "petId",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "ReminderType"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "dueDate",
+            "type": "Date"
+          },
+          {
+            "name": "completed",
+            "type": "boolean"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Article",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "excerpt",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "publishedAt",
+            "type": "Date"
+          },
+          {
+            "name": "readTime",
+            "type": "number"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "PetProduct",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "category",
+            "type": "'food' | 'toys' | 'accessories' | 'medicine' | 'grooming'"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "inStock",
+            "type": "boolean"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "CartItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "productId",
+            "type": "string"
+          },
+          {
+            "name": "quantity",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Cart",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "items",
+            "type": "CartItem[]"
+          },
+          {
+            "name": "subtotal",
+            "type": "number"
+          },
+          {
+            "name": "itemCount",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: pet-services\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, PawPrint, Calendar...\n- **AppointmentsScreen** (src/app/(tabs)/appointments.tsx)\n  - Hooks: useRouter, usePets, useAppointments, useEffect\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, usePets, useUpcomingAppointments, useUpcomingReminders, useEffect\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **PetsScreen** (src/app/(tabs)/pets.tsx)\n  - Hooks: useRouter, usePets, useEffect\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **ShopScreen** (src/app/(tabs)/shop.tsx)\n  - Hooks: useState, useQuery\n  - JSX: SafeAreaView, View, ScrollView, TouchableOpacity, Text...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, SafeAreaProvider, Stack, Stack.Screen\n- **ArticlesScreen** (src/app/articles.tsx)\n  - Hooks: useState, useQuery\n  - JSX: SafeAreaView, View, Text, ScrollView, TouchableOpacity...\n- **BookAppointmentScreen** (src/app/book.tsx)\n  - Hooks: useRouter, usePets, useState, useEffect, useQuery\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **PetDetailScreen** (src/app/pets/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useQuery\n  - JSX: SafeAreaView, Text, ScrollView, View, Image...\n- **AddPetScreen** (src/app/pets/add.tsx)\n  - Hooks: useRouter, useState\n  - JSX: SafeAreaView, ScrollView, View, Text, TextInput...\n\n### Components (7)\n- **AppointmentCard**: 0 hooks, 5 elements\n- **ArticleCard**: 0 hooks, 5 elements\n- **HealthRecord**: 0 hooks, 4 elements\n- **PetCard**: 0 hooks, 4 elements\n- **ReminderItem**: 0 hooks, 5 elements\n- **ServiceSelector**: 0 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useAppointments**: deps [useQuery]\n- **usePets**: deps []\n- **useRecords**: deps [useQuery]\n- **useReminders**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (7)\n- **appointments**: getAppointments(async), getUpcomingAppointments(async), getAppointmentById(async), bookAppointment(async), cancelAppointment(async)\n- **articles**: getArticles(async), getArticleById(async)\n- **pets**: getPets(async), getPetById(async), addPet(async), updatePet(async), deletePet(async)\n- **products**: getProducts(async), getProductById(async)\n- **records**: getHealthRecords(async), addHealthRecord(async)\n- **reminders**: getReminders(async), getUpcomingReminders(async), completeReminder(async), addReminder(async)\n- **services**: getServices(async), getServiceById(async), getServicesForPet(async)\n\n### Navigation (expo-router)\n- appointments -> Appointments\n- index -> Index\n- pets -> Pets\n- profile -> Profile\n- shop -> Shop\n- articles -> Articles\n- book -> Book\n- [id] -> [id]\n- add -> Add\n\n### Types (13)\n- type PetSpecies\n- type AppointmentStatus\n- type ServiceType\n- type ReminderType\n- interface Pet\n- interface Service\n- interface Appointment\n- interface HealthRecord\n- interface Reminder\n- interface Article\n- interface PetProduct\n- interface CartItem\n- interface Cart",
+  "stats": {
+    "totalFiles": 36,
+    "totalScreens": 11,
+    "totalComponents": 7,
+    "totalHooks": 5,
+    "totalServices": 7,
+    "totalTypes": 13
+  }
+}

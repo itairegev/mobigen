@@ -1,0 +1,35 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - time-tracking
+---
+# Clock In/Out Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Jobs
+- tapOn: "Jobs"
+- assertVisible: "All"
+
+# Open first job
+- tapOn:
+    id: "job-card-1"
+- assertVisible: "Job Details"
+
+# Clock in
+- tapOn:
+    id: "clock-in-button"
+- assertVisible: "Time Tracking Active"
+
+# Verify timer is running
+- assertVisible: "Clock Out"
+
+# Clock out
+- tapOn:
+    id: "clock-out-button"
+- assertVisible: "Not Tracking"
+
+# Check time log
+- tapOn: "Time Log"
+- assertVisible: "Today"
+- assertVisible: "This Week"

@@ -1,0 +1,27 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - feed
+---
+# Community Feed Flow
+- launchApp:
+    clearState: true
+
+# Verify feed loads
+- assertVisible: "Community Feed"
+- assertVisible:
+    id: "posts-list"
+
+# Check first post exists
+- assertVisible:
+    id: "post-1"
+
+# React to post
+- tapOn:
+    id: "reaction-like"
+- assertVisible: "1"
+
+# View post comments
+- tapOn:
+    id: "comments-button"
+- assertVisible: "Post"

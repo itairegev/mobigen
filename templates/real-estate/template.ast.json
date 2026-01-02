@@ -1,0 +1,1763 @@
+{
+  "templateId": "real-estate",
+  "generatedAt": "2026-01-02T14:47:22.684Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Search",
+              "Heart",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Search",
+          "Heart",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useFeaturedProperties"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calculator",
+              "Calendar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useFeaturedProperties"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PropertyCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Calculator",
+          "Calendar",
+          "ActivityIndicator",
+          "PropertyCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useSaved",
+          "useTours"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Calendar",
+              "Heart",
+              "Calculator",
+              "Mail",
+              "Bell",
+              "Settings",
+              "LogOut"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useSaved",
+              "useTours"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Card",
+          "User",
+          "Text",
+          "TouchableOpacity",
+          "stat.icon",
+          "item.icon",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SavedScreen",
+        "filePath": "src/app/(tabs)/saved.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useSaved",
+          "useProperties"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useProperties",
+              "useSaved"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PropertyCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SavedScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "ActivityIndicator",
+          "PropertyCard",
+          "Heart"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SearchScreen",
+        "filePath": "src/app/(tabs)/search.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useSearch",
+          "useSearchProperties"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ActivityIndicator",
+              "Modal"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Filter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useSearchProperties",
+              "useSearch"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "PropertyCard",
+              "Input",
+              "FilterPanel"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SearchScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "Input",
+          "TouchableOpacity",
+          "Filter",
+          "Text",
+          "ScrollView",
+          "ActivityIndicator",
+          "PropertyCard",
+          "Modal",
+          "FilterPanel"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CalculatorScreen",
+        "filePath": "src/app/calculator.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "MortgageCalc"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CalculatorScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "MortgageCalc"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ContactScreen",
+        "filePath": "src/app/contact.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Card",
+              "Input",
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ContactScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "Card",
+          "Input",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PropertyDetailScreen",
+        "filePath": "src/app/properties/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useProperty",
+          "useSaved",
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart",
+              "Share",
+              "Calendar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useProperty"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useSaved"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "getAgentById"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ImageGallery",
+              "PropertyDetails",
+              "AgentCard",
+              "MapView",
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PropertyDetailScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "ImageGallery",
+          "TouchableOpacity",
+          "Heart",
+          "Share",
+          "Button",
+          "PropertyDetails",
+          "MapView",
+          "AgentCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ScheduleTourScreen",
+        "filePath": "src/app/schedule-tour.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ScrollView",
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "TourScheduler"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ScheduleTourScreen"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text",
+          "TourScheduler"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AgentCard",
+        "filePath": "src/components/AgentCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Phone",
+              "Mail",
+              "Star"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Agent"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AgentCard"
+        ],
+        "jsxElements": [
+          "Card",
+          "View",
+          "Image",
+          "Text",
+          "Star",
+          "TouchableOpacity",
+          "Phone",
+          "Mail"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacityProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "ViewProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "View"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "FilterPanel",
+        "filePath": "src/components/FilterPanel.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Button",
+            "specifiers": [
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Input",
+            "specifiers": [
+              "Input"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "PropertyType",
+              "PropertyStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "FilterPanel"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "X",
+          "ScrollView",
+          "Input",
+          "Button"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ImageGallery",
+        "filePath": "src/components/ImageGallery.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Image",
+              "TouchableOpacity",
+              "Modal",
+              "ScrollView",
+              "Dimensions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ImageGallery"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "TouchableOpacity",
+          "Image",
+          "Modal",
+          "View",
+          "X"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Input",
+        "filePath": "src/components/Input.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TextInput",
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TextInputProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Input"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TextInput"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MapView",
+        "filePath": "src/components/MapView.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Navigation"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Property"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MapView"
+        ],
+        "jsxElements": [
+          "Card",
+          "View",
+          "MapPin",
+          "Text",
+          "TouchableOpacity",
+          "Navigation"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MortgageCalc",
+        "filePath": "src/components/MortgageCalc.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Input",
+            "specifiers": [
+              "Input"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency",
+              "calculateMortgage"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MortgageCalc"
+        ],
+        "jsxElements": [
+          "View",
+          "Card",
+          "Input",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PropertyCard",
+        "filePath": "src/components/PropertyCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useSaved"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Heart",
+              "Bed",
+              "Bath",
+              "Maximize"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatCurrency",
+              "formatNumber"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Property"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useSaved"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PropertyCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Heart",
+          "Text",
+          "Bed",
+          "Bath",
+          "Maximize"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "PropertyDetails",
+        "filePath": "src/components/PropertyDetails.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Bed",
+              "Bath",
+              "Maximize",
+              "Calendar",
+              "MapPin",
+              "Home"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatNumber"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Property"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PropertyDetails"
+        ],
+        "jsxElements": [
+          "View",
+          "Card",
+          "Text",
+          "Bed",
+          "Bath",
+          "Maximize",
+          "MapPin",
+          "Calendar",
+          "Home"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TourScheduler",
+        "filePath": "src/components/TourScheduler.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useTours",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Card",
+            "specifiers": [
+              "Card"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Input",
+            "specifiers": [
+              "Input"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "./Button",
+            "specifiers": [
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTours"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDate",
+              "formatTime"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TourScheduler"
+        ],
+        "jsxElements": [
+          "View",
+          "Card",
+          "Calendar",
+          "Text",
+          "TouchableOpacity",
+          "Clock",
+          "Input",
+          "Button"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useProperties",
+        "filePath": "src/hooks/useProperties.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSaved",
+        "filePath": "src/hooks/useSaved.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSearch",
+        "filePath": "src/hooks/useSearch.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTours",
+        "filePath": "src/hooks/useTours.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "properties",
+        "filePath": "src/services/properties.ts",
+        "functions": [
+          {
+            "name": "getProperties",
+            "params": [],
+            "returnType": "Promise<Property[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getPropertyById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Property | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getAgentById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Agent | null>",
+            "isAsync": true
+          },
+          {
+            "name": "searchProperties",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              },
+              {
+                "name": "filters",
+                "type": "{\n    type?: PropertyType[];\n    status?: PropertyStatus;\n    priceMin?: number;\n    priceMax?: number;\n    bedrooms?: number;\n    bathrooms?: number;\n    city?: string;\n  }"
+              }
+            ],
+            "returnType": "Promise<Property[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getFeaturedProperties",
+            "params": [],
+            "returnType": "Promise<Property[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "saved",
+          "screen": "Saved",
+          "filePath": "src/app/(tabs)/saved.tsx"
+        },
+        {
+          "name": "search",
+          "screen": "Search",
+          "filePath": "src/app/(tabs)/search.tsx"
+        },
+        {
+          "name": "calculator",
+          "screen": "Calculator",
+          "filePath": "src/app/calculator.tsx"
+        },
+        {
+          "name": "contact",
+          "screen": "Contact",
+          "filePath": "src/app/contact.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/properties/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "schedule-tour",
+          "screen": "Schedule-tour",
+          "filePath": "src/app/schedule-tour.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "PropertyType",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "PropertyStatus",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Property",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "PropertyType"
+          },
+          {
+            "name": "status",
+            "type": "PropertyStatus"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "pricePerSqft",
+            "type": "number"
+          },
+          {
+            "name": "bedrooms",
+            "type": "number"
+          },
+          {
+            "name": "bathrooms",
+            "type": "number"
+          },
+          {
+            "name": "sqft",
+            "type": "number"
+          },
+          {
+            "name": "lotSize",
+            "type": "number"
+          },
+          {
+            "name": "yearBuilt",
+            "type": "number"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "address",
+            "type": "{\n    street: string;\n    city: string;\n    state: string;\n    zipCode: string;\n    lat?: number;\n    lng?: number;\n  }"
+          },
+          {
+            "name": "features",
+            "type": "string[]"
+          },
+          {
+            "name": "agentId",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Agent",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewCount",
+            "type": "number"
+          },
+          {
+            "name": "listingsCount",
+            "type": "number"
+          },
+          {
+            "name": "yearsExperience",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Tour",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "propertyId",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "time",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "message",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "'pending' | 'confirmed' | 'completed' | 'cancelled'"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "SearchFilters",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "type",
+            "type": "PropertyType[]"
+          },
+          {
+            "name": "status",
+            "type": "PropertyStatus"
+          },
+          {
+            "name": "priceMin",
+            "type": "number"
+          },
+          {
+            "name": "priceMax",
+            "type": "number"
+          },
+          {
+            "name": "bedrooms",
+            "type": "number"
+          },
+          {
+            "name": "bathrooms",
+            "type": "number"
+          },
+          {
+            "name": "sqftMin",
+            "type": "number"
+          },
+          {
+            "name": "sqftMax",
+            "type": "number"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "features",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "MortgageParams",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "homePrice",
+            "type": "number"
+          },
+          {
+            "name": "downPayment",
+            "type": "number"
+          },
+          {
+            "name": "interestRate",
+            "type": "number"
+          },
+          {
+            "name": "loanTerm",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "MortgageResult",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "monthlyPayment",
+            "type": "number"
+          },
+          {
+            "name": "totalPayment",
+            "type": "number"
+          },
+          {
+            "name": "totalInterest",
+            "type": "number"
+          },
+          {
+            "name": "loanAmount",
+            "type": "number"
+          },
+          {
+            "name": "downPaymentAmount",
+            "type": "number"
+          },
+          {
+            "name": "downPaymentPercent",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "SavedProperty",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "propertyId",
+            "type": "string"
+          },
+          {
+            "name": "savedAt",
+            "type": "Date"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: real-estate\n\n### Screens (10)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Search, Heart...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useFeaturedProperties\n  - JSX: ScrollView, View, Text, TouchableOpacity, Calculator...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter, useSaved, useTours\n  - JSX: ScrollView, View, Card, User, Text...\n- **SavedScreen** (src/app/(tabs)/saved.tsx)\n  - Hooks: useSaved, useProperties\n  - JSX: ScrollView, View, Text, ActivityIndicator, PropertyCard...\n- **SearchScreen** (src/app/(tabs)/search.tsx)\n  - Hooks: useState, useSearch, useSearchProperties\n  - JSX: View, Input, TouchableOpacity, Filter, Text...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **CalculatorScreen** (src/app/calculator.tsx)\n  - JSX: ScrollView, View, Text, MortgageCalc\n- **ContactScreen** (src/app/contact.tsx)\n  - Hooks: useState\n  - JSX: ScrollView, View, Text, Card, Input...\n- **PropertyDetailScreen** (src/app/properties/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useProperty, useSaved, useQuery\n  - JSX: View, ActivityIndicator, Text, ScrollView, ImageGallery...\n- **ScheduleTourScreen** (src/app/schedule-tour.tsx)\n  - Hooks: useLocalSearchParams\n  - JSX: ScrollView, View, Text, TourScheduler\n\n### Components (12)\n- **AgentCard**: 0 hooks, 8 elements\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 1 elements\n- **FilterPanel**: 0 hooks, 7 elements\n- **ImageGallery**: 1 hooks, 6 elements\n- **Input**: 0 hooks, 3 elements\n- **MapView**: 0 hooks, 6 elements\n- **MortgageCalc**: 1 hooks, 4 elements\n- **PropertyCard**: 2 hooks, 8 elements\n- **PropertyDetails**: 0 hooks, 9 elements\n- **TourScheduler**: 3 hooks, 8 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useProperties**: deps [useQuery]\n- **useSaved**: deps []\n- **useSearch**: deps []\n- **useTheme**: deps [useColorScheme]\n- **useTours**: deps []\n\n### Services (1)\n- **properties**: getProperties(async), getPropertyById(async), getAgentById(async), searchProperties(async), getFeaturedProperties(async)\n\n### Navigation (expo-router)\n- index -> Index\n- profile -> Profile\n- saved -> Saved\n- search -> Search\n- calculator -> Calculator\n- contact -> Contact\n- [id] -> [id]\n- schedule-tour -> Schedule-tour\n\n### Types (9)\n- type PropertyType\n- type PropertyStatus\n- interface Property\n- interface Agent\n- interface Tour\n- interface SearchFilters\n- interface MortgageParams\n- interface MortgageResult\n- interface SavedProperty",
+  "stats": {
+    "totalFiles": 36,
+    "totalScreens": 10,
+    "totalComponents": 12,
+    "totalHooks": 5,
+    "totalServices": 1,
+    "totalTypes": 9
+  }
+}

@@ -1,0 +1,55 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - playback
+---
+# Play Episode Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Episodes tab
+- tapOn: "Episodes"
+- assertVisible: "Search episodes..."
+
+# Tap on first episode to view details
+- tapOn:
+    id: "episode-ep-1"
+- assertVisible: "Episode Details"
+- assertVisible: "The Future of AI"
+- assertVisible: "Play Episode"
+
+# Play the episode
+- tapOn:
+    id: "play-button"
+- assertVisible: "Now Playing"
+
+# Verify player controls
+- assertVisible:
+    id: "player-play-pause"
+- assertVisible:
+    id: "player-skip-forward"
+- assertVisible:
+    id: "player-skip-back"
+
+# Test playback controls
+- tapOn:
+    id: "player-skip-forward"
+- tapOn:
+    id: "player-skip-back"
+
+# Test speed control
+- tapOn:
+    id: "speed-button"
+- assertVisible: "Playback Speed"
+- tapOn:
+    id: "speed-modal-speed-1.5"
+- assertVisible: "Speed: 1.5x"
+
+# Close player
+- tapOn:
+    id: "close-player"
+
+# Verify mini player is visible
+- assertVisible:
+    id: "mini-player"
+- assertVisible: "Now Playing"

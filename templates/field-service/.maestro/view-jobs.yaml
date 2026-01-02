@@ -1,0 +1,29 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - jobs
+---
+# View Jobs Flow
+- launchApp:
+    clearState: true
+
+# Verify home screen loads
+- assertVisible: "Good"
+- assertVisible: "Today's Schedule"
+
+# Navigate to Jobs tab
+- tapOn: "Jobs"
+- assertVisible: "All"
+- assertVisible: "Scheduled"
+
+# View first job
+- tapOn:
+    id: "job-card-1"
+- assertVisible: "Job Details"
+- assertVisible: "Client"
+- assertVisible: "Location"
+
+# Go back to jobs list
+- tapOn:
+    id: "ArrowLeft"
+- assertVisible: "All"

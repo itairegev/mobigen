@@ -1,0 +1,56 @@
+appId: com.mobigen.servicebooking
+tags:
+  - critical
+  - booking
+---
+# Complete Booking Flow
+- launchApp:
+    clearState: true
+
+# Navigate to service and start booking
+- tapOn: "Services"
+- tapOn:
+    id: "service-card-1"
+- tapOn:
+    id: "book-now-button"
+
+# Select staff
+- tapOn:
+    id: "staff-option-1"
+- tapOn:
+    id: "continue-button"
+- assertVisible: "Select Date & Time"
+
+# Select date (tomorrow)
+- tapOn:
+    id: "calendar-picker"
+- scroll
+
+# Select time slot
+- tapOn:
+    id: "time-slot-09:00"
+
+# Continue to confirmation
+- tapOn:
+    id: "continue-button"
+- assertVisible: "Confirm Booking"
+
+# Verify booking summary
+- assertVisible: "Booking Summary"
+- assertVisible: "Total"
+
+# Add notes
+- tapOn:
+    id: "notes-input"
+- inputText: "Looking forward to my appointment"
+
+# Confirm booking
+- tapOn:
+    id: "confirm-booking-button"
+
+# Wait for confirmation
+- assertVisible: "Booking Confirmed!"
+- tapOn: "OK"
+
+# Verify redirected to appointments
+- assertVisible: "Appointments"

@@ -1,0 +1,1733 @@
+{
+  "templateId": "recipe",
+  "generatedAt": "2026-01-02T14:47:22.746Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Ionicons"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CategoriesScreen",
+        "filePath": "src/app/(tabs)/categories.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "RecipeCard",
+              "CategoryChip"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../services",
+            "specifiers": [
+              "getRecipes",
+              "getCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "Recipe",
+              "Category"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CategoriesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "ScrollView",
+          "CategoryChip",
+          "ActivityIndicator",
+          "Ionicons",
+          "RecipeCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "RecipeCard",
+              "CategoryChip"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../services",
+            "specifiers": [
+              "getFeaturedRecipes",
+              "getCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "Recipe",
+              "Category"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "SafeAreaView",
+          "ScrollView",
+          "Text",
+          "TouchableOpacity",
+          "Ionicons",
+          "CategoryChip",
+          "RecipeCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MealPlanScreen",
+        "filePath": "src/app/(tabs)/meal-plan.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useMealPlan"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "MealPlanDay"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useMealPlan"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MealPlanScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Ionicons",
+          "ScrollView",
+          "MealPlanDay"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useFavorites",
+          "useShoppingList",
+          "useMealPlan"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useFavorites",
+              "useShoppingList",
+              "useMealPlan"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Ionicons",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ShoppingScreen",
+        "filePath": "src/app/(tabs)/shopping.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useShoppingList"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "ShoppingItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useShoppingList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ShoppingScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Ionicons",
+          "ScrollView",
+          "ShoppingItem"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-status-bar",
+            "specifiers": [
+              "StatusBar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "StatusBar",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "FavoritesScreen",
+        "filePath": "src/app/favorites.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useFavorites",
+          "useState",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../components",
+            "specifiers": [
+              "RecipeCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../services",
+            "specifiers": [
+              "getRecipes"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Recipe"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks",
+            "specifiers": [
+              "useFavorites"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "FavoritesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "Ionicons",
+          "Text",
+          "ScrollView",
+          "RecipeCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RecipeDetailScreen",
+        "filePath": "src/app/recipes/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useState",
+          "useFavorites",
+          "useShoppingList",
+          "useMealPlan",
+          "useEffect"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "Alert",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useEffect"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../components",
+            "specifiers": [
+              "IngredientList",
+              "StepByStep",
+              "NutritionInfo"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../services",
+            "specifiers": [
+              "getRecipeById"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../types",
+            "specifiers": [
+              "Recipe"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../hooks",
+            "specifiers": [
+              "useFavorites",
+              "useShoppingList",
+              "useMealPlan"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../../theme/colors",
+            "specifiers": [
+              "difficultyColors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RecipeDetailScreen"
+        ],
+        "jsxElements": [
+          "View",
+          "ActivityIndicator",
+          "Ionicons",
+          "Text",
+          "TouchableOpacity",
+          "SafeAreaView",
+          "ScrollView",
+          "Image",
+          "IngredientList",
+          "StepByStep",
+          "NutritionInfo"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "CategoryChip",
+        "filePath": "src/components/CategoryChip.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Category"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CategoryChip"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Ionicons",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "IngredientList",
+        "filePath": "src/components/IngredientList.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Ingredient"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "IngredientList"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Ionicons"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "MealPlanDay",
+        "filePath": "src/components/MealPlanDay.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "PlannedMeal"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../theme/colors",
+            "specifiers": [
+              "mealTypeColors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MealPlanDay"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Ionicons",
+          "Image"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "NutritionInfo",
+        "filePath": "src/components/NutritionInfo.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "NutritionInfoType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "NutritionInfo"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "RecipeCard",
+        "filePath": "src/components/RecipeCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useFavorites"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Recipe"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../theme/colors",
+            "specifiers": [
+              "difficultyColors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../hooks",
+            "specifiers": [
+              "useFavorites"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RecipeCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Ionicons",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ShoppingItem",
+        "filePath": "src/components/ShoppingItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "ShoppingItemType"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ShoppingItem"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "Ionicons",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StepByStep",
+        "filePath": "src/components/StepByStep.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@expo/vector-icons",
+            "specifiers": [
+              "Ionicons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../types",
+            "specifiers": [
+              "Step"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StepByStep"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Ionicons"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useFavorites",
+        "filePath": "src/hooks/useFavorites.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useMealPlan",
+        "filePath": "src/hooks/useMealPlan.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useShoppingList",
+        "filePath": "src/hooks/useShoppingList.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "recipes",
+        "filePath": "src/services/recipes.ts",
+        "functions": [
+          {
+            "name": "getCategories",
+            "params": [],
+            "returnType": "Promise<Category[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getRecipes",
+            "params": [
+              {
+                "name": "categoryId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Recipe[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getRecipeById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Recipe | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getFeaturedRecipes",
+            "params": [],
+            "returnType": "Promise<Recipe[]>",
+            "isAsync": true
+          },
+          {
+            "name": "searchRecipes",
+            "params": [
+              {
+                "name": "query",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Recipe[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "categories",
+          "screen": "Categories",
+          "filePath": "src/app/(tabs)/categories.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "meal-plan",
+          "screen": "Meal-plan",
+          "filePath": "src/app/(tabs)/meal-plan.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "shopping",
+          "screen": "Shopping",
+          "filePath": "src/app/(tabs)/shopping.tsx"
+        },
+        {
+          "name": "favorites",
+          "screen": "Favorites",
+          "filePath": "src/app/favorites.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/recipes/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Recipe",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "type": "string"
+          },
+          {
+            "name": "prepTime",
+            "type": "number"
+          },
+          {
+            "name": "cookTime",
+            "type": "number"
+          },
+          {
+            "name": "totalTime",
+            "type": "number"
+          },
+          {
+            "name": "servings",
+            "type": "number"
+          },
+          {
+            "name": "difficulty",
+            "type": "'easy' | 'medium' | 'hard'"
+          },
+          {
+            "name": "ingredients",
+            "type": "Ingredient[]"
+          },
+          {
+            "name": "steps",
+            "type": "Step[]"
+          },
+          {
+            "name": "nutrition",
+            "type": "NutritionInfo"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewCount",
+            "type": "number"
+          },
+          {
+            "name": "featured",
+            "type": "boolean"
+          },
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "dateAdded",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Ingredient",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "number"
+          },
+          {
+            "name": "unit",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Step",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "stepNumber",
+            "type": "number"
+          },
+          {
+            "name": "instruction",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "NutritionInfo",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "calories",
+            "type": "number"
+          },
+          {
+            "name": "protein",
+            "type": "number"
+          },
+          {
+            "name": "carbs",
+            "type": "number"
+          },
+          {
+            "name": "fat",
+            "type": "number"
+          },
+          {
+            "name": "fiber",
+            "type": "number"
+          },
+          {
+            "name": "sugar",
+            "type": "number"
+          },
+          {
+            "name": "sodium",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Category",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "recipeCount",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "ShoppingItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "ingredientId",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "number"
+          },
+          {
+            "name": "unit",
+            "type": "string"
+          },
+          {
+            "name": "checked",
+            "type": "boolean"
+          },
+          {
+            "name": "recipeId",
+            "type": "string"
+          },
+          {
+            "name": "recipeName",
+            "type": "string"
+          },
+          {
+            "name": "addedAt",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "MealPlan",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "weekStartDate",
+            "type": "string"
+          },
+          {
+            "name": "meals",
+            "type": "PlannedMeal[]"
+          }
+        ]
+      },
+      {
+        "name": "PlannedMeal",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "recipeId",
+            "type": "string"
+          },
+          {
+            "name": "recipeName",
+            "type": "string"
+          },
+          {
+            "name": "recipeImage",
+            "type": "string"
+          },
+          {
+            "name": "dayOfWeek",
+            "type": "0 | 1 | 2 | 3 | 4 | 5 | 6"
+          },
+          {
+            "name": "mealType",
+            "type": "'breakfast' | 'lunch' | 'dinner' | 'snack'"
+          },
+          {
+            "name": "servings",
+            "type": "number"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "UserProfile",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "dietaryPreferences",
+            "type": "DietaryPreference[]"
+          },
+          {
+            "name": "favoriteRecipes",
+            "type": "string[]"
+          },
+          {
+            "name": "mealPlans",
+            "type": "MealPlan[]"
+          }
+        ]
+      },
+      {
+        "name": "DietaryPreference",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "ShoppingListState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "items",
+            "type": "ShoppingItem[]"
+          },
+          {
+            "name": "addItem",
+            "type": "(item: Omit<ShoppingItem, 'id' | 'checked' | 'addedAt'>) => void"
+          },
+          {
+            "name": "removeItem",
+            "type": "(itemId: string) => void"
+          },
+          {
+            "name": "toggleItem",
+            "type": "(itemId: string) => void"
+          },
+          {
+            "name": "clearChecked",
+            "type": "() => void"
+          },
+          {
+            "name": "clearAll",
+            "type": "() => void"
+          },
+          {
+            "name": "addIngredientsFromRecipe",
+            "type": "(recipe: Recipe) => void"
+          }
+        ]
+      },
+      {
+        "name": "MealPlanState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "currentWeek",
+            "type": "MealPlan | null"
+          },
+          {
+            "name": "setWeek",
+            "type": "(weekStartDate: string) => void"
+          },
+          {
+            "name": "addMeal",
+            "type": "(meal: Omit<PlannedMeal, 'id'>) => void"
+          },
+          {
+            "name": "removeMeal",
+            "type": "(mealId: string) => void"
+          },
+          {
+            "name": "updateMeal",
+            "type": "(mealId: string, updates: Partial<PlannedMeal>) => void"
+          },
+          {
+            "name": "clearDay",
+            "type": "(dayOfWeek: number) => void"
+          },
+          {
+            "name": "clearWeek",
+            "type": "() => void"
+          }
+        ]
+      },
+      {
+        "name": "FavoritesState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "favoriteIds",
+            "type": "string[]"
+          },
+          {
+            "name": "addFavorite",
+            "type": "(recipeId: string) => void"
+          },
+          {
+            "name": "removeFavorite",
+            "type": "(recipeId: string) => void"
+          },
+          {
+            "name": "isFavorite",
+            "type": "(recipeId: string) => boolean"
+          },
+          {
+            "name": "toggleFavorite",
+            "type": "(recipeId: string) => void"
+          }
+        ]
+      },
+      {
+        "name": "TimerState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "timers",
+            "type": "CookingTimer[]"
+          },
+          {
+            "name": "addTimer",
+            "type": "(timer: Omit<CookingTimer, 'id' | 'createdAt'>) => void"
+          },
+          {
+            "name": "removeTimer",
+            "type": "(timerId: string) => void"
+          },
+          {
+            "name": "updateTimer",
+            "type": "(timerId: string, updates: Partial<CookingTimer>) => void"
+          }
+        ]
+      },
+      {
+        "name": "CookingTimer",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "remaining",
+            "type": "number"
+          },
+          {
+            "name": "isRunning",
+            "type": "boolean"
+          },
+          {
+            "name": "recipeId",
+            "type": "string"
+          },
+          {
+            "name": "stepNumber",
+            "type": "number"
+          },
+          {
+            "name": "createdAt",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: recipe\n\n### Screens (9)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Ionicons\n- **CategoriesScreen** (src/app/(tabs)/categories.tsx)\n  - Hooks: useRouter, useLocalSearchParams, useState, useEffect\n  - JSX: SafeAreaView, View, Text, ScrollView, CategoryChip...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useState, useEffect\n  - JSX: View, ActivityIndicator, SafeAreaView, ScrollView, Text...\n- **MealPlanScreen** (src/app/(tabs)/meal-plan.tsx)\n  - Hooks: useRouter, useMealPlan\n  - JSX: SafeAreaView, View, Text, TouchableOpacity, Ionicons...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter, useFavorites, useShoppingList, useMealPlan\n  - JSX: SafeAreaView, ScrollView, View, Ionicons, Text...\n- **ShoppingScreen** (src/app/(tabs)/shopping.tsx)\n  - Hooks: useShoppingList\n  - JSX: SafeAreaView, View, Text, TouchableOpacity, Ionicons...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: StatusBar, Stack, Stack.Screen\n- **FavoritesScreen** (src/app/favorites.tsx)\n  - Hooks: useRouter, useFavorites, useState, useEffect\n  - JSX: SafeAreaView, View, ActivityIndicator, Ionicons, Text...\n- **RecipeDetailScreen** (src/app/recipes/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useState, useFavorites, useShoppingList, useMealPlan, useEffect\n  - JSX: View, ActivityIndicator, Ionicons, Text, TouchableOpacity...\n\n### Components (8)\n- **CategoryChip**: 0 hooks, 3 elements\n- **IngredientList**: 1 hooks, 4 elements\n- **MealPlanDay**: 0 hooks, 5 elements\n- **NutritionInfo**: 0 hooks, 2 elements\n- **RecipeCard**: 1 hooks, 5 elements\n- **ShoppingItem**: 0 hooks, 4 elements\n- **StepByStep**: 1 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **useFavorites**: deps []\n- **useMealPlan**: deps []\n- **useShoppingList**: deps []\n- **useTheme**: deps [useColorScheme]\n\n### Services (1)\n- **recipes**: getCategories(async), getRecipes(async), getRecipeById(async), getFeaturedRecipes(async), searchRecipes(async)\n\n### Navigation (expo-router)\n- categories -> Categories\n- index -> Index\n- meal-plan -> Meal-plan\n- profile -> Profile\n- shopping -> Shopping\n- favorites -> Favorites\n- [id] -> [id]\n\n### Types (15)\n- interface Recipe\n- interface Ingredient\n- interface Step\n- interface NutritionInfo\n- interface Category\n- interface ShoppingItem\n- interface MealPlan\n- interface PlannedMeal\n- interface UserProfile\n- type DietaryPreference\n- interface ShoppingListState\n- interface MealPlanState\n- interface FavoritesState\n- interface TimerState\n- interface CookingTimer",
+  "stats": {
+    "totalFiles": 28,
+    "totalScreens": 9,
+    "totalComponents": 8,
+    "totalHooks": 4,
+    "totalServices": 1,
+    "totalTypes": 15
+  }
+}

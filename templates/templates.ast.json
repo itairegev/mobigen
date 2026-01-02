@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-01T10:57:25.422Z",
+  "generatedAt": "2026-01-02T14:47:22.962Z",
   "templates": [
     {
       "id": "ai-assistant",
@@ -24,6 +24,39 @@
       }
     },
     {
+      "id": "church",
+      "stats": {
+        "totalFiles": 38,
+        "totalScreens": 11,
+        "totalComponents": 7,
+        "totalHooks": 5,
+        "totalServices": 6,
+        "totalTypes": 14
+      }
+    },
+    {
+      "id": "community",
+      "stats": {
+        "totalFiles": 35,
+        "totalScreens": 11,
+        "totalComponents": 8,
+        "totalHooks": 5,
+        "totalServices": 3,
+        "totalTypes": 14
+      }
+    },
+    {
+      "id": "course",
+      "stats": {
+        "totalFiles": 29,
+        "totalScreens": 9,
+        "totalComponents": 8,
+        "totalHooks": 5,
+        "totalServices": 1,
+        "totalTypes": 12
+      }
+    },
+    {
       "id": "ecommerce",
       "stats": {
         "totalFiles": 25,
@@ -32,6 +65,39 @@
         "totalHooks": 4,
         "totalServices": 0,
         "totalTypes": 6
+      }
+    },
+    {
+      "id": "event",
+      "stats": {
+        "totalFiles": 40,
+        "totalScreens": 12,
+        "totalComponents": 10,
+        "totalHooks": 5,
+        "totalServices": 4,
+        "totalTypes": 8
+      }
+    },
+    {
+      "id": "field-service",
+      "stats": {
+        "totalFiles": 33,
+        "totalScreens": 10,
+        "totalComponents": 8,
+        "totalHooks": 5,
+        "totalServices": 1,
+        "totalTypes": 11
+      }
+    },
+    {
+      "id": "fitness",
+      "stats": {
+        "totalFiles": 32,
+        "totalScreens": 11,
+        "totalComponents": 11,
+        "totalHooks": 4,
+        "totalServices": 3,
+        "totalTypes": 14
       }
     },
     {
@@ -46,6 +112,17 @@
       }
     },
     {
+      "id": "marketplace",
+      "stats": {
+        "totalFiles": 38,
+        "totalScreens": 11,
+        "totalComponents": 11,
+        "totalHooks": 5,
+        "totalServices": 3,
+        "totalTypes": 7
+      }
+    },
+    {
       "id": "news",
       "stats": {
         "totalFiles": 27,
@@ -54,6 +131,116 @@
         "totalHooks": 4,
         "totalServices": 0,
         "totalTypes": 5
+      }
+    },
+    {
+      "id": "pet-services",
+      "stats": {
+        "totalFiles": 36,
+        "totalScreens": 11,
+        "totalComponents": 7,
+        "totalHooks": 5,
+        "totalServices": 7,
+        "totalTypes": 13
+      }
+    },
+    {
+      "id": "podcast",
+      "stats": {
+        "totalFiles": 32,
+        "totalScreens": 9,
+        "totalComponents": 8,
+        "totalHooks": 5,
+        "totalServices": 2,
+        "totalTypes": 8
+      }
+    },
+    {
+      "id": "portfolio",
+      "stats": {
+        "totalFiles": 31,
+        "totalScreens": 9,
+        "totalComponents": 8,
+        "totalHooks": 4,
+        "totalServices": 1,
+        "totalTypes": 11
+      }
+    },
+    {
+      "id": "real-estate",
+      "stats": {
+        "totalFiles": 36,
+        "totalScreens": 10,
+        "totalComponents": 12,
+        "totalHooks": 5,
+        "totalServices": 1,
+        "totalTypes": 9
+      }
+    },
+    {
+      "id": "recipe",
+      "stats": {
+        "totalFiles": 28,
+        "totalScreens": 9,
+        "totalComponents": 8,
+        "totalHooks": 4,
+        "totalServices": 1,
+        "totalTypes": 15
+      }
+    },
+    {
+      "id": "restaurant",
+      "stats": {
+        "totalFiles": 32,
+        "totalScreens": 10,
+        "totalComponents": 11,
+        "totalHooks": 3,
+        "totalServices": 2,
+        "totalTypes": 12
+      }
+    },
+    {
+      "id": "school",
+      "stats": {
+        "totalFiles": 31,
+        "totalScreens": 11,
+        "totalComponents": 5,
+        "totalHooks": 5,
+        "totalServices": 5,
+        "totalTypes": 21
+      }
+    },
+    {
+      "id": "service-booking",
+      "stats": {
+        "totalFiles": 32,
+        "totalScreens": 11,
+        "totalComponents": 7,
+        "totalHooks": 5,
+        "totalServices": 3,
+        "totalTypes": 7
+      }
+    },
+    {
+      "id": "shared",
+      "stats": {
+        "totalFiles": 51,
+        "totalScreens": 0,
+        "totalComponents": 29,
+        "totalHooks": 0,
+        "totalServices": 0,
+        "totalTypes": 0
+      }
+    },
+    {
+      "id": "sports-team",
+      "stats": {
+        "totalFiles": 35,
+        "totalScreens": 10,
+        "totalComponents": 7,
+        "totalHooks": 5,
+        "totalServices": 6,
+        "totalTypes": 13
       }
     }
   ]

@@ -1,0 +1,42 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - prayer
+---
+# Submit Prayer Request Flow
+- launchApp:
+    clearState: true
+
+# Navigate to home
+- tapOn: "Home"
+- assertVisible: "Welcome Home"
+
+# Tap on Prayer quick action
+- tapOn:
+    id: "prayer-button"
+- assertVisible: "Prayer Requests"
+
+# Open new prayer modal
+- tapOn:
+    id: "add-prayer-button"
+- assertVisible: "New Prayer Request"
+
+# Fill in prayer details
+- tapOn:
+    id: "prayer-title-input"
+- inputText: "Prayer for healing"
+
+- tapOn:
+    id: "prayer-description-input"
+- inputText: "Asking for prayers for my recovery from surgery"
+
+# Select category
+- tapOn:
+    id: "category-health"
+
+# Submit prayer
+- tapOn:
+    id: "submit-prayer-button"
+
+# Verify confirmation
+- assertVisible: "Prayer Submitted"

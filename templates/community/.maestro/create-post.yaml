@@ -1,0 +1,26 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - post
+---
+# Create Post Flow
+- launchApp:
+    clearState: true
+
+# Navigate to create post
+- tapOn:
+    id: "create-post-fab"
+- assertVisible: "Create Post"
+
+# Fill in post content
+- tapOn:
+    id: "post-input"
+- inputText: "This is a test post from the community app!"
+
+# Submit post
+- tapOn:
+    id: "submit-post-button"
+
+# Verify back on feed
+- assertVisible: "Community Feed"
+- assertVisible: "This is a test post"

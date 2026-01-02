@@ -1,0 +1,52 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - browsing
+---
+# Browse Listings Flow
+- launchApp:
+    clearState: true
+
+# Home Screen
+- assertVisible: "Home"
+- assertVisible:
+    id: "search-input"
+
+# Verify listings are displayed
+- assertVisible:
+    id: "listing-1"
+
+# Tap on a listing
+- tapOn:
+    id: "listing-1"
+
+# Verify listing detail screen
+- assertVisible: "Listing Details"
+- assertVisible: "Description"
+- assertVisible: "Seller Information"
+- assertVisible:
+    id: "contact-seller-button"
+
+# Go back
+- back
+
+# Test search
+- tapOn:
+    id: "search-input"
+- inputText: "iPhone"
+- hideKeyboard
+
+# Test quick category filter
+- tapOn:
+    id: "quick-cat-electronics"
+
+# Navigate to Categories tab
+- tapOn: "Categories"
+- assertVisible: "Categories"
+
+# Select a category
+- tapOn:
+    id: "category-tab-furniture"
+
+# Verify filtered results
+- assertVisible: "Categories"

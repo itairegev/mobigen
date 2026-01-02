@@ -1,0 +1,54 @@
+appId: com.mobigen.course
+tags:
+  - critical
+  - quiz
+---
+# Take Quiz Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Courses
+- tapOn: "Courses"
+- tapOn:
+    id: "course-1"
+
+# Start lesson with quiz
+- tapOn:
+    id: "lesson-1-3"
+- assertVisible: "Lesson"
+
+# Complete lesson to access quiz
+- tapOn:
+    id: "complete-lesson-button"
+
+# Take quiz option
+- tapOn: "Take Quiz"
+- assertVisible: "Core Components Quiz"
+
+# Answer first question
+- assertVisible:
+    id: "question-0"
+- tapOn:
+    id: "quiz-option-0"
+
+# Answer remaining questions
+- waitForAnimationToEnd
+- tapOn:
+    id: "quiz-option-1"
+
+- waitForAnimationToEnd
+- tapOn:
+    id: "quiz-option-1"
+
+- waitForAnimationToEnd
+- tapOn:
+    id: "quiz-option-1"
+
+- waitForAnimationToEnd
+- tapOn:
+    id: "quiz-option-1"
+
+# Check results
+- assertVisible: "Congratulations!"
+- assertVisible:
+    id: "continue-button"

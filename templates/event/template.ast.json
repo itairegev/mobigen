@@ -1,0 +1,1803 @@
+{
+  "templateId": "event",
+  "generatedAt": "2026-01-02T14:47:22.192Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Calendar",
+              "Users",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Calendar",
+          "Users",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AttendeesScreen",
+        "filePath": "src/app/(tabs)/attendees.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useAttendees",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Search"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useAttendees",
+            "specifiers": [
+              "useAttendees"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "AttendeeCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AttendeesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Search",
+          "TextInput",
+          "Text",
+          "FlatList",
+          "AttendeeCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useSessions",
+          "useSpeakers"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Users",
+              "MapPin",
+              "Star",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSessions",
+            "specifiers": [
+              "useSessions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSpeakers",
+            "specifiers": [
+              "useSpeakers"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SessionCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "Calendar",
+          "Users",
+          "TouchableOpacity",
+          "MapPin",
+          "Star",
+          "TrendingUp",
+          "SessionCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useAgenda"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Briefcase",
+              "Mail",
+              "Star",
+              "MapPin",
+              "Award",
+              "ExternalLink"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useAgenda",
+            "specifiers": [
+              "useAgenda"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Image",
+          "Text",
+          "Briefcase",
+          "Mail",
+          "Star",
+          "Award",
+          "TouchableOpacity",
+          "ExternalLink",
+          "MapPin"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ScheduleScreen",
+        "filePath": "src/app/(tabs)/schedule.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useSessions",
+          "useTracks",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSessions",
+            "specifiers": [
+              "useSessions",
+              "useTracks"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SessionCard",
+              "TrackFilter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ScheduleScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "TrackFilter",
+          "FlatList",
+          "Text",
+          "SessionCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SpeakersScreen",
+        "filePath": "src/app/(tabs)/speakers.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useSpeakers",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "TextInput"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Search"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSpeakers",
+            "specifiers": [
+              "useSpeakers"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SpeakerCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SpeakersScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Search",
+          "TextInput",
+          "FlatList",
+          "SpeakerCard",
+          "Text"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AgendaScreen",
+        "filePath": "src/app/agenda.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useAgenda",
+          "useSessions"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useAgenda",
+            "specifiers": [
+              "useAgenda"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSessions",
+            "specifiers": [
+              "useSessions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "AgendaItem"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AgendaScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Calendar",
+          "Text",
+          "FlatList",
+          "AgendaItem"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "MapScreen",
+        "filePath": "src/app/map.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "VenueMap"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "MapScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "VenueMap"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SessionDetailScreen",
+        "filePath": "src/app/sessions/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useSession",
+          "useAgenda",
+          "useSpeaker"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "MapPin",
+              "Users",
+              "Calendar",
+              "BookmarkPlus",
+              "BookmarkCheck"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSessions",
+            "specifiers": [
+              "useSession"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSpeakers",
+            "specifiers": [
+              "useSpeaker"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useAgenda",
+            "specifiers": [
+              "useAgenda"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "Button"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SessionDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "View",
+          "Calendar",
+          "Clock",
+          "MapPin",
+          "Users",
+          "TouchableOpacity",
+          "Button"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SpeakerDetailScreen",
+        "filePath": "src/app/speakers/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useRouter",
+          "useSpeaker",
+          "useSessions"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Briefcase",
+              "Twitter",
+              "Linkedin",
+              "Globe"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSpeakers",
+            "specifiers": [
+              "useSpeaker"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useSessions",
+            "specifiers": [
+              "useSessions"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SessionCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SpeakerDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "ScrollView",
+          "View",
+          "Image",
+          "Briefcase",
+          "TouchableOpacity",
+          "Twitter",
+          "Linkedin",
+          "Globe",
+          "SessionCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SponsorsScreen",
+        "filePath": "src/app/sponsors.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useQuery"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "FlatList",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "useQuery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services/sponsors",
+            "specifiers": [
+              "fetchSponsors"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SponsorTile"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SponsorsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "FlatList",
+          "View",
+          "Text",
+          "SponsorTile"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AgendaItem",
+        "filePath": "src/components/AgendaItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useAgenda"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "MapPin",
+              "Bell",
+              "BellOff",
+              "Trash2"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Session"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useAgenda",
+            "specifiers": [
+              "useAgenda"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AgendaItem"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Text",
+          "Bell",
+          "BellOff",
+          "Trash2",
+          "Clock",
+          "MapPin"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "AttendeeCard",
+        "filePath": "src/components/AttendeeCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Briefcase"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Attendee"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AttendeeCard"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "View",
+          "Image",
+          "Text",
+          "Briefcase"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Button",
+        "filePath": "src/components/Button.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "TouchableOpacity",
+              "Text",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Button"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "ActivityIndicator",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "Card",
+        "filePath": "src/components/Card.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "ViewProps"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Card"
+        ],
+        "jsxElements": [
+          "View"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SessionCard",
+        "filePath": "src/components/SessionCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useAgenda"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "MapPin",
+              "Users"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Session"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useAgenda",
+            "specifiers": [
+              "useAgenda"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SessionCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Text",
+          "Clock",
+          "MapPin",
+          "Users"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SpeakerCard",
+        "filePath": "src/components/SpeakerCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Briefcase"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Speaker"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SpeakerCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "Briefcase"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SponsorTile",
+        "filePath": "src/components/SponsorTile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Sponsor"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SponsorTile"
+        ],
+        "jsxElements": [
+          "Wrapper",
+          "View",
+          "Image",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TrackFilter",
+        "filePath": "src/components/TrackFilter.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Track"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TrackFilter"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "TouchableOpacity",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "VenueMap",
+        "filePath": "src/components/VenueMap.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "VenueMap"
+        ],
+        "jsxElements": [
+          "ScrollView",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useAgenda",
+        "filePath": "src/hooks/useAgenda.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useAttendees",
+        "filePath": "src/hooks/useAttendees.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSessions",
+        "filePath": "src/hooks/useSessions.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useSpeakers",
+        "filePath": "src/hooks/useSpeakers.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "attendees",
+        "filePath": "src/services/attendees.ts",
+        "functions": [
+          {
+            "name": "fetchAttendees",
+            "params": [],
+            "returnType": "Promise<Attendee[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchAttendeeById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Attendee | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "sessions",
+        "filePath": "src/services/sessions.ts",
+        "functions": [
+          {
+            "name": "fetchSessions",
+            "params": [],
+            "returnType": "Promise<Session[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchSessionById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Session | null>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchSessionsByTrack",
+            "params": [
+              {
+                "name": "trackId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Session[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchTracks",
+            "params": [],
+            "returnType": "Promise<Track[]>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "speakers",
+        "filePath": "src/services/speakers.ts",
+        "functions": [
+          {
+            "name": "fetchSpeakers",
+            "params": [],
+            "returnType": "Promise<Speaker[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchSpeakerById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Speaker | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "sponsors",
+        "filePath": "src/services/sponsors.ts",
+        "functions": [
+          {
+            "name": "fetchSponsors",
+            "params": [],
+            "returnType": "Promise<Sponsor[]>",
+            "isAsync": true
+          },
+          {
+            "name": "fetchSponsorsByTier",
+            "params": [
+              {
+                "name": "tier",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Sponsor[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "attendees",
+          "screen": "Attendees",
+          "filePath": "src/app/(tabs)/attendees.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "schedule",
+          "screen": "Schedule",
+          "filePath": "src/app/(tabs)/schedule.tsx"
+        },
+        {
+          "name": "speakers",
+          "screen": "Speakers",
+          "filePath": "src/app/(tabs)/speakers.tsx"
+        },
+        {
+          "name": "agenda",
+          "screen": "Agenda",
+          "filePath": "src/app/agenda.tsx"
+        },
+        {
+          "name": "map",
+          "screen": "Map",
+          "filePath": "src/app/map.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/sessions/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/speakers/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "sponsors",
+          "screen": "Sponsors",
+          "filePath": "src/app/sponsors.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Session",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "type": "string"
+          },
+          {
+            "name": "trackId",
+            "type": "string"
+          },
+          {
+            "name": "trackName",
+            "type": "string"
+          },
+          {
+            "name": "trackColor",
+            "type": "string"
+          },
+          {
+            "name": "speakerIds",
+            "type": "string[]"
+          },
+          {
+            "name": "room",
+            "type": "string"
+          },
+          {
+            "name": "level",
+            "type": "'beginner' | 'intermediate' | 'advanced'"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "enrolled",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Speaker",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "twitter",
+            "type": "string"
+          },
+          {
+            "name": "linkedin",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "sessionIds",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Attendee",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "interests",
+            "type": "string[]"
+          },
+          {
+            "name": "linkedin",
+            "type": "string"
+          },
+          {
+            "name": "twitter",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Sponsor",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "logo",
+            "type": "string"
+          },
+          {
+            "name": "tier",
+            "type": "'platinum' | 'gold' | 'silver' | 'bronze'"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "booth",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Track",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Venue",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "floor",
+            "type": "number"
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "amenities",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "AgendaItem",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "sessionId",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "reminder",
+            "type": "boolean"
+          },
+          {
+            "name": "addedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Event",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "type": "string"
+          },
+          {
+            "name": "venue",
+            "type": "string"
+          },
+          {
+            "name": "venueAddress",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "hashtag",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: event\n\n### Screens (12)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Calendar, Users...\n- **AttendeesScreen** (src/app/(tabs)/attendees.tsx)\n  - Hooks: useAttendees, useState\n  - JSX: SafeAreaView, View, Search, TextInput, Text...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useSessions, useSpeakers\n  - JSX: SafeAreaView, ScrollView, View, Text, Calendar...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - Hooks: useRouter, useAgenda\n  - JSX: SafeAreaView, ScrollView, View, Image, Text...\n- **ScheduleScreen** (src/app/(tabs)/schedule.tsx)\n  - Hooks: useRouter, useSessions, useTracks, useState\n  - JSX: SafeAreaView, View, TrackFilter, FlatList, Text...\n- **SpeakersScreen** (src/app/(tabs)/speakers.tsx)\n  - Hooks: useRouter, useSpeakers, useState\n  - JSX: SafeAreaView, View, Search, TextInput, FlatList...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **AgendaScreen** (src/app/agenda.tsx)\n  - Hooks: useRouter, useAgenda, useSessions\n  - JSX: SafeAreaView, View, Calendar, Text, FlatList...\n- **MapScreen** (src/app/map.tsx)\n  - JSX: SafeAreaView, VenueMap\n- **SessionDetailScreen** (src/app/sessions/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useSession, useAgenda, useSpeaker\n  - JSX: SafeAreaView, ActivityIndicator, Text, ScrollView, View...\n- **SpeakerDetailScreen** (src/app/speakers/[id].tsx)\n  - Hooks: useLocalSearchParams, useRouter, useSpeaker, useSessions\n  - JSX: SafeAreaView, ActivityIndicator, Text, ScrollView, View...\n- **SponsorsScreen** (src/app/sponsors.tsx)\n  - Hooks: useQuery\n  - JSX: SafeAreaView, FlatList, View, Text, SponsorTile\n\n### Components (10)\n- **AgendaItem**: 1 hooks, 8 elements\n- **AttendeeCard**: 0 hooks, 5 elements\n- **Button**: 0 hooks, 3 elements\n- **Card**: 0 hooks, 1 elements\n- **SessionCard**: 1 hooks, 6 elements\n- **SpeakerCard**: 0 hooks, 5 elements\n- **SponsorTile**: 0 hooks, 4 elements\n- **TrackFilter**: 0 hooks, 3 elements\n- **VenueMap**: 0 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useAgenda**: deps []\n- **useAttendees**: deps [useQuery]\n- **useSessions**: deps [useQuery]\n- **useSpeakers**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (4)\n- **attendees**: fetchAttendees(async), fetchAttendeeById(async)\n- **sessions**: fetchSessions(async), fetchSessionById(async), fetchSessionsByTrack(async), fetchTracks(async)\n- **speakers**: fetchSpeakers(async), fetchSpeakerById(async)\n- **sponsors**: fetchSponsors(async), fetchSponsorsByTier(async)\n\n### Navigation (expo-router)\n- attendees -> Attendees\n- index -> Index\n- profile -> Profile\n- schedule -> Schedule\n- speakers -> Speakers\n- agenda -> Agenda\n- map -> Map\n- [id] -> [id]\n- [id] -> [id]\n- sponsors -> Sponsors\n\n### Types (8)\n- interface Session\n- interface Speaker\n- interface Attendee\n- interface Sponsor\n- interface Track\n- interface Venue\n- interface AgendaItem\n- interface Event",
+  "stats": {
+    "totalFiles": 40,
+    "totalScreens": 12,
+    "totalComponents": 10,
+    "totalHooks": 5,
+    "totalServices": 4,
+    "totalTypes": 8
+  }
+}

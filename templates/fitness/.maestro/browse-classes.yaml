@@ -1,0 +1,40 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - classes
+---
+# Browse Classes Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Classes tab
+- tapOn: "Classes"
+- assertVisible: "Category"
+- assertVisible: "Difficulty"
+
+# Test category filter
+- tapOn:
+    id: "filter-category-yoga"
+- assertVisible:
+    text: ".*[Cc]lass.*[Aa]vailable"
+    regex: true
+
+# Test difficulty filter
+- tapOn:
+    id: "filter-difficulty-beginner"
+- assertVisible:
+    text: ".*spots left"
+    regex: true
+
+# Verify class card is visible
+- assertVisible:
+    id: "class-card-1"
+
+# Reset filters
+- tapOn:
+    id: "filter-category-all"
+- tapOn:
+    id: "filter-difficulty-all"
+- assertVisible:
+    text: ".*[Cc]lass.*[Aa]vailable"
+    regex: true

@@ -1,0 +1,39 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - grades
+---
+# Test: View grades and GPA
+
+- launchApp:
+    clearState: true
+
+# Navigate to Grades tab
+- tapOn: "Grades"
+- assertVisible: "Overall GPA"
+
+# Verify GPA is displayed
+- assertVisible:
+    text: "\\d\\.\\d{2}"
+    regex: true
+
+# Verify subject grades are shown
+- assertVisible: "Grades by Subject"
+- assertVisible: "Algebra II"
+- assertVisible: "English Literature"
+- assertVisible: "Biology"
+
+# Verify grade scale legend
+- scrollUntilVisible:
+    element: "Grade Scale"
+    direction: DOWN
+- assertVisible: "A (90-100)"
+- assertVisible: "Excellent"
+
+# Verify subject grade cards show letter grades
+- assertVisible:
+    text: "[A-F][+-]?"
+    regex: true
+
+# Success!
+- assertVisible: "Grades"

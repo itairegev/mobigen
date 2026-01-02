@@ -1,0 +1,31 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - giving
+---
+# Donation Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Give tab
+- tapOn: "Give"
+- assertVisible: "Select Fund"
+
+# Select a fund
+- tapOn:
+    id: "fund-2"
+
+# Select quick amount
+- tapOn:
+    id: "quick-amount-100"
+
+# Select frequency
+- tapOn:
+    id: "frequency-monthly"
+
+# Submit donation
+- tapOn:
+    id: "submit-donation-button"
+
+# Verify confirmation (in alert)
+- assertVisible: "Thank You!"

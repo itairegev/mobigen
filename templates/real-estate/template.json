@@ -1,0 +1,45 @@
+{
+  "name": "real-estate",
+  "version": "1.0.0",
+  "description": "Real estate app with property listings, search, tours, and mortgage calculator",
+  "category": "real-estate",
+  "features": [
+    "property-listings",
+    "property-search",
+    "advanced-filters",
+    "image-gallery",
+    "saved-properties",
+    "tour-scheduling",
+    "mortgage-calculator",
+    "agent-contact",
+    "map-view"
+  ],
+  "screens": [
+    "home",
+    "search",
+    "saved",
+    "profile",
+    "property-details",
+    "schedule-tour",
+    "calculator",
+    "contact"
+  ],
+  "components": [
+    "PropertyCard",
+    "ImageGallery",
+    "FilterPanel",
+    "MortgageCalc",
+    "TourScheduler",
+    "AgentCard",
+    "PropertyDetails",
+    "MapView"
+  ],
+  "dataModels": [
+    "Property",
+    "PropertyType",
+    "Agent",
+    "Tour",
+    "MortgageParams",
+    "SearchFilters"
+  ]
+}

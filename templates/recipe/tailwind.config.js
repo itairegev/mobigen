@@ -1,0 +1,51 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  presets: [require('nativewind/preset')],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#FF6B35',
+          50: '#FFF4F0',
+          100: '#FFE9E0',
+          200: '#FFD3C2',
+          300: '#FFBDA3',
+          400: '#FFA685',
+          500: '#FF6B35',
+          600: '#E65A2B',
+          700: '#CC4921',
+          800: '#B33817',
+          900: '#99270D',
+        },
+        secondary: {
+          DEFAULT: '#4ECDC4',
+          50: '#F0FFFE',
+          100: '#E0FFFC',
+          200: '#C1FFF9',
+          300: '#A2FFF6',
+          400: '#83FFF3',
+          500: '#4ECDC4',
+          600: '#3BB8AF',
+          700: '#28A39A',
+          800: '#158E85',
+          900: '#027970',
+        },
+        accent: {
+          DEFAULT: '#FFE66D',
+          50: '#FFFEF5',
+          100: '#FFFDEB',
+          200: '#FFFBD7',
+          300: '#FFF9C3',
+          400: '#FFF7AF',
+          500: '#FFE66D',
+          600: '#E6CF5A',
+          700: '#CCB847',
+          800: '#B3A134',
+          900: '#998A21',
+        },
+      },
+    },
+  },
+  plugins: [],
+};

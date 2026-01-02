@@ -1,0 +1,60 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - agenda
+---
+# Build Personal Agenda Flow
+- launchApp:
+    clearState: true
+
+# Add first session from home
+- tapOn:
+    id: "upcoming-session-1"
+- assertVisible: "Session Details"
+- tapOn:
+    id: "add-to-agenda-button"
+- assertVisible: "Remove from Agenda"
+- back
+
+# Add second session from schedule
+- tapOn: "Schedule"
+- tapOn:
+    id: "session-2"
+- tapOn:
+    id: "add-to-agenda-button"
+- back
+
+# View agenda
+- tapOn: "Home"
+- tapOn:
+    id: "my-agenda-button"
+- assertVisible: "My Agenda"
+- assertVisible:
+    text: "2 sessions in your agenda"
+
+# Check agenda items
+- assertVisible:
+    id: "agenda-session-1"
+- assertVisible:
+    id: "agenda-session-2"
+
+# Toggle reminder
+- scrollUntilVisible:
+    element:
+      id: "agenda-session-1"
+- assertVisible:
+    id: "agenda-session-1"
+
+# Remove from agenda
+- tapOn:
+    id: "agenda-session-1"
+- assertVisible: "Session Details"
+- tapOn:
+    id: "remove-from-agenda-button"
+- back
+
+# Verify removal
+- assertVisible:
+    text: "1 session in your agenda"
+- assertNotVisible:
+    id: "agenda-session-1"

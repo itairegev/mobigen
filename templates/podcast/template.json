@@ -1,0 +1,97 @@
+{
+  "id": "podcast",
+  "name": "Podcast & Creator Hub",
+  "description": "Complete podcast app with audio player, exclusive content, and community features",
+  "category": "creator-economy",
+  "version": "1.0.0",
+  "features": [
+    "episode-browser",
+    "audio-player",
+    "playback-controls",
+    "exclusive-content",
+    "community-feed",
+    "show-notes",
+    "mini-player",
+    "background-audio"
+  ],
+  "screens": [
+    {
+      "name": "Home",
+      "path": "(tabs)/index",
+      "description": "Latest and featured episodes"
+    },
+    {
+      "name": "Episodes",
+      "path": "(tabs)/episodes",
+      "description": "All episodes with search"
+    },
+    {
+      "name": "Exclusives",
+      "path": "(tabs)/exclusives",
+      "description": "Subscriber-only content"
+    },
+    {
+      "name": "Community",
+      "path": "(tabs)/community",
+      "description": "Discussion and engagement"
+    },
+    {
+      "name": "Profile",
+      "path": "(tabs)/profile",
+      "description": "User settings and preferences"
+    },
+    {
+      "name": "Episode Detail",
+      "path": "episodes/[id]",
+      "description": "Full episode information"
+    },
+    {
+      "name": "Player",
+      "path": "player",
+      "description": "Full-screen audio player"
+    }
+  ],
+  "components": [
+    "EpisodeCard",
+    "AudioPlayer",
+    "MiniPlayer",
+    "PlaybackControls",
+    "ProgressSlider",
+    "PlaybackSpeed",
+    "ShowNotes"
+  ],
+  "hooks": [
+    "useEpisodes",
+    "usePlayer",
+    "usePlayback",
+    "useDownloads",
+    "useTheme"
+  ],
+  "mockData": {
+    "series": 3,
+    "episodes": 14,
+    "posts": 3
+  },
+  "backendTables": [
+    "episodes",
+    "series",
+    "plays",
+    "comments",
+    "users"
+  ],
+  "testFlows": [
+    "browse-episodes",
+    "play-episode"
+  ],
+  "dependencies": {
+    "expo-av": "For audio playback",
+    "expo-file-system": "For episode downloads",
+    "date-fns": "For date formatting",
+    "lucide-react-native": "For icons"
+  },
+  "colors": {
+    "primary": "#8b5cf6",
+    "secondary": "#ec4899",
+    "player": "#1e1b4b"
+  }
+}

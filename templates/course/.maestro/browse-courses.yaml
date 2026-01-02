@@ -1,0 +1,27 @@
+appId: com.mobigen.course
+tags:
+  - critical
+  - browse
+---
+# Browse Courses Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Courses tab
+- tapOn: "Courses"
+- assertVisible: "Courses"
+
+# Check courses are displayed
+- assertVisible:
+    id: "course-1"
+- assertVisible:
+    id: "course-2"
+
+# Test category filter
+- tapOn:
+    id: "category-Mobile Development"
+- assertVisible: "1 courses"
+
+- tapOn:
+    id: "category-All"
+- assertVisible: "4 courses"

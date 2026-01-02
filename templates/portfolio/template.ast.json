@@ -1,0 +1,1738 @@
+{
+  "templateId": "portfolio",
+  "generatedAt": "2026-01-02T14:47:22.617Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Briefcase",
+              "User",
+              "Mail"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Briefcase",
+          "User",
+          "Mail"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AboutScreen",
+        "filePath": "src/app/(tabs)/about.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "MapPin",
+              "Mail",
+              "Phone",
+              "Download"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "SkillBadge",
+              "ExperienceItem",
+              "SocialLinks"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "PERSONAL_INFO",
+              "MOCK_SKILLS",
+              "MOCK_EXPERIENCE",
+              "MOCK_EDUCATION"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AboutScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Image",
+          "Text",
+          "MapPin",
+          "Mail",
+          "Phone",
+          "SocialLinks",
+          "SkillBadge",
+          "ExperienceItem"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ContactScreen",
+        "filePath": "src/app/(tabs)/contact.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Mail",
+              "Phone",
+              "MapPin",
+              "Clock",
+              "DollarSign"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ContactForm",
+              "SocialLinks"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "PERSONAL_INFO"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ContactScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "Mail",
+          "Phone",
+          "MapPin",
+          "Clock",
+          "DollarSign",
+          "SocialLinks",
+          "ContactForm"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme",
+          "useFeaturedProjects",
+          "useTestimonials"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Link"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ArrowRight",
+              "Star",
+              "Briefcase",
+              "Users"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme",
+              "useFeaturedProjects",
+              "useTestimonials"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ProjectCard",
+              "TestimonialCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "PERSONAL_INFO"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Image",
+          "Text",
+          "Link",
+          "TouchableOpacity",
+          "Briefcase",
+          "ArrowRight",
+          "ProjectCard",
+          "TestimonialCard",
+          "Users"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "PortfolioScreen",
+        "filePath": "src/app/(tabs)/portfolio.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme",
+          "useState",
+          "useProjects"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme",
+              "useProjects"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ProjectCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "ProjectCategory"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "PortfolioScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "ProjectCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProjectDetailScreen",
+        "filePath": "src/app/projects/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme",
+          "useLocalSearchParams",
+          "useProject"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Linking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useLocalSearchParams",
+              "Link"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ExternalLink",
+              "Github",
+              "Calendar",
+              "User",
+              "Building"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme",
+              "useProject"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ImageGallery"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProjectDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "Text",
+          "Link",
+          "TouchableOpacity",
+          "ScrollView",
+          "ImageGallery",
+          "Building",
+          "User",
+          "Calendar",
+          "ExternalLink",
+          "Github"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ServicesScreen",
+        "filePath": "src/app/services.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Link"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Icons"
+            ],
+            "isDefault": false,
+            "isNamespace": true
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/services",
+            "specifiers": [
+              "MOCK_SERVICES"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ServicesScreen"
+        ],
+        "jsxElements": [
+          "IconComponent",
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "Link",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "TestimonialsScreen",
+        "filePath": "src/app/testimonials.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme",
+          "useTestimonials"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme",
+              "useTestimonials"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "TestimonialCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TestimonialsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "TestimonialCard"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "ContactForm",
+        "filePath": "src/components/ContactForm.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme",
+          "useContact",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TouchableOpacity",
+              "Alert",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Send",
+              "CheckCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useContact"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "validateEmail"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ContactForm"
+        ],
+        "jsxElements": [
+          "View",
+          "CheckCircle",
+          "Text",
+          "TextInput",
+          "TouchableOpacity",
+          "Send"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ExperienceItem",
+        "filePath": "src/components/ExperienceItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Briefcase"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/utils",
+            "specifiers": [
+              "formatDateRange"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Experience"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ExperienceItem"
+        ],
+        "jsxElements": [
+          "View",
+          "Briefcase",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ImageGallery",
+        "filePath": "src/components/ImageGallery.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React",
+              "useState"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Image",
+              "TouchableOpacity",
+              "Modal",
+              "ScrollView",
+              "Dimensions",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ImageGallery"
+        ],
+        "jsxElements": [
+          "View",
+          "ScrollView",
+          "TouchableOpacity",
+          "Image",
+          "Modal",
+          "X"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ProjectCard",
+        "filePath": "src/components/ProjectCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Link"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Project"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProjectCard"
+        ],
+        "jsxElements": [
+          "Link",
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SkillBadge",
+        "filePath": "src/components/SkillBadge.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Skill"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SkillBadge"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "SocialLinks",
+        "filePath": "src/components/SocialLinks.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "TouchableOpacity",
+              "Linking",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Github",
+              "Linkedin",
+              "Twitter",
+              "Globe"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "SocialLink"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SocialLinks"
+        ],
+        "jsxElements": [
+          "Github",
+          "Linkedin",
+          "Twitter",
+          "Globe",
+          "View",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TestimonialCard",
+        "filePath": "src/components/TestimonialCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useTheme"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "React"
+            ],
+            "isDefault": true,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "ViewStyle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Star"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useTheme"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Testimonial"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TestimonialCard"
+        ],
+        "jsxElements": [
+          "View",
+          "Star",
+          "Text",
+          "Image"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useContact",
+        "filePath": "src/hooks/useContact.ts",
+        "dependencies": [
+          "useState",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useProjects",
+        "filePath": "src/hooks/useProjects.ts",
+        "dependencies": [
+          "useQuery",
+          "useProjects"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTestimonials",
+        "filePath": "src/hooks/useTestimonials.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "data",
+        "filePath": "src/services/data.ts",
+        "functions": [
+          {
+            "name": "getProjects",
+            "params": [
+              {
+                "name": "featured",
+                "type": "boolean"
+              }
+            ],
+            "returnType": "Promise<Project[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getProjectById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Project | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getSkills",
+            "params": [],
+            "returnType": "Promise<Skill[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getExperience",
+            "params": [],
+            "returnType": "Promise<Experience[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getEducation",
+            "params": [],
+            "returnType": "Promise<Education[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getTestimonials",
+            "params": [],
+            "returnType": "Promise<Testimonial[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getServices",
+            "params": [],
+            "returnType": "Promise<Service[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getPersonalInfo",
+            "params": [],
+            "returnType": "Promise<PersonalInfo>",
+            "isAsync": true
+          },
+          {
+            "name": "submitContactMessage",
+            "params": [
+              {
+                "name": "message",
+                "type": "Omit<ContactMessage, 'id' | 'createdAt' | 'status'>"
+              }
+            ],
+            "returnType": "Promise<ContactMessage>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "about",
+          "screen": "About",
+          "filePath": "src/app/(tabs)/about.tsx"
+        },
+        {
+          "name": "contact",
+          "screen": "Contact",
+          "filePath": "src/app/(tabs)/contact.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "portfolio",
+          "screen": "Portfolio",
+          "filePath": "src/app/(tabs)/portfolio.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/projects/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "services",
+          "screen": "Services",
+          "filePath": "src/app/services.tsx"
+        },
+        {
+          "name": "testimonials",
+          "screen": "Testimonials",
+          "filePath": "src/app/testimonials.tsx"
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Project",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "shortDescription",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "ProjectCategory"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "thumbnail",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "featured",
+            "type": "boolean"
+          },
+          {
+            "name": "client",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "type": "string"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "repository",
+            "type": "string"
+          },
+          {
+            "name": "achievements",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "ProjectCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Skill",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "SkillCategory"
+          },
+          {
+            "name": "level",
+            "type": "'beginner' | 'intermediate' | 'advanced' | 'expert'"
+          },
+          {
+            "name": "yearsOfExperience",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "SkillCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "type"
+      },
+      {
+        "name": "Experience",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'full-time' | 'part-time' | 'freelance' | 'contract'"
+          },
+          {
+            "name": "startDate",
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "type": "string"
+          },
+          {
+            "name": "current",
+            "type": "boolean"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "achievements",
+            "type": "string[]"
+          },
+          {
+            "name": "skills",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Education",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "degree",
+            "type": "string"
+          },
+          {
+            "name": "field",
+            "type": "string"
+          },
+          {
+            "name": "institution",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "startYear",
+            "type": "number"
+          },
+          {
+            "name": "endYear",
+            "type": "number"
+          },
+          {
+            "name": "gpa",
+            "type": "string"
+          },
+          {
+            "name": "honors",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Testimonial",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "position",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "quote",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "projectId",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Service",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "features",
+            "type": "string[]"
+          },
+          {
+            "name": "pricing",
+            "type": "{\n    type: 'fixed' | 'hourly' | 'project';\n    amount?: string;\n    currency?: string;\n  }"
+          }
+        ]
+      },
+      {
+        "name": "ContactMessage",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "subject",
+            "type": "string"
+          },
+          {
+            "name": "message",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "status",
+            "type": "'new' | 'read' | 'replied'"
+          }
+        ]
+      },
+      {
+        "name": "SocialLink",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "platform",
+            "type": "'github' | 'linkedin' | 'twitter' | 'dribbble' | 'behance' | 'instagram' | 'website'"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "PersonalInfo",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "tagline",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "resume",
+            "type": "string"
+          },
+          {
+            "name": "availability",
+            "type": "'available' | 'busy' | 'unavailable'"
+          },
+          {
+            "name": "hourlyRate",
+            "type": "string"
+          },
+          {
+            "name": "socialLinks",
+            "type": "SocialLink[]"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: portfolio\n\n### Screens (9)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Briefcase, User...\n- **AboutScreen** (src/app/(tabs)/about.tsx)\n  - Hooks: useTheme\n  - JSX: SafeAreaView, ScrollView, View, Image, Text...\n- **ContactScreen** (src/app/(tabs)/contact.tsx)\n  - Hooks: useTheme\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useTheme, useFeaturedProjects, useTestimonials\n  - JSX: SafeAreaView, ScrollView, View, Image, Text...\n- **PortfolioScreen** (src/app/(tabs)/portfolio.tsx)\n  - Hooks: useTheme, useState, useProjects\n  - JSX: SafeAreaView, ScrollView, View, Text, TouchableOpacity...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **ProjectDetailScreen** (src/app/projects/[id].tsx)\n  - Hooks: useTheme, useLocalSearchParams, useProject\n  - JSX: SafeAreaView, View, Text, Link, TouchableOpacity...\n- **ServicesScreen** (src/app/services.tsx)\n  - Hooks: useTheme\n  - JSX: IconComponent, SafeAreaView, ScrollView, View, Text...\n- **TestimonialsScreen** (src/app/testimonials.tsx)\n  - Hooks: useTheme, useTestimonials\n  - JSX: SafeAreaView, ScrollView, View, Text, TestimonialCard\n\n### Components (8)\n- **ContactForm**: 3 hooks, 6 elements\n- **ExperienceItem**: 1 hooks, 3 elements\n- **ImageGallery**: 2 hooks, 6 elements\n- **ProjectCard**: 1 hooks, 5 elements\n- **SkillBadge**: 1 hooks, 2 elements\n- **SocialLinks**: 1 hooks, 6 elements\n- **TestimonialCard**: 1 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (4)\n- **useContact**: deps [useState, useMutation]\n- **useProjects**: deps [useQuery, useProjects]\n- **useTestimonials**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (1)\n- **data**: getProjects(async), getProjectById(async), getSkills(async), getExperience(async), getEducation(async), getTestimonials(async), getServices(async), getPersonalInfo(async), submitContactMessage(async)\n\n### Navigation (expo-router)\n- about -> About\n- contact -> Contact\n- index -> Index\n- portfolio -> Portfolio\n- [id] -> [id]\n- services -> Services\n- testimonials -> Testimonials\n\n### Types (11)\n- interface Project\n- type ProjectCategory\n- interface Skill\n- type SkillCategory\n- interface Experience\n- interface Education\n- interface Testimonial\n- interface Service\n- interface ContactMessage\n- interface SocialLink\n- interface PersonalInfo",
+  "stats": {
+    "totalFiles": 31,
+    "totalScreens": 9,
+    "totalComponents": 8,
+    "totalHooks": 4,
+    "totalServices": 1,
+    "totalTypes": 11
+  }
+}

@@ -1,0 +1,40 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - recipes
+---
+# Browse Recipes Flow
+- launchApp:
+    clearState: true
+
+# Verify home screen loads
+- assertVisible: "Welcome to RecipeBook"
+- assertVisible: "Browse Categories"
+- assertVisible: "Featured Recipes"
+
+# Browse a category
+- tapOn:
+    id: "home-category-1"
+- assertVisible: "Breakfast"
+
+# View a recipe
+- tapOn:
+    id: "categories-recipe-1"
+- assertVisible: "Classic French Toast"
+- assertVisible: "Ingredients"
+- assertVisible: "Instructions"
+
+# Add to favorites
+- tapOn:
+    id: "recipe-detail-favorite-btn"
+
+# Go back to categories
+- back
+
+# Navigate to favorites
+- tapOn: "Profile"
+- tapOn:
+    id: "profile-stat-favorite-recipes"
+
+# Verify recipe is in favorites
+- assertVisible: "Classic French Toast"

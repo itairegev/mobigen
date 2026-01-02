@@ -1,0 +1,33 @@
+appId: com.mobigen.servicebooking
+tags:
+  - critical
+  - booking
+---
+# Select Staff Flow
+- launchApp:
+    clearState: true
+
+# Navigate to service detail
+- tapOn: "Services"
+- tapOn:
+    id: "service-card-1"
+- assertVisible: "Service Details"
+
+# Start booking
+- tapOn:
+    id: "book-now-button"
+- assertVisible: "Select Staff Member"
+
+# Verify progress indicator
+- assertVisible: "Staff"
+- assertVisible: "Date & Time"
+- assertVisible: "Confirm"
+
+# Select staff member
+- tapOn:
+    id: "staff-option-1"
+
+# Continue to date/time
+- tapOn:
+    id: "continue-button"
+- assertVisible: "Select Date & Time"

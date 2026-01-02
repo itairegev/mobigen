@@ -1,0 +1,38 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - contact
+---
+# Contact Form Submission Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Contact tab
+- tapOn: "Contact"
+- assertVisible: "Get In Touch"
+
+# Fill out contact form
+- tapOn:
+    id: "name-input"
+- inputText: "John Doe"
+
+- tapOn:
+    id: "email-input"
+- inputText: "john@example.com"
+
+- tapOn:
+    id: "subject-input"
+- inputText: "Project Inquiry"
+
+- tapOn:
+    id: "message-input"
+- inputText: "I'd like to discuss a potential project."
+
+# Submit form
+- tapOn:
+    id: "submit-button"
+
+# Verify success
+- assertVisible:
+    id: "success-message"
+- assertVisible: "Message Sent!"

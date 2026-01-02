@@ -1,0 +1,32 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - cart
+---
+# Test: Add Item to Cart
+- launchApp:
+    clearState: true
+
+# Go to Menu
+- tapOn: "Menu"
+- assertVisible:
+    id: "menu-item-1"
+
+# Select an item
+- tapOn:
+    id: "menu-item-1"
+- assertVisible: "Add to Cart"
+
+# Increase quantity
+- tapOn:
+    id: "quantity-increase"
+
+# Add to cart
+- tapOn:
+    id: "add-to-cart-button"
+
+# Verify cart badge appears
+- tapOn: "Cart"
+- assertVisible: "Your Cart"
+- assertVisible:
+    id: "cart-item"

@@ -1,0 +1,44 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - roster
+---
+# Player Profile Flow
+- launchApp:
+    clearState: true
+
+# Navigate to Roster tab
+- tapOn: "Roster"
+- assertVisible: "All Players"
+
+# Filter by position
+- tapOn:
+    id: "filter-forward"
+- assertVisible: "Forward"
+
+# View player profile
+- tapOn:
+    id: "player-card-player-1"
+- assertVisible: "Player Profile"
+- assertVisible: "Marcus Rodriguez"
+- assertVisible: "Forward"
+
+# Check stats are visible
+- assertVisible:
+    id: "player-stats"
+
+# Go back
+- back
+
+# Verify we're back on roster
+- assertVisible: "All Players"
+
+# View different position
+- tapOn:
+    id: "filter-goalkeeper"
+- assertVisible: "Goalkeeper"
+
+# View goalkeeper profile
+- tapOn:
+    id: "player-card-player-2"
+- assertVisible: "David Chen"

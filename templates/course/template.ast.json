@@ -1,0 +1,1625 @@
+{
+  "templateId": "course",
+  "generatedAt": "2026-01-02T14:47:22.124Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "BookOpen",
+              "BarChart3",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "BookOpen",
+          "BarChart3",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CoursesScreen",
+        "filePath": "src/app/(tabs)/courses.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCourses",
+          "useProgress",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "ActivityIndicator",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useCourses",
+            "specifiers": [
+              "useCourses"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProgress",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "CourseCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CoursesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "CourseCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "HomeScreen",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCourses",
+          "useProgress"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useCourses",
+            "specifiers": [
+              "useCourses"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProgress",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "CourseCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "PlayCircle",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "Text",
+          "PlayCircle",
+          "CourseCard",
+          "TrendingUp"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Settings",
+              "Bell",
+              "HelpCircle",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "User",
+          "Text",
+          "TouchableOpacity",
+          "item.icon",
+          "ChevronRight"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProgressScreen",
+        "filePath": "src/app/(tabs)/progress.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useCourses",
+          "useProgress"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useCourses",
+            "specifiers": [
+              "useCourses"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProgress",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ProgressBar",
+              "Certificate"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Award",
+              "BookOpen",
+              "Clock",
+              "TrendingUp"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProgressScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "Text",
+          "View",
+          "BookOpen",
+          "Award",
+          "TrendingUp",
+          "Clock",
+          "ProgressBar",
+          "Certificate"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "@/global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-status-bar",
+            "specifiers": [
+              "StatusBar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "StatusBar",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "CourseDetailScreen",
+        "filePath": "src/app/courses/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useCourse",
+          "useCourseLessons",
+          "useProgress"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useCourses",
+            "specifiers": [
+              "useCourse",
+              "useCourseLessons"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProgress",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "LessonItem",
+              "ProgressBar"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Star",
+              "Clock",
+              "Users",
+              "Award",
+              "PlayCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CourseDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "Image",
+          "Text",
+          "Star",
+          "Clock",
+          "PlayCircle",
+          "Award",
+          "ProgressBar",
+          "LessonItem",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "LessonScreen",
+        "filePath": "src/app/lessons/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useLesson",
+          "useProgress",
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useLessons",
+            "specifiers": [
+              "useLesson"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProgress",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "VideoPlayer",
+              "NotesEditor"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "CheckCircle",
+              "FileText",
+              "Download",
+              "PlayCircle"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "LessonNote"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "LessonScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "ScrollView",
+          "VideoPlayer",
+          "Text",
+          "TouchableOpacity",
+          "FileText",
+          "PlayCircle",
+          "Download",
+          "NotesEditor",
+          "CheckCircle"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "QuizScreen",
+        "filePath": "src/app/quiz/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useRouter",
+          "useLocalSearchParams",
+          "useLesson",
+          "useQuiz",
+          "useProgress"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "useRouter",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useQuiz",
+            "specifiers": [
+              "useQuiz"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useLessons",
+            "specifiers": [
+              "useLesson"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks/useProgress",
+            "specifiers": [
+              "useProgress"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "QuizQuestion"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Award",
+              "XCircle",
+              "RefreshCw"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "QuizScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ActivityIndicator",
+          "Award",
+          "XCircle",
+          "Text",
+          "TouchableOpacity",
+          "RefreshCw",
+          "ScrollView",
+          "QuizQuestion"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "Certificate",
+        "filePath": "src/components/Certificate.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Award"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "Certificate"
+        ],
+        "jsxElements": [
+          "View",
+          "Award",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CourseCard",
+        "filePath": "src/components/CourseCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Course"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Star",
+              "Clock",
+              "Users"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CourseCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "Star",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "LessonItem",
+        "filePath": "src/components/LessonItem.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Lesson"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "PlayCircle",
+              "CheckCircle",
+              "Lock",
+              "Clock"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "LessonItem"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Lock",
+          "CheckCircle",
+          "PlayCircle",
+          "Text",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "NotesEditor",
+        "filePath": "src/components/NotesEditor.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TextInput",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "PlusCircle",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "LessonNote"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "NotesEditor"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity",
+          "PlusCircle",
+          "TextInput",
+          "ScrollView",
+          "X"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ProgressBar",
+        "filePath": "src/components/ProgressBar.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProgressBar"
+        ],
+        "jsxElements": [
+          "View",
+          "Text"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "QuizQuestion",
+        "filePath": "src/components/QuizQuestion.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Question"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "QuizQuestion"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "VideoPlayer",
+        "filePath": "src/components/VideoPlayer.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useRef"
+        ],
+        "imports": [
+          {
+            "source": "react",
+            "specifiers": [
+              "useState",
+              "useRef"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-av",
+            "specifiers": [
+              "Video",
+              "ResizeMode",
+              "AVPlaybackStatus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Play",
+              "Pause"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "VideoPlayer"
+        ],
+        "jsxElements": [
+          "View",
+          "Video",
+          "ActivityIndicator"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useCourses",
+        "filePath": "src/hooks/useCourses.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useLessons",
+        "filePath": "src/hooks/useLessons.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useProgress",
+        "filePath": "src/hooks/useProgress.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useQuiz",
+        "filePath": "src/hooks/useQuiz.ts",
+        "dependencies": [
+          "useState",
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "courses",
+        "filePath": "src/services/courses.ts",
+        "functions": [
+          {
+            "name": "getCourses",
+            "params": [],
+            "returnType": "Promise<Course[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getCourse",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Course | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getCourseLessons",
+            "params": [
+              {
+                "name": "courseId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Lesson[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getLesson",
+            "params": [
+              {
+                "name": "lessonId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Lesson | undefined>",
+            "isAsync": true
+          },
+          {
+            "name": "getQuiz",
+            "params": [
+              {
+                "name": "lessonId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Quiz | undefined>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "courses",
+          "screen": "Courses",
+          "filePath": "src/app/(tabs)/courses.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "progress",
+          "screen": "Progress",
+          "filePath": "src/app/(tabs)/progress.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/courses/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/lessons/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/quiz/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Course",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "instructor",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "lessonsCount",
+            "type": "number"
+          },
+          {
+            "name": "thumbnail",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "level",
+            "type": "'beginner' | 'intermediate' | 'advanced'"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "studentsCount",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          }
+        ]
+      },
+      {
+        "name": "Lesson",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "courseId",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "videoUrl",
+            "type": "string"
+          },
+          {
+            "name": "thumbnail",
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "type": "number"
+          },
+          {
+            "name": "isLocked",
+            "type": "boolean"
+          },
+          {
+            "name": "resources",
+            "type": "LessonResource[]"
+          }
+        ]
+      },
+      {
+        "name": "LessonResource",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "'pdf' | 'link' | 'file'"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Quiz",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "lessonId",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "questions",
+            "type": "Question[]"
+          },
+          {
+            "name": "passingScore",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Question",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "question",
+            "type": "string"
+          },
+          {
+            "name": "options",
+            "type": "string[]"
+          },
+          {
+            "name": "correctAnswer",
+            "type": "number"
+          },
+          {
+            "name": "explanation",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "QuizAttempt",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "quizId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "answers",
+            "type": "Answer[]"
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "passed",
+            "type": "boolean"
+          },
+          {
+            "name": "completedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "Answer",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "questionId",
+            "type": "string"
+          },
+          {
+            "name": "selectedOption",
+            "type": "number"
+          },
+          {
+            "name": "isCorrect",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "Enrollment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "courseId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "enrolledAt",
+            "type": "Date"
+          },
+          {
+            "name": "progress",
+            "type": "CourseProgress"
+          }
+        ]
+      },
+      {
+        "name": "CourseProgress",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "courseId",
+            "type": "string"
+          },
+          {
+            "name": "completedLessons",
+            "type": "string[]"
+          },
+          {
+            "name": "currentLesson",
+            "type": "string | null"
+          },
+          {
+            "name": "percentComplete",
+            "type": "number"
+          },
+          {
+            "name": "lastAccessedAt",
+            "type": "Date"
+          },
+          {
+            "name": "quizScores",
+            "type": "Record<string, number>"
+          }
+        ]
+      },
+      {
+        "name": "Certificate",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "courseId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "issuedAt",
+            "type": "Date"
+          },
+          {
+            "name": "certificateUrl",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "LessonNote",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "lessonId",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "number"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "updatedAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "ProgressStats",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "totalCourses",
+            "type": "number"
+          },
+          {
+            "name": "completedCourses",
+            "type": "number"
+          },
+          {
+            "name": "inProgressCourses",
+            "type": "number"
+          },
+          {
+            "name": "totalLessonsCompleted",
+            "type": "number"
+          },
+          {
+            "name": "totalMinutesWatched",
+            "type": "number"
+          },
+          {
+            "name": "averageQuizScore",
+            "type": "number"
+          },
+          {
+            "name": "certificatesEarned",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: course\n\n### Screens (9)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, BookOpen, BarChart3...\n- **CoursesScreen** (src/app/(tabs)/courses.tsx)\n  - Hooks: useRouter, useCourses, useProgress, useState\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, TouchableOpacity...\n- **HomeScreen** (src/app/(tabs)/index.tsx)\n  - Hooks: useRouter, useCourses, useProgress\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, Text...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - JSX: SafeAreaView, ScrollView, View, User, Text...\n- **ProgressScreen** (src/app/(tabs)/progress.tsx)\n  - Hooks: useRouter, useCourses, useProgress\n  - JSX: SafeAreaView, ScrollView, Text, View, BookOpen...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, StatusBar, Stack, Stack.Screen\n- **CourseDetailScreen** (src/app/courses/[id].tsx)\n  - Hooks: useRouter, useLocalSearchParams, useCourse, useCourseLessons, useProgress\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, Image...\n- **LessonScreen** (src/app/lessons/[id].tsx)\n  - Hooks: useRouter, useLocalSearchParams, useLesson, useProgress, useState\n  - JSX: SafeAreaView, View, ActivityIndicator, ScrollView, VideoPlayer...\n- **QuizScreen** (src/app/quiz/[id].tsx)\n  - Hooks: useRouter, useLocalSearchParams, useLesson, useQuiz, useProgress\n  - JSX: SafeAreaView, View, ActivityIndicator, Award, XCircle...\n\n### Components (8)\n- **Certificate**: 0 hooks, 3 elements\n- **CourseCard**: 0 hooks, 6 elements\n- **LessonItem**: 0 hooks, 7 elements\n- **NotesEditor**: 1 hooks, 7 elements\n- **ProgressBar**: 0 hooks, 2 elements\n- **QuizQuestion**: 0 hooks, 3 elements\n- **VideoPlayer**: 2 hooks, 3 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useCourses**: deps [useQuery]\n- **useLessons**: deps [useQuery]\n- **useProgress**: deps []\n- **useQuiz**: deps [useState, useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (1)\n- **courses**: getCourses(async), getCourse(async), getCourseLessons(async), getLesson(async), getQuiz(async)\n\n### Navigation (expo-router)\n- courses -> Courses\n- index -> Index\n- profile -> Profile\n- progress -> Progress\n- [id] -> [id]\n- [id] -> [id]\n- [id] -> [id]\n\n### Types (12)\n- interface Course\n- interface Lesson\n- interface LessonResource\n- interface Quiz\n- interface Question\n- interface QuizAttempt\n- interface Answer\n- interface Enrollment\n- interface CourseProgress\n- interface Certificate\n- interface LessonNote\n- interface ProgressStats",
+  "stats": {
+    "totalFiles": 29,
+    "totalScreens": 9,
+    "totalComponents": 8,
+    "totalHooks": 5,
+    "totalServices": 1,
+    "totalTypes": 12
+  }
+}

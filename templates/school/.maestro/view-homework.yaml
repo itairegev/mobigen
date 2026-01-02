@@ -1,0 +1,43 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - homework
+---
+# Test: View and navigate homework assignments
+
+- launchApp:
+    clearState: true
+
+# Navigate to Homework tab
+- tapOn: "Homework"
+- assertVisible: "All"
+- assertVisible: "Pending"
+
+# Verify homework list is visible
+- assertVisible:
+    id: "tab-all"
+
+# Filter by pending assignments
+- tapOn:
+    id: "tab-pending"
+- assertVisible: "Pending"
+
+# Open first assignment
+- tapOn:
+    id: "assignment-hw-1"
+- assertVisible: "Assignment Details"
+- assertVisible: "Submit Assignment"
+
+# Go back to homework list
+- back
+
+# Check in-progress tab
+- tapOn:
+    id: "tab-in-progress"
+- assertVisible: "In Progress"
+
+# Verify assignment card shows subject
+- assertVisible: "Algebra II"
+
+# Success!
+- assertVisible: "Homework"

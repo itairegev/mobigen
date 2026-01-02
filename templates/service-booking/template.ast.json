@@ -1,0 +1,1695 @@
+{
+  "templateId": "service-booking",
+  "generatedAt": "2026-01-02T14:47:22.895Z",
+  "version": "1.0.0",
+  "structure": {
+    "screens": [
+      {
+        "name": "TabsLayout",
+        "filePath": "src/app/(tabs)/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Tabs"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Home",
+              "Scissors",
+              "Calendar",
+              "User"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TabsLayout"
+        ],
+        "jsxElements": [
+          "Tabs",
+          "Tabs.Screen",
+          "Home",
+          "Scissors",
+          "Calendar",
+          "User"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AppointmentCardWithData",
+        "filePath": "src/app/(tabs)/appointments.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useAppointments",
+          "useService",
+          "useStaffMember"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "CalendarPlus"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useAppointments",
+              "useService",
+              "useStaffMember"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "AppointmentCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AppointmentsScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "ActivityIndicator",
+          "Text",
+          "AppointmentCardWithData",
+          "CalendarPlus",
+          "TouchableOpacity",
+          "AppointmentCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "Scissors",
+        "filePath": "src/app/(tabs)/index.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useServices",
+          "useCategories"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Sparkles",
+              "Clock",
+              "Award",
+              "ArrowRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useServices",
+              "useCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ServiceCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "HomeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Text",
+          "Sparkles",
+          "Award",
+          "Clock",
+          "TouchableOpacity",
+          "Scissors",
+          "ServiceCard",
+          "ArrowRight"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ProfileScreen",
+        "filePath": "src/app/(tabs)/profile.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "User",
+              "Mail",
+              "Phone",
+              "MapPin",
+              "Bell",
+              "CreditCard",
+              "HelpCircle",
+              "LogOut",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ProfileScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ScrollView",
+          "View",
+          "Image",
+          "Text",
+          "TouchableOpacity",
+          "Mail",
+          "ChevronRight",
+          "Phone",
+          "MapPin",
+          "Bell",
+          "CreditCard",
+          "HelpCircle",
+          "LogOut"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ServicesScreen",
+        "filePath": "src/app/(tabs)/services.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState",
+          "useServices",
+          "useCategories"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useServices",
+              "useCategories"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "ServiceCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ServicesScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "View",
+          "ScrollView",
+          "TouchableOpacity",
+          "Text",
+          "ActivityIndicator",
+          "ServiceCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "RootLayout",
+        "filePath": "src/app/_layout.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "Stack"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@tanstack/react-query",
+            "specifiers": [
+              "QueryClient",
+              "QueryClientProvider"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "../global.css",
+            "specifiers": [],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "RootLayout"
+        ],
+        "jsxElements": [
+          "QueryClientProvider",
+          "Stack",
+          "Stack.Screen"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "AppointmentDetailScreen",
+        "filePath": "src/app/appointments/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useAppointment",
+          "useService",
+          "useStaffMember",
+          "useCancelAppointment"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator",
+              "Alert",
+              "Image"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronLeft",
+              "Calendar",
+              "Clock",
+              "User",
+              "MapPin",
+              "X"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "parseISO"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useAppointment",
+              "useService",
+              "useStaffMember",
+              "useCancelAppointment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AppointmentDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "View",
+          "TouchableOpacity",
+          "ChevronLeft",
+          "ScrollView",
+          "Image",
+          "User",
+          "Calendar",
+          "Clock",
+          "X"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ConfirmBookingScreen",
+        "filePath": "src/app/book/confirm.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useBooking",
+          "useService",
+          "useStaffMember",
+          "useCreateAppointment"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "TextInput",
+              "Alert"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronLeft"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useBooking",
+              "useService",
+              "useStaffMember",
+              "useCreateAppointment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "BookingSummary"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ConfirmBookingScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "View",
+          "TouchableOpacity",
+          "ChevronLeft",
+          "ScrollView",
+          "BookingSummary",
+          "TextInput"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SelectDateTimeScreen",
+        "filePath": "src/app/book/datetime.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useBooking",
+          "useState",
+          "useAvailableSlots"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronLeft"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useBooking",
+              "useAvailableSlots"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "CalendarPicker",
+              "TimeSlotGrid"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SelectDateTimeScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "View",
+          "TouchableOpacity",
+          "ChevronLeft",
+          "ScrollView",
+          "CalendarPicker",
+          "ActivityIndicator",
+          "TimeSlotGrid"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "SelectStaffScreen",
+        "filePath": "src/app/book/staff.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useBooking",
+          "useStaffForService"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronLeft"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useStaffForService",
+              "useBooking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "StaffCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "SelectStaffScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "Text",
+          "View",
+          "TouchableOpacity",
+          "ChevronLeft",
+          "ScrollView",
+          "ActivityIndicator",
+          "StaffCard"
+        ],
+        "hasDefaultExport": true
+      },
+      {
+        "name": "ServiceDetailScreen",
+        "filePath": "src/app/services/[id].tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useLocalSearchParams",
+          "useService",
+          "useStaffForService",
+          "useBooking"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "ScrollView",
+              "Image",
+              "TouchableOpacity",
+              "ActivityIndicator"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react-native-safe-area-context",
+            "specifiers": [
+              "SafeAreaView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "expo-router",
+            "specifiers": [
+              "router",
+              "useLocalSearchParams"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "X",
+              "Clock",
+              "DollarSign",
+              "Users"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/hooks",
+            "specifiers": [
+              "useService",
+              "useStaffForService",
+              "useBooking"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/components",
+            "specifiers": [
+              "StaffCard"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ServiceDetailScreen"
+        ],
+        "jsxElements": [
+          "SafeAreaView",
+          "ActivityIndicator",
+          "Text",
+          "View",
+          "TouchableOpacity",
+          "X",
+          "ScrollView",
+          "Image",
+          "Clock",
+          "DollarSign",
+          "Users",
+          "StaffCard"
+        ],
+        "hasDefaultExport": true
+      }
+    ],
+    "components": [
+      {
+        "name": "AppointmentCard",
+        "filePath": "src/components/AppointmentCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "User",
+              "MapPin"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "parseISO"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Appointment"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "AppointmentCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Text",
+          "User",
+          "Calendar",
+          "Clock"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "BookingSummary",
+        "filePath": "src/components/BookingSummary.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Calendar",
+              "Clock",
+              "User",
+              "Scissors",
+              "DollarSign"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "parseISO"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "BookingSummary"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "Scissors",
+          "User",
+          "Calendar",
+          "Clock",
+          "DollarSign"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "CalendarPicker",
+        "filePath": "src/components/CalendarPicker.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [
+          "useState"
+        ],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "ChevronLeft",
+              "ChevronRight"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "react",
+            "specifiers": [
+              "useState"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "date-fns",
+            "specifiers": [
+              "format",
+              "addMonths",
+              "subMonths",
+              "startOfMonth",
+              "endOfMonth",
+              "eachDayOfInterval",
+              "isSameDay",
+              "isBefore",
+              "startOfToday"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "CalendarPicker"
+        ],
+        "jsxElements": [
+          "View",
+          "TouchableOpacity",
+          "ChevronLeft",
+          "Text",
+          "ChevronRight"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "ServiceCard",
+        "filePath": "src/components/ServiceCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Clock",
+              "DollarSign"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Service"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "ServiceCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "Image",
+          "View",
+          "Text",
+          "Clock",
+          "DollarSign"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "StaffCard",
+        "filePath": "src/components/StaffCard.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "Image",
+              "TouchableOpacity"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "lucide-react-native",
+            "specifiers": [
+              "Star",
+              "Award"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "Staff"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "StaffCard"
+        ],
+        "jsxElements": [
+          "TouchableOpacity",
+          "View",
+          "Image",
+          "Text",
+          "Award",
+          "Star"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "TimeSlotGrid",
+        "filePath": "src/components/TimeSlotGrid.tsx",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [
+          {
+            "source": "react-native",
+            "specifiers": [
+              "View",
+              "Text",
+              "TouchableOpacity",
+              "ScrollView"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          },
+          {
+            "source": "@/types",
+            "specifiers": [
+              "TimeSlot"
+            ],
+            "isDefault": false,
+            "isNamespace": false
+          }
+        ],
+        "exports": [
+          "TimeSlotGrid"
+        ],
+        "jsxElements": [
+          "View",
+          "Text",
+          "ScrollView",
+          "TouchableOpacity"
+        ],
+        "hasDefaultExport": false
+      },
+      {
+        "name": "index",
+        "filePath": "src/components/index.ts",
+        "type": "function",
+        "props": [],
+        "hooks": [],
+        "imports": [],
+        "exports": [],
+        "jsxElements": [],
+        "hasDefaultExport": false
+      }
+    ],
+    "hooks": [
+      {
+        "name": "useAppointments",
+        "filePath": "src/hooks/useAppointments.ts",
+        "dependencies": [
+          "useQuery",
+          "useQueryClient",
+          "useMutation"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useBooking",
+        "filePath": "src/hooks/useBooking.ts",
+        "dependencies": [],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useServices",
+        "filePath": "src/hooks/useServices.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useStaff",
+        "filePath": "src/hooks/useStaff.ts",
+        "dependencies": [
+          "useQuery"
+        ],
+        "returnType": "unknown"
+      },
+      {
+        "name": "useTheme",
+        "filePath": "src/hooks/useTheme.ts",
+        "dependencies": [
+          "useColorScheme"
+        ],
+        "returnType": "unknown"
+      }
+    ],
+    "services": [
+      {
+        "name": "appointments",
+        "filePath": "src/services/appointments.ts",
+        "functions": [
+          {
+            "name": "generateTimeSlots",
+            "params": [
+              {
+                "name": "staffId",
+                "type": "string"
+              },
+              {
+                "name": "date",
+                "type": "string"
+              }
+            ],
+            "returnType": "TimeSlot[]",
+            "isAsync": false
+          },
+          {
+            "name": "getAppointments",
+            "params": [
+              {
+                "name": "userId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Appointment[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getAppointmentById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Appointment | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getAvailableSlots",
+            "params": [
+              {
+                "name": "staffId",
+                "type": "string"
+              },
+              {
+                "name": "date",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<TimeSlot[]>",
+            "isAsync": true
+          },
+          {
+            "name": "createAppointment",
+            "params": [
+              {
+                "name": "appointment",
+                "type": "Omit<Appointment, 'id' | 'createdAt'>"
+              }
+            ],
+            "returnType": "Promise<Appointment>",
+            "isAsync": true
+          },
+          {
+            "name": "cancelAppointment",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<void>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "services",
+        "filePath": "src/services/services.ts",
+        "functions": [
+          {
+            "name": "getServices",
+            "params": [
+              {
+                "name": "categoryId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Service[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getServiceById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Service | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getCategories",
+            "params": [],
+            "returnType": "Promise<ServiceCategory[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getCategoryById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<ServiceCategory | null>",
+            "isAsync": true
+          }
+        ]
+      },
+      {
+        "name": "staff",
+        "filePath": "src/services/staff.ts",
+        "functions": [
+          {
+            "name": "getAllStaff",
+            "params": [],
+            "returnType": "Promise<Staff[]>",
+            "isAsync": true
+          },
+          {
+            "name": "getStaffById",
+            "params": [
+              {
+                "name": "id",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Staff | null>",
+            "isAsync": true
+          },
+          {
+            "name": "getStaffForService",
+            "params": [
+              {
+                "name": "serviceId",
+                "type": "string"
+              }
+            ],
+            "returnType": "Promise<Staff[]>",
+            "isAsync": true
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "type": "expo-router",
+      "routes": [
+        {
+          "name": "appointments",
+          "screen": "Appointments",
+          "filePath": "src/app/(tabs)/appointments.tsx"
+        },
+        {
+          "name": "index",
+          "screen": "Index",
+          "filePath": "src/app/(tabs)/index.tsx"
+        },
+        {
+          "name": "profile",
+          "screen": "Profile",
+          "filePath": "src/app/(tabs)/profile.tsx"
+        },
+        {
+          "name": "services",
+          "screen": "Services",
+          "filePath": "src/app/(tabs)/services.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/appointments/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        },
+        {
+          "name": "confirm",
+          "screen": "Confirm",
+          "filePath": "src/app/book/confirm.tsx"
+        },
+        {
+          "name": "datetime",
+          "screen": "Datetime",
+          "filePath": "src/app/book/datetime.tsx"
+        },
+        {
+          "name": "staff",
+          "screen": "Staff",
+          "filePath": "src/app/book/staff.tsx"
+        },
+        {
+          "name": "[id]",
+          "screen": "[id]",
+          "filePath": "src/app/services/[id].tsx",
+          "params": {
+            "dynamic": "id"
+          }
+        }
+      ]
+    },
+    "types": [
+      {
+        "name": "Service",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "type": "string"
+          },
+          {
+            "name": "staffIds",
+            "type": "string[]"
+          },
+          {
+            "name": "available",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "ServiceCategory",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "icon",
+            "type": "string"
+          },
+          {
+            "name": "sortOrder",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "Staff",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewCount",
+            "type": "number"
+          },
+          {
+            "name": "serviceIds",
+            "type": "string[]"
+          },
+          {
+            "name": "available",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "TimeSlot",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "staffId",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "type": "string"
+          },
+          {
+            "name": "available",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "Appointment",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "serviceId",
+            "type": "string"
+          },
+          {
+            "name": "staffId",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "'upcoming' | 'completed' | 'cancelled'"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "name": "BookingState",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "serviceId",
+            "type": "string | null"
+          },
+          {
+            "name": "staffId",
+            "type": "string | null"
+          },
+          {
+            "name": "date",
+            "type": "string | null"
+          },
+          {
+            "name": "timeSlot",
+            "type": "TimeSlot | null"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Review",
+        "filePath": "src/types/index.ts",
+        "kind": "interface",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "appointmentId",
+            "type": "string"
+          },
+          {
+            "name": "staffId",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "comment",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "Date"
+          },
+          {
+            "name": "userName",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": "## Template: service-booking\n\n### Screens (11)\n- **TabsLayout** (src/app/(tabs)/_layout.tsx)\n  - JSX: Tabs, Tabs.Screen, Home, Scissors, Calendar...\n- **AppointmentCardWithData** (src/app/(tabs)/appointments.tsx)\n  - Hooks: useAppointments, useService, useStaffMember\n  - JSX: SafeAreaView, ScrollView, View, ActivityIndicator, Text...\n- **Scissors** (src/app/(tabs)/index.tsx)\n  - Hooks: useServices, useCategories\n  - JSX: SafeAreaView, ScrollView, View, Text, Sparkles...\n- **ProfileScreen** (src/app/(tabs)/profile.tsx)\n  - JSX: SafeAreaView, ScrollView, View, Image, Text...\n- **ServicesScreen** (src/app/(tabs)/services.tsx)\n  - Hooks: useState, useServices, useCategories\n  - JSX: SafeAreaView, View, ScrollView, TouchableOpacity, Text...\n- **RootLayout** (src/app/_layout.tsx)\n  - JSX: QueryClientProvider, Stack, Stack.Screen\n- **AppointmentDetailScreen** (src/app/appointments/[id].tsx)\n  - Hooks: useLocalSearchParams, useAppointment, useService, useStaffMember, useCancelAppointment\n  - JSX: SafeAreaView, ActivityIndicator, Text, View, TouchableOpacity...\n- **ConfirmBookingScreen** (src/app/book/confirm.tsx)\n  - Hooks: useBooking, useService, useStaffMember, useCreateAppointment\n  - JSX: SafeAreaView, Text, View, TouchableOpacity, ChevronLeft...\n- **SelectDateTimeScreen** (src/app/book/datetime.tsx)\n  - Hooks: useBooking, useState, useAvailableSlots\n  - JSX: SafeAreaView, Text, View, TouchableOpacity, ChevronLeft...\n- **SelectStaffScreen** (src/app/book/staff.tsx)\n  - Hooks: useBooking, useStaffForService\n  - JSX: SafeAreaView, Text, View, TouchableOpacity, ChevronLeft...\n- **ServiceDetailScreen** (src/app/services/[id].tsx)\n  - Hooks: useLocalSearchParams, useService, useStaffForService, useBooking\n  - JSX: SafeAreaView, ActivityIndicator, Text, View, TouchableOpacity...\n\n### Components (7)\n- **AppointmentCard**: 0 hooks, 6 elements\n- **BookingSummary**: 0 hooks, 7 elements\n- **CalendarPicker**: 1 hooks, 5 elements\n- **ServiceCard**: 0 hooks, 6 elements\n- **StaffCard**: 0 hooks, 6 elements\n- **TimeSlotGrid**: 0 hooks, 4 elements\n- **index**: 0 hooks, 0 elements\n\n### Hooks (5)\n- **useAppointments**: deps [useQuery, useQueryClient, useMutation]\n- **useBooking**: deps []\n- **useServices**: deps [useQuery]\n- **useStaff**: deps [useQuery]\n- **useTheme**: deps [useColorScheme]\n\n### Services (3)\n- **appointments**: generateTimeSlots(), getAppointments(async), getAppointmentById(async), getAvailableSlots(async), createAppointment(async), cancelAppointment(async)\n- **services**: getServices(async), getServiceById(async), getCategories(async), getCategoryById(async)\n- **staff**: getAllStaff(async), getStaffById(async), getStaffForService(async)\n\n### Navigation (expo-router)\n- appointments -> Appointments\n- index -> Index\n- profile -> Profile\n- services -> Services\n- [id] -> [id]\n- confirm -> Confirm\n- datetime -> Datetime\n- staff -> Staff\n- [id] -> [id]\n\n### Types (7)\n- interface Service\n- interface ServiceCategory\n- interface Staff\n- interface TimeSlot\n- interface Appointment\n- interface BookingState\n- interface Review",
+  "stats": {
+    "totalFiles": 32,
+    "totalScreens": 11,
+    "totalComponents": 7,
+    "totalHooks": 5,
+    "totalServices": 3,
+    "totalTypes": 7
+  }
+}

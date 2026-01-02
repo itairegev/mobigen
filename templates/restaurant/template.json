@@ -1,0 +1,136 @@
+{
+  "id": "restaurant",
+  "name": "Restaurant & Food Ordering",
+  "description": "Complete food ordering app with menu browsing, cart, checkout, and order tracking",
+  "category": "local-business",
+  "version": "1.0.0",
+  "author": "Mobigen",
+  "keywords": [
+    "restaurant",
+    "food ordering",
+    "delivery",
+    "pickup",
+    "menu",
+    "cart",
+    "checkout",
+    "order tracking",
+    "local business"
+  ],
+  "features": [
+    "menu-browsing",
+    "item-modifiers",
+    "shopping-cart",
+    "order-checkout",
+    "pickup-delivery-toggle",
+    "order-tracking",
+    "address-management",
+    "tip-selection",
+    "dietary-tags",
+    "featured-items"
+  ],
+  "screens": [
+    {
+      "name": "Home",
+      "path": "(tabs)/index",
+      "description": "Featured items and category browser"
+    },
+    {
+      "name": "Menu",
+      "path": "(tabs)/menu",
+      "description": "Full menu with category filtering"
+    },
+    {
+      "name": "Cart",
+      "path": "(tabs)/cart",
+      "description": "Shopping cart with order summary"
+    },
+    {
+      "name": "Orders",
+      "path": "(tabs)/orders",
+      "description": "Active and past order history"
+    },
+    {
+      "name": "Profile",
+      "path": "(tabs)/profile",
+      "description": "User profile and settings"
+    },
+    {
+      "name": "Item Detail",
+      "path": "menu/[id]",
+      "description": "Item details with modifiers and customization"
+    },
+    {
+      "name": "Checkout",
+      "path": "checkout",
+      "description": "Order type, address, tip, and payment"
+    },
+    {
+      "name": "Order Tracking",
+      "path": "orders/[id]",
+      "description": "Real-time order status tracking"
+    }
+  ],
+  "components": [
+    "MenuItem",
+    "MenuCategory",
+    "CartItem",
+    "CartSummary",
+    "OrderCard",
+    "OrderStatus",
+    "ModifierSelector",
+    "AddressSelector",
+    "TipSelector",
+    "DeliveryToggle"
+  ],
+  "mockData": {
+    "categories": 5,
+    "menuItems": 20,
+    "orders": 5,
+    "addresses": 2
+  },
+  "backendTables": [
+    "categories",
+    "menu_items",
+    "modifier_groups",
+    "modifiers",
+    "orders",
+    "order_items",
+    "addresses",
+    "users"
+  ],
+  "testFlows": [
+    "browse-menu",
+    "add-to-cart",
+    "checkout-flow",
+    "track-order"
+  ],
+  "dependencies": {
+    "expo": "~52.0.0",
+    "expo-router": "~4.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "nativewind": "^4.1.0",
+    "@tanstack/react-query": "^5.0.0",
+    "zustand": "^5.0.0",
+    "lucide-react-native": "^0.454.0"
+  },
+  "theme": {
+    "primaryColor": "#ff6b35",
+    "secondaryColor": "#b97b6b",
+    "palette": "warm-appetizing"
+  },
+  "targetAudience": [
+    "restaurants",
+    "cafes",
+    "food-trucks",
+    "bakeries",
+    "catering-services"
+  ],
+  "useCases": [
+    "Avoid 30% delivery platform fees",
+    "Own customer data and relationships",
+    "Direct online ordering",
+    "Branded mobile presence",
+    "Customer loyalty programs"
+  ]
+}

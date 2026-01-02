@@ -1,0 +1,48 @@
+appId: ${APP_BUNDLE_ID}
+tags:
+  - critical
+  - workout-logging
+---
+# Log Workout Flow
+- launchApp:
+    clearState: true
+
+# Navigate to log workout from Home
+- tapOn: "Home"
+- assertVisible: "Welcome Back"
+
+- tapOn:
+    id: "home-log-workout-button"
+- assertVisible: "Log Your Workout"
+
+# Fill in workout details
+- tapOn:
+    id: "workout-name-input"
+- inputText: "Morning Run"
+
+- tapOn:
+    id: "duration-input"
+- inputText: "30"
+
+- tapOn:
+    id: "calories-input"
+- inputText: "300"
+
+- tapOn:
+    id: "notes-input"
+- inputText: "Felt great today!"
+
+# Save workout
+- tapOn:
+    id: "save-workout-button"
+
+# Verify success
+- assertVisible:
+    text: ".*[Ll]ogged.*"
+    regex: true
+
+# Tap OK on alert
+- tapOn: "OK"
+
+# Should return to home
+- assertVisible: "Welcome Back"
