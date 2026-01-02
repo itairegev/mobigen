@@ -7,6 +7,9 @@ export * from './types';
 export * from './tiers/index';
 export * from './validators/index';
 export * from './visual';
+export * from './maestro';
+export * from './test-utils';
+export * from './errors';
 
 /**
  * Run validation at the specified tier level

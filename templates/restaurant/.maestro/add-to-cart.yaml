@@ -1,32 +1,44 @@
-appId: ${APP_BUNDLE_ID}
+appId: ${APP_ID}
+name: Add to Cart Flow
 tags:
   - critical
   - cart
 ---
-# Test: Add Item to Cart
+# Test: Add item to cart and verify
+
 - launchApp:
     clearState: true
 
-# Go to Menu
-- tapOn: "Menu"
+# Navigate to Menu
+- tapOn:
+    id: "menu-tab"
 - assertVisible:
-    id: "menu-item-1"
+    id: "menu-screen"
 
-# Select an item
+# Tap on first menu item
 - tapOn:
-    id: "menu-item-1"
-- assertVisible: "Add to Cart"
+    id: "menu-item-0"
 
-# Increase quantity
-- tapOn:
-    id: "quantity-increase"
+# Wait for item detail to load
+- assertVisible:
+    id: "item-detail-screen"
 
-# Add to cart
+# Tap Add to Cart button
 - tapOn:
     id: "add-to-cart-button"
 
-# Verify cart badge appears
-- tapOn: "Cart"
-- assertVisible: "Your Cart"
+# Verify confirmation
+- assertVisible: "Added to cart"
+
+# Navigate to Cart
+- tapOn:
+    id: "cart-tab"
+
+# Verify item is in cart
 - assertVisible:
-    id: "cart-item"
+    id: "cart-screen"
+- assertVisible:
+    id: "cart-item-0"
+
+# Verify cart count shows 1
+- assertVisible: "1"

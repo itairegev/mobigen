@@ -1,0 +1,55 @@
+appId: ${APP_ID}
+name: Complete Booking Flow
+tags:
+  - critical
+  - booking
+---
+# Test: Complete service booking flow
+
+- launchApp:
+    clearState: true
+
+# Navigate to Services
+- tapOn:
+    id: "services-tab"
+- assertVisible:
+    id: "services-screen"
+
+# Select a service
+- tapOn:
+    id: "service-card-0"
+- assertVisible:
+    id: "service-detail-screen"
+
+# Tap Book Now
+- tapOn:
+    id: "book-now-button"
+
+# Select Staff
+- assertVisible:
+    id: "staff-selection-screen"
+- tapOn:
+    id: "staff-card-0"
+
+# Select Date
+- assertVisible:
+    id: "date-selection-screen"
+- tapOn:
+    id: "calendar-day-15"
+
+# Select Time Slot
+- assertVisible:
+    id: "time-slots"
+- tapOn:
+    id: "time-slot-0"
+
+# Confirm Booking
+- assertVisible:
+    id: "booking-summary"
+- tapOn:
+    id: "confirm-booking-button"
+
+# Verify confirmation
+- assertVisible: "Booking Confirmed"
+- assertVisible:
+    id: "confirmation-code"

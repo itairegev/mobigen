@@ -1,40 +1,55 @@
-appId: ${APP_BUNDLE_ID}
+appId: ${APP_ID}
+name: Checkout Flow
 tags:
   - critical
   - checkout
 ---
-# Test: Complete Checkout Flow
+# Test: Complete checkout flow
+
 - launchApp:
     clearState: true
 
-# Add item to cart
-- tapOn: "Menu"
+# Add item to cart first
 - tapOn:
-    id: "menu-item-1"
+    id: "menu-tab"
+- tapOn:
+    id: "menu-item-0"
+- assertVisible:
+    id: "item-detail-screen"
 - tapOn:
     id: "add-to-cart-button"
 
-# Go to cart
-- tapOn: "Cart"
-- assertVisible: "Your Cart"
-- assertVisible: "Proceed to Checkout"
+# Navigate to Cart
+- tapOn:
+    id: "cart-tab"
+- assertVisible:
+    id: "cart-screen"
 
-# Proceed to checkout
+# Tap Checkout button
 - tapOn:
     id: "checkout-button"
-- assertVisible: "Order Type"
 
-# Select pickup
-- tapOn:
-    id: "delivery-toggle-pickup"
+# Verify checkout screen
+- assertVisible:
+    id: "checkout-screen"
 
-# Select tip
+# Fill delivery address
 - tapOn:
-    id: "tip-selector-15%"
+    id: "address-input"
+- inputText: "123 Test Street, Suite 100"
+
+# Select tip amount
+- tapOn:
+    id: "tip-option-15"
+
+# Review order total
+- assertVisible: "Total"
 
 # Place order
 - tapOn:
     id: "place-order-button"
 
-# Verify success (alert should appear)
-- assertVisible: "Order Placed"
+# Verify order confirmation
+- assertVisible: "Order Confirmed"
+- assertVisible:
+    id: "order-number"

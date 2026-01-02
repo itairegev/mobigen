@@ -1,0 +1,38 @@
+appId: ${APP_ID}
+name: Navigation Test
+tags:
+  - smoke
+  - navigation
+---
+# Test: Verify all main navigation tabs work
+
+- launchApp:
+    clearState: true
+
+# Home tab should be visible by default
+- assertVisible:
+    id: "home-screen"
+
+# Tap Services tab
+- tapOn:
+    id: "services-tab"
+- assertVisible:
+    id: "services-screen"
+
+# Tap Appointments tab
+- tapOn:
+    id: "appointments-tab"
+- assertVisible:
+    id: "appointments-screen"
+
+# Tap Profile tab
+- tapOn:
+    id: "profile-tab"
+- assertVisible:
+    id: "profile-screen"
+
+# Return to Home
+- tapOn:
+    id: "home-tab"
+- assertVisible:
+    id: "home-screen"
