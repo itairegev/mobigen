@@ -1,10 +1,15 @@
-# @mobigen/analytics
+# @mobigen/analytics-service
 
-Usage tracking and cost monitoring service for Mobigen.
+Analytics service for Mobigen - handles platform usage tracking and mobile app event ingestion.
 
 ## Overview
 
-The Analytics service tracks usage events, monitors API costs, and aggregates metrics for the Mobigen platform. It provides insights into token usage, project activity, and cost projections.
+The Analytics service has two main responsibilities:
+
+1. **Platform Analytics**: Usage tracking, cost monitoring, and metrics aggregation for the Mobigen platform itself
+2. **Event Ingestion**: Receives and processes analytics events from generated mobile apps
+
+This dual-purpose service provides insights into both platform usage (token consumption, costs) and end-user behavior in generated mobile apps (screen views, custom events, sessions).
 
 ## Tech Stack
 
@@ -117,6 +122,95 @@ ENABLE_CRON=true
 ```
 
 ## API Endpoints
+
+### Event Ingestion (Mobile Apps)
+
+#### POST /api/events
+
+Ingest a batch of events from mobile apps.
+
+**Headers:**
+- `X-API-Key`: Project API key (required)
+
+**Request:**
+```json
+{
+  "batchId": "batch-123",
+  "projectId": "project-abc",
+  "events": [
+    {
+      "eventId": "event-1",
+      "type": "screen_view",
+      "sessionId": "session-xyz",
+      "projectId": "project-abc",
+      "timestamp": "2024-01-03T12:00:00Z",
+      "properties": {
+        "screenName": "Home"
+      },
+      "device": {
+        "platform": "ios",
+        "osVersion": "17.2",
+        "appVersion": "1.0.0"
+      }
+    }
+  ],
+  "createdAt": "2024-01-03T12:00:00Z"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "accepted": 1,
+  "rejected": 0,
+  "rateLimit": {
+    "count": 150,
+    "limit": 1000,
+    "exceeded": false
+  }
+}
+```
+
+#### POST /api/events/single
+
+Ingest a single event.
+
+**Headers:**
+- `X-API-Key`: Project API key (required)
+
+**Request:**
+```json
+{
+  "eventId": "event-1",
+  "type": "custom",
+  "sessionId": "session-xyz",
+  "projectId": "project-abc",
+  "timestamp": "2024-01-03T12:00:00Z",
+  "properties": {
+    "eventName": "purchase_completed",
+    "orderId": "order-123",
+    "total": 99.99
+  }
+}
+```
+
+#### GET /api/events/health
+
+Health check for event ingestion.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "service": "analytics-ingestion",
+  "buffers": {
+    "project-abc": 45
+  }
+}
+```
+
+### Platform Analytics
 
 ### Health Check
 

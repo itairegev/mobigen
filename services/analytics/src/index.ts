@@ -4,6 +4,10 @@ import Redis from 'ioredis';
 import { UsageTracker } from './usage-tracker';
 import { CostMonitor } from './cost-monitor';
 import { MetricsAggregator } from './metrics-aggregator';
+import { IngestionService } from './ingestion';
+import { createAnalyticsRouter, errorHandler, notFoundHandler } from './api';
+import { createStorageAdapter } from './storage';
+import { createDashboardRouter } from './dashboard-api';
 
 const app = express();
 app.use(express.json());
@@ -11,10 +15,62 @@ app.use(express.json());
 // Redis connection
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 
-// Services
+// Platform analytics services (usage tracking, cost monitoring)
 const usageTracker = new UsageTracker(redis);
 const costMonitor = new CostMonitor(redis);
 const metricsAggregator = new MetricsAggregator(redis);
+
+// Event ingestion service (for mobile app analytics)
+const storageAdapter = createStorageAdapter({
+  type: (process.env.ANALYTICS_STORAGE as 'clickhouse' | 'postgres' | 'memory') || 'memory',
+  clickhouse: process.env.CLICKHOUSE_HOST
+    ? {
+        host: process.env.CLICKHOUSE_HOST,
+        port: parseInt(process.env.CLICKHOUSE_PORT || '8123', 10),
+        database: process.env.CLICKHOUSE_DATABASE || 'analytics',
+        table: process.env.CLICKHOUSE_TABLE || 'events',
+        username: process.env.CLICKHOUSE_USERNAME,
+        password: process.env.CLICKHOUSE_PASSWORD,
+      }
+    : undefined,
+  postgres: process.env.POSTGRES_URL
+    ? {
+        connectionString: process.env.POSTGRES_URL,
+        table: process.env.POSTGRES_EVENTS_TABLE || 'analytics_events',
+      }
+    : undefined,
+  memory: {
+    maxSize: parseInt(process.env.MEMORY_BUFFER_SIZE || '10000', 10),
+  },
+});
+
+const ingestionService = new IngestionService({
+  redis,
+  rateLimitPerMinute: parseInt(process.env.RATE_LIMIT_PER_MINUTE || '1000', 10),
+  maxBatchSize: parseInt(process.env.MAX_BATCH_SIZE || '100', 10),
+  enableGeoEnrichment: process.env.ENABLE_GEO_ENRICHMENT !== 'false',
+  bufferSize: parseInt(process.env.BUFFER_SIZE || '500', 10),
+});
+
+ingestionService.setStorageAdapter(storageAdapter);
+
+// API key validation (stub - integrate with actual auth service)
+const validateApiKey = async (projectId: string, apiKey: string): Promise<boolean> => {
+  // TODO: Implement actual API key validation
+  // For now, accept any non-empty key
+  return apiKey.length > 0;
+};
+
+// Mount event ingestion API
+const analyticsRouter = createAnalyticsRouter({
+  ingestionService,
+  validateApiKey,
+});
+app.use('/api', analyticsRouter);
+
+// Mount dashboard API
+const dashboardRouter = createDashboardRouter(redis);
+app.use('/api', dashboardRouter);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -212,9 +268,28 @@ app.listen(PORT, () => {
   console.log(`Analytics service running on port ${PORT}`);
 });
 
+// Periodic buffer flush (every 30 seconds)
+cron.schedule('*/30 * * * * *', async () => {
+  try {
+    await ingestionService.flushBuffer();
+  } catch (error) {
+    console.error('Error flushing event buffers:', error);
+  }
+});
+
+// Error handlers
+app.use(notFoundHandler);
+app.use(errorHandler);
+
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('Shutting down analytics service...');
+
+  // Flush event buffers
+  await ingestionService.shutdown();
+
+  // Close connections
   await redis.quit();
+
   process.exit(0);
 });

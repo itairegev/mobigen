@@ -419,6 +419,107 @@ export const OTA_CONFIG = {
 
 export type OTAConfigType = typeof OTA_CONFIG;
 
+// ═══════════════════════════════════════════════════════════════════════════
+// ANALYTICS DATABASE CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const ANALYTICS_DB_CONFIG = {
+  // ClickHouse configuration
+  clickhouse: {
+    url: getEnvVar('CLICKHOUSE_URL', 'http://localhost:8123'),
+    database: getEnvVar('CLICKHOUSE_DATABASE', 'mobigen_analytics'),
+    username: getEnvVar('CLICKHOUSE_USER', 'mobigen'),
+    password: getEnvVar('CLICKHOUSE_PASSWORD', ''),
+    request_timeout: getEnvNumber('CLICKHOUSE_TIMEOUT', 60000),
+    max_open_connections: getEnvNumber('CLICKHOUSE_MAX_CONNECTIONS', 10),
+    compression: {
+      request: true,
+      response: true,
+    },
+  },
+
+  // TimescaleDB configuration
+  timescale: {
+    host: getEnvVar('TIMESCALE_HOST', 'localhost'),
+    port: getEnvNumber('TIMESCALE_PORT', 5433),
+    database: getEnvVar('TIMESCALE_DATABASE', 'mobigen_analytics'),
+    user: getEnvVar('TIMESCALE_USER', 'mobigen'),
+    password: getEnvVar('TIMESCALE_PASSWORD', ''),
+    max_connections: getEnvNumber('TIMESCALE_MAX_CONNECTIONS', 20),
+    idle_timeout_ms: getEnvNumber('TIMESCALE_IDLE_TIMEOUT', 30000),
+    connection_timeout_ms: getEnvNumber('TIMESCALE_CONNECTION_TIMEOUT', 10000),
+    ssl: getEnvVar('TIMESCALE_SSL', 'false') === 'true',
+  },
+
+  // Batch insert settings
+  batchInsert: {
+    maxBatchSize: 1000,              // Events per batch
+    flushIntervalMs: 5000,           // Flush every 5 seconds
+    maxQueueSize: 10000,             // Max events in queue before backpressure
+    retryAttempts: 3,
+    retryDelayMs: 1000,
+  },
+
+  // Query settings
+  query: {
+    defaultTimeout: 30000,            // 30 seconds
+    maxResults: 10000,                // Max rows to return
+    enableCaching: true,
+    cacheTtlSeconds: 300,             // 5 minutes
+  },
+
+  // Retention policies
+  retention: {
+    rawEventsMonths: 24,              // Keep raw events for 24 months
+    aggregatesMonths: 36,             // Keep aggregates for 36 months
+    sessionsMonths: 24,               // Keep sessions for 24 months
+  },
+
+  // Compression
+  compression: {
+    clickhouseEnabled: true,
+    clickhouseCodec: 'ZSTD(3)',
+    timescaleEnabled: true,
+    timescaleAfterDays: 7,            // Compress chunks older than 7 days
+  },
+
+  // Analytics features by tier
+  tierFeatures: {
+    basic: {
+      realTimeMetrics: false,
+      customEvents: true,
+      funnelAnalysis: false,
+      cohortAnalysis: false,
+      retentionAnalysis: false,
+      exportData: false,
+      apiAccess: false,
+      customDashboards: false,
+    },
+    pro: {
+      realTimeMetrics: true,
+      customEvents: true,
+      funnelAnalysis: true,
+      cohortAnalysis: true,
+      retentionAnalysis: true,
+      exportData: true,
+      apiAccess: true,
+      customDashboards: true,
+    },
+    enterprise: {
+      realTimeMetrics: true,
+      customEvents: true,
+      funnelAnalysis: true,
+      cohortAnalysis: true,
+      retentionAnalysis: true,
+      exportData: true,
+      apiAccess: true,
+      customDashboards: true,
+    },
+  },
+} as const;
+
+export type AnalyticsDBConfigType = typeof ANALYTICS_DB_CONFIG;
+
 // Export all as a single config object for convenience
 export const CONFIG = {
   tiers: TIER_LIMITS,
@@ -432,6 +533,7 @@ export const CONFIG = {
   models: MODEL_CONFIG,
   pipeline: PIPELINE_PHASES,
   ota: OTA_CONFIG,
+  analyticsDb: ANALYTICS_DB_CONFIG,
 };
 
 export default CONFIG;

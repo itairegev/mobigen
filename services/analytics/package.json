@@ -1,8 +1,9 @@
 {
-  "name": "@mobigen/analytics",
+  "name": "@mobigen/analytics-service",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "description": "Analytics service for Mobigen - handles platform usage tracking and mobile app event ingestion",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup src/index.ts --format esm --dts",

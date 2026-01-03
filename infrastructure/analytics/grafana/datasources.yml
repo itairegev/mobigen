@@ -1,0 +1,33 @@
+apiVersion: 1
+
+datasources:
+  # ClickHouse datasource for OLAP queries
+  - name: ClickHouse
+    type: grafana-clickhouse-datasource
+    access: proxy
+    url: http://clickhouse:8123
+    database: mobigen_analytics
+    isDefault: true
+    jsonData:
+      username: mobigen
+      defaultDatabase: mobigen_analytics
+      protocol: http
+      port: 8123
+    secureJsonData:
+      password: ${CLICKHOUSE_PASSWORD}
+    editable: true
+
+  # TimescaleDB datasource for time-series queries
+  - name: TimescaleDB
+    type: postgres
+    access: proxy
+    url: timescale:5432
+    database: mobigen_analytics
+    user: mobigen
+    secureJsonData:
+      password: ${TIMESCALE_PASSWORD}
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1600
+      timescaledb: true
+    editable: true

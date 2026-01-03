@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # ClickHouse - Fast OLAP database for analytics
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.1-alpine
+    container_name: mobigen-clickhouse
+    hostname: clickhouse
+    ports:
+      - "8123:8123"   # HTTP interface
+      - "9000:9000"   # Native TCP interface
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./clickhouse/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./clickhouse/config.xml:/etc/clickhouse-server/config.d/custom.xml:ro
+    environment:
+      CLICKHOUSE_DB: mobigen_analytics
+      CLICKHOUSE_USER: mobigen
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-changeme123}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - analytics
+
+  # TimescaleDB - PostgreSQL extension for time-series data
+  timescale:
+    image: timescale/timescaledb:latest-pg16
+    container_name: mobigen-timescale
+    hostname: timescale
+    ports:
+      - "5433:5432"   # Use 5433 to avoid conflict with main PostgreSQL
+    volumes:
+      - timescale-data:/var/lib/postgresql/data
+      - ./timescale/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    environment:
+      POSTGRES_DB: mobigen_analytics
+      POSTGRES_USER: mobigen
+      POSTGRES_PASSWORD: ${TIMESCALE_PASSWORD:-changeme123}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    command: postgres -c shared_preload_libraries=timescaledb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mobigen -d mobigen_analytics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - analytics
+
+  # Grafana - Visualization and dashboards
+  grafana:
+    image: grafana/grafana:10.3.1
+    container_name: mobigen-grafana
+    hostname: grafana
+    ports:
+      - "3001:3000"   # Use 3001 to avoid conflict
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+      GF_INSTALL_PLUGINS: grafana-clickhouse-datasource
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_ROOT_URL: http://localhost:3001
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      timescale:
+        condition: service_healthy
+    networks:
+      - analytics
+
+volumes:
+  clickhouse-data:
+    driver: local
+  timescale-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  analytics:
+    driver: bridge
