@@ -1,10 +1,18 @@
 # Mobigen
 
+**Mobile apps made easy - in minutes**
+
 AI-powered mobile app generator that creates production-ready React Native apps from natural language descriptions.
+
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![Certification](https://github.com/OWNER/REPO/actions/workflows/certify.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/certify.yml)
+[![Templates](https://img.shields.io/badge/templates-20-blue)](docs/CERTIFICATION-STATUS.md)
+[![Silver Certified](https://img.shields.io/badge/certified-20%20silver-c0c0c0)](docs/CERTIFICATION-STATUS.md)
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Template Certification Status](#template-certification-status)
 - [Features](#features)
 - [Architecture](#architecture)
 - [Quick Start](#quick-start)
@@ -28,12 +36,29 @@ AI-powered mobile app generator that creates production-ready React Native apps 
 
 Mobigen is a full-stack platform that transforms natural language descriptions into production-ready React Native mobile applications. It leverages Claude AI through a multi-agent pipeline to analyze requirements, design architecture, generate code, and validate quality.
 
+Built on React Native + Expo, it removes the development barrier and allows any founder or small business to have a professional mobile app in minutes.
+
 **Key Capabilities:**
 - Describe your app idea in plain English
 - AI generates a complete React Native (Expo) application
 - Real-time progress tracking via WebSocket
 - Build and deploy to iOS/Android via Expo EAS
 - Automated testing and visual regression
+- 20 best-in-class templates across 8 categories
+
+## Template Certification Status
+
+All Mobigen templates go through rigorous quality assurance with a 3-tier certification system:
+
+| Certification | Templates | Description |
+|---------------|-----------|-------------|
+| 🥇 **Gold** | 0 | E2E tests pass, production-ready |
+| 🥈 **Silver** | 20 | Builds succeed, unit tests pass |
+| 🥉 **Bronze** | 0 | Compiles, lints, basic validation |
+
+**Current Status:** 100% of templates are Silver certified or higher
+
+[View detailed certification status →](docs/CERTIFICATION-STATUS.md)
 
 ---
 
@@ -1014,6 +1039,9 @@ done
 
 | Document | Description |
 |----------|-------------|
+| [Product Requirements](../docs/PRD-mobigen.md) | Product vision, features, and roadmap |
+| [Technical Design](../docs/TECHNICAL-DESIGN-mobigen.md) | System architecture and AI pipeline design |
+| [Certification Status](docs/CERTIFICATION-STATUS.md) | Template quality assurance results |
 | [Project Creation Flow](docs/PROJECT_CREATION_FLOW.md) | Complete guide on how apps are generated from templates |
 | [Architecture Overview](docs/ARCHITECTURE.md) | System architecture and component relationships |
 | [API Reference](docs/API.md) | REST and tRPC API documentation |

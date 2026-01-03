@@ -1,0 +1,273 @@
+name: Template Certification
+
+on:
+  pull_request:
+    paths:
+      - 'templates/**'
+      - 'templates-bare/**'
+      - 'packages/testing/**'
+      - '.github/workflows/certify.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+jobs:
+  detect-changes:
+    name: Detect Changed Templates
+    runs-on: ubuntu-latest
+    outputs:
+      templates: ${{ steps.changed-templates.outputs.templates }}
+      has-changes: ${{ steps.changed-templates.outputs.has-changes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed templates
+        id: changed-templates
+        run: |
+          # Get list of changed files in templates/
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^templates/' || true)
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "templates=[]" >> $GITHUB_OUTPUT
+            echo "No template changes detected"
+            exit 0
+          fi
+
+          # Extract unique template directories
+          TEMPLATES=$(echo "$CHANGED_FILES" | \
+            grep '^templates/' | \
+            cut -d'/' -f2 | \
+            grep -v '^shared$' | \
+            grep -v '^base$' | \
+            sort -u | \
+            jq -R -s -c 'split("\n") | map(select(length > 0))')
+
+          echo "has-changes=true" >> $GITHUB_OUTPUT
+          echo "templates=$TEMPLATES" >> $GITHUB_OUTPUT
+          echo "Changed templates: $TEMPLATES"
+
+  certify-template:
+    name: Certify ${{ matrix.template }}
+    runs-on: ubuntu-latest
+    needs: [detect-changes]
+    if: needs.detect-changes.outputs.has-changes == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        template: ${{ fromJson(needs.detect-changes.outputs.templates) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @mobigen/db prisma generate
+
+      - name: Run certification (Bronze - Tier 1)
+        id: certify-bronze
+        continue-on-error: true
+        run: |
+          echo "Running Bronze certification (Tier 1)..."
+          pnpm certify --template=${{ matrix.template }} --level=bronze
+          echo "bronze-status=$?" >> $GITHUB_OUTPUT
+
+      - name: Run certification (Silver - Tier 2)
+        id: certify-silver
+        if: steps.certify-bronze.outcome == 'success'
+        continue-on-error: true
+        run: |
+          echo "Running Silver certification (Tier 2)..."
+          pnpm certify --template=${{ matrix.template }} --level=silver
+          echo "silver-status=$?" >> $GITHUB_OUTPUT
+
+      - name: Run certification (Gold - Tier 3)
+        id: certify-gold
+        if: steps.certify-silver.outcome == 'success'
+        continue-on-error: true
+        run: |
+          echo "Running Gold certification (Tier 3)..."
+          pnpm certify --template=${{ matrix.template }} --level=gold
+          echo "gold-status=$?" >> $GITHUB_OUTPUT
+
+      - name: Determine certification level
+        id: certification-level
+        run: |
+          if [[ "${{ steps.certify-gold.outcome }}" == "success" ]]; then
+            echo "level=🥇 Gold" >> $GITHUB_OUTPUT
+            echo "passed=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.certify-silver.outcome }}" == "success" ]]; then
+            echo "level=🥈 Silver" >> $GITHUB_OUTPUT
+            echo "passed=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.certify-bronze.outcome }}" == "success" ]]; then
+            echo "level=🥉 Bronze" >> $GITHUB_OUTPUT
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "level=❌ None" >> $GITHUB_OUTPUT
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload certification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: certification-${{ matrix.template }}
+          path: |
+            docs/CERTIFICATION-STATUS.md
+            docs/certification-report.json
+          retention-days: 30
+
+      - name: Post certification result as PR comment
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const template = '${{ matrix.template }}';
+            const level = '${{ steps.certification-level.outputs.level }}';
+            const passed = '${{ steps.certification-level.outputs.passed }}' === 'true';
+
+            const fs = require('fs');
+            let details = '';
+
+            // Try to read certification report
+            try {
+              const reportPath = 'docs/certification-report.json';
+              if (fs.existsSync(reportPath)) {
+                const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+                const templateReport = report.templates.find(t => t.templateId === template);
+
+                if (templateReport) {
+                  details += `\n\n**Details:**\n`;
+                  details += `- Passed Tiers: ${templateReport.passedTiers.join(', ') || 'none'}\n`;
+                  details += `- Failed Tiers: ${templateReport.failedTiers.join(', ') || 'none'}\n`;
+                  details += `- Errors: ${templateReport.errors.reduce((sum, e) => sum + e.count, 0)}\n`;
+                  details += `- Warnings: ${templateReport.warnings.reduce((sum, w) => sum + w.count, 0)}\n`;
+                  details += `- Duration: ${(templateReport.duration / 1000).toFixed(1)}s\n`;
+
+                  if (templateReport.errors.length > 0) {
+                    details += `\n**Top Errors:**\n`;
+                    templateReport.errors.slice(0, 3).forEach(error => {
+                      details += `- **${error.tier} / ${error.stage}**: ${error.count} error(s)\n`;
+                      error.samples.slice(0, 2).forEach(sample => {
+                        details += `  - \`${sample}\`\n`;
+                      });
+                    });
+                  }
+                }
+              }
+            } catch (e) {
+              console.log('Could not read certification report:', e.message);
+            }
+
+            const body = `## Template Certification: \`${template}\`\n\n` +
+                        `**Certification Level:** ${level}\n` +
+                        `**Status:** ${passed ? '✅ Passed' : '❌ Failed'}\n` +
+                        details +
+                        `\n---\n` +
+                        `[View full certification report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes(`Template Certification: \`${template}\``)
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+      - name: Fail job if certification below Silver
+        if: steps.certification-level.outputs.level == '🥉 Bronze' || steps.certification-level.outputs.level == '❌ None'
+        run: |
+          echo "::error::Template ${{ matrix.template }} failed to achieve Silver certification"
+          echo "Current level: ${{ steps.certification-level.outputs.level }}"
+          echo "Templates must achieve at least Silver (Tier 2) certification to be merged."
+          exit 1
+
+  certification-summary:
+    name: Certification Summary
+    runs-on: ubuntu-latest
+    needs: [detect-changes, certify-template]
+    if: always() && needs.detect-changes.outputs.has-changes == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all certification reports
+        uses: actions/download-artifact@v4
+        with:
+          path: certification-reports
+
+      - name: Generate summary
+        run: |
+          echo "## 🎯 Template Certification Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Count certifications by level
+          GOLD_COUNT=$(find certification-reports -name "certification-report.json" -exec grep -l '"certificationLevel":"gold"' {} \; | wc -l)
+          SILVER_COUNT=$(find certification-reports -name "certification-report.json" -exec grep -l '"certificationLevel":"silver"' {} \; | wc -l)
+          BRONZE_COUNT=$(find certification-reports -name "certification-report.json" -exec grep -l '"certificationLevel":"bronze"' {} \; | wc -l)
+          NONE_COUNT=$(find certification-reports -name "certification-report.json" -exec grep -l '"certificationLevel":"none"' {} \; | wc -l)
+
+          echo "| Level | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🥇 Gold | $GOLD_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🥈 Silver | $SILVER_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🥉 Bronze | $BRONZE_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "| ❌ None | $NONE_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ $BRONZE_COUNT -gt 0 ] || [ $NONE_COUNT -gt 0 ]; then
+            echo "⚠️ **Warning:** Some templates did not achieve Silver certification." >> $GITHUB_STEP_SUMMARY
+            echo "Templates must achieve at least Silver (Tier 2) to be production-ready." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **All templates achieved Silver or Gold certification!**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check certification status
+        id: check-status
+        run: |
+          if [[ "${{ needs.certify-template.result }}" != "success" ]]; then
+            echo "status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "status=passed" >> $GITHUB_OUTPUT
+          fi
