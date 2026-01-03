@@ -34,18 +34,6 @@ export interface ExportOptions {
    * Custom exclusion patterns
    */
   excludePatterns?: string[];
-
-  /**
-   * Format code with Prettier and ESLint
-   * @default true
-   */
-  formatCode?: boolean;
-
-  /**
-   * Skip formatting validation (faster but less thorough)
-   * @default false
-   */
-  skipFormatValidation?: boolean;
 }
 
 export interface ExportResult {
