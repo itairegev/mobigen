@@ -65,6 +65,9 @@ import { getExportService } from './export-service';
 import type { ExportOptions } from './export-types';
 // GitHub integration service
 import { GitHubService } from './github-service';
+// White-label branding service
+import { getWhiteLabelService } from './white-label-service';
+import type { BrandConfig } from './white-label-types';
 
 // Inline observability utilities (avoiding package dependency for now)
 type HealthStatus = 'healthy' | 'degraded' | 'unhealthy';
@@ -2796,6 +2799,108 @@ app.get('/api/projects/:projectId/github', async (req, res) => {
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Failed to get config',
+    });
+  }
+});
+
+// ============================================================================
+// WHITE-LABEL BRANDING ENDPOINTS (Enterprise)
+// ============================================================================
+
+// Apply branding to a project
+app.post('/api/projects/:projectId/branding', async (req, res) => {
+  const { projectId } = req.params;
+  const brandConfig = req.body as BrandConfig;
+
+  try {
+    const whiteLabelService = getWhiteLabelService();
+    const result = await whiteLabelService.applyBranding(projectId, brandConfig);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    res.json(result);
+
+    // Emit progress via WebSocket
+    io.to(`project:${projectId}`).emit('branding:applied', {
+      projectId,
+      success: true,
+      assetsGenerated: {
+        ios: result.assets.icons.ios.length + result.assets.splash.ios.length,
+        android: result.assets.icons.android.length + result.assets.splash.android.length,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to apply branding:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to apply branding',
+      assets: { icons: { ios: [], android: [] }, splash: { ios: [], android: [] } },
+      config: { appJson: {} },
+    });
+  }
+});
+
+// Get current branding configuration
+app.get('/api/projects/:projectId/branding', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const whiteLabelService = getWhiteLabelService();
+    const branding = await whiteLabelService.getBranding(projectId);
+
+    if (!branding) {
+      return res.status(404).json({
+        success: false,
+        error: 'Branding not found for this project',
+      });
+    }
+
+    res.json({
+      success: true,
+      branding,
+    });
+  } catch (error) {
+    console.error('[api] Failed to get branding:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get branding',
+    });
+  }
+});
+
+// Preview branding (generate sample without applying)
+app.post('/api/projects/:projectId/branding/preview', async (req, res) => {
+  const { projectId } = req.params;
+  const brandConfig = req.body as BrandConfig;
+
+  try {
+    const whiteLabelService = getWhiteLabelService();
+    const result = await whiteLabelService.previewBranding(brandConfig);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    res.json({
+      success: true,
+      preview: {
+        appJson: result.config.appJson,
+        colors: {
+          primary: brandConfig.branding.primaryColor,
+          secondary: brandConfig.branding.secondaryColor,
+          accent: brandConfig.branding.accentColor,
+        },
+        bundleId: brandConfig.bundleId,
+      },
+      warnings: result.warnings,
+    });
+  } catch (error) {
+    console.error('[api] Failed to preview branding:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to preview branding',
     });
   }
 });
