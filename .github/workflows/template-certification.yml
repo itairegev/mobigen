@@ -1,0 +1,260 @@
+name: Template Certification
+
+on:
+  pull_request:
+    paths:
+      - 'templates/**'
+      - '!templates/README.md'
+      - '!templates/shared/**'
+      - '!templates/base/**'
+      - '!templates/*.json'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  detect-changes:
+    name: Detect Changed Templates
+    runs-on: ubuntu-latest
+    outputs:
+      templates: ${{ steps.changes.outputs.templates }}
+      has-changes: ${{ steps.changes.outputs.has-changes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed templates
+        id: changes
+        run: |
+          # Get list of changed files in templates/ directory
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^templates/' || true)
+
+          if [ -z "$changed_files" ]; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "templates=[]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Extract unique template names (exclude shared, base, and top-level files)
+          templates=$(echo "$changed_files" | \
+            grep -v '^templates/README.md$' | \
+            grep -v '^templates/shared/' | \
+            grep -v '^templates/base/' | \
+            grep -v '^templates/[^/]*\.json$' | \
+            sed 's|^templates/\([^/]*\)/.*|\1|' | \
+            sort -u | \
+            jq -R -s -c 'split("\n") | map(select(length > 0))')
+
+          echo "has-changes=true" >> $GITHUB_OUTPUT
+          echo "templates=$templates" >> $GITHUB_OUTPUT
+
+          echo "Changed templates: $templates"
+
+  certify:
+    name: Certify ${{ matrix.template }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        template: ${{ fromJson(needs.detect-changes.outputs.templates) }}
+    outputs:
+      result-${{ matrix.template }}: ${{ steps.certify.outputs.result }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+            templates/${{ matrix.template }}/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Certify template
+        id: certify
+        uses: ./.github/actions/certify-template
+        with:
+          template: ${{ matrix.template }}
+
+      - name: Set check status
+        if: always()
+        run: |
+          level="${{ steps.certify.outputs.level }}"
+
+          if [ "$level" = "gold" ] || [ "$level" = "silver" ]; then
+            echo "✅ Certification passed: $level"
+            exit 0
+          else
+            echo "❌ Certification failed: $level"
+            exit 1
+          fi
+
+  report:
+    name: Post Certification Report
+    needs: [detect-changes, certify]
+    if: always() && needs.detect-changes.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate certification report
+        id: report
+        run: |
+          # Create report directory
+          mkdir -p .certification-reports
+
+          # Run certification on changed templates and capture output
+          templates='${{ needs.detect-changes.outputs.templates }}'
+          echo "$templates" | jq -r '.[]' | while read template; do
+            echo "Certifying $template..."
+            pnpm tsx scripts/certify-all-templates.ts --template="$template" --level=silver > ".certification-reports/$template.txt" 2>&1 || true
+          done
+
+          # Generate combined report in markdown format
+          cat > .certification-reports/report.md << 'EOF'
+          ## 📋 Template Certification Results
+
+          This PR modifies templates. Here are the certification results:
+
+          EOF
+
+          # Add results for each template
+          echo "$templates" | jq -r '.[]' | while read template; do
+            if [ -f ".certification-reports/$template.txt" ]; then
+              # Extract certification level from output
+              cert_level=$(grep -o "Certification: [A-Z]*" ".certification-reports/$template.txt" | head -1 | awk '{print $2}' || echo "UNKNOWN")
+
+              case "$cert_level" in
+                GOLD)
+                  badge="🥇 Gold"
+                  status="✅ Passed"
+                  ;;
+                SILVER)
+                  badge="🥈 Silver"
+                  status="✅ Passed"
+                  ;;
+                BRONZE)
+                  badge="🥉 Bronze"
+                  status="⚠️ Needs Improvement"
+                  ;;
+                *)
+                  badge="❌ None"
+                  status="❌ Failed"
+                  ;;
+              esac
+
+              echo "### $template - $badge" >> .certification-reports/report.md
+              echo "" >> .certification-reports/report.md
+              echo "**Status:** $status" >> .certification-reports/report.md
+              echo "" >> .certification-reports/report.md
+              echo "<details>" >> .certification-reports/report.md
+              echo "<summary>View Details</summary>" >> .certification-reports/report.md
+              echo "" >> .certification-reports/report.md
+              echo '```' >> .certification-reports/report.md
+              cat ".certification-reports/$template.txt" >> .certification-reports/report.md
+              echo '```' >> .certification-reports/report.md
+              echo "" >> .certification-reports/report.md
+              echo "</details>" >> .certification-reports/report.md
+              echo "" >> .certification-reports/report.md
+            fi
+          done
+
+          cat >> .certification-reports/report.md << 'EOF'
+
+          ---
+
+          ### Certification Levels
+
+          - 🥇 **Gold**: All checks pass including E2E tests (Tier 3)
+          - 🥈 **Silver**: TypeScript, ESLint, builds, and unit tests pass (Tier 2) - **Required**
+          - 🥉 **Bronze**: TypeScript, ESLint, navigation, and imports pass (Tier 1)
+          - ❌ **None**: Does not meet minimum requirements
+
+          **Minimum requirement for merge: Silver (🥈) certification**
+          EOF
+
+          # Output report path
+          echo "report-file=.certification-reports/report.md" >> $GITHUB_OUTPUT
+
+      - name: Post PR comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const reportPath = '${{ steps.report.outputs.report-file }}';
+            const report = fs.readFileSync(reportPath, 'utf8');
+
+            // Find existing certification comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('📋 Template Certification Results')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: report
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: report
+              });
+            }
+
+      - name: Upload certification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: certification-reports
+          path: .certification-reports/
+          retention-days: 30

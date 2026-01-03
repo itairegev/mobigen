@@ -1,0 +1,210 @@
+name: 'Certify Template'
+description: 'Run certification tests on a Mobigen template'
+author: 'Mobigen'
+
+inputs:
+  template:
+    description: 'Template name to certify'
+    required: true
+  level:
+    description: 'Maximum certification level to test (bronze, silver, gold)'
+    required: false
+    default: 'silver'
+
+outputs:
+  level:
+    description: 'Certification level achieved (gold, silver, bronze, none)'
+    value: ${{ steps.parse-result.outputs.level }}
+  passed:
+    description: 'Whether certification passed (true/false)'
+    value: ${{ steps.parse-result.outputs.passed }}
+  tier1-passed:
+    description: 'Tier 1 validation passed'
+    value: ${{ steps.parse-result.outputs.tier1-passed }}
+  tier2-passed:
+    description: 'Tier 2 validation passed'
+    value: ${{ steps.parse-result.outputs.tier2-passed }}
+  tier3-passed:
+    description: 'Tier 3 validation passed'
+    value: ${{ steps.parse-result.outputs.tier3-passed }}
+  errors:
+    description: 'Number of errors found'
+    value: ${{ steps.parse-result.outputs.errors }}
+  warnings:
+    description: 'Number of warnings found'
+    value: ${{ steps.parse-result.outputs.warnings }}
+  duration:
+    description: 'Certification duration in seconds'
+    value: ${{ steps.parse-result.outputs.duration }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate inputs
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.template }}" ]; then
+          echo "❌ Error: template input is required"
+          exit 1
+        fi
+
+        if [ ! -d "templates/${{ inputs.template }}" ]; then
+          echo "❌ Error: template 'templates/${{ inputs.template }}' does not exist"
+          exit 1
+        fi
+
+        echo "✅ Validating template: ${{ inputs.template }}"
+        echo "🎯 Target certification level: ${{ inputs.level }}"
+
+    - name: Install template dependencies
+      shell: bash
+      working-directory: templates/${{ inputs.template }}
+      run: |
+        if [ -f "package.json" ]; then
+          echo "📦 Installing template dependencies..."
+          npm install --legacy-peer-deps || true
+        fi
+
+    - name: Run certification
+      id: certify
+      shell: bash
+      run: |
+        echo "🔍 Running certification for ${{ inputs.template }}..."
+
+        # Run certification and capture output
+        set +e
+        output=$(pnpm tsx scripts/certify-all-templates.ts \
+          --template="${{ inputs.template }}" \
+          --level="${{ inputs.level }}" 2>&1)
+        exit_code=$?
+        set -e
+
+        # Save output for parsing
+        echo "$output" > .cert-output.txt
+
+        echo "📄 Certification output:"
+        cat .cert-output.txt
+
+        # Exit code doesn't matter - we parse the output
+        exit 0
+
+    - name: Parse certification result
+      id: parse-result
+      shell: bash
+      run: |
+        if [ ! -f .cert-output.txt ]; then
+          echo "level=none" >> $GITHUB_OUTPUT
+          echo "passed=false" >> $GITHUB_OUTPUT
+          echo "tier1-passed=false" >> $GITHUB_OUTPUT
+          echo "tier2-passed=false" >> $GITHUB_OUTPUT
+          echo "tier3-passed=false" >> $GITHUB_OUTPUT
+          echo "errors=0" >> $GITHUB_OUTPUT
+          echo "warnings=0" >> $GITHUB_OUTPUT
+          echo "duration=0" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        output=$(cat .cert-output.txt)
+
+        # Extract certification level
+        if echo "$output" | grep -q "Certification: GOLD"; then
+          level="gold"
+        elif echo "$output" | grep -q "Certification: SILVER"; then
+          level="silver"
+        elif echo "$output" | grep -q "Certification: BRONZE"; then
+          level="bronze"
+        else
+          level="none"
+        fi
+
+        # Determine if passed (silver or gold)
+        if [ "$level" = "gold" ] || [ "$level" = "silver" ]; then
+          passed="true"
+        else
+          passed="false"
+        fi
+
+        # Extract tier results
+        tier1_passed="false"
+        tier2_passed="false"
+        tier3_passed="false"
+
+        if echo "$output" | grep -q "✅ tier1: PASS"; then
+          tier1_passed="true"
+        fi
+
+        if echo "$output" | grep -q "✅ tier2: PASS"; then
+          tier2_passed="true"
+        fi
+
+        if echo "$output" | grep -q "✅ tier3: PASS"; then
+          tier3_passed="true"
+        fi
+
+        # Count errors and warnings (approximate)
+        errors=$(echo "$output" | grep -c "error(s) found" || echo "0")
+        warnings=$(echo "$output" | grep -c "warning" || echo "0")
+
+        # Extract duration (approximate from last line)
+        duration=$(echo "$output" | grep -o "[0-9]*ms" | tail -1 | sed 's/ms//' || echo "0")
+        duration_sec=$((duration / 1000))
+
+        # Output results
+        echo "level=$level" >> $GITHUB_OUTPUT
+        echo "passed=$passed" >> $GITHUB_OUTPUT
+        echo "tier1-passed=$tier1_passed" >> $GITHUB_OUTPUT
+        echo "tier2-passed=$tier2_passed" >> $GITHUB_OUTPUT
+        echo "tier3-passed=$tier3_passed" >> $GITHUB_OUTPUT
+        echo "errors=$errors" >> $GITHUB_OUTPUT
+        echo "warnings=$warnings" >> $GITHUB_OUTPUT
+        echo "duration=$duration_sec" >> $GITHUB_OUTPUT
+
+        # Summary
+        echo ""
+        echo "📊 Certification Summary for ${{ inputs.template }}:"
+        echo "  Level: $level"
+        echo "  Passed: $passed"
+        echo "  Tier 1: $tier1_passed"
+        echo "  Tier 2: $tier2_passed"
+        echo "  Tier 3: $tier3_passed"
+        echo "  Errors: $errors"
+        echo "  Warnings: $warnings"
+        echo "  Duration: ${duration_sec}s"
+
+    - name: Save certification output as artifact
+      shell: bash
+      run: |
+        mkdir -p .certification-artifacts
+        cp .cert-output.txt ".certification-artifacts/${{ inputs.template }}-certification.txt"
+        echo "level=${{ steps.parse-result.outputs.level }}" > ".certification-artifacts/${{ inputs.template }}-summary.txt"
+        echo "passed=${{ steps.parse-result.outputs.passed }}" >> ".certification-artifacts/${{ inputs.template }}-summary.txt"
+        echo "tier1=${{ steps.parse-result.outputs.tier1-passed }}" >> ".certification-artifacts/${{ inputs.template }}-summary.txt"
+        echo "tier2=${{ steps.parse-result.outputs.tier2-passed }}" >> ".certification-artifacts/${{ inputs.template }}-summary.txt"
+        echo "tier3=${{ steps.parse-result.outputs.tier3-passed }}" >> ".certification-artifacts/${{ inputs.template }}-summary.txt"
+
+    - name: Create check annotation
+      shell: bash
+      run: |
+        level="${{ steps.parse-result.outputs.level }}"
+        passed="${{ steps.parse-result.outputs.passed }}"
+
+        case "$level" in
+          gold)
+            badge="🥇 Gold"
+            ;;
+          silver)
+            badge="🥈 Silver"
+            ;;
+          bronze)
+            badge="🥉 Bronze"
+            ;;
+          *)
+            badge="❌ None"
+            ;;
+        esac
+
+        if [ "$passed" = "true" ]; then
+          echo "::notice title=Certification Passed for ${{ inputs.template }}::Achieved $badge certification"
+        else
+          echo "::warning title=Certification Failed for ${{ inputs.template }}::Only achieved $badge certification (Silver+ required)"
+        fi
