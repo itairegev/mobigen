@@ -1,0 +1,204 @@
+name: Send Notifications
+
+on:
+  workflow_call:
+    inputs:
+      type:
+        description: 'Notification type (success, failure, certification)'
+        required: true
+        type: string
+      title:
+        description: 'Notification title'
+        required: true
+        type: string
+      message:
+        description: 'Notification message'
+        required: true
+        type: string
+      color:
+        description: 'Notification color (success, failure, warning, info)'
+        required: false
+        type: string
+        default: 'info'
+      fields:
+        description: 'Additional fields as JSON object'
+        required: false
+        type: string
+        default: '{}'
+    secrets:
+      SLACK_WEBHOOK_URL:
+        description: 'Slack webhook URL'
+        required: false
+      DISCORD_WEBHOOK_URL:
+        description: 'Discord webhook URL'
+        required: false
+
+jobs:
+  notify:
+    name: Send Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare notification data
+        id: prepare
+        run: |
+          # Get commit info
+          COMMIT_SHA="${{ github.sha }}"
+          COMMIT_SHORT="${COMMIT_SHA:0:7}"
+          COMMIT_MSG="${{ github.event.head_commit.message || 'N/A' }}"
+          COMMIT_AUTHOR="${{ github.event.head_commit.author.name || github.actor }}"
+          BRANCH="${{ github.ref_name }}"
+          WORKFLOW_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # Set color based on type
+          case "${{ inputs.color }}" in
+            success)
+              SLACK_COLOR="good"
+              DISCORD_COLOR="5763719"  # Green
+              ;;
+            failure)
+              SLACK_COLOR="danger"
+              DISCORD_COLOR="15548997"  # Red
+              ;;
+            warning)
+              SLACK_COLOR="warning"
+              DISCORD_COLOR="16776960"  # Yellow
+              ;;
+            *)
+              SLACK_COLOR="#0366d6"
+              DISCORD_COLOR="3447003"  # Blue
+              ;;
+          esac
+
+          echo "commit_short=$COMMIT_SHORT" >> $GITHUB_OUTPUT
+          echo "commit_msg=$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "workflow_url=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+          echo "slack_color=$SLACK_COLOR" >> $GITHUB_OUTPUT
+          echo "discord_color=$DISCORD_COLOR" >> $GITHUB_OUTPUT
+
+      - name: Send Slack notification
+        if: secrets.SLACK_WEBHOOK_URL != ''
+        run: |
+          # Parse additional fields
+          FIELDS='${{ inputs.fields }}'
+
+          # Build Slack message payload
+          cat > /tmp/slack-payload.json << 'EOF'
+          {
+            "attachments": [
+              {
+                "color": "${{ steps.prepare.outputs.slack_color }}",
+                "title": "${{ inputs.title }}",
+                "text": "${{ inputs.message }}",
+                "fields": [
+                  {
+                    "title": "Repository",
+                    "value": "<https://github.com/${{ github.repository }}|${{ github.repository }}>",
+                    "short": true
+                  },
+                  {
+                    "title": "Branch",
+                    "value": "`${{ steps.prepare.outputs.branch }}`",
+                    "short": true
+                  },
+                  {
+                    "title": "Commit",
+                    "value": "<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|`${{ steps.prepare.outputs.commit_short }}`>",
+                    "short": true
+                  },
+                  {
+                    "title": "Author",
+                    "value": "${{ steps.prepare.outputs.commit_author }}",
+                    "short": true
+                  },
+                  {
+                    "title": "Workflow",
+                    "value": "<${{ steps.prepare.outputs.workflow_url }}|View Workflow Run>",
+                    "short": false
+                  }
+                ],
+                "footer": "GitHub Actions",
+                "footer_icon": "https://github.githubassets.com/favicons/favicon.png",
+                "ts": ${{ github.event.head_commit.timestamp && 'github.event.head_commit.timestamp' || 'null' }}
+              }
+            ]
+          }
+          EOF
+
+          # Send to Slack
+          curl -X POST \
+            -H 'Content-Type: application/json' \
+            -d @/tmp/slack-payload.json \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send Discord notification
+        if: secrets.DISCORD_WEBHOOK_URL != ''
+        run: |
+          # Prepare commit message (escape for JSON)
+          COMMIT_MSG_ESCAPED=$(echo '${{ steps.prepare.outputs.commit_msg }}' | head -c 100 | jq -Rs .)
+
+          # Build Discord embed payload
+          cat > /tmp/discord-payload.json << EOF
+          {
+            "embeds": [
+              {
+                "title": "${{ inputs.title }}",
+                "description": "${{ inputs.message }}",
+                "color": ${{ steps.prepare.outputs.discord_color }},
+                "fields": [
+                  {
+                    "name": "Repository",
+                    "value": "[${{ github.repository }}](https://github.com/${{ github.repository }})",
+                    "inline": true
+                  },
+                  {
+                    "name": "Branch",
+                    "value": "\`${{ steps.prepare.outputs.branch }}\`",
+                    "inline": true
+                  },
+                  {
+                    "name": "Commit",
+                    "value": "[\`${{ steps.prepare.outputs.commit_short }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})",
+                    "inline": true
+                  },
+                  {
+                    "name": "Author",
+                    "value": "${{ steps.prepare.outputs.commit_author }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Commit Message",
+                    "value": $(echo "$COMMIT_MSG_ESCAPED"),
+                    "inline": false
+                  },
+                  {
+                    "name": "Workflow Run",
+                    "value": "[View Details](${{ steps.prepare.outputs.workflow_url }})",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "GitHub Actions • Mobigen CI/CD"
+                },
+                "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"
+              }
+            ]
+          }
+          EOF
+
+          # Send to Discord
+          curl -X POST \
+            -H 'Content-Type: application/json' \
+            -d @/tmp/discord-payload.json \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Notification sent
+        run: |
+          echo "✅ Notifications sent successfully"
+          echo "Type: ${{ inputs.type }}"
+          echo "Title: ${{ inputs.title }}"

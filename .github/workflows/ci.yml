@@ -194,15 +194,72 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint, typecheck, test, build]
     if: always()
+    outputs:
+      status: ${{ steps.check-status.outputs.status }}
+      failed_jobs: ${{ steps.check-status.outputs.failed_jobs }}
     steps:
       - name: Check CI Status
+        id: check-status
         run: |
-          if [[ "${{ needs.lint.result }}" != "success" || \
-                "${{ needs.typecheck.result }}" != "success" || \
-                "${{ needs.test.result }}" != "success" || \
-                "${{ needs.build.result }}" != "success" ]]; then
+          FAILED_JOBS=""
+
+          if [[ "${{ needs.lint.result }}" != "success" ]]; then
+            FAILED_JOBS="${FAILED_JOBS}lint, "
+          fi
+          if [[ "${{ needs.typecheck.result }}" != "success" ]]; then
+            FAILED_JOBS="${FAILED_JOBS}typecheck, "
+          fi
+          if [[ "${{ needs.test.result }}" != "success" ]]; then
+            FAILED_JOBS="${FAILED_JOBS}test, "
+          fi
+          if [[ "${{ needs.build.result }}" != "success" ]]; then
+            FAILED_JOBS="${FAILED_JOBS}build, "
+          fi
+
+          # Remove trailing comma and space
+          FAILED_JOBS=$(echo "$FAILED_JOBS" | sed 's/, $//')
+
+          if [[ -n "$FAILED_JOBS" ]]; then
             echo "❌ CI pipeline failed"
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "failed_jobs=$FAILED_JOBS" >> $GITHUB_OUTPUT
             exit 1
           else
             echo "✅ All CI checks passed"
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "failed_jobs=" >> $GITHUB_OUTPUT
           fi
+
+  notify-failure:
+    name: Notify CI Failure
+    needs: [ci-status]
+    if: always() && needs.ci-status.outputs.status == 'failure'
+    uses: ./.github/workflows/notifications.yml
+    with:
+      type: failure
+      title: "❌ CI Pipeline Failed"
+      message: |
+        The CI pipeline has failed for branch `${{ github.ref_name }}`.
+
+        **Failed Jobs:** ${{ needs.ci-status.outputs.failed_jobs }}
+      color: failure
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  notify-success:
+    name: Notify CI Success
+    needs: [ci-status]
+    if: always() && needs.ci-status.outputs.status == 'success' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    uses: ./.github/workflows/notifications.yml
+    with:
+      type: success
+      title: "✅ CI Pipeline Passed"
+      message: |
+        All CI checks passed successfully for branch `${{ github.ref_name }}`.
+
+        **Jobs Completed:** lint, typecheck, test, build
+      color: success
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
