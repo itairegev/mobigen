@@ -1,0 +1,15 @@
+{
+  "testProjectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+  "testUserId": "33cce73e-861f-44ff-9c8d-ba01a9a975ff",
+  "projectPath": "/Users/itairegev/projects/mobigen/projects/a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+  "timestamp": "2025-12-30T21:16:12.768Z",
+  "progressEventsCount": 42,
+  "success": false,
+  "filesGenerated": 0,
+  "files": [],
+  "qaScore": null,
+  "readyForProduction": false,
+  "requiresReview": false,
+  "phasesCompleted": [],
+  "errors": []
+}

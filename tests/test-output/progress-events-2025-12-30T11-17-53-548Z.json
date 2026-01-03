@@ -1,0 +1,248 @@
+[
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "starting",
+    "timestamp": "2025-12-30T10:58:32.104Z",
+    "data": {
+      "mode": "pipeline"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "setup",
+    "timestamp": "2025-12-30T10:58:32.106Z",
+    "data": {
+      "phase": "template-selection"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T10:58:32.106Z",
+    "data": {
+      "agent": "intent-analyzer",
+      "phase": "template-selection"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T10:58:52.101Z",
+    "data": {
+      "agent": "intent-analyzer",
+      "phase": "template-selection",
+      "selectedTemplate": "news"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "cloning",
+    "timestamp": "2025-12-30T10:58:52.102Z",
+    "data": {
+      "template": "news"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "pipeline:start",
+    "timestamp": "2025-12-30T10:58:52.827Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "agents": [
+            "product-manager",
+            "technical-architect"
+          ]
+        },
+        {
+          "name": "design",
+          "agents": [
+            "ui-ux-expert"
+          ]
+        },
+        {
+          "name": "task-breakdown",
+          "agents": [
+            "lead-developer"
+          ]
+        },
+        {
+          "name": "implementation",
+          "agents": [
+            "developer"
+          ]
+        },
+        {
+          "name": "validation",
+          "agents": [
+            "validator"
+          ]
+        },
+        {
+          "name": "build-validation",
+          "agents": [
+            "build-validator"
+          ]
+        },
+        {
+          "name": "qa",
+          "agents": [
+            "qa"
+          ]
+        },
+        {
+          "name": "web-preview",
+          "agents": [
+            "web-deployer"
+          ]
+        },
+        {
+          "name": "android-build",
+          "agents": [
+            "apk-builder"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "phase:start",
+    "timestamp": "2025-12-30T10:58:52.827Z",
+    "data": {
+      "phase": "planning"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T10:58:52.829Z",
+    "data": {
+      "agent": "product-manager",
+      "phase": "planning"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T10:59:54.864Z",
+    "data": {
+      "agent": "product-manager",
+      "success": true,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T10:59:54.865Z",
+    "data": {
+      "agent": "technical-architect",
+      "phase": "planning"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T11:00:48.656Z",
+    "data": {
+      "agent": "technical-architect",
+      "success": true,
+      "filesModified": 0
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "phase:complete",
+    "timestamp": "2025-12-30T11:00:48.657Z",
+    "data": {
+      "phase": "planning",
+      "success": true,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "phase:start",
+    "timestamp": "2025-12-30T11:00:48.658Z",
+    "data": {
+      "phase": "design"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T11:00:48.660Z",
+    "data": {
+      "agent": "ui-ux-expert",
+      "phase": "design"
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T11:10:48.664Z",
+    "data": {
+      "agent": "ui-ux-expert",
+      "success": false,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "phase:failed",
+    "timestamp": "2025-12-30T11:10:48.666Z",
+    "data": {
+      "phase": "design",
+      "errors": [
+        {
+          "code": "AGENT_ERROR",
+          "message": "Agent ui-ux-expert timed out after 600000ms",
+          "autoFixable": false
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "pipeline:complete",
+    "timestamp": "2025-12-30T11:10:48.666Z",
+    "data": {
+      "success": false,
+      "filesModified": 1,
+      "errors": 1
+    }
+  },
+  {
+    "projectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+    "stage": "complete",
+    "timestamp": "2025-12-30T11:10:48.667Z",
+    "data": {
+      "success": false,
+      "filesGenerated": 1,
+      "status": "NEEDS_REVIEW",
+      "taskSummary": {
+        "phases": [
+          {
+            "name": "planning",
+            "status": "completed",
+            "tasks": 2,
+            "completed": 2,
+            "failed": 0
+          },
+          {
+            "name": "design",
+            "status": "failed",
+            "tasks": 1,
+            "completed": 0,
+            "failed": 1
+          }
+        ],
+        "progress": 67,
+        "errors": 0
+      },
+      "message": "⚠ Project needs review. 1 errors found."
+    }
+  }
+]
