@@ -23,13 +23,25 @@
     "certify:template": "npx tsx scripts/certify-all-templates.ts --template",
     "templates:status": "npx tsx scripts/check-template-status.ts",
     "templates:status:detailed": "npx tsx scripts/check-template-status.ts --detailed",
-    "templates:analyze": "npx tsx scripts/analyze-templates.ts"
+    "templates:analyze": "npx tsx scripts/analyze-templates.ts",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
     "ts-node": "^10.9.2",
     "turbo": "^2.3.3",
     "typescript": "^5.6.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
