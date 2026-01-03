@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, Text, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Calendar, TrendingUp } from 'lucide-react-native';
+import { Calendar, TrendingUp, Briefcase } from 'lucide-react-native';
 import { useJobs } from '@/hooks';
 import { JobCard, JobStats } from '@/components';
 import { getJobStats } from '@/services/jobs';

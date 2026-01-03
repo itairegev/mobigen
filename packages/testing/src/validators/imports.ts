@@ -119,9 +119,9 @@ async function loadPathAliases(projectPath: string): Promise<Map<string, string>
 
   try {
     const content = fs.readFileSync(tsconfigPath, 'utf-8');
-    // Remove comments for parsing
-    const cleanContent = content.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-    const tsconfig = JSON.parse(cleanContent);
+    // Parse JSON directly - comment removal regex can corrupt strings containing /* or */
+    // Most tsconfig.json files don't have comments, and if they do, a proper JSON5 parser should be used
+    const tsconfig = JSON.parse(content);
 
     const paths = tsconfig.compilerOptions?.paths || {};
     const baseUrl = tsconfig.compilerOptions?.baseUrl || '.';

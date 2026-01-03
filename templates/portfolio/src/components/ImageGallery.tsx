@@ -15,9 +15,10 @@ interface ImageGalleryProps {
   images: string[];
   style?: ViewStyle;
   testID?: string;
+  className?: string;
 }
 
-export function ImageGallery({ images, style, testID }: ImageGalleryProps) {
+export function ImageGallery({ images, style, testID, className }: ImageGalleryProps) {
   const { colors } = useTheme();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { width } = Dimensions.get('window');

@@ -1,0 +1,2398 @@
+{
+  "reportDate": "2026-01-03T08:46:50.134Z",
+  "totalTemplates": 20,
+  "summary": {
+    "gold": 0,
+    "silver": 20,
+    "bronze": 0,
+    "none": 0
+  },
+  "templates": [
+    {
+      "templateName": "ai-assistant",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 5227,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 4239,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 983,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 5,
+              "errors": [],
+              "output": "Checked 26 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 12566,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6452,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 675,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 26 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 4182,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1253,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 17795,
+      "certifiedAt": "2026-01-03T08:40:13.561Z"
+    },
+    {
+      "templateId": "church",
+      "templateName": "Church & Religious Organization",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7223,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6165,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1051,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 7,
+              "errors": [],
+              "output": "Checked 37 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14422,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6521,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 665,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 37 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5808,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1424,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21646,
+      "certifiedAt": "2026-01-03T08:40:35.207Z"
+    },
+    {
+      "templateId": "community",
+      "templateName": "Community",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7333,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6326,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1004,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 35 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14147,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6337,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 640,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 5,
+              "errors": [],
+              "output": "Checked 35 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5804,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1361,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21481,
+      "certifiedAt": "2026-01-03T08:40:56.688Z"
+    },
+    {
+      "templateId": "course",
+      "templateName": "Course/Learning Platform",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7293,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6234,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1055,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 29 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 15002,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6062,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 642,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 29 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5930,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 2366,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 22297,
+      "certifiedAt": "2026-01-03T08:41:18.985Z"
+    },
+    {
+      "templateName": "ecommerce",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 5700,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5082,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 616,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 25 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 17744,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 4913,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 622,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 1,
+              "errors": [],
+              "output": "Checked 25 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 11174,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1034,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 23445,
+      "certifiedAt": "2026-01-03T08:41:42.430Z"
+    },
+    {
+      "templateId": "event",
+      "templateName": "Event & Conference",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 6692,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5709,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 980,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 39 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 15430,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5861,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 623,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 39 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 7514,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1428,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 22122,
+      "certifiedAt": "2026-01-03T08:42:04.552Z"
+    },
+    {
+      "templateId": "field-service",
+      "templateName": "Field Service & Jobs",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7262,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6294,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 965,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 13762,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5802,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 593,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5905,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1458,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21025,
+      "certifiedAt": "2026-01-03T08:42:25.577Z"
+    },
+    {
+      "templateId": "fitness",
+      "templateName": "Fitness",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7170,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6209,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 958,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14130,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5958,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 596,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5456,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 2116,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21301,
+      "certifiedAt": "2026-01-03T08:42:46.878Z"
+    },
+    {
+      "templateName": "loyalty",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 4521,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 3888,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 629,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 28 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 8868,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 4654,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 634,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 28 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 2732,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 846,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 13390,
+      "certifiedAt": "2026-01-03T08:43:00.268Z"
+    },
+    {
+      "templateId": "marketplace",
+      "templateName": "Local Marketplace",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 8027,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6993,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1030,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 38 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14134,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6247,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 597,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 38 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5898,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1389,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 22162,
+      "certifiedAt": "2026-01-03T08:43:22.430Z"
+    },
+    {
+      "templateName": "news",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 4850,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 4227,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 621,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 27 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 9412,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 4757,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 628,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 27 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 3035,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 990,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 14264,
+      "certifiedAt": "2026-01-03T08:43:36.694Z"
+    },
+    {
+      "templateId": "pet-services",
+      "templateName": "Pet Services",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 5954,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 4985,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 966,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 36 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 13104,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5601,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 616,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 36 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5610,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1275,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 19060,
+      "certifiedAt": "2026-01-03T08:43:55.754Z"
+    },
+    {
+      "templateId": "podcast",
+      "templateName": "Podcast & Creator Hub",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7596,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6553,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1039,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14130,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6668,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 596,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 5,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5527,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1334,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21727,
+      "certifiedAt": "2026-01-03T08:44:17.481Z"
+    },
+    {
+      "templateId": "portfolio",
+      "templateName": "Portfolio & Resume",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 6996,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6017,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 976,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 30 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 13589,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6140,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 621,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 30 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5509,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1316,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 20586,
+      "certifiedAt": "2026-01-03T08:44:38.067Z"
+    },
+    {
+      "templateName": "real-estate",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7181,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6169,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1009,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 36 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 12951,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5630,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 590,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 36 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5426,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1302,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 20135,
+      "certifiedAt": "2026-01-03T08:44:58.202Z"
+    },
+    {
+      "templateId": "recipe",
+      "templateName": "Recipe",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 8376,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 7343,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1030,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 28 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 13889,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6013,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 602,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 28 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5905,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1366,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 22265,
+      "certifiedAt": "2026-01-03T08:45:20.467Z"
+    },
+    {
+      "templateId": "restaurant",
+      "templateName": "Restaurant & Food Ordering",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7266,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6262,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1000,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14604,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5929,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 623,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5594,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 2456,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21872,
+      "certifiedAt": "2026-01-03T08:45:42.339Z"
+    },
+    {
+      "templateId": "school",
+      "templateName": "School",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7402,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6348,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1051,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 31 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 14123,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6047,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 625,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 31 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 6106,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1341,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 21527,
+      "certifiedAt": "2026-01-03T08:46:03.866Z"
+    },
+    {
+      "templateId": "service-booking",
+      "templateName": "Service Booking",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/appointments.tsx",
+              "line": 87,
+              "column": 16,
+              "message": "Unexpected any. Specify a different type.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-explicit-any"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/index.tsx",
+              "line": 1,
+              "column": 52,
+              "message": "'Image' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/profile.tsx",
+              "line": 3,
+              "column": 10,
+              "message": "'User' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+              "line": 4,
+              "column": 46,
+              "message": "'MapPin' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+              "line": 32,
+              "column": 22,
+              "message": "'error' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/confirm.tsx",
+              "line": 44,
+              "column": 14,
+              "message": "'error' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/datetime.tsx",
+              "line": 22,
+              "column": 25,
+              "message": "Unexpected any. Specify a different type.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-explicit-any"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/AppointmentCard.tsx",
+              "line": 2,
+              "column": 33,
+              "message": "'MapPin' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/CalendarPicker.tsx",
+              "line": 1,
+              "column": 40,
+              "message": "'ScrollView' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/services/appointments.ts",
+              "line": 81,
+              "column": 39,
+              "message": "'userId' is defined but never used. Allowed unused args must match /^_/u.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+              "line": 52,
+              "column": 27,
+              "message": "'ItemT' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+              "line": 55,
+              "column": 30,
+              "message": "'ItemT' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+              "line": 55,
+              "column": 37,
+              "message": "'SectionT' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            }
+          ],
+          "duration": 9327,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5688,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 3636,
+              "errors": [
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/appointments.tsx",
+                  "line": 87,
+                  "column": 16,
+                  "message": "Unexpected any. Specify a different type.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-explicit-any"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/index.tsx",
+                  "line": 1,
+                  "column": 52,
+                  "message": "'Image' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/profile.tsx",
+                  "line": 3,
+                  "column": 10,
+                  "message": "'User' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+                  "line": 4,
+                  "column": 46,
+                  "message": "'MapPin' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+                  "line": 32,
+                  "column": 22,
+                  "message": "'error' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/confirm.tsx",
+                  "line": 44,
+                  "column": 14,
+                  "message": "'error' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/datetime.tsx",
+                  "line": 22,
+                  "column": 25,
+                  "message": "Unexpected any. Specify a different type.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-explicit-any"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/AppointmentCard.tsx",
+                  "line": 2,
+                  "column": 33,
+                  "message": "'MapPin' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/CalendarPicker.tsx",
+                  "line": 1,
+                  "column": 40,
+                  "message": "'ScrollView' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/services/appointments.ts",
+                  "line": 81,
+                  "column": 39,
+                  "message": "'userId' is defined but never used. Allowed unused args must match /^_/u.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+                  "line": 52,
+                  "column": 27,
+                  "message": "'ItemT' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+                  "line": 55,
+                  "column": 30,
+                  "message": "'ItemT' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+                  "line": 55,
+                  "column": 37,
+                  "message": "'SectionT' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                }
+              ]
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/appointments.tsx",
+              "line": 87,
+              "column": 16,
+              "message": "Unexpected any. Specify a different type.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-explicit-any"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/index.tsx",
+              "line": 1,
+              "column": 52,
+              "message": "'Image' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/profile.tsx",
+              "line": 3,
+              "column": 10,
+              "message": "'User' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+              "line": 4,
+              "column": 46,
+              "message": "'MapPin' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+              "line": 32,
+              "column": 22,
+              "message": "'error' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/confirm.tsx",
+              "line": 44,
+              "column": 14,
+              "message": "'error' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/datetime.tsx",
+              "line": 22,
+              "column": 25,
+              "message": "Unexpected any. Specify a different type.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-explicit-any"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/AppointmentCard.tsx",
+              "line": 2,
+              "column": 33,
+              "message": "'MapPin' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/CalendarPicker.tsx",
+              "line": 1,
+              "column": 40,
+              "message": "'ScrollView' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/services/appointments.ts",
+              "line": 81,
+              "column": 39,
+              "message": "'userId' is defined but never used. Allowed unused args must match /^_/u.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+              "line": 52,
+              "column": 27,
+              "message": "'ItemT' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+              "line": 55,
+              "column": 30,
+              "message": "'ItemT' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            },
+            {
+              "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+              "line": 55,
+              "column": 37,
+              "message": "'SectionT' is defined but never used.",
+              "severity": "warning",
+              "rule": "@typescript-eslint/no-unused-vars"
+            }
+          ],
+          "duration": 16307,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5952,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 2247,
+              "errors": [
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/appointments.tsx",
+                  "line": 87,
+                  "column": 16,
+                  "message": "Unexpected any. Specify a different type.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-explicit-any"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/index.tsx",
+                  "line": 1,
+                  "column": 52,
+                  "message": "'Image' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/(tabs)/profile.tsx",
+                  "line": 3,
+                  "column": 10,
+                  "message": "'User' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+                  "line": 4,
+                  "column": 46,
+                  "message": "'MapPin' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/appointments/[id].tsx",
+                  "line": 32,
+                  "column": 22,
+                  "message": "'error' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/confirm.tsx",
+                  "line": 44,
+                  "column": 14,
+                  "message": "'error' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/app/book/datetime.tsx",
+                  "line": 22,
+                  "column": 25,
+                  "message": "Unexpected any. Specify a different type.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-explicit-any"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/AppointmentCard.tsx",
+                  "line": 2,
+                  "column": 33,
+                  "message": "'MapPin' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/components/CalendarPicker.tsx",
+                  "line": 1,
+                  "column": 40,
+                  "message": "'ScrollView' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/services/appointments.ts",
+                  "line": 81,
+                  "column": 39,
+                  "message": "'userId' is defined but never used. Allowed unused args must match /^_/u.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+                  "line": 52,
+                  "column": 27,
+                  "message": "'ItemT' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+                  "line": 55,
+                  "column": 30,
+                  "message": "'ItemT' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                },
+                {
+                  "file": "/home/ubuntu/base99/mobigen/templates/service-booking/src/types/nativewind.d.ts",
+                  "line": 55,
+                  "column": 37,
+                  "message": "'SectionT' is defined but never used.",
+                  "severity": "warning",
+                  "rule": "@typescript-eslint/no-unused-vars"
+                }
+              ]
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 2,
+              "errors": [],
+              "output": "Checked 32 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5731,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 2375,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [
+        {
+          "tier": "tier1",
+          "stage": "eslint",
+          "count": 13
+        },
+        {
+          "tier": "tier2",
+          "stage": "eslint",
+          "count": 13
+        }
+      ],
+      "duration": 25635,
+      "certifiedAt": "2026-01-03T08:46:29.501Z"
+    },
+    {
+      "templateId": "sports-team",
+      "templateName": "Sports Team / Fan Club",
+      "certificationLevel": "silver",
+      "passedTiers": [
+        "tier1",
+        "tier2"
+      ],
+      "failedTiers": [],
+      "results": [
+        {
+          "tier": "tier1",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 7266,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 6260,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 1003,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 3,
+              "errors": [],
+              "output": "Checked 34 files, found 0 import issues"
+            }
+          }
+        },
+        {
+          "tier": "tier2",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "duration": 13365,
+          "stages": {
+            "typescript": {
+              "name": "typescript",
+              "passed": true,
+              "duration": 5940,
+              "errors": []
+            },
+            "eslint": {
+              "name": "eslint",
+              "passed": true,
+              "duration": 595,
+              "errors": []
+            },
+            "navigation": {
+              "name": "navigation",
+              "passed": true,
+              "duration": 0,
+              "errors": [],
+              "output": "No screens directory found - skipping navigation validation"
+            },
+            "imports": {
+              "name": "imports",
+              "passed": true,
+              "duration": 4,
+              "errors": [],
+              "output": "Checked 34 files, found 0 import issues"
+            },
+            "expo-prebuild": {
+              "name": "expo-prebuild",
+              "passed": true,
+              "duration": 5509,
+              "errors": []
+            },
+            "jest": {
+              "name": "jest",
+              "passed": true,
+              "duration": 1316,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "duration": 20633,
+      "certifiedAt": "2026-01-03T08:46:50.134Z"
+    }
+  ]
+}

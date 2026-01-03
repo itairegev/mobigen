@@ -84,7 +84,7 @@ export const MOCK_SPONSORS: Sponsor[] = [
     name: 'Linear',
     logo: 'https://via.placeholder.com/200x80/5E6AD2/FFFFFF?text=Linear',
     tier: 'bronze',
-    description: 'The issue tracking tool you'll enjoy using.',
+    description: "The issue tracking tool you'll enjoy using.",
     website: 'https://linear.app',
   },
 ];

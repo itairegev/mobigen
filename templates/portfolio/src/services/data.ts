@@ -9,6 +9,7 @@ import type {
   Service,
   PersonalInfo,
   SocialLink,
+  ContactMessage,
 } from '@/types';
 
 // Personal Information

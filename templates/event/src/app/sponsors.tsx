@@ -29,8 +29,8 @@ export default function SponsorsScreen() {
         ]}
         keyExtractor={(item) => item.tier}
         contentContainerClassName="px-4 py-4"
-        renderItem={({ item }) => (
-          item.sponsors.length > 0 && (
+        renderItem={({ item }) =>
+          item.sponsors.length > 0 ? (
             <View className="mb-6">
               <Text className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                 {item.title}
@@ -44,8 +44,8 @@ export default function SponsorsScreen() {
                 />
               ))}
             </View>
-          )
-        )}
+          ) : null
+        }
         ListEmptyComponent={
           <View className="items-center py-8">
             <Text className="text-gray-500 dark:text-gray-400">
