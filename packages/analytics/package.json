@@ -1,0 +1,34 @@
+{
+  "name": "@mobigen/analytics",
+  "version": "0.1.0",
+  "description": "Analytics SDK for Mobigen generated apps",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "analytics",
+    "mobigen",
+    "react-native",
+    "expo"
+  ],
+  "author": "Mobigen",
+  "license": "MIT",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-native": "*",
+    "expo-application": "~5.9.1",
+    "expo-constants": "~16.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.3.0"
+  }
+}

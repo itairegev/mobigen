@@ -167,7 +167,7 @@ export interface EventBatch {
 /**
  * Validated and enriched event (ready for storage)
  */
-export interface EnrichedEvent extends AnalyticsEvent {
+export interface EnrichedEvent extends BaseEvent {
   /** Server-side timestamp when event was received */
   receivedAt: string;
   /** Server-side enriched geo data */
