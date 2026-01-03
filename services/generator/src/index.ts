@@ -1,3 +1,16 @@
+// Add error handlers FIRST before any imports that might fail
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+console.log('🚀 Starting Mobigen Generator Service...');
+
 import dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -13,7 +26,11 @@ if (envResult.error) {
   dotenv.config(); // Try default .env in cwd
 }
 
+console.log('📦 Loading API module...');
+
 import { httpServer } from './api';
+
+console.log('✅ API module loaded successfully');
 
 const PORT = process.env.GENERATOR_PORT || process.env.PORT || 4000;
 
@@ -103,6 +120,8 @@ function printStartupDiagnostics(): void {
   console.log('╚══════════════════════════════════════════════════════════════════╝');
   console.log('\n');
 }
+
+console.log('🔌 Starting HTTP server...');
 
 httpServer.listen(PORT, () => {
   printStartupDiagnostics();
