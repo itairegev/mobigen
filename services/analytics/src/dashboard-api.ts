@@ -10,6 +10,7 @@ import { z } from 'zod';
 import Redis from 'ioredis';
 import { prisma } from '@mobigen/db';
 import { AggregationService } from './aggregations';
+import { ExportService } from './export-service';
 import {
   AnalyticsError,
   InvalidDateRangeError,
@@ -21,6 +22,11 @@ import {
   FunnelQueryParams,
   RetentionQueryParams,
 } from './dashboard-types';
+import type {
+  ExportFormat,
+  ReportType,
+  ExportOptions,
+} from './export-types';
 
 // ============================================================================
 // VALIDATION SCHEMAS
@@ -59,6 +65,19 @@ const retentionQuerySchema = z.object({
   ),
 });
 
+const exportRequestSchema = z.object({
+  reportType: z.enum(['overview', 'events', 'screens', 'users', 'retention', 'funnel', 'sessions', 'performance', 'custom']),
+  format: z.enum(['csv', 'pdf', 'json', 'xlsx']),
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime(),
+  email: z.string().email().optional(),
+});
+
+const exportListSchema = z.object({
+  page: z.string().optional().transform(val => (val ? parseInt(val, 10) : 1)),
+  pageSize: z.string().optional().transform(val => (val ? parseInt(val, 10) : 20)),
+});
+
 // ============================================================================
 // DASHBOARD API ROUTER
 // ============================================================================
@@ -66,6 +85,7 @@ const retentionQuerySchema = z.object({
 export function createDashboardRouter(redis: Redis): express.Router {
   const router = express.Router();
   const aggregationService = new AggregationService(redis);
+  const exportService = new ExportService(redis);
 
   // Error handler middleware
   const errorHandler = (
@@ -644,6 +664,163 @@ export function createDashboardRouter(redis: Redis): express.Router {
         res.json({
           success: true,
           data: result,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  // ==========================================================================
+  // POST /api/projects/:projectId/analytics/export
+  // Start a new analytics export
+  // ==========================================================================
+
+  router.post(
+    '/projects/:projectId/analytics/export',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { projectId } = req.params;
+        const exportRequest = exportRequestSchema.parse(req.body);
+
+        const startDate = new Date(exportRequest.startDate);
+        const endDate = new Date(exportRequest.endDate);
+
+        if (startDate >= endDate) {
+          throw new InvalidDateRangeError('Start date must be before end date');
+        }
+
+        // Get user ID from request context (assuming authentication middleware sets this)
+        const userId = (req as any).user?.id || 'anonymous';
+
+        const result = await exportService.createExport(
+          projectId,
+          exportRequest.reportType as ReportType,
+          exportRequest.format as ExportFormat,
+          {
+            start: startDate,
+            end: endDate,
+          },
+          userId,
+          {
+            includeHeaders: true,
+            includeMetadata: true,
+          }
+        );
+
+        res.status(202).json({
+          success: true,
+          message: 'Export started',
+          data: result,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  // ==========================================================================
+  // GET /api/projects/:projectId/analytics/exports
+  // List all exports for a project
+  // ==========================================================================
+
+  router.get(
+    '/projects/:projectId/analytics/exports',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { projectId } = req.params;
+        const query = exportListSchema.parse(req.query);
+
+        const result = await exportService.listExports(
+          projectId,
+          query.page,
+          query.pageSize
+        );
+
+        res.json({
+          success: true,
+          data: result,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  // ==========================================================================
+  // GET /api/projects/:projectId/analytics/exports/:exportId
+  // Get export status and download URL
+  // ==========================================================================
+
+  router.get(
+    '/projects/:projectId/analytics/exports/:exportId',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { exportId } = req.params;
+
+        const result = await exportService.getExportStatus(exportId);
+
+        res.json({
+          success: true,
+          data: result,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  // ==========================================================================
+  // GET /api/projects/:projectId/analytics/exports/:exportId/download
+  // Download an export (redirect to signed URL)
+  // ==========================================================================
+
+  router.get(
+    '/projects/:projectId/analytics/exports/:exportId/download',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { exportId } = req.params;
+
+        const result = await exportService.getExportStatus(exportId);
+
+        if (result.status !== 'completed') {
+          return res.status(400).json({
+            success: false,
+            error: `Export is not ready. Current status: ${result.status}`,
+          });
+        }
+
+        if (!result.downloadUrl) {
+          return res.status(404).json({
+            success: false,
+            error: 'Download URL not available',
+          });
+        }
+
+        // Redirect to signed S3 URL
+        res.redirect(302, result.downloadUrl);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  // ==========================================================================
+  // DELETE /api/projects/:projectId/analytics/exports/:exportId
+  // Delete an export
+  // ==========================================================================
+
+  router.delete(
+    '/projects/:projectId/analytics/exports/:exportId',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { exportId } = req.params;
+
+        await exportService.deleteExport(exportId);
+
+        res.json({
+          success: true,
+          message: 'Export deleted successfully',
         });
       } catch (error) {
         next(error);
