@@ -5,7 +5,7 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { AssetGenerator } from './asset-generator';
+import { AssetGenerator, isCanvasAvailable } from './asset-generator';
 import type {
   BrandConfig,
   BrandingResult,
@@ -52,8 +52,19 @@ export class WhiteLabelService {
       // Initialize asset generator
       this.assetGenerator = new AssetGenerator(projectPath);
 
-      // Generate assets (icons and splash screens)
-      const assets = await this.generateAssets(brandConfig);
+      // Check if canvas is available for asset generation
+      const canvasAvailable = await isCanvasAvailable();
+      let assets: GeneratedAssets = { icons: { ios: [], android: [] }, splash: { ios: [], android: [] } };
+
+      if (canvasAvailable) {
+        // Generate assets (icons and splash screens)
+        assets = await this.generateAssets(brandConfig);
+      } else {
+        warnings.push(
+          'Asset generation skipped: canvas module not available. ' +
+          'To enable: brew install pkg-config cairo pango libpng jpeg giflib librsvg && pnpm rebuild canvas'
+        );
+      }
 
       // Update app.json configuration
       const config = await this.updateAppConfig(projectPath, brandConfig, assets);

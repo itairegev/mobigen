@@ -1,14 +1,14 @@
 /**
  * Asset generator for white-label branding
  * Generates app icons and splash screens from source images
+ *
+ * NOTE: This module requires the 'canvas' package which has native dependencies.
+ * If canvas is not installed, asset generation will be disabled but the service
+ * will still start. Run `pnpm rebuild canvas` to enable asset generation.
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-
-// Canvas types - will be available when canvas package is installed
-// @ts-ignore - canvas package types
-import { createCanvas, loadImage, Image } from 'canvas';
 import type {
   BrandConfig,
   GeneratedAssets,
@@ -19,6 +19,39 @@ import {
   ANDROID_ICON_SIZES,
   SPLASH_SIZES,
 } from './white-label-types';
+
+// Lazy-loaded canvas module
+let canvasModule: typeof import('canvas') | null = null;
+let canvasLoadError: Error | null = null;
+
+/**
+ * Attempt to load canvas module
+ * Returns null if canvas is not available
+ */
+async function getCanvas(): Promise<typeof import('canvas') | null> {
+  if (canvasModule) return canvasModule;
+  if (canvasLoadError) return null;
+
+  try {
+    canvasModule = await import('canvas');
+    return canvasModule;
+  } catch (error) {
+    canvasLoadError = error as Error;
+    console.warn(
+      '[AssetGenerator] Canvas module not available. Asset generation disabled.',
+      'Run `pnpm rebuild canvas` to enable.'
+    );
+    return null;
+  }
+}
+
+/**
+ * Check if canvas is available
+ */
+export async function isCanvasAvailable(): Promise<boolean> {
+  const canvas = await getCanvas();
+  return canvas !== null;
+}
 
 export class AssetGenerator {
   private workDir: string;
@@ -31,6 +64,15 @@ export class AssetGenerator {
    * Generate all assets (icons and splash screens) from brand config
    */
   async generateAssets(brandConfig: BrandConfig): Promise<GeneratedAssets> {
+    const canvas = await getCanvas();
+    if (!canvas) {
+      throw new Error(
+        'Canvas module is not available. Asset generation requires the canvas package.\n' +
+        'To fix: Run `pnpm rebuild canvas` or `npm rebuild canvas`\n' +
+        'On macOS, you may need: `brew install pkg-config cairo pango libpng jpeg giflib librsvg`'
+      );
+    }
+
     const assets: GeneratedAssets = {
       icons: { ios: [], android: [] },
       splash: { ios: [], android: [] },
@@ -38,37 +80,43 @@ export class AssetGenerator {
 
     // Load source logo
     const logoImage = await this.loadImageFromSource(
-      brandConfig.branding.logo.light
+      brandConfig.branding.logo.light,
+      canvas
     );
 
     // Generate iOS icons
-    assets.icons.ios = await this.generateIOSIcons(logoImage);
+    assets.icons.ios = await this.generateIOSIcons(logoImage, canvas);
 
     // Generate Android adaptive icons
-    assets.icons.android = await this.generateAndroidIcons(logoImage);
+    assets.icons.android = await this.generateAndroidIcons(logoImage, canvas);
 
     // Generate splash screens
     if (brandConfig.branding.splash.image) {
       const splashImage = await this.loadImageFromSource(
-        brandConfig.branding.splash.image
+        brandConfig.branding.splash.image,
+        canvas
       );
       assets.splash.ios = await this.generateIOSSplash(
         splashImage,
-        brandConfig.branding.splash.backgroundColor
+        brandConfig.branding.splash.backgroundColor,
+        canvas
       );
       assets.splash.android = await this.generateAndroidSplash(
         splashImage,
-        brandConfig.branding.splash.backgroundColor
+        brandConfig.branding.splash.backgroundColor,
+        canvas
       );
     } else {
       // Generate solid color splash with logo
       assets.splash.ios = await this.generateIOSSplash(
         logoImage,
-        brandConfig.branding.splash.backgroundColor
+        brandConfig.branding.splash.backgroundColor,
+        canvas
       );
       assets.splash.android = await this.generateAndroidSplash(
         logoImage,
-        brandConfig.branding.splash.backgroundColor
+        brandConfig.branding.splash.backgroundColor,
+        canvas
       );
     }
 
@@ -78,7 +126,12 @@ export class AssetGenerator {
   /**
    * Load image from URL or base64 string
    */
-  private async loadImageFromSource(source: string): Promise<Image> {
+  private async loadImageFromSource(
+    source: string,
+    canvas: typeof import('canvas')
+  ): Promise<import('canvas').Image> {
+    const { loadImage } = canvas;
+
     if (source.startsWith('data:')) {
       // Base64 image
       const base64Data = source.split(',')[1];
@@ -98,7 +151,10 @@ export class AssetGenerator {
   /**
    * Generate iOS app icons in all required sizes
    */
-  private async generateIOSIcons(sourceImage: Image): Promise<AssetFile[]> {
+  private async generateIOSIcons(
+    sourceImage: import('canvas').Image,
+    canvas: typeof import('canvas')
+  ): Promise<AssetFile[]> {
     const icons: AssetFile[] = [];
     const iconsDir = path.join(this.workDir, 'assets', 'icons', 'ios');
     await fs.mkdir(iconsDir, { recursive: true });
@@ -109,7 +165,7 @@ export class AssetGenerator {
         const filename = `icon-${size}@${scale}x.png`;
         const filePath = path.join(iconsDir, filename);
 
-        await this.resizeAndSaveImage(sourceImage, pixelSize, pixelSize, filePath);
+        await this.resizeAndSaveImage(sourceImage, pixelSize, pixelSize, filePath, canvas);
 
         icons.push({
           path: path.relative(this.workDir, filePath),
@@ -127,7 +183,10 @@ export class AssetGenerator {
    * Generate Android adaptive icons
    * Requires foreground and background layers
    */
-  private async generateAndroidIcons(sourceImage: Image): Promise<AssetFile[]> {
+  private async generateAndroidIcons(
+    sourceImage: import('canvas').Image,
+    canvas: typeof import('canvas')
+  ): Promise<AssetFile[]> {
     const icons: AssetFile[] = [];
     const iconsDir = path.join(this.workDir, 'assets', 'icons', 'android');
     await fs.mkdir(iconsDir, { recursive: true });
@@ -142,7 +201,7 @@ export class AssetGenerator {
         'ic_launcher_foreground.png'
       );
       await fs.mkdir(path.dirname(foregroundPath), { recursive: true });
-      await this.resizeAndSaveImage(sourceImage, size, size, foregroundPath, 0.8); // 80% size for padding
+      await this.resizeAndSaveImage(sourceImage, size, size, foregroundPath, canvas, 0.8); // 80% size for padding
 
       icons.push({
         path: path.relative(this.workDir, foregroundPath),
@@ -157,7 +216,7 @@ export class AssetGenerator {
         `mipmap-${density}`,
         'ic_launcher_background.png'
       );
-      await this.createSolidColorImage(size, size, '#FFFFFF', backgroundPath);
+      await this.createSolidColorImage(size, size, '#FFFFFF', backgroundPath, canvas);
 
       icons.push({
         path: path.relative(this.workDir, backgroundPath),
@@ -172,7 +231,7 @@ export class AssetGenerator {
         `mipmap-${density}`,
         'ic_launcher_round.png'
       );
-      await this.resizeAndSaveImage(sourceImage, size, size, roundPath);
+      await this.resizeAndSaveImage(sourceImage, size, size, roundPath, canvas);
 
       icons.push({
         path: path.relative(this.workDir, roundPath),
@@ -189,8 +248,9 @@ export class AssetGenerator {
    * Generate iOS splash screens
    */
   private async generateIOSSplash(
-    image: Image,
-    backgroundColor: string
+    image: import('canvas').Image,
+    backgroundColor: string,
+    canvas: typeof import('canvas')
   ): Promise<AssetFile[]> {
     const splashScreens: AssetFile[] = [];
     const splashDir = path.join(this.workDir, 'assets', 'splash', 'ios');
@@ -200,7 +260,7 @@ export class AssetGenerator {
       const filename = `splash-${width}x${height}.png`;
       const filePath = path.join(splashDir, filename);
 
-      await this.createSplashScreen(image, width, height, backgroundColor, filePath);
+      await this.createSplashScreen(image, width, height, backgroundColor, filePath, canvas);
 
       splashScreens.push({
         path: path.relative(this.workDir, filePath),
@@ -217,8 +277,9 @@ export class AssetGenerator {
    * Generate Android splash screens
    */
   private async generateAndroidSplash(
-    image: Image,
-    backgroundColor: string
+    image: import('canvas').Image,
+    backgroundColor: string,
+    canvas: typeof import('canvas')
   ): Promise<AssetFile[]> {
     const splashScreens: AssetFile[] = [];
     const splashDir = path.join(this.workDir, 'assets', 'splash', 'android');
@@ -228,7 +289,7 @@ export class AssetGenerator {
       const filename = `splash-${width}x${height}.png`;
       const filePath = path.join(splashDir, filename);
 
-      await this.createSplashScreen(image, width, height, backgroundColor, filePath);
+      await this.createSplashScreen(image, width, height, backgroundColor, filePath, canvas);
 
       splashScreens.push({
         path: path.relative(this.workDir, filePath),
@@ -245,14 +306,16 @@ export class AssetGenerator {
    * Resize image and save to file
    */
   private async resizeAndSaveImage(
-    sourceImage: Image,
+    sourceImage: import('canvas').Image,
     targetWidth: number,
     targetHeight: number,
     outputPath: string,
+    canvas: typeof import('canvas'),
     scaleFactor: number = 1.0
   ): Promise<void> {
-    const canvas = createCanvas(targetWidth, targetHeight);
-    const ctx = canvas.getContext('2d');
+    const { createCanvas } = canvas;
+    const canvasInstance = createCanvas(targetWidth, targetHeight);
+    const ctx = canvasInstance.getContext('2d');
 
     // Clear canvas
     ctx.clearRect(0, 0, targetWidth, targetHeight);
@@ -268,7 +331,7 @@ export class AssetGenerator {
 
     // Save to file
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    const buffer = canvas.toBuffer('image/png');
+    const buffer = canvasInstance.toBuffer('image/png');
     await fs.writeFile(outputPath, buffer);
   }
 
@@ -279,16 +342,18 @@ export class AssetGenerator {
     width: number,
     height: number,
     color: string,
-    outputPath: string
+    outputPath: string,
+    canvas: typeof import('canvas')
   ): Promise<void> {
-    const canvas = createCanvas(width, height);
-    const ctx = canvas.getContext('2d');
+    const { createCanvas } = canvas;
+    const canvasInstance = createCanvas(width, height);
+    const ctx = canvasInstance.getContext('2d');
 
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, width, height);
 
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    const buffer = canvas.toBuffer('image/png');
+    const buffer = canvasInstance.toBuffer('image/png');
     await fs.writeFile(outputPath, buffer);
   }
 
@@ -296,14 +361,16 @@ export class AssetGenerator {
    * Create splash screen with centered logo on colored background
    */
   private async createSplashScreen(
-    logoImage: Image,
+    logoImage: import('canvas').Image,
     width: number,
     height: number,
     backgroundColor: string,
-    outputPath: string
+    outputPath: string,
+    canvas: typeof import('canvas')
   ): Promise<void> {
-    const canvas = createCanvas(width, height);
-    const ctx = canvas.getContext('2d');
+    const { createCanvas } = canvas;
+    const canvasInstance = createCanvas(width, height);
+    const ctx = canvasInstance.getContext('2d');
 
     // Fill background
     ctx.fillStyle = backgroundColor;
@@ -329,7 +396,7 @@ export class AssetGenerator {
 
     // Save to file
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    const buffer = canvas.toBuffer('image/png');
+    const buffer = canvasInstance.toBuffer('image/png');
     await fs.writeFile(outputPath, buffer);
   }
 
@@ -337,11 +404,16 @@ export class AssetGenerator {
    * Generate a single icon (useful for testing or preview)
    */
   async generateSingleIcon(
-    sourceImage: Image,
+    sourceImage: import('canvas').Image,
     size: number,
     outputPath: string
   ): Promise<AssetFile> {
-    await this.resizeAndSaveImage(sourceImage, size, size, outputPath);
+    const canvas = await getCanvas();
+    if (!canvas) {
+      throw new Error('Canvas module not available for icon generation');
+    }
+
+    await this.resizeAndSaveImage(sourceImage, size, size, outputPath, canvas);
 
     return {
       path: outputPath,
