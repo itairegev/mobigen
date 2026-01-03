@@ -1,0 +1,213 @@
+# {{APP_NAME}}
+
+**Version:** {{VERSION}}
+**Generated with:** [Mobigen](https://mobigen.io)
+
+{{#if DESCRIPTION}}
+## Description
+
+{{DESCRIPTION}}
+{{/if}}
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+ and npm/yarn/pnpm
+- iOS Simulator (macOS) or Android Emulator
+- Expo Go app on your physical device (optional)
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Start the development server
+npm start
+```
+
+### Running on Devices
+
+```bash
+# iOS Simulator (macOS only)
+npm run ios
+
+# Android Emulator
+npm run android
+
+# Expo Go (scan QR code with your phone)
+npm start
+# Then scan the QR code with:
+# - iOS: Camera app
+# - Android: Expo Go app
+```
+
+## Project Structure
+
+```
+{{APP_SLUG}}/
+├── src/
+│   ├── app/                  # Screen files (Expo Router)
+{{#each SCREEN_GROUPS}}
+│   │   ├── {{this}}/
+{{/each}}
+│   ├── components/           # Reusable UI components
+│   ├── services/             # API and business logic
+│   ├── hooks/                # Custom React hooks
+│   ├── stores/               # State management
+│   ├── types/                # TypeScript types
+│   └── utils/                # Utility functions
+├── assets/                   # Images, fonts, etc.
+├── app.json                  # Expo configuration
+└── package.json              # Dependencies and scripts
+```
+
+## Features
+
+{{#each FEATURES}}
+- {{this}}
+{{/each}}
+
+## Screens
+
+{{#each SCREENS}}
+### {{name}}
+**Route:** `{{route}}`
+{{#if description}}{{description}}{{/if}}
+
+{{#if features}}
+Features:
+{{#each features}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+{{/each}}
+
+## Configuration
+
+### App Configuration
+
+Edit `app.json` to customize:
+- App name and slug
+- Bundle identifiers (iOS/Android)
+- App icon and splash screen
+- Permissions and capabilities
+
+### Environment Variables
+
+{{#if ENV_VARS}}
+Create a `.env` file in the root directory:
+
+```env
+{{#each ENV_VARS}}
+# {{description}}
+{{name}}={{#if example}}{{example}}{{else}}your-value-here{{/if}}
+{{/each}}
+```
+
+{{else}}
+No environment variables required for basic functionality.
+{{/if}}
+
+### Styling
+
+This app uses [NativeWind](https://www.nativewind.dev/) (Tailwind CSS for React Native).
+
+Edit `tailwind.config.js` to customize:
+- Colors
+- Fonts
+- Spacing
+- Breakpoints
+
+## Building for Production
+
+### iOS
+
+```bash
+# Build for iOS
+eas build --platform ios
+
+# For local build (requires macOS and Xcode)
+npm run build:ios
+```
+
+### Android
+
+```bash
+# Build for Android
+eas build --platform android
+
+# For local build
+npm run build:android
+```
+
+See [SETUP.md](./SETUP.md) for detailed build instructions.
+
+## Key Dependencies
+
+{{#each KEY_DEPENDENCIES}}
+- **{{name}}** ({{version}}): {{description}}
+{{/each}}
+
+## Available Scripts
+
+{{#each SCRIPTS}}
+- `npm run {{name}}` - {{description}}
+{{/each}}
+
+## Troubleshooting
+
+### Common Issues
+
+**Metro bundler not starting:**
+```bash
+# Clear cache and restart
+npm start -- --clear
+```
+
+**iOS build fails:**
+```bash
+# Clean iOS build folder
+cd ios && rm -rf build && cd ..
+npm run ios
+```
+
+**Android build fails:**
+```bash
+# Clean Android build
+cd android && ./gradlew clean && cd ..
+npm run android
+```
+
+**Dependencies out of sync:**
+```bash
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Documentation
+
+- [Setup Guide](./SETUP.md) - Detailed setup and deployment instructions
+{{#if HAS_API_DOCS}}- [API Documentation](./API.md) - API endpoints and usage{{/if}}
+{{#if HAS_COMPONENT_DOCS}}- [Components](./COMPONENTS.md) - Component documentation{{/if}}
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/)
+
+## Support
+
+For issues with this generated app:
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Review [Expo documentation](https://docs.expo.dev/)
+3. Contact support at support@mobigen.io
+
+## License
+
+This project was generated using Mobigen. All rights reserved.
+
+---
+
+**Generated:** {{GENERATION_DATE}}
+**Mobigen Version:** {{MOBIGEN_VERSION}}

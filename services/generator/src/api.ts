@@ -60,6 +60,11 @@ import {
   suggestNextVersion,
   getVersionSummary,
 } from './version-validation';
+// Code export service
+import { getExportService } from './export-service';
+import type { ExportOptions } from './export-types';
+// GitHub integration service
+import { GitHubService } from './github-service';
 
 // Inline observability utilities (avoiding package dependency for now)
 type HealthStatus = 'healthy' | 'degraded' | 'unhealthy';
@@ -2319,6 +2324,478 @@ app.post('/api/projects/:projectId/channels/initialize', async (req, res) => {
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Failed to initialize channels',
+    });
+  }
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CODE EXPORT ROUTES (Pro/Enterprise Only)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Check user tier middleware
+ * In production, this should check the user's tier from database
+ */
+function checkProOrEnterpriseTier(req: any, res: any, next: any) {
+  const userTier = req.body.userTier || req.query.userTier || 'basic';
+
+  if (userTier === 'pro' || userTier === 'enterprise') {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      error: 'Code export is only available for Pro and Enterprise users',
+      requiredTier: 'pro',
+      currentTier: userTier,
+    });
+  }
+}
+
+// Validation schema for export options
+const ExportOptionsSchema = z.object({
+  format: z.enum(['zip', 'tar.gz']).optional(),
+  includeEnv: z.boolean().optional(),
+  cleanSecrets: z.boolean().optional(),
+  includeDocs: z.boolean().optional(),
+  includeGitHistory: z.boolean().optional(),
+  excludePatterns: z.array(z.string()).optional(),
+  userTier: z.enum(['pro', 'enterprise']),
+  version: z.number().optional(),
+  appName: z.string().optional(),
+  templateId: z.string().optional(),
+});
+
+// POST /api/projects/:id/export - Start export
+app.post('/api/projects/:projectId/export', checkProOrEnterpriseTier, async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const validated = ExportOptionsSchema.parse(req.body);
+
+    // Extract export options
+    const options: Partial<ExportOptions> = {
+      format: validated.format,
+      includeEnv: validated.includeEnv,
+      cleanSecrets: validated.cleanSecrets,
+      includeDocs: validated.includeDocs,
+      includeGitHistory: validated.includeGitHistory,
+      excludePatterns: validated.excludePatterns,
+    };
+
+    // Extract metadata
+    const metadata = {
+      version: validated.version || 1,
+      appName: validated.appName,
+      templateId: validated.templateId,
+      userTier: validated.userTier,
+    };
+
+    // Get export service
+    const exportService = getExportService();
+
+    // Start export
+    console.log(`[api] Starting export for project ${projectId}`);
+    const result = await exportService.exportProject(projectId, options, metadata);
+
+    res.json({
+      success: true,
+      export: {
+        exportId: result.exportId,
+        status: result.status,
+        format: result.format,
+        createdAt: result.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to start export:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to start export',
+    });
+  }
+});
+
+// GET /api/projects/:id/exports - List exports
+app.get('/api/projects/:projectId/exports', checkProOrEnterpriseTier, async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const exportService = getExportService();
+    const exports = await exportService.listExports(projectId);
+
+    res.json({
+      success: true,
+      exports,
+      count: exports.length,
+    });
+  } catch (error) {
+    console.error('[api] Failed to list exports:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to list exports',
+    });
+  }
+});
+
+// GET /api/projects/:id/exports/:exportId - Get export status
+app.get('/api/projects/:projectId/exports/:exportId', checkProOrEnterpriseTier, async (req, res) => {
+  const { exportId } = req.params;
+
+  try {
+    const exportService = getExportService();
+    const exportResult = await exportService.getExportStatus(exportId);
+
+    if (!exportResult) {
+      res.status(404).json({
+        success: false,
+        error: 'Export not found',
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      export: {
+        exportId: exportResult.exportId,
+        projectId: exportResult.projectId,
+        status: exportResult.status,
+        format: exportResult.format,
+        fileSize: exportResult.fileSize,
+        filesIncluded: exportResult.filesIncluded,
+        error: exportResult.error,
+        createdAt: exportResult.createdAt,
+        completedAt: exportResult.completedAt,
+        expiresAt: exportResult.expiresAt,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to get export status:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get export status',
+    });
+  }
+});
+
+// GET /api/projects/:id/exports/:exportId/download - Download export
+app.get('/api/projects/:projectId/exports/:exportId/download', checkProOrEnterpriseTier, async (req, res) => {
+  const { exportId } = req.params;
+
+  try {
+    const exportService = getExportService();
+    const downloadUrl = await exportService.downloadExport(exportId);
+
+    if (!downloadUrl) {
+      res.status(404).json({
+        success: false,
+        error: 'Export not found or not ready',
+      });
+      return;
+    }
+
+    // Redirect to presigned S3 URL
+    res.redirect(302, downloadUrl);
+  } catch (error) {
+    console.error('[api] Failed to download export:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to download export',
+    });
+  }
+});
+
+// DELETE /api/projects/:id/exports/:exportId - Delete export
+app.delete('/api/projects/:projectId/exports/:exportId', checkProOrEnterpriseTier, async (req, res) => {
+  const { exportId } = req.params;
+
+  try {
+    const exportService = getExportService();
+    await exportService.deleteExport(exportId);
+
+    res.json({
+      success: true,
+      message: 'Export deleted successfully',
+    });
+  } catch (error) {
+    console.error('[api] Failed to delete export:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete export',
+    });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GITHUB INTEGRATION ROUTES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Start GitHub OAuth flow
+app.get('/api/github/auth', async (req, res) => {
+  const { userId, projectId, redirectPath } = req.query;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'userId is required',
+    });
+  }
+
+  try {
+    const url = await GitHubService.startOAuth(
+      userId,
+      projectId as string | undefined,
+      redirectPath as string | undefined
+    );
+
+    res.json({
+      success: true,
+      url,
+    });
+  } catch (error) {
+    console.error('[api] Failed to start GitHub OAuth:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to start OAuth',
+    });
+  }
+});
+
+// Handle GitHub OAuth callback
+app.get('/api/github/callback', async (req, res) => {
+  const { code, state } = req.query;
+
+  if (!code || !state || typeof code !== 'string' || typeof state !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'code and state are required',
+    });
+  }
+
+  try {
+    const result = await GitHubService.handleOAuthCallback(code, state);
+
+    res.json({
+      success: true,
+      userId: result.userId,
+      projectId: result.projectId,
+      redirectPath: result.redirectPath,
+    });
+  } catch (error) {
+    console.error('[api] Failed to handle GitHub OAuth callback:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to handle OAuth callback',
+    });
+  }
+});
+
+// List user's GitHub repositories
+app.get('/api/github/repos', async (req, res) => {
+  const { userId, page, perPage, sort } = req.query;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'userId is required',
+    });
+  }
+
+  try {
+    const repos = await GitHubService.listRepos(userId, {
+      page: page ? parseInt(page as string) : undefined,
+      perPage: perPage ? parseInt(perPage as string) : undefined,
+      sort: sort as 'created' | 'updated' | 'pushed' | 'full_name' | undefined,
+    });
+
+    res.json({
+      success: true,
+      repos,
+    });
+  } catch (error) {
+    console.error('[api] Failed to list GitHub repos:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to list repositories',
+    });
+  }
+});
+
+// Create a new GitHub repository
+app.post('/api/github/repos', async (req, res) => {
+  const { userId, name, description, private: isPrivate } = req.body;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'userId is required',
+    });
+  }
+
+  if (!name || typeof name !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'Repository name is required',
+    });
+  }
+
+  try {
+    const repo = await GitHubService.createRepo(userId, name, {
+      description,
+      private: isPrivate ?? true,
+    });
+
+    res.json({
+      success: true,
+      repo,
+    });
+  } catch (error) {
+    console.error('[api] Failed to create GitHub repo:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create repository',
+    });
+  }
+});
+
+// Push project code to GitHub repository
+app.post('/api/github/push', async (req, res) => {
+  const {
+    userId,
+    projectId,
+    repoOwner,
+    repoName,
+    branch,
+    commitMessage,
+    createPullRequest,
+    prTitle,
+    prBody,
+  } = req.body;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'userId is required',
+    });
+  }
+
+  if (!projectId || typeof projectId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'projectId is required',
+    });
+  }
+
+  if (!repoOwner || typeof repoOwner !== 'string' || !repoName || typeof repoName !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'repoOwner and repoName are required',
+    });
+  }
+
+  try {
+    const result = await GitHubService.pushToRepo({
+      userId,
+      projectId,
+      repoOwner,
+      repoName,
+      branch,
+      commitMessage,
+      createPullRequest,
+      prTitle,
+      prBody,
+    });
+
+    if (!result.success) {
+      return res.status(500).json(result);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('[api] Failed to push to GitHub:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to push to repository',
+    });
+  }
+});
+
+// Check if user has GitHub connected
+app.get('/api/github/status', async (req, res) => {
+  const { userId } = req.query;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'userId is required',
+    });
+  }
+
+  try {
+    const connected = await GitHubService.isConnected(userId);
+    const connection = connected ? await GitHubService.getConnection(userId) : null;
+
+    res.json({
+      success: true,
+      connected,
+      connection: connection ? {
+        username: connection.username,
+        email: connection.email,
+        avatarUrl: connection.avatarUrl,
+        connectedAt: connection.createdAt,
+      } : null,
+    });
+  } catch (error) {
+    console.error('[api] Failed to check GitHub status:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to check status',
+    });
+  }
+});
+
+// Disconnect GitHub account
+app.delete('/api/github/disconnect', async (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'userId is required',
+    });
+  }
+
+  try {
+    await GitHubService.disconnect(userId);
+
+    res.json({
+      success: true,
+      message: 'GitHub account disconnected',
+    });
+  } catch (error) {
+    console.error('[api] Failed to disconnect GitHub:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to disconnect',
+    });
+  }
+});
+
+// Get project GitHub configuration
+app.get('/api/projects/:projectId/github', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const config = await GitHubService.getProjectConfig(projectId);
+
+    res.json({
+      success: true,
+      config,
+    });
+  } catch (error) {
+    console.error('[api] Failed to get project GitHub config:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get config',
     });
   }
 });

@@ -1,0 +1,412 @@
+# Setup and Deployment Guide
+
+Complete guide for setting up and deploying **{{APP_NAME}}**.
+
+## Table of Contents
+
+1. [Development Setup](#development-setup)
+2. [Environment Configuration](#environment-configuration)
+3. [Building for Production](#building-for-production)
+4. [App Store Deployment](#app-store-deployment)
+5. [Testing](#testing)
+
+---
+
+## Development Setup
+
+### System Requirements
+
+**macOS (for iOS development):**
+- macOS 12.0 or later
+- Xcode 14.0 or later
+- CocoaPods (`sudo gem install cocoapods`)
+
+**Windows/macOS/Linux (for Android development):**
+- Android Studio
+- Android SDK (API level 33+)
+- Java Development Kit 17
+
+**All platforms:**
+- Node.js 18.x or later
+- npm, yarn, or pnpm
+- Git
+
+### Initial Setup
+
+1. **Clone or extract the project:**
+   ```bash
+   cd {{APP_SLUG}}
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Install iOS dependencies (macOS only):**
+   ```bash
+   cd ios
+   pod install
+   cd ..
+   ```
+
+4. **Start the development server:**
+   ```bash
+   npm start
+   ```
+
+### Development Workflow
+
+**Option 1: Expo Go (Fastest for development)**
+```bash
+npm start
+# Scan QR code with Expo Go app
+```
+
+**Option 2: iOS Simulator**
+```bash
+npm run ios
+```
+
+**Option 3: Android Emulator**
+```bash
+npm run android
+```
+
+---
+
+## Environment Configuration
+
+### Required Environment Variables
+
+{{#if ENV_VARS}}
+Create a `.env` file in the project root:
+
+```env
+{{#each ENV_VARS}}
+# {{description}}
+{{#if required}}# REQUIRED{{else}}# Optional{{/if}}
+{{name}}={{#if example}}{{example}}{{else}}{{#if defaultValue}}{{defaultValue}}{{else}}your-value-here{{/if}}{{/if}}
+{{/each}}
+```
+
+{{else}}
+No environment variables required for basic functionality.
+{{/if}}
+
+### App Configuration
+
+Edit `app.json` to configure:
+
+```json
+{
+  "expo": {
+    "name": "{{APP_NAME}}",
+    "slug": "{{APP_SLUG}}",
+    "version": "{{VERSION}}",
+    "ios": {
+      "bundleIdentifier": "{{IOS_BUNDLE_ID}}"
+    },
+    "android": {
+      "package": "{{ANDROID_PACKAGE}}"
+    }
+  }
+}
+```
+
+**Important:** Change bundle identifiers before publishing:
+- iOS: Must be unique in App Store (e.g., `com.yourcompany.appname`)
+- Android: Must be unique in Play Store (e.g., `com.yourcompany.appname`)
+
+---
+
+## Building for Production
+
+### Using Expo Application Services (EAS)
+
+**Prerequisites:**
+```bash
+npm install -g eas-cli
+eas login
+```
+
+**Configure EAS:**
+```bash
+eas build:configure
+```
+
+**Build for iOS:**
+```bash
+# Development build
+eas build --platform ios --profile development
+
+# Production build for App Store
+eas build --platform ios --profile production
+```
+
+**Build for Android:**
+```bash
+# Development build (APK)
+eas build --platform android --profile development
+
+# Production build (AAB for Play Store)
+eas build --platform android --profile production
+```
+
+### Local Builds (Advanced)
+
+**iOS (requires macOS and Xcode):**
+```bash
+# Install dependencies
+cd ios && pod install && cd ..
+
+# Open in Xcode
+open ios/{{APP_SLUG}}.xcworkspace
+
+# Or build from command line
+xcodebuild -workspace ios/{{APP_SLUG}}.xcworkspace \
+  -scheme {{APP_SLUG}} \
+  -configuration Release \
+  -archivePath ./build/{{APP_SLUG}}.xcarchive \
+  archive
+```
+
+**Android:**
+```bash
+cd android
+
+# Build APK (for testing)
+./gradlew assembleRelease
+
+# Build AAB (for Play Store)
+./gradlew bundleRelease
+```
+
+---
+
+## App Store Deployment
+
+### iOS App Store
+
+**1. Prepare App Store Connect:**
+- Create an App ID at [developer.apple.com](https://developer.apple.com)
+- Register your app in [App Store Connect](https://appstoreconnect.apple.com)
+- Bundle ID must match: `{{IOS_BUNDLE_ID}}`
+
+**2. Create App Store assets:**
+- App icon (1024x1024px)
+- Screenshots (various sizes for iPhone/iPad)
+- Privacy policy URL (if app collects data)
+
+**3. Upload build:**
+```bash
+# Using EAS (recommended)
+eas build --platform ios --profile production
+eas submit --platform ios
+
+# Or manually upload IPA to App Store Connect
+```
+
+**4. Submit for review:**
+- Fill in app metadata in App Store Connect
+- Set pricing and availability
+- Submit for review
+
+**Required permissions in app.json:**
+{{#if IOS_PERMISSIONS}}
+```json
+{
+  "ios": {
+    "infoPlist": {
+{{#each IOS_PERMISSIONS}}
+      "{{key}}": "{{description}}"{{#unless @last}},{{/unless}}
+{{/each}}
+    }
+  }
+}
+```
+{{else}}
+No special iOS permissions required.
+{{/if}}
+
+### Google Play Store
+
+**1. Prepare Google Play Console:**
+- Create an app at [play.google.com/console](https://play.google.com/console)
+- Package name must match: `{{ANDROID_PACKAGE}}`
+
+**2. Create Play Store assets:**
+- App icon (512x512px)
+- Feature graphic (1024x500px)
+- Screenshots (various sizes)
+- Privacy policy URL
+
+**3. Upload build:**
+```bash
+# Using EAS (recommended)
+eas build --platform android --profile production
+eas submit --platform android
+
+# Or manually upload AAB in Play Console
+```
+
+**4. Configure release:**
+- Choose release track (Internal/Alpha/Beta/Production)
+- Set up pricing and distribution
+- Complete content rating questionnaire
+- Submit for review
+
+**Required permissions:**
+{{#if ANDROID_PERMISSIONS}}
+```xml
+{{#each ANDROID_PERMISSIONS}}
+<uses-permission android:name="android.permission.{{this}}" />
+{{/each}}
+```
+
+**Permission descriptions for Play Store:**
+{{#each ANDROID_PERMISSIONS}}
+- **{{this}}**: {{description}}
+{{/each}}
+{{else}}
+No special Android permissions required.
+{{/if}}
+
+---
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests with coverage
+npm test -- --coverage
+```
+
+### End-to-End Testing
+
+{{#if HAS_E2E_TESTS}}
+```bash
+# Run Maestro tests
+maestro test .maestro/
+
+# Run specific test
+maestro test .maestro/main-flow.yaml
+```
+{{else}}
+End-to-end tests are not included in this generated project.
+{{/if}}
+
+### Manual Testing Checklist
+
+Before deploying to production:
+
+- [ ] Test on real iOS device (not just simulator)
+- [ ] Test on real Android device (not just emulator)
+- [ ] Test with poor network connection
+- [ ] Test offline functionality (if applicable)
+- [ ] Verify all environment variables are set correctly
+- [ ] Test all navigation flows
+- [ ] Verify app icons and splash screens display correctly
+- [ ] Test push notifications (if applicable)
+- [ ] Verify analytics are tracking correctly
+- [ ] Test in-app purchases (if applicable)
+- [ ] Review crash reporting setup
+
+---
+
+## Continuous Deployment
+
+### GitHub Actions Example
+
+Create `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy to Stores
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-ios:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: eas build --platform ios --profile production --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: eas build --platform android --profile production --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+```
+
+---
+
+## Troubleshooting
+
+### Build Issues
+
+**iOS build fails with signing errors:**
+- Verify your Apple Developer account is active
+- Check bundle identifier matches your provisioning profile
+- Run `eas credentials` to manage certificates
+
+**Android build fails:**
+- Check package name is unique
+- Verify keystore is configured in `eas.json`
+- Ensure all required permissions are declared
+
+### Runtime Issues
+
+**App crashes on startup:**
+- Check environment variables are set
+- Verify all dependencies are installed
+- Review error logs in Expo Dev Tools
+
+**Network requests fail:**
+- Verify API endpoints are accessible
+- Check CORS settings on backend
+- Ensure SSL certificates are valid
+
+---
+
+## Next Steps
+
+1. ✅ Complete development setup
+2. ✅ Configure environment variables
+3. ✅ Test on real devices
+4. ✅ Create App Store/Play Store accounts
+5. ✅ Prepare store assets
+6. ✅ Build production versions
+7. ✅ Submit for review
+
+## Support
+
+- **Documentation:** See [README.md](./README.md)
+- **Expo Docs:** https://docs.expo.dev/
+- **Support:** support@mobigen.io
+
+---
+
+**Last Updated:** {{GENERATION_DATE}}

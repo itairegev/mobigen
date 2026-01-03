@@ -1,0 +1,366 @@
+# API Documentation
+
+API documentation for **{{APP_NAME}}**.
+
+## Overview
+
+This app uses the following backend services:
+
+{{#if BACKEND_SERVICES}}
+{{#each BACKEND_SERVICES}}
+- **{{name}}**: {{description}}
+{{/each}}
+{{else}}
+No backend services configured.
+{{/if}}
+
+---
+
+## Services
+
+{{#each SERVICES}}
+## {{name}}
+
+**File:** `{{path}}`
+
+{{#if description}}{{description}}{{/if}}
+
+### Exports
+
+{{#each exports}}
+- `{{this}}`
+{{/each}}
+
+{{#if dependencies}}
+### Dependencies
+
+{{#each dependencies}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+---
+
+{{/each}}
+
+## API Configuration
+
+### Base URL
+
+{{#if API_BASE_URL}}
+```typescript
+const API_BASE_URL = '{{API_BASE_URL}}';
+```
+{{else}}
+Configure your API base URL in the environment variables:
+
+```env
+EXPO_PUBLIC_API_URL=https://your-api.example.com
+```
+{{/if}}
+
+### Authentication
+
+{{#if AUTH_TYPE}}
+This app uses **{{AUTH_TYPE}}** for authentication.
+
+{{#if AUTH_TYPE_JWT}}
+**JWT Token Flow:**
+
+1. User logs in with credentials
+2. Server returns JWT token
+3. Token is stored securely (SecureStore)
+4. Token is included in all API requests
+
+```typescript
+// Example: Making authenticated request
+const response = await fetch(`${API_BASE_URL}/api/endpoint`, {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+});
+```
+{{/if}}
+
+{{#if AUTH_TYPE_OAUTH}}
+**OAuth Flow:**
+
+1. User initiates login
+2. Redirected to OAuth provider
+3. User authorizes app
+4. App receives access token
+5. Token used for API requests
+
+See `src/services/auth.ts` for implementation.
+{{/if}}
+
+{{else}}
+Authentication configuration not detected. Update this section based on your backend requirements.
+{{/if}}
+
+### Error Handling
+
+All API services follow this error handling pattern:
+
+```typescript
+try {
+  const response = await apiCall();
+  return { success: true, data: response };
+} catch (error) {
+  console.error('API Error:', error);
+  return {
+    success: false,
+    error: error.message || 'Unknown error'
+  };
+}
+```
+
+### Rate Limiting
+
+{{#if RATE_LIMIT}}
+**Rate Limits:**
+- {{RATE_LIMIT}}
+
+Implement exponential backoff for failed requests:
+
+```typescript
+async function retryWithBackoff(fn, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise(resolve =>
+        setTimeout(resolve, Math.pow(2, i) * 1000)
+      );
+    }
+  }
+}
+```
+{{else}}
+Check with your backend provider for rate limiting policies.
+{{/if}}
+
+---
+
+## Data Models
+
+{{#each DATA_MODELS}}
+### {{name}}
+
+```typescript
+{{code}}
+```
+
+{{#if description}}{{description}}{{/if}}
+
+{{/each}}
+
+---
+
+## Offline Support
+
+{{#if OFFLINE_SUPPORT}}
+This app includes offline support using:
+
+- **Local Storage:** {{OFFLINE_STORAGE_TYPE}}
+- **Sync Strategy:** {{OFFLINE_SYNC_STRATEGY}}
+
+### Sync Flow
+
+1. User makes changes while offline
+2. Changes stored in local database
+3. When connection restored, changes synced to server
+4. Conflicts resolved using {{CONFLICT_RESOLUTION_STRATEGY}}
+
+### Implementation
+
+See the following files:
+- `src/services/offline-sync.ts` - Sync logic
+- `src/services/storage.ts` - Local storage
+- `src/hooks/useOfflineSync.ts` - React hook for sync
+
+{{else}}
+This app requires an active internet connection to function.
+{{/if}}
+
+---
+
+## Environment Variables
+
+API-related environment variables:
+
+{{#if API_ENV_VARS}}
+```env
+{{#each API_ENV_VARS}}
+# {{description}}
+{{name}}={{example}}
+{{/each}}
+```
+{{else}}
+No API-specific environment variables required.
+{{/if}}
+
+---
+
+## Testing APIs
+
+### Using the Development Server
+
+```bash
+# Start with local API
+EXPO_PUBLIC_API_URL=http://localhost:3000 npm start
+```
+
+### Using Mock Data
+
+For testing without a backend, enable mock mode:
+
+```typescript
+// src/config/api.ts
+export const USE_MOCK_DATA = __DEV__ && process.env.EXPO_PUBLIC_USE_MOCKS === 'true';
+```
+
+Then start with:
+```bash
+EXPO_PUBLIC_USE_MOCKS=true npm start
+```
+
+---
+
+## Common API Patterns
+
+### Fetching Data
+
+```typescript
+import { useQuery } from '@tanstack/react-query';
+
+function useItems() {
+  return useQuery({
+    queryKey: ['items'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/items`);
+      if (!response.ok) throw new Error('Failed to fetch items');
+      return response.json();
+    },
+  });
+}
+```
+
+### Mutating Data
+
+```typescript
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+function useCreateItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (item) => {
+      const response = await fetch(`${API_BASE_URL}/items`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item),
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] });
+    },
+  });
+}
+```
+
+### File Uploads
+
+```typescript
+async function uploadFile(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${API_BASE_URL}/upload`, {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  return response.json();
+}
+```
+
+---
+
+## WebSocket Support
+
+{{#if WEBSOCKET_SUPPORT}}
+This app uses WebSockets for real-time updates.
+
+**Connection:**
+```typescript
+const ws = new WebSocket('{{WEBSOCKET_URL}}');
+
+ws.onopen = () => {
+  console.log('Connected to WebSocket');
+};
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  // Handle real-time update
+};
+```
+
+See `src/services/websocket.ts` for full implementation.
+{{else}}
+WebSocket support not included. Add if real-time updates are needed.
+{{/if}}
+
+---
+
+## Security Best Practices
+
+1. **Never commit API keys or secrets**
+   - Use environment variables
+   - Add `.env` to `.gitignore`
+
+2. **Validate all inputs**
+   - Sanitize user input before sending to API
+   - Use TypeScript for type safety
+
+3. **Handle sensitive data securely**
+   - Use `expo-secure-store` for tokens
+   - Never log sensitive information
+
+4. **Implement proper error handling**
+   - Don't expose internal errors to users
+   - Log errors for debugging
+
+5. **Use HTTPS only**
+   - Never send requests over HTTP in production
+   - Pin SSL certificates for high-security apps
+
+---
+
+## Troubleshooting
+
+**API requests failing:**
+- Check network connection
+- Verify API_BASE_URL is correct
+- Check for CORS issues
+- Verify authentication token is valid
+
+**Slow API responses:**
+- Implement request caching
+- Use pagination for large datasets
+- Consider using GraphQL for efficiency
+
+**Authentication errors:**
+- Check token expiration
+- Verify token format
+- Ensure secure storage is working
+
+---
+
+**Last Updated:** {{GENERATION_DATE}}
