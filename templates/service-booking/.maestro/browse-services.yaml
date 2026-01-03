@@ -1,35 +1,59 @@
 appId: com.mobigen.servicebooking
 tags:
-  - smoke
+  - critical
   - services
+  - browse
 ---
-# Browse Services Flow
+# Test: Browse Services
+# Verifies users can browse and filter services by category
+
 - launchApp:
     clearState: true
 
-# Check home screen loads
-- assertVisible: "Book Your Next Appointment"
-- assertVisible: "Categories"
-- assertVisible: "Popular Services"
-
-# Navigate to Services tab
-- tapOn: "Services"
-- assertVisible: "All Services"
-
-# Test category filter
+# From home, navigate to all services
+- assertVisible:
+    id: "view-all-services"
 - tapOn:
-    id: "category-filter-1"
-- assertVisible: "available"
+    id: "view-all-services"
 
-# View service detail
+# Should be on Services tab now
+- assertVisible:
+    text: ".*service.*available"
+    regex: true
+
+# Verify category filter is present
+- assertVisible:
+    id: "category-all"
+
+# Test filtering - tap on a category filter
+# Note: This assumes at least one category exists in the mock data
 - tapOn:
-    id: "service-card-1"
+    id: "category-all"
+
+# Verify services are displayed
+# Note: Services should have testID pattern "service-card-{id}"
+- assertVisible:
+    text: ".*service.*available"
+    regex: true
+
+# Tap on a service card to view details
+# Note: Using index-based selection as we can't predict service IDs
+- tapOn:
+    text: ".*min"
+    regex: true
+    index: 0
+
+# Should navigate to service detail screen
 - assertVisible: "Service Details"
 - assertVisible: "Duration"
 - assertVisible: "Price"
 - assertVisible: "Available Staff"
+- assertVisible:
+    id: "book-now-button"
 
-# Close service detail
+# Go back to services list
 - tapOn:
     id: "close-button"
-- assertVisible: "Services"
+
+- assertVisible:
+    id: "category-all"

@@ -1,0 +1,7 @@
+appId: com.mobigen.restaurant
+name: Restaurant App E2E Tests
+tags:
+  - restaurant
+  - e2e
+env:
+  APP_NAME: "Restaurant"

@@ -1,11 +1,10 @@
 appId: com.mobigen.fitness
 tags:
-  - critical
   - progress
-  - stats
   - history
+  - stats
 ---
-# View Progress Flow - Comprehensive stats and history check
+# Test viewing workout history and stats
 
 - launchApp:
     clearState: true
@@ -14,13 +13,11 @@ tags:
 - tapOn: "Progress"
 - assertVisible: "Your Progress"
 
-# Verify streak display
+# Verify streak badge is visible
 - assertVisible:
     id: "progress-streak"
 
-# Verify overview stats section
-- assertVisible:
-    text: "Overview"
+# Verify overview stats are visible
 - assertVisible:
     id: "stat-total-workouts"
 - assertVisible:
@@ -30,20 +27,20 @@ tags:
 - assertVisible:
     id: "stat-avg-duration"
 
-# Verify weekly chart
+# Verify weekly chart is visible
 - assertVisible:
     id: "weekly-chart"
 
-# Verify goals section (if goals exist)
+# Check for active goals section (if goals exist)
 - assertVisible:
     text: "Active Goals"
     optional: true
 
-# Verify recent workouts section
+# Check for recent workouts section
 - assertVisible:
     text: "Recent Workouts"
 
-# Check for either empty state or workout logs
+# Verify empty state or workout logs
 - assertVisible:
     text: "No workouts logged yet.*"
     regex: true

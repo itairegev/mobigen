@@ -1,0 +1,23 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - chat
+---
+# Test: Create new chat from History screen
+# Validates that users can create a new conversation
+
+- launchApp:
+    clearState: true
+
+# Navigate to History tab
+- tapOn: "History"
+- assertVisible: "No conversations yet"
+
+# Tap New Chat button
+- tapOn:
+    id: "new-chat-button"
+
+# Should navigate back to Chat tab
+- assertVisible: "AI Assistant"
+- assertVisible:
+    id: "chat-input"

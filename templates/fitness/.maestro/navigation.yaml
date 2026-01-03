@@ -1,0 +1,41 @@
+appId: com.mobigen.fitness
+tags:
+  - critical
+  - navigation
+  - smoke
+---
+# Test navigation between all main tabs
+
+- launchApp:
+    clearState: true
+
+# Verify Home tab is visible by default
+- assertVisible: "Welcome Back!"
+- assertVisible: "home-streak"
+
+# Navigate to Classes tab
+- tapOn: "Classes"
+- assertVisible:
+    text: "Category"
+- assertVisible: "filter-category-all"
+
+# Navigate to Workouts tab
+- tapOn: "Workouts"
+- assertVisible:
+    text: "Category"
+- assertVisible: "filter-category-all"
+
+# Navigate to Progress tab
+- tapOn: "Progress"
+- assertVisible: "Your Progress"
+- assertVisible: "progress-streak"
+- assertVisible: "stat-total-workouts"
+
+# Navigate to Profile tab
+- tapOn: "Profile"
+- assertVisible: "My Profile"
+
+# Navigate back to Home
+- tapOn: "Home"
+- assertVisible: "Welcome Back!"
+- assertVisible: "home-streak"

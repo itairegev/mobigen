@@ -1,0 +1,87 @@
+appId: com.mobigen.restaurant
+tags:
+  - critical
+  - e2e
+  - full-flow
+---
+# Complete end-to-end user flow
+- launchApp:
+    clearState: true
+
+# Step 1: Browse home screen
+- assertVisible: "Welcome! 👋"
+- assertVisible: "Featured"
+
+# Step 2: Navigate to menu
+- tapOn: "Menu"
+- assertVisible:
+    id: "category-all"
+
+# Step 3: Filter by category
+- tapOn:
+    id: "category-.*"
+    regex: true
+    index: 0
+
+# Step 4: Select a menu item
+- tapOn:
+    id: "menu-item-.*"
+    regex: true
+    index: 0
+
+# Step 5: Customize item
+- tapOn:
+    id: "quantity-increase"
+- assertVisible: "2"
+
+- tapOn:
+    id: "special-instructions-input"
+- inputText: "No spicy sauce"
+
+# Step 6: Add to cart
+- tapOn:
+    id: "add-to-cart-button"
+
+# Step 7: Add another item
+- tapOn:
+    id: "menu-item-.*"
+    regex: true
+    index: 1
+- tapOn:
+    id: "add-to-cart-button"
+
+# Step 8: Review cart
+- tapOn: "Cart"
+- assertVisible: "Your Cart"
+- assertVisible:
+    id: "cart-item-.*"
+    regex: true
+- assertVisible:
+    id: "cart-summary"
+
+# Step 9: Proceed to checkout
+- tapOn:
+    id: "checkout-button"
+
+# Step 10: Configure order
+- assertVisible: "Order Type"
+- assertVisible:
+    id: "tip-selector"
+
+# Select 18% tip
+- tapOn:
+    text: "18%"
+
+# Add order notes
+- tapOn:
+    id: "customer-notes-input"
+- inputText: "Please call when you arrive"
+
+# Step 11: Place order
+- assertVisible:
+    id: "place-order-button"
+- tapOn:
+    id: "place-order-button"
+
+# Note: Success verification would require backend integration
+# This validates the complete user journey through the app

@@ -1,44 +1,76 @@
-appId: ${APP_ID}
-name: Add to Cart Flow
+appId: com.mobigen.restaurant
 tags:
   - critical
   - cart
+  - menu
 ---
-# Test: Add item to cart and verify
-
+# Add items to cart with customizations
 - launchApp:
     clearState: true
 
-# Navigate to Menu
-- tapOn:
-    id: "menu-tab"
+# Navigate to Menu tab
+- tapOn: "Menu"
 - assertVisible:
-    id: "menu-screen"
+    id: "category-all"
 
 # Tap on first menu item
 - tapOn:
-    id: "menu-item-0"
+    id: "menu-item-.*"
+    regex: true
+    index: 0
 
-# Wait for item detail to load
+# Wait for item detail screen to load
+- assertVisible: "Quantity"
 - assertVisible:
-    id: "item-detail-screen"
+    id: "add-to-cart-button"
 
-# Tap Add to Cart button
+# Increase quantity
+- tapOn:
+    id: "quantity-increase"
+- assertVisible: "2"
+
+# Add special instructions
+- tapOn:
+    id: "special-instructions-input"
+- inputText: "No onions, please"
+
+# Add to cart
 - tapOn:
     id: "add-to-cart-button"
 
-# Verify confirmation
-- assertVisible: "Added to cart"
+# Should navigate back to menu
+- assertVisible:
+    id: "category-all"
 
-# Navigate to Cart
-- tapOn:
-    id: "cart-tab"
+# Navigate to Cart tab
+- tapOn: "Cart"
 
 # Verify item is in cart
 - assertVisible:
-    id: "cart-screen"
-- assertVisible:
-    id: "cart-item-0"
+    id: "cart-item-.*"
+    regex: true
 
-# Verify cart count shows 1
-- assertVisible: "1"
+# Verify quantity is correct (2 items)
+- assertVisible: "2 items"
+
+# Verify special instructions are shown
+- assertVisible: "No onions, please"
+
+# Test quantity controls
+- tapOn:
+    id: "cart-item-.*-increase"
+    regex: true
+- assertVisible: "3 items"
+
+- tapOn:
+    id: "cart-item-.*-decrease"
+    regex: true
+- assertVisible: "2 items"
+
+# Verify cart summary is visible
+- assertVisible:
+    id: "cart-summary"
+
+# Verify checkout button is available
+- assertVisible:
+    id: "checkout-button"

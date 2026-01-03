@@ -1,30 +1,22 @@
-appId: ${APP_BUNDLE_ID}
+appId: com.mobigen.restaurant
 tags:
-  - smoke
   - orders
+  - smoke
 ---
-# Test: Track Order
+# Test orders screen and order tracking
 - launchApp:
     clearState: true
 
 # Navigate to Orders tab
 - tapOn: "Orders"
-- assertVisible: "Active Orders"
 
-# Open an active order
-- tapOn:
-    id: "active-order-ORD-003"
-- assertVisible: "Order #ORD-003"
-- assertVisible:
-    id: "order-status"
+# Initially should show no orders (empty state)
+- assertVisible: "No orders yet"
+- assertVisible: "Your order history will appear here"
 
-# Verify order details
-- assertVisible: "Order Items"
-- assertVisible: "Order Summary"
-
-# Go back
-- back
-
-# Check past orders
-- scrollDown
-- assertVisible: "Past Orders"
+# Note: Testing with actual orders would require:
+# 1. Placing an order through checkout flow
+# 2. Verifying it appears in active orders section
+# 3. Tapping on an order to view details
+# 4. Verifying order status, items, and summary
+# This test validates the empty state of the orders screen

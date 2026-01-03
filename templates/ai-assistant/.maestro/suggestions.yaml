@@ -1,0 +1,28 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - chat
+  - suggestions
+---
+# Test: Use a suggestion card to start conversation
+# Validates that suggestion cards work correctly
+
+- launchApp:
+    clearState: true
+
+# Verify suggestions are visible
+- assertVisible: "AI Assistant"
+- assertVisible: "Start a conversation or try one of these suggestions"
+
+# Tap on the first suggestion
+# Note: The exact suggestion IDs would depend on the data
+- tapOn:
+    id: "suggestion-1"
+
+# Wait for typing indicator
+- assertVisible:
+    id: "typing-indicator"
+    timeout: 2000
+
+# Verify we're no longer in empty state
+- assertNotVisible: "Start a conversation or try one of these suggestions"

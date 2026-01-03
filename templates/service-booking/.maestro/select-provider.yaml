@@ -1,0 +1,56 @@
+appId: com.mobigen.servicebooking
+tags:
+  - critical
+  - booking
+  - staff
+---
+# Test: Select Service Provider
+# Verifies users can select a staff member for their booking
+
+- launchApp:
+    clearState: true
+
+# Navigate to Services
+- tapOn: "Services"
+- assertVisible:
+    id: "category-all"
+
+# Open first service detail
+- tapOn:
+    text: ".*min"
+    regex: true
+    index: 0
+
+# Should be on service detail screen
+- assertVisible: "Service Details"
+- assertVisible:
+    id: "book-now-button"
+
+# Start booking flow
+- tapOn:
+    id: "book-now-button"
+
+# Should navigate to staff selection screen
+- assertVisible: "Select Staff Member"
+
+# Verify progress indicator shows we're on step 1
+- assertVisible: "Staff"
+- assertVisible: "Date & Time"
+- assertVisible: "Confirm"
+
+# Verify staff members are displayed
+- assertVisible: "Choose your preferred staff member"
+
+# Select a staff member (first one)
+# Note: Staff cards should have testID pattern "staff-option-{id}"
+- tapOn:
+    text: ".*"
+    regex: true
+    index: 2
+
+# Continue button should be enabled after selection
+- assertVisible:
+    id: "continue-button"
+
+# Note: We don't proceed further to avoid creating test data
+# Just verify the UI is working correctly

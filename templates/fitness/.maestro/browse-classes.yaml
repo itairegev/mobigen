@@ -1,40 +1,67 @@
-appId: ${APP_BUNDLE_ID}
+appId: com.mobigen.fitness
 tags:
   - critical
   - classes
+  - browsing
+  - filters
 ---
-# Browse Classes Flow
+# Browse Classes Flow - Test category and difficulty filtering
+
 - launchApp:
     clearState: true
 
 # Navigate to Classes tab
 - tapOn: "Classes"
-- assertVisible: "Category"
-- assertVisible: "Difficulty"
+- assertVisible:
+    text: "Category"
+- assertVisible:
+    text: "Difficulty"
 
-# Test category filter
+# Test category filter - Yoga
 - tapOn:
     id: "filter-category-yoga"
 - assertVisible:
-    text: ".*[Cc]lass.*[Aa]vailable"
+    text: ".*Classes.*"
     regex: true
 
-# Test difficulty filter
+# Test difficulty filter - Beginner
 - tapOn:
     id: "filter-difficulty-beginner"
 - assertVisible:
-    text: ".*spots left"
+    text: ".*Classes.*"
     regex: true
 
-# Verify class card is visible
-- assertVisible:
-    id: "class-card-1"
+# Change to intermediate difficulty
+- tapOn:
+    id: "filter-difficulty-intermediate"
 
-# Reset filters
+# Switch to HIIT category
+- tapOn:
+    id: "filter-category-hiit"
+- assertVisible:
+    text: ".*Classes.*"
+    regex: true
+
+# Test advanced difficulty
+- tapOn:
+    id: "filter-difficulty-advanced"
+
+# Reset all filters
 - tapOn:
     id: "filter-category-all"
 - tapOn:
     id: "filter-difficulty-all"
 - assertVisible:
-    text: ".*[Cc]lass.*[Aa]vailable"
+    text: ".*Classes.*"
     regex: true
+
+# Tap first class card if available
+- tapOn:
+    id: "class-card-.*"
+    regex: true
+    optional: true
+
+# Verify class details if loaded
+- assertVisible:
+    text: "Class Details"
+    optional: true

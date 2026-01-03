@@ -1,0 +1,31 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - products
+  - detail
+---
+# Test: Product Detail View
+# Validates navigation to product details and viewing product information
+
+- launchApp:
+    clearState: true
+
+# Navigate to Shop tab
+- tapOn: "Shop"
+- assertVisible:
+    id: "search-input"
+
+# Tap on first product
+- tapOn:
+    id: "product-1"
+
+# Note: Based on code review, product detail screen navigation exists
+# but we need to verify what's displayed. Since the template only shows
+# tabs in current implementation, this will test the tap action works
+# and navigation is properly configured
+
+# For now, verify tap works and no crash occurs
+- waitForAnimationToEnd
+
+# If product detail screen exists, it should show product info
+# This is a placeholder that will work once product/[id].tsx is implemented

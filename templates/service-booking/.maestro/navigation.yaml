@@ -1,38 +1,38 @@
-appId: ${APP_ID}
-name: Navigation Test
+appId: com.mobigen.servicebooking
 tags:
   - smoke
   - navigation
+  - critical
 ---
-# Test: Verify all main navigation tabs work
+# Test: Tab Navigation
+# Verifies all main tabs are accessible and display correct content
 
 - launchApp:
     clearState: true
 
-# Home tab should be visible by default
-- assertVisible:
-    id: "home-screen"
+# Verify Home tab is default
+- assertVisible: "Book Your Next Appointment"
+- assertVisible: "Professional services at your fingertips"
 
-# Tap Services tab
-- tapOn:
-    id: "services-tab"
+# Navigate to Services tab
+- tapOn: "Services"
 - assertVisible:
-    id: "services-screen"
+    text: ".*service.*available"
+    regex: true
+- assertVisible:
+    id: "category-all"
 
-# Tap Appointments tab
-- tapOn:
-    id: "appointments-tab"
+# Navigate to Appointments tab
+- tapOn: "Appointments"
 - assertVisible:
-    id: "appointments-screen"
+    anyOf:
+      - text: "No Appointments"
+      - text: "Upcoming"
 
-# Tap Profile tab
-- tapOn:
-    id: "profile-tab"
-- assertVisible:
-    id: "profile-screen"
+# Navigate to Profile tab
+- tapOn: "Profile"
+- assertVisible: "Profile"
 
-# Return to Home
-- tapOn:
-    id: "home-tab"
-- assertVisible:
-    id: "home-screen"
+# Return to Home tab
+- tapOn: "Home"
+- assertVisible: "Book Your Next Appointment"

@@ -1,0 +1,35 @@
+appId: com.mobigen.app
+tags:
+  - smoke
+  - navigation
+---
+# Test: Tab Navigation
+# Validates that all main tabs are accessible and render correctly
+
+- launchApp:
+    clearState: true
+
+# Verify home/shop tab is visible by default
+- assertVisible: "Shop"
+
+# Test Shop tab
+- tapOn: "Shop"
+- assertVisible: "Search products..."
+
+# Test Categories tab
+- tapOn: "Categories"
+- assertVisible:
+    text: ".*products"
+    regex: true
+
+# Test Cart tab
+- tapOn: "Cart"
+- assertVisible: "Your cart is empty"
+
+# Test Profile tab
+- tapOn: "Profile"
+- assertVisible: "Profile"
+
+# Return to Shop tab
+- tapOn: "Shop"
+- assertVisible: "Search products..."

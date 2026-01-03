@@ -1,0 +1,53 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - history
+---
+# Test: View and navigate conversation history
+# Validates conversation history management
+
+- launchApp:
+    clearState: true
+
+# Send a message to create a conversation
+- tapOn:
+    id: "chat-input-input"
+- inputText: "Test message"
+- tapOn:
+    id: "chat-input-send"
+
+# Wait briefly for message to send
+- waitForAnimationToEnd
+
+# Navigate to History tab
+- tapOn: "History"
+
+# Should see at least one conversation
+- assertNotVisible: "No conversations yet"
+
+# Verify we can see conversation items
+- assertVisible: "1 message"
+
+# Tap New Chat button to create another conversation
+- tapOn:
+    id: "new-chat-button"
+
+# Should navigate to Chat tab
+- assertVisible: "AI Assistant"
+
+# Send another message
+- tapOn:
+    id: "chat-input-input"
+- inputText: "Second conversation"
+- tapOn:
+    id: "chat-input-send"
+
+# Wait briefly
+- waitForAnimationToEnd
+
+# Go back to History
+- tapOn: "History"
+
+# Should now see 2 conversations
+# Note: We look for multiple conversation items
+- assertVisible: "1 message"

@@ -1,0 +1,42 @@
+appId: com.mobigen.app
+tags:
+  - settings
+  - configuration
+---
+# Test: Settings screen interaction
+# Validates that settings screen displays correctly and toggles work
+
+- launchApp:
+    clearState: true
+
+# Navigate to Settings tab
+- tapOn: "Settings"
+
+# Verify all sections are visible
+- assertVisible: "AI Model"
+- assertVisible: "Features"
+- assertVisible: "Model Parameters"
+- assertVisible: "About"
+
+# Verify AI Model section
+- assertVisible: "GPT-4"
+
+# Verify Features section shows toggles
+- assertVisible: "Voice Input"
+- assertVisible: "Use microphone for input"
+- assertVisible: "Haptic Feedback"
+- assertVisible: "Vibrate on actions"
+
+# Verify Model Parameters
+- assertVisible: "Temperature"
+- assertVisible: "Controls randomness"
+- assertVisible: "Max Tokens"
+- assertVisible: "Maximum length of the response"
+
+# Verify About section
+- assertVisible: "Version"
+- assertVisible: "1.0.0"
+
+# Navigate back to Chat to verify settings don't break navigation
+- tapOn: "Chat"
+- assertVisible: "AI Assistant"

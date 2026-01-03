@@ -1,0 +1,51 @@
+appId: com.mobigen.restaurant
+tags:
+  - cart
+  - smoke
+---
+# Test cart management features
+- launchApp:
+    clearState: true
+
+# Start with empty cart
+- tapOn: "Cart"
+- assertVisible: "Your cart is empty"
+- assertVisible:
+    id: "browse-menu-button"
+
+# Browse menu button should navigate to menu
+- tapOn:
+    id: "browse-menu-button"
+- assertVisible:
+    id: "category-all"
+
+# Add first item
+- tapOn:
+    id: "menu-item-.*"
+    regex: true
+    index: 0
+- tapOn:
+    id: "add-to-cart-button"
+
+# Add second item
+- tapOn:
+    id: "menu-item-.*"
+    regex: true
+    index: 1
+- tapOn:
+    id: "add-to-cart-button"
+
+# Go to cart
+- tapOn: "Cart"
+
+# Verify both items are in cart
+- assertVisible:
+    id: "cart-item-.*"
+    regex: true
+
+# Test clear cart
+- tapOn:
+    id: "clear-cart-button"
+
+# Cart should be empty again
+- assertVisible: "Your cart is empty"

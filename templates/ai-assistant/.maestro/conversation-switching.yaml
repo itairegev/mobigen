@@ -1,0 +1,50 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - history
+  - navigation
+---
+# Test: Switch between conversations
+# Validates that users can switch between different conversations
+
+- launchApp:
+    clearState: true
+
+# Create first conversation
+- tapOn:
+    id: "chat-input-input"
+- inputText: "First conversation message"
+- tapOn:
+    id: "chat-input-send"
+
+# Wait briefly
+- waitForAnimationToEnd
+
+# Navigate to History
+- tapOn: "History"
+
+# Create new conversation
+- tapOn:
+    id: "new-chat-button"
+
+# Send message in second conversation
+- tapOn:
+    id: "chat-input-input"
+- inputText: "Second conversation message"
+- tapOn:
+    id: "chat-input-send"
+
+# Wait briefly
+- waitForAnimationToEnd
+
+# Go back to History
+- tapOn: "History"
+
+# Should see multiple conversations
+- assertVisible: "1 message"
+
+# Navigate back to Chat
+- tapOn: "Chat"
+
+# Verify we're in a conversation (not empty state)
+- assertNotVisible: "Start a conversation or try one of these suggestions"

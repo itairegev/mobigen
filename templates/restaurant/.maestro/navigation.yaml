@@ -1,44 +1,35 @@
-appId: ${APP_ID}
-name: Navigation Test
+appId: com.mobigen.restaurant
 tags:
   - smoke
   - navigation
 ---
-# Test: Verify all main navigation tabs work
-
+# Test all tab navigation
 - launchApp:
     clearState: true
 
-# Home tab should be visible by default
-- assertVisible:
-    id: "home-tab"
+# Verify Home tab is default
+- assertVisible: "Welcome! 👋"
+- assertVisible: "Home"
 
-# Tap Menu tab
-- tapOn:
-    id: "menu-tab"
+# Navigate to Menu tab
+- tapOn: "Menu"
 - assertVisible:
-    id: "menu-screen"
+    id: "category-all"
 
-# Tap Cart tab
-- tapOn:
-    id: "cart-tab"
-- assertVisible:
-    id: "cart-screen"
+# Navigate to Cart tab
+- tapOn: "Cart"
+- assertVisible: "Your cart is empty"
 
-# Tap Orders tab
-- tapOn:
-    id: "orders-tab"
-- assertVisible:
-    id: "orders-screen"
+# Navigate to Orders tab
+- tapOn: "Orders"
+- assertVisible: "No orders yet"
 
-# Tap Profile tab
-- tapOn:
-    id: "profile-tab"
-- assertVisible:
-    id: "profile-screen"
+# Navigate to Profile tab
+- tapOn: "Profile"
+- assertVisible: "Guest User"
+- assertVisible: "guest@example.com"
 
-# Return to Home
-- tapOn:
-    id: "home-tab"
-- assertVisible:
-    id: "home-screen"
+# Return to Home tab
+- tapOn: "Home"
+- assertVisible: "Welcome! 👋"
+- assertVisible: "What are you craving today?"

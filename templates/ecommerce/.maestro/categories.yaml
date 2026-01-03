@@ -1,0 +1,44 @@
+appId: com.mobigen.app
+tags:
+  - smoke
+  - categories
+  - navigation
+---
+# Test: Categories Screen
+# Validates category browsing and navigation
+
+- launchApp:
+    clearState: true
+
+# Navigate to Categories tab
+- tapOn: "Categories"
+
+# Verify categories are loaded
+# Categories should show product count
+- assertVisible:
+    text: ".*products"
+    regex: true
+
+# Test category card is tappable
+# Note: Based on code, category IDs are dynamic (electronics, sports, accessories)
+# We'll test for the presence of category cards
+- assertVisible:
+    id: "category-electronics"
+
+# Tap on electronics category
+- tapOn:
+    id: "category-electronics"
+
+# Wait for navigation
+- waitForAnimationToEnd
+
+# Note: Navigation to category detail screen depends on implementation
+# of /category/[id].tsx route. Test documents expected behavior.
+
+# Return to categories (if navigation occurred)
+- pressKey: Back
+
+# Verify we're back on categories screen
+- assertVisible:
+    text: ".*products"
+    regex: true

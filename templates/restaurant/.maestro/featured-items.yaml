@@ -1,0 +1,49 @@
+appId: com.mobigen.restaurant
+tags:
+  - smoke
+  - home
+  - featured
+---
+# Test featured items on home screen
+- launchApp:
+    clearState: true
+
+# Verify home screen content
+- assertVisible: "Welcome! 👋"
+- assertVisible: "What are you craving today?"
+
+# Check for Featured section
+- assertVisible: "Featured"
+
+# Verify featured items are displayed
+- assertVisible:
+    id: "featured-item-.*"
+    regex: true
+
+# Tap on a featured item
+- tapOn:
+    id: "featured-item-.*"
+    regex: true
+    index: 0
+
+# Should navigate to item detail
+- assertVisible: "Quantity"
+- assertVisible:
+    id: "add-to-cart-button"
+
+# Go back to home
+- back
+- assertVisible: "Welcome! 👋"
+
+# Verify category browsing from home
+- assertVisible: "Browse by Category"
+
+# Tap on a category
+- tapOn:
+    id: "category-.*"
+    regex: true
+    index: 0
+
+# Should navigate to Menu tab
+- assertVisible:
+    id: "category-all"

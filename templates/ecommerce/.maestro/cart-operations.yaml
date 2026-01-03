@@ -1,0 +1,50 @@
+appId: com.mobigen.app
+tags:
+  - cart
+  - operations
+---
+# Test: Cart Operations with Items
+# Tests quantity updates and item removal when cart has items
+# Note: This test requires items to be pre-populated in the cart
+# or the ability to add items from product screens
+
+- launchApp:
+    clearState: false  # Don't clear state to preserve cart items
+
+# Navigate to Cart tab
+- tapOn: "Cart"
+
+# Check if cart has items (conditional test)
+# If empty, this test will be skipped in practice
+- runFlow:
+    when:
+      visible: "Proceed to Checkout"
+    commands:
+      # Cart has items - test operations
+
+      # Verify cart item is visible
+      - assertVisible:
+          text: "cart-item-.*"
+          regex: true
+
+      # Test increase quantity
+      - tapOn:
+          id: "cart-item-1-increase"
+      - waitForAnimationToEnd
+
+      # Test decrease quantity
+      - tapOn:
+          id: "cart-item-1-decrease"
+      - waitForAnimationToEnd
+
+      # Verify total is displayed
+      - assertVisible: "Total"
+
+      # Verify checkout button is present
+      - assertVisible:
+          id: "checkout-button"
+
+      # Test remove item (commented out to preserve cart state)
+      # - tapOn:
+      #     id: "cart-item-1-remove"
+      # - waitForAnimationToEnd

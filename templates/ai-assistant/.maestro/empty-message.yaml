@@ -1,0 +1,44 @@
+appId: com.mobigen.app
+tags:
+  - chat
+  - validation
+---
+# Test: Prevent sending empty messages
+# Validates that empty or whitespace-only messages cannot be sent
+
+- launchApp:
+    clearState: true
+
+# Verify initial state
+- assertVisible: "AI Assistant"
+
+# Try to tap send button without typing (should show mic icon, not send)
+- assertVisible:
+    id: "chat-input-voice"
+
+# Tap on input
+- tapOn:
+    id: "chat-input-input"
+
+# Type only whitespace
+- inputText: "   "
+
+# Send button should still not be visible (mic icon shown instead)
+- assertVisible:
+    id: "chat-input-voice"
+
+# Type a real message
+- inputText: "Hello"
+
+# Now send button should be visible
+- assertVisible:
+    id: "chat-input-send"
+
+# Tap send
+- tapOn:
+    id: "chat-input-send"
+
+# Message should be sent
+- assertVisible:
+    id: "typing-indicator"
+    timeout: 2000

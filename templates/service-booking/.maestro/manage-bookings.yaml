@@ -1,0 +1,74 @@
+appId: com.mobigen.servicebooking
+tags:
+  - critical
+  - appointments
+  - management
+---
+# Test: Manage Bookings
+# Verifies users can view and manage their appointments
+
+- launchApp:
+    clearState: true
+
+# Navigate to Appointments tab
+- tapOn: "Appointments"
+
+# Check for empty state (no appointments)
+- assertVisible:
+    anyOf:
+      - text: "No Appointments"
+      - text: "Upcoming"
+
+# If empty state is shown, verify call-to-action
+- assertVisible:
+    anyOf:
+      - id: "book-first-appointment"
+      - text: "Upcoming"
+
+# Test scenario: If there ARE appointments
+# Verify appointment cards are displayed with proper testIDs
+# Note: This section will only work if test data exists
+
+# Test the "Book First Appointment" button if no appointments exist
+- runFlow:
+    when:
+      visible:
+        id: "book-first-appointment"
+    commands:
+      - tapOn:
+          id: "book-first-appointment"
+      - assertVisible:
+          id: "category-all"
+      - tapOn: "Appointments"
+
+# Test viewing appointment details (if appointments exist)
+# Note: Appointment cards should have testID pattern "appointment-{id}"
+- runFlow:
+    when:
+      visible:
+        text: "Upcoming"
+    commands:
+      - tapOn:
+          text: ".*"
+          regex: true
+          index: 1
+      - assertVisible: "Appointment Details"
+      - assertVisible: "Appointment Information"
+      - assertVisible: "Staff Member"
+      - assertVisible: "Date"
+      - assertVisible: "Time"
+      # If appointment is upcoming, cancel button should be visible
+      - runFlow:
+          when:
+            visible:
+              text: "Upcoming"
+          commands:
+            - assertVisible:
+                id: "cancel-appointment-button"
+      # Go back to appointments list
+      - tapOn:
+          id: "back-button"
+      - assertVisible:
+          anyOf:
+            - text: "No Appointments"
+            - text: "Upcoming"

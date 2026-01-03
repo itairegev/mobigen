@@ -4,15 +4,12 @@ tags:
   - workout
   - logging
 ---
-# Log Workout Flow - Complete workout logging with all fields
+# Test logging a workout (track progress flow)
 
 - launchApp:
     clearState: true
 
-# Navigate to log workout from Home
-- tapOn: "Home"
-- assertVisible: "Welcome Back!"
-
+# Navigate to log workout from home screen
 - tapOn:
     id: "home-log-workout-button"
 - assertVisible: "Log Your Workout"
@@ -28,27 +25,27 @@ tags:
 
 - tapOn:
     id: "calories-input"
-- inputText: "300"
+- inputText: "250"
 
 - tapOn:
     id: "notes-input"
 - inputText: "Felt great today!"
 
-# Save workout
+# Save the workout
 - tapOn:
     id: "save-workout-button"
 
-# Verify success alert
+# Should show success alert
 - assertVisible:
     text: "Workout Logged!"
     optional: true
 
-# Tap OK on alert
+# Dismiss alert if present
 - tapOn:
     text: "OK"
     optional: true
 
-# Should return to home
+# Should navigate back to home
 - assertVisible:
     text: "Welcome Back!"
     optional: true

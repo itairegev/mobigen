@@ -1,0 +1,39 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - cart
+---
+# Test: Shopping Cart Operations
+# Validates cart functionality including quantity updates and item removal
+# Note: This test assumes products can be added to cart from product detail screen
+# Since current implementation may not have product detail screen yet,
+# this test documents the expected cart behavior
+
+- launchApp:
+    clearState: true
+
+# Navigate to Cart tab
+- tapOn: "Cart"
+
+# Verify empty cart state
+- assertVisible: "Your cart is empty"
+- assertVisible: "Add some products to get started"
+- assertVisible:
+    id: "browse-products-button"
+
+# Test browse products button
+- tapOn:
+    id: "browse-products-button"
+
+# Should navigate to Shop tab
+- assertVisible: "Shop"
+- assertVisible:
+    id: "search-input"
+
+# Return to cart
+- tapOn: "Cart"
+- assertVisible: "Your cart is empty"
+
+# Note: Full cart testing (add to cart, update quantity, remove items)
+# requires product detail screen with "Add to Cart" functionality
+# Those tests should be added once that screen is implemented

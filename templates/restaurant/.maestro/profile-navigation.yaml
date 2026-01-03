@@ -1,0 +1,44 @@
+appId: com.mobigen.restaurant
+tags:
+  - profile
+  - smoke
+---
+# Test profile screen navigation
+- launchApp:
+    clearState: true
+
+# Navigate to Profile tab
+- tapOn: "Profile"
+
+# Verify profile header
+- assertVisible: "Guest User"
+- assertVisible: "guest@example.com"
+
+# Verify all profile menu items are present
+- assertVisible:
+    id: "profile-edit-profile"
+- assertVisible:
+    id: "profile-saved-addresses"
+- assertVisible:
+    id: "profile-payment-methods"
+- assertVisible:
+    id: "profile-notifications"
+- assertVisible:
+    id: "profile-help-&-support"
+
+# Verify app info
+- assertVisible: "Restaurant App"
+- assertVisible: "Version 1.0.0"
+
+# Verify logout button
+- assertVisible:
+    id: "logout-button"
+
+# Test menu item navigation (tap Edit Profile)
+- tapOn:
+    id: "profile-edit-profile"
+# Note: In real implementation, this would navigate to edit screen
+# For template, it may be a no-op
+
+# Verify we're still on profile screen
+- assertVisible: "Guest User"

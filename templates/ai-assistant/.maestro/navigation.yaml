@@ -1,0 +1,29 @@
+appId: com.mobigen.app
+tags:
+  - smoke
+  - navigation
+---
+# Test: Navigation between all tabs
+# Validates that all tab navigation works correctly
+
+- launchApp:
+    clearState: true
+
+# Verify we start on Chat tab
+- assertVisible: "AI Assistant"
+- assertVisible: "Start a conversation or try one of these suggestions"
+
+# Navigate to History tab
+- tapOn: "History"
+- assertVisible: "No conversations yet"
+- assertVisible: "Start a new chat to begin a conversation"
+
+# Navigate to Settings tab
+- tapOn: "Settings"
+- assertVisible: "AI Model"
+- assertVisible: "Features"
+- assertVisible: "Model Parameters"
+
+# Navigate back to Chat tab
+- tapOn: "Chat"
+- assertVisible: "AI Assistant"

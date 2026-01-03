@@ -1,0 +1,41 @@
+appId: com.mobigen.fitness
+tags:
+  - smoke
+  - home
+  - quick-actions
+---
+# Test quick actions on home screen
+
+- launchApp:
+    clearState: true
+
+# Verify home screen loaded
+- assertVisible: "Welcome Back!"
+- assertVisible: "Quick Actions"
+
+# Test Log Workout quick action
+- assertVisible:
+    id: "home-log-workout-button"
+- tapOn:
+    id: "home-log-workout-button"
+- assertVisible: "Log Your Workout"
+
+# Go back to home
+- back
+
+# Test Browse Classes quick action
+- tapOn:
+    id: "home-browse-classes-button"
+- assertVisible:
+    text: "Category"
+- assertVisible:
+    text: "Difficulty"
+
+# Verify we're on Classes tab
+- assertVisible:
+    text: ".*Classes.*"
+    regex: true
+
+# Navigate back to Home
+- tapOn: "Home"
+- assertVisible: "Welcome Back!"

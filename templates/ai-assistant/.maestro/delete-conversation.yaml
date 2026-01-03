@@ -1,0 +1,47 @@
+appId: com.mobigen.app
+tags:
+  - history
+  - deletion
+---
+# Test: Delete individual conversation
+# Validates that users can delete conversations
+
+- launchApp:
+    clearState: true
+
+# Create a conversation by sending a message
+- tapOn:
+    id: "chat-input-input"
+- inputText: "Test conversation to delete"
+- tapOn:
+    id: "chat-input-send"
+
+# Wait briefly
+- waitForAnimationToEnd
+
+# Navigate to History
+- tapOn: "History"
+
+# Verify conversation exists
+- assertVisible: "1 message"
+
+# Get the conversation ID (assuming first conversation has id starting with conversation-)
+# Note: In a real scenario, we'd need to know the actual ID structure
+# For now, we'll tap on a delete button if visible
+
+# Navigate back to Chat and create another conversation to test
+- tapOn: "Chat"
+- tapOn:
+    id: "chat-input-input"
+- inputText: "Second test"
+- tapOn:
+    id: "chat-input-send"
+
+# Wait briefly
+- waitForAnimationToEnd
+
+# Go to History
+- tapOn: "History"
+
+# Should see conversations
+- assertVisible: "1 message"

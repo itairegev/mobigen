@@ -1,28 +1,51 @@
-appId: ${APP_BUNDLE_ID}
+appId: com.mobigen.restaurant
 tags:
   - smoke
   - menu
+  - browse
 ---
-# Test: Browse Menu
+# Browse menu categories and items
 - launchApp:
     clearState: true
 
 # Navigate to Menu tab
 - tapOn: "Menu"
+- assertVisible:
+    id: "category-all"
+
+# Verify All category is active by default
 - assertVisible: "All"
 
-# Browse all categories
+# Test category filtering - tap on first category
+- tapOn:
+    id: "category-appetizers"
+- assertVisible:
+    text: "Appetizers"
+
+# Tap All to show all items again
 - tapOn:
     id: "category-all"
+
+# Verify menu items are displayed
 - assertVisible:
-    id: "menu-item-1"
+    id: "menu-item-.*"
+    regex: true
 
-# Filter by category
+# Tap on a menu item to view details
 - tapOn:
-    id: "category-1"
-- assertVisible: "Appetizers"
+    id: "menu-item-.*"
+    regex: true
+    index: 0
 
-# View another category
-- tapOn:
-    id: "category-2"
-- assertVisible: "Main Courses"
+# Verify item detail screen
+- assertVisible: "Quantity"
+- assertVisible: "Special Instructions"
+- assertVisible:
+    id: "add-to-cart-button"
+
+# Navigate back
+- back
+
+# Verify we're back on the menu screen
+- assertVisible:
+    id: "category-all"

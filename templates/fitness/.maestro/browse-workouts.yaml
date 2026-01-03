@@ -1,0 +1,57 @@
+appId: com.mobigen.fitness
+tags:
+  - critical
+  - workouts
+  - browsing
+---
+# Test browsing workout library with filters
+
+- launchApp:
+    clearState: true
+
+# Navigate to Workouts tab
+- tapOn: "Workouts"
+- assertVisible:
+    text: "Category"
+
+# Test category filtering
+- tapOn:
+    id: "filter-category-strength"
+- assertVisible:
+    text: ".*Workouts"
+    regex: true
+
+# Switch to another category
+- tapOn:
+    id: "filter-category-cardio"
+- assertVisible:
+    text: ".*Workouts"
+    regex: true
+
+# Switch to full-body category
+- tapOn:
+    id: "filter-category-full-body"
+- assertVisible:
+    text: ".*Workouts"
+    regex: true
+
+# Test back to all workouts
+- tapOn:
+    id: "filter-category-all"
+- assertVisible:
+    text: ".*Workouts"
+    regex: true
+
+# Tap first workout card (if exists)
+- tapOn:
+    id: "workout-card-.*"
+    regex: true
+    optional: true
+
+# If workout detail loaded, verify details
+- assertVisible:
+    text: "Duration"
+    optional: true
+- assertVisible:
+    text: "Exercises"
+    optional: true

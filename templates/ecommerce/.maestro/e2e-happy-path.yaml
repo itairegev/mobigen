@@ -1,0 +1,87 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - e2e
+  - smoke
+---
+# Test: E2E Happy Path
+# Complete user journey: browse → view product → (add to cart) → checkout
+# Note: Some steps depend on product detail and checkout screens being implemented
+
+- launchApp:
+    clearState: true
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 1: Browse Products
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- assertVisible: "Shop"
+- assertVisible:
+    id: "search-input"
+
+# Verify products are displayed
+- assertVisible:
+    id: "product-1"
+- assertVisible:
+    id: "product-2"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 2: Search for Product
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- tapOn:
+    id: "search-input"
+- inputText: "Watch"
+- assertVisible: "Smart Watch Pro"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 3: View Product Details
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Clear search first to see all products
+- tapOn:
+    id: "search-input"
+- eraseText
+
+# Tap on a product
+- tapOn:
+    id: "product-2"
+- waitForAnimationToEnd
+
+# Note: Product detail screen assertions will be added when implemented
+
+# Return to shop
+- pressKey: Back
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 4: View Categories
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- tapOn: "Categories"
+- assertVisible:
+    text: ".*products"
+    regex: true
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 5: Check Cart
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- tapOn: "Cart"
+- assertVisible: "Your cart is empty"
+
+# Verify browse products button works
+- tapOn:
+    id: "browse-products-button"
+- assertVisible: "Shop"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 6: View Profile
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- tapOn: "Profile"
+- assertVisible: "Profile"
+
+# Return to shop to complete the journey
+- tapOn: "Shop"
+- assertVisible:
+    id: "search-input"

@@ -1,0 +1,21 @@
+appId: com.mobigen.restaurant
+tags:
+  - orders
+  - smoke
+---
+# Test orders screen
+- launchApp:
+    clearState: true
+
+# Navigate to Orders tab
+- tapOn: "Orders"
+
+# Initially should show no orders
+- assertVisible: "No orders yet"
+- assertVisible: "Your order history will appear here"
+
+# Note: Testing with actual orders would require:
+# 1. Placing an order through checkout
+# 2. Verifying it appears in active orders
+# 3. Checking order details
+# This template test validates the empty state

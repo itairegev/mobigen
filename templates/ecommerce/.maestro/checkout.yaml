@@ -1,0 +1,51 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - checkout
+  - e2e
+---
+# Test: Checkout Flow
+# Validates the complete checkout process from cart to order confirmation
+# Note: Requires items in cart and checkout screen implementation
+
+- launchApp:
+    clearState: false  # Preserve cart state
+
+# Navigate to Cart tab
+- tapOn: "Cart"
+
+# Only run if checkout button is visible (cart has items)
+- runFlow:
+    when:
+      visible:
+        id: "checkout-button"
+    commands:
+      # Verify cart has items and total
+      - assertVisible: "Total"
+      - assertVisible:
+          text: "\\$.*"
+          regex: true
+
+      # Tap checkout button
+      - tapOn:
+          id: "checkout-button"
+
+      # Wait for navigation
+      - waitForAnimationToEnd
+
+      # Verify checkout screen loads
+      # Note: Actual assertions depend on checkout screen implementation
+      # Expected elements: shipping address, payment method, place order button
+      # These will be added once checkout screen is implemented
+
+# Alternative flow if cart is empty
+- runFlow:
+    when:
+      visible: "Your cart is empty"
+    commands:
+      # Verify empty state message
+      - assertVisible: "Add some products to get started"
+
+      # Cannot proceed with checkout
+      - assertNotVisible:
+          id: "checkout-button"

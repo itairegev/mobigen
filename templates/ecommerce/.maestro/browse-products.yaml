@@ -1,0 +1,50 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - products
+  - search
+---
+# Test: Browse and Search Products
+# Validates product browsing, search functionality, and filtering
+
+- launchApp:
+    clearState: true
+
+# Verify products are displayed
+- assertVisible: "Shop"
+- assertVisible:
+    id: "search-input"
+
+# Verify at least one product is visible
+- assertVisible:
+    id: "product-1"
+
+# Test search functionality - search for headphones
+- tapOn:
+    id: "search-input"
+- inputText: "Headphones"
+- assertVisible: "Wireless Bluetooth Headphones"
+
+# Clear search by deleting text
+- tapOn:
+    id: "search-input"
+- eraseText
+
+# Verify products are shown again after clearing search
+- assertVisible:
+    id: "product-1"
+
+# Test search with no results
+- tapOn:
+    id: "search-input"
+- inputText: "NonexistentProduct12345"
+- assertVisible: "No products found"
+
+# Clear search again
+- tapOn:
+    id: "search-input"
+- eraseText
+
+# Verify product card displays price
+- assertVisible: "Wireless Bluetooth Headphones"
+- assertVisible: "$79.99"

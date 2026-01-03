@@ -1,0 +1,7 @@
+# Maestro Configuration for Mobigen E-commerce Template
+appId: com.mobigen.app
+---
+# Global configuration for all test flows
+env:
+  TIMEOUT: 30000
+  RETRY_COUNT: 3

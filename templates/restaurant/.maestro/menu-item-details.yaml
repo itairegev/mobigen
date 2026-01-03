@@ -1,0 +1,67 @@
+appId: com.mobigen.restaurant
+tags:
+  - menu
+  - modifiers
+---
+# Test menu item detail screen and modifiers
+- launchApp:
+    clearState: true
+
+# Navigate to Menu
+- tapOn: "Menu"
+
+# Open first menu item
+- tapOn:
+    id: "menu-item-.*"
+    regex: true
+    index: 0
+
+# Verify item detail components
+- assertVisible: "Quantity"
+- assertVisible: "Special Instructions"
+- assertVisible:
+    id: "quantity-decrease"
+- assertVisible:
+    id: "quantity-increase"
+- assertVisible:
+    id: "special-instructions-input"
+- assertVisible:
+    id: "add-to-cart-button"
+
+# Test quantity controls
+- assertVisible: "1"
+
+- tapOn:
+    id: "quantity-increase"
+- assertVisible: "2"
+
+- tapOn:
+    id: "quantity-increase"
+- assertVisible: "3"
+
+- tapOn:
+    id: "quantity-decrease"
+- assertVisible: "2"
+
+- tapOn:
+    id: "quantity-decrease"
+- assertVisible: "1"
+
+# Try to decrease below 1 (should stay at 1)
+- tapOn:
+    id: "quantity-decrease"
+- assertVisible: "1"
+
+# Test special instructions input
+- tapOn:
+    id: "special-instructions-input"
+- inputText: "Extra sauce on the side"
+- assertVisible: "Extra sauce on the side"
+
+# Add to cart should work
+- tapOn:
+    id: "add-to-cart-button"
+
+# Should navigate back
+- assertVisible:
+    id: "category-all"

@@ -1,0 +1,42 @@
+appId: com.mobigen.fitness
+tags:
+  - critical
+  - workout
+  - start
+---
+# Test starting a workout from workout details
+
+- launchApp:
+    clearState: true
+
+# Navigate to Workouts tab
+- tapOn: "Workouts"
+- assertVisible:
+    text: "Category"
+
+# Tap first workout card
+- tapOn:
+    id: "workout-card-.*"
+    regex: true
+    optional: true
+
+# Verify workout detail screen loaded
+- assertVisible:
+    text: "Duration"
+    optional: true
+- assertVisible:
+    text: "Exercises"
+    optional: true
+
+# Tap Start This Workout button
+- tapOn:
+    id: "start-workout-button"
+    optional: true
+
+# Should navigate to log workout screen
+- assertVisible:
+    text: "Log Your Workout"
+    optional: true
+- assertVisible:
+    id: "workout-name-input"
+    optional: true

@@ -1,0 +1,40 @@
+appId: com.mobigen.app
+tags:
+  - critical
+  - chat
+  - messaging
+---
+# Test: Send a message and receive response
+# Validates the core chat functionality
+
+- launchApp:
+    clearState: true
+
+# Verify initial state
+- assertVisible: "AI Assistant"
+- assertVisible: "Start a conversation or try one of these suggestions"
+
+# Tap on chat input
+- tapOn:
+    id: "chat-input-input"
+
+# Type a message
+- inputText: "Hello, how are you?"
+
+# Send the message
+- tapOn:
+    id: "chat-input-send"
+
+# Wait for typing indicator to appear
+- assertVisible:
+    id: "typing-indicator"
+    timeout: 2000
+
+# Wait for typing to complete and message to appear
+# Note: In a real app, this would wait for the AI response
+# For testing purposes, we verify the user message was sent
+- assertNotVisible: "Start a conversation or try one of these suggestions"
+
+# Verify the input is cleared and ready for next message
+- tapOn:
+    id: "chat-input-input"

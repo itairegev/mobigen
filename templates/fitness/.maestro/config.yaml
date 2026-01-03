@@ -1,0 +1,6 @@
+appId: com.mobigen.fitness
+name: Fitness App E2E Tests
+tags:
+  - fitness
+  - mobile
+  - e2e
