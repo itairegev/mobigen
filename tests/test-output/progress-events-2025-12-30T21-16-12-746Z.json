@@ -1,0 +1,975 @@
+[
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "starting",
+    "timestamp": "2025-12-30T20:47:02.499Z",
+    "data": {
+      "mode": "pipeline"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "setup",
+    "timestamp": "2025-12-30T20:47:02.501Z",
+    "data": {
+      "phase": "template-selection"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T20:47:02.501Z",
+    "data": {
+      "agent": "intent-analyzer",
+      "phase": "template-selection"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T20:47:12.248Z",
+    "data": {
+      "agent": "intent-analyzer",
+      "phase": "template-selection",
+      "selectedTemplate": "news"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "cloning",
+    "timestamp": "2025-12-30T20:47:12.249Z",
+    "data": {
+      "template": "news"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:start",
+    "timestamp": "2025-12-30T20:47:12.977Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "agents": [
+            "product-manager",
+            "technical-architect"
+          ]
+        },
+        {
+          "name": "design",
+          "agents": [
+            "ui-ux-expert"
+          ]
+        },
+        {
+          "name": "task-breakdown",
+          "agents": [
+            "lead-developer"
+          ]
+        },
+        {
+          "name": "implementation",
+          "agents": [
+            "developer"
+          ]
+        },
+        {
+          "name": "validation",
+          "agents": [
+            "validator"
+          ]
+        },
+        {
+          "name": "build-validation",
+          "agents": [
+            "build-validator"
+          ]
+        },
+        {
+          "name": "qa",
+          "agents": [
+            "qa"
+          ]
+        },
+        {
+          "name": "web-preview",
+          "agents": [
+            "web-deployer"
+          ]
+        },
+        {
+          "name": "android-build",
+          "agents": [
+            "apk-builder"
+          ]
+        }
+      ],
+      "totalPhases": 9
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T20:47:12.977Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "design",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 0,
+      "tasks": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": null,
+      "completedPhases": [],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:start",
+    "timestamp": "2025-12-30T20:47:12.977Z",
+    "data": {
+      "phase": "planning",
+      "phaseIndex": 1,
+      "totalPhases": 9,
+      "elapsedTime": 0,
+      "agents": [
+        "product-manager",
+        "technical-architect"
+      ]
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T20:47:12.977Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "running",
+          "icon": "🔄"
+        },
+        {
+          "name": "design",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 0,
+      "tasks": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": "planning",
+      "completedPhases": [],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T20:47:12.978Z",
+    "data": {
+      "agent": "product-manager",
+      "phase": "planning"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:attempt",
+    "timestamp": "2025-12-30T20:47:12.979Z",
+    "data": {
+      "agent": "product-manager",
+      "phase": "planning",
+      "attempt": 1,
+      "maxRetries": 3,
+      "status": "starting"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:success",
+    "timestamp": "2025-12-30T20:48:13.413Z",
+    "data": {
+      "agent": "product-manager",
+      "phase": "planning",
+      "attempt": 1,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T20:48:13.413Z",
+    "data": {
+      "agent": "product-manager",
+      "phase": "planning",
+      "success": true,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T20:48:13.413Z",
+    "data": {
+      "agent": "technical-architect",
+      "phase": "planning"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:attempt",
+    "timestamp": "2025-12-30T20:48:13.414Z",
+    "data": {
+      "agent": "technical-architect",
+      "phase": "planning",
+      "attempt": 1,
+      "maxRetries": 3,
+      "status": "starting"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:success",
+    "timestamp": "2025-12-30T20:48:57.822Z",
+    "data": {
+      "agent": "technical-architect",
+      "phase": "planning",
+      "attempt": 1,
+      "filesModified": 0
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T20:48:57.823Z",
+    "data": {
+      "agent": "technical-architect",
+      "phase": "planning",
+      "success": true,
+      "filesModified": 0
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:complete",
+    "timestamp": "2025-12-30T20:48:57.823Z",
+    "data": {
+      "phase": "planning",
+      "success": true,
+      "filesModified": 1,
+      "duration": 105,
+      "phaseIndex": 1,
+      "totalPhases": 9
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T20:48:57.823Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "design",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 11,
+      "tasks": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": null,
+      "completedPhases": [
+        "planning"
+      ],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:start",
+    "timestamp": "2025-12-30T20:48:57.823Z",
+    "data": {
+      "phase": "design",
+      "phaseIndex": 2,
+      "totalPhases": 9,
+      "elapsedTime": 105,
+      "agents": [
+        "ui-ux-expert"
+      ]
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T20:48:57.824Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "design",
+          "status": "running",
+          "icon": "🔄"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 11,
+      "tasks": {
+        "total": 2,
+        "completed": 2,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": "design",
+      "completedPhases": [
+        "planning"
+      ],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T20:48:57.826Z",
+    "data": {
+      "agent": "ui-ux-expert",
+      "phase": "design"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:attempt",
+    "timestamp": "2025-12-30T20:48:57.828Z",
+    "data": {
+      "agent": "ui-ux-expert",
+      "phase": "design",
+      "attempt": 1,
+      "maxRetries": 3,
+      "status": "starting"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:success",
+    "timestamp": "2025-12-30T20:58:55.746Z",
+    "data": {
+      "agent": "ui-ux-expert",
+      "phase": "design",
+      "attempt": 1,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T20:58:55.747Z",
+    "data": {
+      "agent": "ui-ux-expert",
+      "phase": "design",
+      "success": true,
+      "filesModified": 1
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:complete",
+    "timestamp": "2025-12-30T20:58:55.747Z",
+    "data": {
+      "phase": "design",
+      "success": true,
+      "filesModified": 1,
+      "duration": 598,
+      "phaseIndex": 2,
+      "totalPhases": 9
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T20:58:55.748Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "design",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 22,
+      "tasks": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": null,
+      "completedPhases": [
+        "planning",
+        "design"
+      ],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:start",
+    "timestamp": "2025-12-30T20:58:55.748Z",
+    "data": {
+      "phase": "task-breakdown",
+      "phaseIndex": 3,
+      "totalPhases": 9,
+      "elapsedTime": 703,
+      "agents": [
+        "lead-developer"
+      ]
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T20:58:55.748Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "design",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "running",
+          "icon": "🔄"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 22,
+      "tasks": {
+        "total": 3,
+        "completed": 3,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": "task-breakdown",
+      "completedPhases": [
+        "planning",
+        "design"
+      ],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T20:58:55.749Z",
+    "data": {
+      "agent": "lead-developer",
+      "phase": "task-breakdown"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:attempt",
+    "timestamp": "2025-12-30T20:58:55.750Z",
+    "data": {
+      "agent": "lead-developer",
+      "phase": "task-breakdown",
+      "attempt": 1,
+      "maxRetries": 3,
+      "status": "starting"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:success",
+    "timestamp": "2025-12-30T21:00:52.327Z",
+    "data": {
+      "agent": "lead-developer",
+      "phase": "task-breakdown",
+      "attempt": 1,
+      "filesModified": 0
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:complete",
+    "timestamp": "2025-12-30T21:00:52.327Z",
+    "data": {
+      "agent": "lead-developer",
+      "phase": "task-breakdown",
+      "success": true,
+      "filesModified": 0
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:complete",
+    "timestamp": "2025-12-30T21:00:52.327Z",
+    "data": {
+      "phase": "task-breakdown",
+      "success": true,
+      "filesModified": 0,
+      "duration": 117,
+      "phaseIndex": 3,
+      "totalPhases": 9
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T21:00:52.327Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "design",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "implementation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 33,
+      "tasks": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": null,
+      "completedPhases": [
+        "planning",
+        "design",
+        "task-breakdown"
+      ],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "phase:start",
+    "timestamp": "2025-12-30T21:00:52.327Z",
+    "data": {
+      "phase": "implementation",
+      "phaseIndex": 4,
+      "totalPhases": 9,
+      "elapsedTime": 819,
+      "agents": [
+        "developer"
+      ]
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "pipeline:status",
+    "timestamp": "2025-12-30T21:00:52.327Z",
+    "data": {
+      "phases": [
+        {
+          "name": "planning",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "design",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "task-breakdown",
+          "status": "completed",
+          "icon": "✅"
+        },
+        {
+          "name": "implementation",
+          "status": "running",
+          "icon": "🔄"
+        },
+        {
+          "name": "validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "build-validation",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "qa",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "web-preview",
+          "status": "pending",
+          "icon": "⏳"
+        },
+        {
+          "name": "android-build",
+          "status": "pending",
+          "icon": "⏳"
+        }
+      ],
+      "progress": 33,
+      "tasks": {
+        "total": 4,
+        "completed": 4,
+        "failed": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "currentPhase": "implementation",
+      "completedPhases": [
+        "planning",
+        "design",
+        "task-breakdown"
+      ],
+      "failedPhases": []
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:start",
+    "timestamp": "2025-12-30T21:00:52.329Z",
+    "data": {
+      "agent": "developer",
+      "phase": "implementation"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:attempt",
+    "timestamp": "2025-12-30T21:00:52.330Z",
+    "data": {
+      "agent": "developer",
+      "phase": "implementation",
+      "attempt": 1,
+      "maxRetries": 3,
+      "status": "starting"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:error",
+    "timestamp": "2025-12-30T21:10:52.330Z",
+    "data": {
+      "agent": "developer",
+      "phase": "implementation",
+      "attempt": 1,
+      "maxRetries": 3,
+      "error": "Agent developer timed out after 600000ms",
+      "isTimeout": true,
+      "isRateLimit": false,
+      "willRetry": true
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:waiting",
+    "timestamp": "2025-12-30T21:10:52.331Z",
+    "data": {
+      "agent": "developer",
+      "phase": "implementation",
+      "waitTime": 10000,
+      "reason": "timeout"
+    }
+  },
+  {
+    "projectId": "a9626ead-d791-4b8e-8a7d-c1f4094b23a7",
+    "stage": "agent:attempt",
+    "timestamp": "2025-12-30T21:11:02.333Z",
+    "data": {
+      "agent": "developer",
+      "phase": "implementation",
+      "attempt": 2,
+      "maxRetries": 3,
+      "status": "retrying"
+    }
+  }
+]

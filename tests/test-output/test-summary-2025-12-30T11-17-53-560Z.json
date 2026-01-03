@@ -1,0 +1,17 @@
+{
+  "testProjectId": "c8f1be82-6ff5-43c9-9703-92333b08922c",
+  "testUserId": "4ca558e4-5ba1-4286-9349-78d609fc348f",
+  "projectPath": "/Users/itairegev/projects/mobigen/projects/c8f1be82-6ff5-43c9-9703-92333b08922c",
+  "timestamp": "2025-12-30T11:17:53.560Z",
+  "progressEventsCount": 18,
+  "success": false,
+  "filesGenerated": 1,
+  "files": [
+    "/Users/itairegev/projects/mobigen/projects/c8f1be82-6ff5-43c9-9703-92333b08922c/product-requirements.json"
+  ],
+  "qaScore": null,
+  "readyForProduction": false,
+  "requiresReview": true,
+  "phasesCompleted": [],
+  "errors": []
+}
