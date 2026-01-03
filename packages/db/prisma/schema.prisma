@@ -591,6 +591,33 @@ model OTAUpdateEvent {
   @@map("ota_update_events")
 }
 
+model RollbackEvent {
+  id            String   @id @default(uuid())
+  projectId     String   @map("project_id")
+
+  // Rollback details
+  fromVersion   Int      @map("from_version")
+  toVersion     Int      @map("to_version")
+  fromUpdateId  String   @map("from_update_id")
+  toUpdateId    String   @map("to_update_id")
+  reason        String?
+
+  // Execution details
+  performedBy   String   @map("performed_by") // User ID
+  performedAt   DateTime @map("performed_at")
+  success       Boolean  @default(false)
+  filesRestored Int      @default(0) @map("files_restored")
+  durationMs    Int      @map("duration_ms")
+
+  // Error tracking
+  error         String?  @db.Text
+
+  @@index([projectId])
+  @@index([performedAt])
+  @@index([success])
+  @@map("rollback_events")
+}
+
 // ============================================================================
 // TEMPLATE MARKETPLACE
 // ============================================================================

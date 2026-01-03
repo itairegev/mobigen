@@ -331,6 +331,94 @@ export function validateConfig(): { valid: boolean; errors: string[] } {
   return { valid: errors.length === 0, errors };
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// OTA UPDATES CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+export type OTAChannel = 'staging' | 'production' | 'development';
+
+export interface OTAChannelConfig {
+  name: string;
+  description: string;
+  runtimeVersion?: string;
+  isDefault: boolean;
+}
+
+export const OTA_CONFIG = {
+  // Channel configurations
+  channels: {
+    production: {
+      name: 'production',
+      description: 'Production releases for end users',
+      isDefault: true,
+    },
+    staging: {
+      name: 'staging',
+      description: 'Pre-release testing environment',
+      isDefault: false,
+    },
+    development: {
+      name: 'development',
+      description: 'Development and QA builds',
+      isDefault: false,
+    },
+  } as Record<OTAChannel, OTAChannelConfig>,
+
+  // Version naming conventions
+  versioning: {
+    // Format: {major}.{minor}.{patch}+{build}
+    format: 'semver',
+    // Auto-increment patch version for OTA updates
+    autoIncrement: 'patch',
+    // Prefix for runtime versions
+    runtimePrefix: 'exposdk:',
+  },
+
+  // EAS Update configuration
+  eas: {
+    // Default runtime version if not specified
+    defaultRuntimeVersion: '1.0.0',
+    // Update URL base
+    updateUrlBase: process.env.EXPO_UPDATE_URL || 'https://u.expo.dev',
+    // Expo access token from env
+    accessToken: process.env.EXPO_ACCESS_TOKEN,
+  },
+
+  // Rollout settings
+  rollout: {
+    // Default rollout percentage for new updates
+    defaultPercent: 100,
+    // Minimum percentage allowed
+    minPercent: 0,
+    // Maximum percentage allowed
+    maxPercent: 100,
+    // Gradual rollout step increments
+    gradualSteps: [10, 25, 50, 75, 100],
+  },
+
+  // Update limits
+  limits: {
+    // Maximum number of updates to keep per channel
+    maxUpdatesPerChannel: 100,
+    // Maximum number of simultaneous rollouts
+    maxSimultaneousRollouts: 5,
+    // Days to keep archived updates before deletion
+    archiveRetentionDays: 90,
+  },
+
+  // Monitoring thresholds
+  monitoring: {
+    // Error rate threshold for automatic rollback
+    errorRateThreshold: 0.05, // 5%
+    // Minimum downloads before considering rollback
+    minDownloadsForRollback: 100,
+    // Success rate threshold (below this triggers alert)
+    successRateThreshold: 0.95, // 95%
+  },
+} as const;
+
+export type OTAConfigType = typeof OTA_CONFIG;
+
 // Export all as a single config object for convenience
 export const CONFIG = {
   tiers: TIER_LIMITS,
@@ -343,6 +431,7 @@ export const CONFIG = {
   logging: LOGGING_CONFIG,
   models: MODEL_CONFIG,
   pipeline: PIPELINE_PHASES,
+  ota: OTA_CONFIG,
 };
 
 export default CONFIG;

@@ -189,7 +189,7 @@ export const otaUpdatesRouter = router({
   // ============================================================================
 
   /**
-   * Rollback to a previous update
+   * Rollback to a previous update (legacy - kept for compatibility)
    */
   rollback: protectedProcedure
     .input(RollbackUpdateSchema)
@@ -211,6 +211,139 @@ export const otaUpdatesRouter = router({
       }
 
       return service.rollbackUpdate(input, ctx.userId!);
+    }),
+
+  /**
+   * Rollback to previous version
+   */
+  rollbackToPrevious: protectedProcedure
+    .input(z.object({
+      projectId: z.string().uuid(),
+      reason: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify project ownership
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input.projectId, userId: ctx.userId },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
+      }
+
+      // Import RollbackService dynamically to avoid circular dependencies
+      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
+      const rollbackService = new RollbackService(ctx.prisma);
+
+      return rollbackService.rollbackToPrevious(
+        { projectId: input.projectId, reason: input.reason },
+        ctx.userId!
+      );
+    }),
+
+  /**
+   * Rollback to specific version
+   */
+  rollbackToVersion: protectedProcedure
+    .input(z.object({
+      projectId: z.string().uuid(),
+      targetVersion: z.number().int().positive(),
+      reason: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify project ownership
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input.projectId, userId: ctx.userId },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
+      }
+
+      // Import RollbackService dynamically to avoid circular dependencies
+      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
+      const rollbackService = new RollbackService(ctx.prisma);
+
+      return rollbackService.rollbackToVersion(
+        {
+          projectId: input.projectId,
+          targetVersion: input.targetVersion,
+          reason: input.reason,
+        },
+        ctx.userId!
+      );
+    }),
+
+  /**
+   * Check if rollback is possible
+   */
+  canRollback: protectedProcedure
+    .input(z.object({
+      projectId: z.string().uuid(),
+      targetVersion: z.number().int().positive().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      // Verify project ownership
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input.projectId, userId: ctx.userId },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
+      }
+
+      // Import RollbackService dynamically to avoid circular dependencies
+      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
+      const rollbackService = new RollbackService(ctx.prisma);
+
+      return rollbackService.canRollback(input.projectId, input.targetVersion);
+    }),
+
+  /**
+   * Get rollback status for a project
+   */
+  getRollbackStatus: protectedProcedure
+    .input(z.object({ projectId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      // Verify project ownership
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input.projectId, userId: ctx.userId },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
+      }
+
+      // Import RollbackService dynamically to avoid circular dependencies
+      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
+      const rollbackService = new RollbackService(ctx.prisma);
+
+      return rollbackService.getRollbackStatus(input.projectId);
+    }),
+
+  /**
+   * Get rollback history for a project
+   */
+  getRollbackHistory: protectedProcedure
+    .input(z.object({
+      projectId: z.string().uuid(),
+      limit: z.number().int().min(1).max(100).default(50),
+    }))
+    .query(async ({ ctx, input }) => {
+      // Verify project ownership
+      const project = await ctx.prisma.project.findFirst({
+        where: { id: input.projectId, userId: ctx.userId },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
+      }
+
+      // Import RollbackService dynamically to avoid circular dependencies
+      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
+      const rollbackService = new RollbackService(ctx.prisma);
+
+      return rollbackService.getRollbackHistory(input.projectId, input.limit);
     }),
 
   // ============================================================================

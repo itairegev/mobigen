@@ -40,6 +40,19 @@ import {
 // Legacy orchestrator available as fallback (set ORCHESTRATOR_MODE=legacy to use)
 import { generateApp as generateAppLegacy } from './orchestrator';
 import type { SDKMessage } from '@mobigen/ai';
+// OTA update service
+import { getOTAService } from './ota-service';
+import type { OTAPublishOptions, OTARollbackOptions } from './ota-types';
+// Version management
+import { VersionManager } from './version-manager';
+import {
+  validateVersionFormat,
+  validateVersionIncrement,
+  checkCompatibility,
+  detectVersionType,
+  suggestNextVersion,
+  getVersionSummary,
+} from './version-validation';
 
 // Inline observability utilities (avoiding package dependency for now)
 type HealthStatus = 'healthy' | 'degraded' | 'unhealthy';
@@ -1347,6 +1360,309 @@ app.get('/api/projects/:projectId/preview', async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+// VERSION MANAGEMENT ENDPOINTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Get current version for a project
+app.get('/api/projects/:projectId/version', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const version = await VersionManager.getCurrentVersion(projectId);
+
+    if (!version) {
+      return res.status(404).json({
+        success: false,
+        error: 'No version found for this project',
+      });
+    }
+
+    res.json({
+      success: true,
+      version: version.version,
+      runtimeVersion: version.runtimeVersion,
+      createdAt: version.createdAt,
+      notes: version.notes,
+      channel: version.channel,
+      summary: getVersionSummary(version.version),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get version',
+    });
+  }
+});
+
+// Increment version (major, minor, or patch)
+app.post('/api/projects/:projectId/version/increment', async (req, res) => {
+  const { projectId } = req.params;
+  const { type, notes } = req.body;
+
+  // Validate type
+  if (!type || !['major', 'minor', 'patch'].includes(type)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid version type. Must be one of: major, minor, patch',
+    });
+  }
+
+  try {
+    const version = await VersionManager.incrementVersion(projectId, type, notes);
+
+    res.json({
+      success: true,
+      version: version.version,
+      runtimeVersion: version.runtimeVersion,
+      createdAt: version.createdAt,
+      notes: version.notes,
+      channel: version.channel,
+      type,
+      summary: getVersionSummary(version.version),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to increment version',
+    });
+  }
+});
+
+// Set specific version
+app.put('/api/projects/:projectId/version', async (req, res) => {
+  const { projectId } = req.params;
+  const { version, notes } = req.body;
+
+  if (!version) {
+    return res.status(400).json({
+      success: false,
+      error: 'Version is required',
+    });
+  }
+
+  // Validate version format
+  const validation = validateVersionFormat(version);
+  if (!validation.valid) {
+    return res.status(400).json({
+      success: false,
+      error: validation.error,
+    });
+  }
+
+  try {
+    const newVersion = await VersionManager.setVersion(projectId, version, notes);
+
+    res.json({
+      success: true,
+      version: newVersion.version,
+      runtimeVersion: newVersion.runtimeVersion,
+      createdAt: newVersion.createdAt,
+      notes: newVersion.notes,
+      channel: newVersion.channel,
+      summary: getVersionSummary(newVersion.version),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to set version',
+    });
+  }
+});
+
+// Get version history
+app.get('/api/projects/:projectId/versions', async (req, res) => {
+  const { projectId } = req.params;
+  const { channel, limit, offset } = req.query;
+
+  try {
+    const history = await VersionManager.getVersionHistory(projectId, {
+      channel: channel as string | undefined,
+      limit: limit ? parseInt(limit as string) : undefined,
+      offset: offset ? parseInt(offset as string) : undefined,
+    });
+
+    res.json({
+      success: true,
+      projectId,
+      count: history.length,
+      versions: history.map(v => ({
+        version: v.version,
+        runtimeVersion: v.runtimeVersion,
+        createdAt: v.createdAt,
+        notes: v.notes,
+        channel: v.channel,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get version history',
+    });
+  }
+});
+
+// Get all versions across all channels
+app.get('/api/projects/:projectId/versions/all', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const allVersions = await VersionManager.getAllVersions(projectId);
+
+    res.json({
+      success: true,
+      projectId,
+      channels: allVersions,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get all versions',
+    });
+  }
+});
+
+// Validate version format
+app.post('/api/version/validate', (req, res) => {
+  const { version } = req.body;
+
+  if (!version) {
+    return res.status(400).json({
+      success: false,
+      error: 'Version is required',
+    });
+  }
+
+  const result = validateVersionFormat(version);
+
+  res.json({
+    success: result.valid,
+    valid: result.valid,
+    error: result.error,
+    summary: result.valid ? getVersionSummary(version) : null,
+  });
+});
+
+// Check version compatibility
+app.post('/api/version/compatibility', (req, res) => {
+  const { version1, version2 } = req.body;
+
+  if (!version1 || !version2) {
+    return res.status(400).json({
+      success: false,
+      error: 'Both version1 and version2 are required',
+    });
+  }
+
+  const result = checkCompatibility(version1, version2);
+
+  res.json({
+    success: true,
+    compatible: result.compatible,
+    reason: result.reason,
+    version1: {
+      version: version1,
+      runtimeVersion: result.runtimeVersion1,
+    },
+    version2: {
+      version: version2,
+      runtimeVersion: result.runtimeVersion2,
+    },
+  });
+});
+
+// Suggest next version
+app.post('/api/version/suggest', (req, res) => {
+  const { currentVersion, type } = req.body;
+
+  if (!currentVersion || !type) {
+    return res.status(400).json({
+      success: false,
+      error: 'Both currentVersion and type are required',
+    });
+  }
+
+  if (!['major', 'minor', 'patch'].includes(type)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid type. Must be one of: major, minor, patch',
+    });
+  }
+
+  const suggested = suggestNextVersion(currentVersion, type);
+
+  if (!suggested) {
+    return res.status(400).json({
+      success: false,
+      error: 'Failed to suggest version. Check that currentVersion is valid.',
+    });
+  }
+
+  res.json({
+    success: true,
+    currentVersion,
+    type,
+    suggestedVersion: suggested,
+    summary: getVersionSummary(suggested),
+  });
+});
+
+// Get or create channels
+app.get('/api/projects/:projectId/channels', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const channels = await VersionManager.getChannels(projectId);
+
+    res.json({
+      success: true,
+      projectId,
+      count: channels.length,
+      channels,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get channels',
+    });
+  }
+});
+
+// Create a new channel
+app.post('/api/projects/:projectId/channels', async (req, res) => {
+  const { projectId } = req.params;
+  const { name, description } = req.body;
+
+  if (!name) {
+    return res.status(400).json({
+      success: false,
+      error: 'Channel name is required',
+    });
+  }
+
+  // Validate channel name (alphanumeric, dash, underscore)
+  if (!/^[a-z0-9-_]+$/i.test(name)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid channel name. Use only alphanumeric characters, dashes, and underscores.',
+    });
+  }
+
+  try {
+    const channel = await VersionManager.createChannel(projectId, name, description);
+
+    res.json({
+      success: true,
+      channel,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create channel',
+    });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
 // TESTING ENDPOINTS
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -1508,6 +1824,246 @@ app.get('/api/projects/:projectId/test/summary', async (req, res) => {
       tier3: `POST /api/projects/${projectId}/test/tier3`,
     },
   });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// OTA UPDATE ROUTES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Validation schema for publishing OTA updates
+const PublishOTASchema = z.object({
+  channelId: z.string().uuid(),
+  message: z.string().min(1).max(500),
+  changeType: z.enum(['feature', 'fix', 'style', 'content']).optional(),
+  platform: z.enum(['ios', 'android', 'all']).default('all'),
+  rolloutPercent: z.number().int().min(0).max(100).default(100),
+});
+
+// Publish a new OTA update
+app.post('/api/projects/:projectId/updates/publish', async (req, res) => {
+  const { projectId } = req.params;
+  const userId = req.body.userId || 'system'; // In production, get from auth context
+
+  try {
+    // Validate request body
+    const validated = PublishOTASchema.parse(req.body);
+
+    // Create publish options
+    const options: OTAPublishOptions = {
+      projectId,
+      channelId: validated.channelId,
+      message: validated.message,
+      changeType: validated.changeType,
+      platform: validated.platform,
+      rolloutPercent: validated.rolloutPercent,
+    };
+
+    // Get OTA service
+    const otaService = getOTAService();
+
+    // Publish the update
+    console.log(`[api] Publishing OTA update for project ${projectId}`);
+    const update = await otaService.publishUpdate(options, userId);
+
+    res.json({
+      success: true,
+      update: {
+        id: update.id,
+        version: update.version,
+        status: update.status,
+        platform: update.platform,
+        message: update.message,
+        rolloutPercent: update.rolloutPercent,
+        manifestUrl: update.manifestUrl,
+        publishedAt: update.publishedAt,
+        createdAt: update.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to publish OTA update:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get all updates for a project
+app.get('/api/projects/:projectId/updates', async (req, res) => {
+  const { projectId } = req.params;
+  const channelId = req.query.channelId as string | undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
+
+  try {
+    const otaService = getOTAService();
+    const updates = await otaService.listUpdates(projectId, channelId, limit);
+
+    res.json({
+      success: true,
+      updates: updates.map(u => ({
+        id: u.id,
+        version: u.version,
+        status: u.status,
+        platform: u.platform,
+        message: u.message,
+        changeType: u.changeType,
+        rolloutPercent: u.rolloutPercent,
+        downloadCount: u.downloadCount,
+        errorCount: u.errorCount,
+        manifestUrl: u.manifestUrl,
+        publishedAt: u.publishedAt,
+        createdAt: u.createdAt,
+      })),
+      total: updates.length,
+    });
+  } catch (error) {
+    console.error('[api] Failed to list OTA updates:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get specific update status with metrics
+app.get('/api/projects/:projectId/updates/:updateId', async (req, res) => {
+  const { projectId, updateId } = req.params;
+
+  try {
+    const otaService = getOTAService();
+
+    // Get update status
+    const status = await otaService.getUpdateStatus(projectId, updateId);
+
+    // Get metrics
+    const metrics = await otaService.getUpdateMetrics(updateId);
+
+    // Get health info
+    const health = await otaService.getUpdateHealth(updateId);
+
+    res.json({
+      success: true,
+      status,
+      metrics: metrics.map(m => ({
+        platform: m.platform,
+        successCount: m.successCount,
+        failureCount: m.failureCount,
+        rollbackCount: m.rollbackCount,
+        successRate: m.successRate,
+        avgDownloadTimeMs: m.avgDownloadTimeMs,
+        avgApplyTimeMs: m.avgApplyTimeMs,
+      })),
+      recentErrors: health.recentErrors,
+    });
+  } catch (error) {
+    console.error('[api] Failed to get OTA update status:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Rollback to a previous update
+app.post('/api/projects/:projectId/updates/:updateId/rollback', async (req, res) => {
+  const { projectId, updateId } = req.params;
+  const userId = req.body.userId || 'system'; // In production, get from auth context
+  const targetUpdateId = req.body.targetUpdateId as string | undefined;
+
+  try {
+    const otaService = getOTAService();
+
+    const options: OTARollbackOptions = {
+      updateId,
+      targetUpdateId,
+    };
+
+    console.log(`[api] Rolling back update ${updateId} for project ${projectId}`);
+    const rolledBackUpdate = await otaService.rollbackTo(projectId, options, userId);
+
+    res.json({
+      success: true,
+      update: {
+        id: rolledBackUpdate.id,
+        version: rolledBackUpdate.version,
+        status: rolledBackUpdate.status,
+        message: rolledBackUpdate.message,
+        publishedAt: rolledBackUpdate.publishedAt,
+      },
+      message: `Successfully rolled back to update ${rolledBackUpdate.id}`,
+    });
+  } catch (error) {
+    console.error('[api] Failed to rollback OTA update:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get update channels for a project
+app.get('/api/projects/:projectId/updates/channels', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const otaService = getOTAService();
+    const channels = await otaService.listChannels(projectId);
+
+    res.json({
+      success: true,
+      channels: channels.map(c => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        isDefault: c.isDefault,
+        branchName: c.branchName,
+        runtimeVersion: c.runtimeVersion,
+        createdAt: c.createdAt,
+      })),
+    });
+  } catch (error) {
+    console.error('[api] Failed to list channels:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Create a new update channel
+app.post('/api/projects/:projectId/updates/channels', async (req, res) => {
+  const { projectId } = req.params;
+  const { name, isDefault = false } = req.body;
+
+  if (!name || typeof name !== 'string') {
+    return res.status(400).json({
+      success: false,
+      error: 'Channel name is required',
+    });
+  }
+
+  try {
+    const otaService = getOTAService();
+    const channel = await otaService.createChannel(projectId, name, isDefault);
+
+    res.json({
+      success: true,
+      channel: {
+        id: channel.id,
+        name: channel.name,
+        description: channel.description,
+        isDefault: channel.isDefault,
+        branchName: channel.branchName,
+        createdAt: channel.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to create channel:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
 });
 
 export { app, httpServer, io };
