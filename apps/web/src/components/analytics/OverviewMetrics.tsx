@@ -1,39 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@mobigen/ui';
-
-interface MetricCardProps {
-  title: string;
-  value: string | number;
-  change?: number;
-  subtitle?: string;
-  icon?: string;
-}
-
-function MetricCard({ title, value, change, subtitle, icon }: MetricCardProps) {
-  const isPositive = change !== undefined && change >= 0;
-  const changeColor = isPositive ? 'text-green-600' : 'text-red-600';
-  const changeBg = isPositive ? 'bg-green-50' : 'bg-red-50';
-
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600">{title}</CardTitle>
-        {icon && <span className="text-2xl">{icon}</span>}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-gray-900">{value}</div>
-        {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
-        {change !== undefined && (
-          <div className={`mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${changeBg} ${changeColor}`}>
-            <span>{isPositive ? '↑' : '↓'}</span>
-            <span>{Math.abs(change).toFixed(1)}%</span>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
+import { MetricCard } from './MetricCard';
 
 interface OverviewMetricsProps {
   data?: {
