@@ -916,3 +916,104 @@ model AppMetadata {
   @@index([projectId])
   @@map("app_metadata")
 }
+
+// ============================================================================
+// SLA MONITORING FOR ENTERPRISE USERS
+// ============================================================================
+
+model UptimeRecord {
+  id              String    @id @default(uuid())
+  serviceId       String    @map("service_id")
+  serviceType     String    @map("service_type") // api, generator, builder, preview, analytics, database
+  checkTimestamp  DateTime  @map("check_timestamp")
+  isHealthy       Boolean   @map("is_healthy")
+  responseTimeMs  Int?      @map("response_time_ms")
+  statusCode      Int?      @map("status_code")
+  region          String?
+  errorMessage    String?   @map("error_message") @db.Text
+  errorCode       String?   @map("error_code")
+  metadata        Json      @default("{}")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@index([serviceId])
+  @@index([serviceType])
+  @@index([checkTimestamp])
+  @@index([isHealthy])
+  @@map("uptime_records")
+}
+
+model Incident {
+  id                 String    @id @default(uuid())
+  serviceId          String    @map("service_id")
+  serviceType        String    @map("service_type")
+  title              String
+  description        String    @db.Text
+  severity           String // critical, major, minor, info
+  status             String // investigating, identified, monitoring, resolved
+  affectedRegions    String[]  @default([]) @map("affected_regions")
+  affectedUsers      Int?      @map("affected_users")
+  impactDescription  String?   @map("impact_description") @db.Text
+  detectedAt         DateTime  @map("detected_at")
+  identifiedAt       DateTime? @map("identified_at")
+  resolvedAt         DateTime? @map("resolved_at")
+  durationMs         Int?      @map("duration_ms")
+  rootCause          String?   @map("root_cause") @db.Text
+  resolution         String?   @db.Text
+  updates            Json      @default("[]")
+  metadata           Json      @default("{}")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  @@index([serviceId])
+  @@index([serviceType])
+  @@index([severity])
+  @@index([status])
+  @@index([detectedAt])
+  @@map("incidents")
+}
+
+model SLAReport {
+  id                String   @id @default(uuid())
+  generatedAt       DateTime @map("generated_at")
+  periodStart       DateTime @map("period_start")
+  periodEnd         DateTime @map("period_end")
+  overallSLA        Float    @map("overall_sla")
+  metSLATarget      Boolean  @map("met_sla_target")
+  targetSLA         Float    @map("target_sla")
+  services          Json     @default("[]")
+  totalIncidents    Int      @map("total_incidents")
+  totalDowntimeMs   Int      @map("total_downtime_ms")
+  comparisonPeriod  Json?    @map("comparison_period")
+  uptimeTrend       Float?   @map("uptime_trend")
+  incidentTrend     Float?   @map("incident_trend")
+  notableIncidents  Json     @default("[]") @map("notable_incidents")
+  slaCreditsOwed    Json     @default("[]") @map("sla_credits_owed")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  @@index([periodStart])
+  @@index([periodEnd])
+  @@index([metSLATarget])
+  @@map("sla_reports")
+}
+
+model SLAAlert {
+  id           String    @id @default(uuid())
+  timestamp    DateTime
+  type         String // incident_detected, sla_breach, performance_degradation, incident_resolved
+  severity     String // critical, major, minor, info
+  serviceId    String    @map("service_id")
+  serviceType  String    @map("service_type")
+  incidentId   String?   @map("incident_id")
+  title        String
+  message      String    @db.Text
+  recipients   String[]  @default([])
+  sent         Boolean   @default(false)
+  sentAt       DateTime? @map("sent_at")
+  metadata     Json      @default("{}")
+
+  @@index([timestamp])
+  @@index([type])
+  @@index([severity])
+  @@index([serviceId])
+  @@index([sent])
+  @@map("sla_alerts")
+}
