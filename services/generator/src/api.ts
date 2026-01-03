@@ -43,6 +43,13 @@ import type { SDKMessage } from '@mobigen/ai';
 // OTA update service
 import { getOTAService } from './ota-service';
 import type { OTAPublishOptions, OTARollbackOptions } from './ota-types';
+// Multi-channel OTA service
+import { getChannelService } from './channel-service';
+import type {
+  CreateChannelInput,
+  UpdateChannelInput,
+  PromoteUpdateInput,
+} from './channel-types';
 // Version management
 import { VersionManager } from './version-manager';
 import {
@@ -2062,6 +2069,256 @@ app.post('/api/projects/:projectId/updates/channels', async (req, res) => {
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MULTI-CHANNEL OTA ROUTES (Enhanced Channel Management)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Validation schemas
+const CreateChannelSchemaAPI = z.object({
+  name: z.string().min(1).max(50),
+  description: z.string().optional(),
+  config: z.object({
+    autoUpdate: z.boolean().default(true),
+    rolloutPercentage: z.number().int().min(0).max(100).default(100),
+    minVersion: z.string().optional(),
+    maxRetries: z.number().int().min(0).max(10).optional(),
+    updateCheckInterval: z.number().int().min(60).optional(),
+    notifyBeforeUpdate: z.boolean().optional(),
+    metadata: z.record(z.unknown()).optional(),
+  }).optional(),
+  isDefault: z.boolean().default(false),
+});
+
+const UpdateChannelSchemaAPI = z.object({
+  name: z.string().min(1).max(50).optional(),
+  description: z.string().optional(),
+  config: z.object({
+    autoUpdate: z.boolean().optional(),
+    rolloutPercentage: z.number().int().min(0).max(100).optional(),
+    minVersion: z.string().optional(),
+    maxRetries: z.number().int().min(0).max(10).optional(),
+    updateCheckInterval: z.number().int().min(60).optional(),
+    notifyBeforeUpdate: z.boolean().optional(),
+    metadata: z.record(z.unknown()).optional(),
+  }).optional(),
+  isDefault: z.boolean().optional(),
+});
+
+const PromoteUpdateSchemaAPI = z.object({
+  updateId: z.string().uuid(),
+  targetChannelId: z.string().uuid(),
+  message: z.string().optional(),
+  changeType: z.enum(['feature', 'fix', 'style', 'content']).optional(),
+  rolloutPercent: z.number().int().min(0).max(100).optional(),
+});
+
+// Get all channels for a project (enhanced with config)
+app.get('/api/projects/:projectId/channels/v2', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const channelService = getChannelService();
+    const channels = await channelService.getChannels(projectId);
+
+    res.json({
+      success: true,
+      projectId,
+      count: channels.length,
+      channels: channels.map(c => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        config: c.config,
+        branchName: c.branchName,
+        isDefault: c.isDefault,
+        createdAt: c.createdAt,
+        updatedAt: c.updatedAt,
+      })),
+    });
+  } catch (error) {
+    console.error('[api] Failed to get channels:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// Get specific channel with summary
+app.get('/api/projects/:projectId/channels/:channelId', async (req, res) => {
+  const { projectId, channelId } = req.params;
+
+  try {
+    const channelService = getChannelService();
+    const summary = await channelService.getChannelSummary(projectId, channelId);
+
+    res.json({
+      success: true,
+      channel: summary,
+    });
+  } catch (error) {
+    console.error('[api] Failed to get channel:', error);
+    res.status(404).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Channel not found',
+    });
+  }
+});
+
+// Create a new channel with full configuration
+app.post('/api/projects/:projectId/channels/v2', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const validated = CreateChannelSchemaAPI.parse(req.body);
+
+    const channelService = getChannelService();
+    const channel = await channelService.createChannel(projectId, validated as CreateChannelInput);
+
+    res.json({
+      success: true,
+      channel: {
+        id: channel.id,
+        name: channel.name,
+        description: channel.description,
+        config: channel.config,
+        branchName: channel.branchName,
+        isDefault: channel.isDefault,
+        createdAt: channel.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to create channel:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create channel',
+    });
+  }
+});
+
+// Update channel configuration
+app.put('/api/projects/:projectId/channels/:channelId', async (req, res) => {
+  const { projectId, channelId } = req.params;
+
+  try {
+    const validated = UpdateChannelSchemaAPI.parse(req.body);
+
+    const channelService = getChannelService();
+    const channel = await channelService.updateChannel(
+      projectId,
+      channelId,
+      validated as UpdateChannelInput
+    );
+
+    res.json({
+      success: true,
+      channel: {
+        id: channel.id,
+        name: channel.name,
+        description: channel.description,
+        config: channel.config,
+        isDefault: channel.isDefault,
+        updatedAt: channel.updatedAt,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to update channel:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to update channel',
+    });
+  }
+});
+
+// Delete a channel
+app.delete('/api/projects/:projectId/channels/:channelId', async (req, res) => {
+  const { projectId, channelId } = req.params;
+
+  try {
+    const channelService = getChannelService();
+    await channelService.deleteChannel(projectId, channelId);
+
+    res.json({
+      success: true,
+      message: 'Channel deleted successfully',
+    });
+  } catch (error) {
+    console.error('[api] Failed to delete channel:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete channel',
+    });
+  }
+});
+
+// Promote an update from one channel to another
+app.post('/api/projects/:projectId/channels/:channelId/promote', async (req, res) => {
+  const { projectId, channelId } = req.params;
+  const userId = req.body.userId || 'system'; // In production, get from auth context
+
+  try {
+    const validated = PromoteUpdateSchemaAPI.parse(req.body);
+
+    const channelService = getChannelService();
+    const result = await channelService.promoteUpdate(
+      projectId,
+      channelId,
+      validated as PromoteUpdateInput,
+      userId
+    );
+
+    res.json({
+      success: true,
+      promotion: {
+        id: result.promotion.id,
+        status: result.promotion.status,
+        sourceChannel: result.sourceChannel.name,
+        targetChannel: result.targetChannel.name,
+        promotedAt: result.promotion.promotedAt,
+      },
+      update: {
+        id: result.update.id,
+        version: result.update.version,
+        message: result.update.message,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to promote update:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to promote update',
+    });
+  }
+});
+
+// Initialize default channels for a project
+app.post('/api/projects/:projectId/channels/initialize', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const channelService = getChannelService();
+    const channels = await channelService.initializeDefaultChannels(projectId);
+
+    res.json({
+      success: true,
+      message: `Initialized ${channels.length} default channels`,
+      channels: channels.map(c => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        config: c.config,
+        isDefault: c.isDefault,
+      })),
+    });
+  } catch (error) {
+    console.error('[api] Failed to initialize default channels:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to initialize channels',
     });
   }
 });
