@@ -1,0 +1,14 @@
+# Loyalty App Maestro E2E Test Configuration
+# Template: loyalty
+# Bundle ID: com.mobigen.loyalty
+
+appId: com.mobigen.loyalty
+name: Loyalty App E2E Tests
+
+# Environment variables for tests
+env:
+  APP_NAME: Loyalty App
+  TEST_USER_POINTS: 1500
+
+# Default timeout for operations (ms)
+# timeout: 5000

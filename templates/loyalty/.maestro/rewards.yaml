@@ -1,0 +1,33 @@
+# Rewards Test - Browse and interact with rewards
+# Tests viewing available rewards and redeem flow
+
+appId: com.mobigen.loyalty
+tags:
+  - critical
+  - rewards
+  - redeem
+---
+- launchApp:
+    clearState: true
+
+# Navigate to Rewards
+- tapOn: "Rewards"
+- assertVisible: "Rewards"
+
+# Verify points balance is shown
+- assertVisible: "points to spend"
+
+# Verify rewards list loads
+# The rewards are rendered with testID="reward-{id}"
+- scroll:
+    direction: "down"
+
+# Scroll back up
+- scroll:
+    direction: "up"
+
+# Test reward interaction (if rewards are available)
+# Note: In actual test with data, you would tap on a specific reward
+# - tapOn:
+#     id: "reward-1"
+# - assertVisible: "Redeem"

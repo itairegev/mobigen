@@ -1,0 +1,43 @@
+# Home Dashboard Test - Verify main dashboard functionality
+# Tests points display, quick actions, and recent activity
+
+appId: com.mobigen.loyalty
+tags:
+  - smoke
+  - home
+  - dashboard
+---
+- launchApp:
+    clearState: true
+
+# Verify Home screen elements
+- assertVisible: "Home"
+- assertVisible:
+    id: "points-card"
+
+# Verify tier progress is shown
+- assertVisible: "Progress to"
+
+# Verify Quick Actions section
+- assertVisible: "Quick Actions"
+- assertVisible:
+    id: "scan-button"
+- assertVisible:
+    id: "rewards-button"
+
+# Verify Recent Activity section
+- assertVisible: "Recent Activity"
+- assertVisible: "See All"
+
+# Test Scan & Earn quick action
+- tapOn:
+    id: "scan-button"
+- assertVisible: "Scan QR Code"
+
+# Go back to Home
+- tapOn: "Home"
+
+# Test Redeem quick action
+- tapOn:
+    id: "rewards-button"
+- assertVisible: "points to spend"

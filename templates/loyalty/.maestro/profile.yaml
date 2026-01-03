@@ -1,0 +1,28 @@
+# Profile Test - User profile functionality
+# Tests viewing and interacting with user profile
+
+appId: com.mobigen.loyalty
+tags:
+  - smoke
+  - profile
+  - settings
+---
+- launchApp:
+    clearState: true
+
+# Navigate to Profile tab
+- tapOn: "Profile"
+- assertVisible: "Profile"
+
+# Scroll through profile content
+- scroll:
+    direction: "down"
+
+# Scroll back up
+- scroll:
+    direction: "up"
+
+# Navigate back to Home
+- tapOn: "Home"
+- assertVisible:
+    id: "points-card"

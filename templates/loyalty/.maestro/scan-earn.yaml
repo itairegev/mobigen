@@ -1,0 +1,35 @@
+# Scan & Earn Test - QR code scanning functionality
+# Tests the QR scanner screen and manual code entry
+
+appId: com.mobigen.loyalty
+tags:
+  - critical
+  - scan
+  - earn
+---
+- launchApp:
+    clearState: true
+
+# Navigate to Scan tab
+- tapOn: "Scan"
+- assertVisible: "Scan"
+
+# Verify scanner screen elements
+- assertVisible: "Scan QR Code"
+- assertVisible: "Point your camera at the QR code"
+- assertVisible: "Camera Preview"
+
+# Verify action buttons
+- assertVisible:
+    id: "enter-code-button"
+- assertVisible:
+    id: "flash-button"
+
+# Test Enter Code button
+- tapOn:
+    id: "enter-code-button"
+# In a full implementation, this would open a modal for manual code entry
+
+# Test Flash toggle (if available)
+- tapOn:
+    id: "flash-button"

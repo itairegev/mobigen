@@ -1,0 +1,35 @@
+# History Test - Transaction history functionality
+# Tests viewing earning and spending history
+
+appId: com.mobigen.loyalty
+tags:
+  - smoke
+  - history
+  - transactions
+---
+- launchApp:
+    clearState: true
+
+# Navigate to History tab
+- tapOn: "History"
+- assertVisible: "History"
+
+# Verify history list loads
+# Transactions are rendered with testID="transaction-{id}"
+# If no transactions, empty state should show
+- scroll:
+    direction: "down"
+
+# Scroll back to top
+- scroll:
+    direction: "up"
+
+# Navigate back to Home to verify navigation works
+- tapOn: "Home"
+- assertVisible:
+    id: "points-card"
+
+# Navigate via See All link from Home
+- assertVisible: "See All"
+- tapOn: "See All"
+- assertVisible: "History"

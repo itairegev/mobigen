@@ -1,0 +1,41 @@
+# Navigation Test - Verify all tabs are accessible
+# Tests the basic tab navigation functionality
+
+appId: com.mobigen.loyalty
+tags:
+  - smoke
+  - navigation
+  - critical
+---
+- launchApp:
+    clearState: true
+
+# Verify Home screen loads
+- assertVisible: "Home"
+- assertVisible:
+    id: "points-card"
+
+# Navigate to Rewards tab
+- tapOn: "Rewards"
+- assertVisible: "Rewards"
+- assertVisible: "points to spend"
+
+# Navigate to Scan tab
+- tapOn: "Scan"
+- assertVisible: "Scan"
+- assertVisible: "Scan QR Code"
+- assertVisible:
+    id: "enter-code-button"
+
+# Navigate to History tab
+- tapOn: "History"
+- assertVisible: "History"
+
+# Navigate to Profile tab
+- tapOn: "Profile"
+- assertVisible: "Profile"
+
+# Return to Home
+- tapOn: "Home"
+- assertVisible:
+    id: "points-card"
