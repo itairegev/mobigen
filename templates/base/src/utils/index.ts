@@ -19,3 +19,6 @@ export function debounce<T extends (...args: unknown[]) => void>(
     timeoutId = setTimeout(() => fn(...args), delay);
   };
 }
+
+// Re-export update utilities
+export * from './updates';
