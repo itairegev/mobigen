@@ -56,7 +56,21 @@ export interface PipelineConfig {
   validateAfterImplementation: boolean;
   parallelImplementation: boolean;  // Use parallel task execution for implementation
   parallelConfig?: Partial<ParallelExecutionConfig>;
+  /** Maximum fix loop iterations (default: 5) */
+  maxFixLoopIterations?: number;
+  /** Stop fix loop if no progress is made for this many iterations */
+  maxNoProgressIterations?: number;
 }
+
+// ============================================================================
+// FIX LOOP CONFIGURATION
+// ============================================================================
+
+/** Default maximum fix loop iterations */
+const DEFAULT_MAX_FIX_ITERATIONS = 5;
+
+/** Stop if no progress made for this many iterations */
+const DEFAULT_MAX_NO_PROGRESS = 2;
 
 export interface ExecutionContext {
   projectId: string;
@@ -1005,52 +1019,215 @@ PROJECT PATH: ${projectPath}
   }
 
   /**
-   * Run feedback loop to fix errors
+   * Run resilient feedback loop to fix errors
+   * Loops until: all errors fixed, max iterations reached, or no progress being made
    */
   private async runFeedbackLoop(
     phase: PipelinePhase,
     errors: TaskError[]
   ): Promise<{ success: boolean; filesModified: string[] }> {
     const { job, logger, projectId } = this.context;
-    const fixableErrors = errors.filter(e => e.autoFixable);
+    const maxIterations = this.config.maxFixLoopIterations ?? DEFAULT_MAX_FIX_ITERATIONS;
+    const maxNoProgress = this.config.maxNoProgressIterations ?? DEFAULT_MAX_NO_PROGRESS;
 
-    if (fixableErrors.length === 0) {
+    let currentErrors = errors.filter(e => e.autoFixable);
+    let allFilesModified: string[] = [];
+    let iteration = 0;
+    let noProgressCount = 0;
+    let previousErrorCount = currentErrors.length;
+    let previousErrorSignature = this.getErrorSignature(currentErrors);
+
+    if (currentErrors.length === 0) {
       logger.info('No auto-fixable errors found');
       return { success: false, filesModified: [] };
     }
 
-    logger.info(`Attempting to fix ${fixableErrors.length} errors`);
-    await emitProgress(projectId, 'feedback:start', { errorCount: fixableErrors.length });
-
-    // Create fix task
-    const fixTask = TaskTracker.createFixTask(
-      job.id,
-      projectId,
-      TaskTracker.getFailedTasks(job.id)[0]?.id || '',
-      fixableErrors
-    );
-
-    // Execute error-fixer agent
-    const result = await this.executeAgent('error-fixer', 'fix');
-
-    await emitProgress(projectId, 'feedback:complete', {
-      success: result.success,
-      filesFixed: result.filesModified?.length || 0,
+    logger.info(`Starting resilient fix loop with ${currentErrors.length} errors (max ${maxIterations} iterations)`);
+    await emitProgress(projectId, 'feedback:start', {
+      errorCount: currentErrors.length,
+      maxIterations,
     });
 
-    if (result.success) {
-      // Re-run validation to confirm fix worked
-      logger.info('Re-running validation after fix');
+    while (iteration < maxIterations && currentErrors.length > 0) {
+      iteration++;
+      logger.info(`Fix loop iteration ${iteration}/${maxIterations}: ${currentErrors.length} errors remaining`);
 
+      await emitProgress(projectId, 'feedback:iteration', {
+        iteration,
+        maxIterations,
+        errorCount: currentErrors.length,
+        errorsFixed: previousErrorCount - currentErrors.length,
+      });
+
+      // Create fix task for this iteration
+      const fixTask = TaskTracker.createFixTask(
+        job.id,
+        projectId,
+        TaskTracker.getFailedTasks(job.id)[0]?.id || '',
+        currentErrors
+      );
+
+      // Build detailed error context for the fixer
+      const errorContext = this.buildErrorContextForFixer(currentErrors, iteration);
+
+      // Execute error-fixer agent with enhanced context
+      const result = await this.executeAgentWithContext('error-fixer', 'fix', errorContext);
+
+      if (result.filesModified) {
+        allFilesModified.push(...result.filesModified);
+      }
+
+      if (!result.success) {
+        logger.warn(`Error-fixer failed on iteration ${iteration}`);
+        // Continue anyway - let's validate and see what errors remain
+      }
+
+      // Re-run validation to check what errors remain
+      logger.info(`Re-running validation after fix iteration ${iteration}`);
       const validationResult = await this.executeAgent('validator', 'validation');
 
-      return {
-        success: validationResult.success,
-        filesModified: result.filesModified || [],
-      };
+      if (validationResult.success) {
+        // All errors fixed!
+        logger.info(`All errors fixed after ${iteration} iteration(s)`);
+        const uniqueFiles = Array.from(new Set(allFilesModified));
+        await emitProgress(projectId, 'feedback:complete', {
+          success: true,
+          iterations: iteration,
+          totalFilesFixed: uniqueFiles.length,
+        });
+        return {
+          success: true,
+          filesModified: uniqueFiles,
+        };
+      }
+
+      // Extract remaining errors
+      const newErrors = this.extractErrors({
+        error: validationResult.error,
+        errorDetails: validationResult.output as Record<string, unknown>,
+      });
+      currentErrors = newErrors.filter(e => e.autoFixable);
+
+      // Check for progress
+      const currentSignature = this.getErrorSignature(currentErrors);
+      if (currentSignature === previousErrorSignature) {
+        noProgressCount++;
+        logger.warn(`No progress detected (${noProgressCount}/${maxNoProgress}). Same errors remain.`);
+
+        if (noProgressCount >= maxNoProgress) {
+          logger.error(`Stopping fix loop: no progress for ${noProgressCount} iterations`);
+          await emitProgress(projectId, 'feedback:stalled', {
+            iterations: iteration,
+            remainingErrors: currentErrors.length,
+            reason: 'no_progress',
+          });
+          break;
+        }
+      } else {
+        // Progress made - reset counter
+        noProgressCount = 0;
+        const fixedCount = previousErrorCount - currentErrors.length;
+        logger.info(`Progress: fixed ${fixedCount} error(s), ${currentErrors.length} remaining`);
+      }
+
+      previousErrorCount = currentErrors.length;
+      previousErrorSignature = currentSignature;
     }
 
-    return { success: false, filesModified: [] };
+    const finalSuccess = currentErrors.length === 0;
+    const finalUniqueFiles = Array.from(new Set(allFilesModified));
+    await emitProgress(projectId, 'feedback:complete', {
+      success: finalSuccess,
+      iterations: iteration,
+      remainingErrors: currentErrors.length,
+      totalFilesFixed: finalUniqueFiles.length,
+    });
+
+    if (!finalSuccess) {
+      logger.warn(`Fix loop ended after ${iteration} iterations with ${currentErrors.length} errors remaining`);
+    }
+
+    return {
+      success: finalSuccess,
+      filesModified: finalUniqueFiles,
+    };
+  }
+
+  /**
+   * Generate a signature for a set of errors to detect if the same errors keep appearing
+   */
+  private getErrorSignature(errors: TaskError[]): string {
+    return errors
+      .map(e => `${e.file || ''}:${e.line || ''}:${e.code}:${e.message.substring(0, 50)}`)
+      .sort()
+      .join('|');
+  }
+
+  /**
+   * Build detailed error context for the error-fixer agent
+   */
+  private buildErrorContextForFixer(errors: TaskError[], iteration: number): string {
+    const groupedErrors = this.groupErrorsByFile(errors);
+
+    let context = `FIX LOOP ITERATION ${iteration}\n\n`;
+    context += `You have ${errors.length} error(s) to fix. `;
+
+    if (iteration > 1) {
+      context += `Previous fix attempts did not resolve all errors. Please analyze carefully and apply different fixes.\n\n`;
+    }
+
+    context += `ERRORS BY FILE:\n\n`;
+
+    for (const [file, fileErrors] of Object.entries(groupedErrors)) {
+      context += `📄 ${file}:\n`;
+      for (const err of fileErrors) {
+        context += `  Line ${err.line || '?'}: [${err.code}] ${err.message}\n`;
+      }
+      context += '\n';
+    }
+
+    context += `\nFIX STRATEGY:\n`;
+    context += `1. Read each file with errors\n`;
+    context += `2. Apply minimal, targeted fixes\n`;
+    context += `3. For TypeScript errors: ensure imports, types, and variables are correct\n`;
+    context += `4. For ESLint errors: apply the appropriate code style fix\n`;
+    context += `5. For navigation errors: verify all routes are properly registered\n`;
+    context += `6. After fixing, verify the fix is syntactically correct\n`;
+
+    return context;
+  }
+
+  /**
+   * Group errors by file for easier processing
+   */
+  private groupErrorsByFile(errors: TaskError[]): Record<string, TaskError[]> {
+    const grouped: Record<string, TaskError[]> = {};
+    for (const error of errors) {
+      const file = error.file || 'unknown';
+      if (!grouped[file]) {
+        grouped[file] = [];
+      }
+      grouped[file].push(error);
+    }
+    return grouped;
+  }
+
+  /**
+   * Execute agent with additional context
+   */
+  private async executeAgentWithContext(
+    agentId: AgentRole,
+    taskType: string,
+    additionalContext: string
+  ): Promise<{
+    success: boolean;
+    outputs?: Record<string, unknown>;
+    filesModified?: string[];
+    error?: string;
+  }> {
+    // Store context for the agent to use
+    this.context.outputs['_fixerContext'] = additionalContext;
+    return this.executeAgent(agentId, taskType);
   }
 
   /**
@@ -1223,24 +1400,142 @@ PROJECT PATH: ${projectPath}
 
   /**
    * Check if an error is auto-fixable
+   * Expanded patterns to catch more TypeScript, ESLint, and common code errors
    */
   private isAutoFixable(error: Record<string, unknown>): boolean {
     const message = String(error.message || '').toLowerCase();
+    const code = String(error.code || '').toLowerCase();
 
-    const fixablePatterns = [
-      'missing import',
+    // TypeScript error patterns
+    const typescriptPatterns = [
       'cannot find module',
+      'cannot find name',
       'is not defined',
       'property does not exist',
       'type is not assignable',
+      'argument of type',
+      'not assignable to parameter',
+      'missing in type',
+      'has no exported member',
+      'module has no exported',
+      'has no default export',
+      'is declared but',
+      'is not a module',
+      'cannot be used as a value',
+      'refers to a value',
+      'only refers to a type',
+      'implicitly has',
+      'could not find a declaration',
       'expected',
-      'unused',
-      'no-unused-vars',
-      'prefer-const',
-      'unexpected token',
+      'expected.*arguments',
+      'parameter.*implicitly',
+      'object is possibly',
+      'cannot redeclare',
+      'duplicate identifier',
+      'binding element',
+      'spread argument must have',
+      'cannot invoke an object',
+      'no overload matches',
+      'ts2304', 'ts2305', 'ts2306', 'ts2307', // Common TS error codes
+      'ts2322', 'ts2339', 'ts2345', 'ts2349',
+      'ts2554', 'ts2555', 'ts2556',
+      'ts7006', 'ts7016', 'ts7031',
     ];
 
-    return fixablePatterns.some(pattern => message.includes(pattern));
+    // ESLint error patterns
+    const eslintPatterns = [
+      'no-unused-vars',
+      'no-undef',
+      'prefer-const',
+      'no-console',
+      'no-empty',
+      'no-extra-semi',
+      'semi',
+      'quotes',
+      'indent',
+      'comma-dangle',
+      'eol-last',
+      'no-multiple-empty-lines',
+      'no-trailing-spaces',
+      'space-before-function-paren',
+      'object-curly-spacing',
+      'array-bracket-spacing',
+      'react/jsx',
+      'react/prop-types',
+      'react/no-unused',
+      'react-hooks/rules-of-hooks',
+      'react-hooks/exhaustive-deps',
+      '@typescript-eslint/',
+      'import/no-unresolved',
+      'import/named',
+      'import/order',
+      'unused',
+      'unexpected token',
+      'parsing error',
+    ];
+
+    // Navigation and React Native patterns
+    const navigationPatterns = [
+      'screen.*not found',
+      'route.*not registered',
+      'navigator.*undefined',
+      'navigation.*undefined',
+      'no route',
+      'screen is not a valid',
+      'component for route',
+    ];
+
+    // Import/Export patterns
+    const importPatterns = [
+      'missing import',
+      'import.*not found',
+      'export.*not found',
+      'failed to resolve',
+      'unable to resolve',
+      'module not found',
+    ];
+
+    // Syntax patterns
+    const syntaxPatterns = [
+      'syntax error',
+      'unexpected end',
+      'unexpected identifier',
+      'unexpected string',
+      'unexpected number',
+      'unterminated',
+      'missing.*bracket',
+      'missing.*brace',
+      'missing.*parenthesis',
+      'missing closing',
+      'expected.*but found',
+      'jsx.*expected',
+    ];
+
+    const allPatterns = [
+      ...typescriptPatterns,
+      ...eslintPatterns,
+      ...navigationPatterns,
+      ...importPatterns,
+      ...syntaxPatterns,
+    ];
+
+    // Check message against patterns
+    const messageMatch = allPatterns.some(pattern => {
+      if (pattern.includes('.*')) {
+        // Treat as regex
+        try {
+          return new RegExp(pattern).test(message);
+        } catch {
+          return message.includes(pattern.replace('.*', ''));
+        }
+      }
+      return message.includes(pattern);
+    });
+
+    // Also check error code
+    const codeMatch = allPatterns.some(pattern => code.includes(pattern));
+
+    return messageMatch || codeMatch;
   }
 }
 
