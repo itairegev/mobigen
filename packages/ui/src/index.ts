@@ -64,3 +64,78 @@ export type {
 
 export { Toast, ToastContainer, useToast } from './components/Toast';
 export type { ToastProps, ToastContainerProps, Toast as ToastType } from './components/Toast';
+
+// GitHub Integration Components
+export {
+  GitHubConnectionCard,
+  SyncStatusIndicator,
+  LastSyncInfo,
+  SyncHistoryList,
+  ConnectGitHubButton,
+  SyncActionsMenu,
+  useGitHubConnection,
+  useSyncStatus,
+  useSyncHistory,
+  useRealtimeSyncStatus,
+  useGitHubOAuth,
+} from './github';
+export type {
+  GitHubConnectionStatus,
+  SyncStatus,
+  GitHubConnectionData,
+  ProjectGitHubData,
+  SyncHistoryEntry,
+  SyncAction,
+  OAuthFlowState,
+  GitHubConnectionCardProps,
+  SyncStatusIndicatorProps,
+  LastSyncInfoProps,
+  SyncHistoryListProps,
+  ConnectGitHubButtonProps,
+  SyncActionsMenuProps,
+  GitHubHookConfig,
+  HookResult,
+} from './github';
+
+// Build Status Dashboard Components
+export {
+  BuildStatusCard,
+  BuildProgressBar,
+  BuildHistoryList,
+  BuildDetailsModal,
+  DeployButton,
+  BuildQueueIndicator,
+  PlatformTabs,
+  useBuildStatus,
+  useBuildHistory,
+  useDeployment,
+  useBuildQueue,
+  useBuildUpdates,
+  BUILD_STAGES,
+  BUILD_STATUS_CONFIG,
+} from './builds';
+export type {
+  Build,
+  BuildPlatform,
+  BuildStatus,
+  BuildStage,
+  ValidationError,
+  BuildProgress,
+  DeploymentOptions,
+  BuildHistoryFilters,
+  BuildQueueInfo,
+  BuildStatusCardProps,
+  BuildProgressBarProps,
+  BuildHistoryListProps,
+  BuildDetailsModalProps,
+  DeployButtonProps,
+  BuildQueueIndicatorProps,
+  PlatformTabsProps,
+  UseBuildStatusReturn,
+  UseBuildHistoryReturn,
+  UseDeploymentReturn,
+  BuildStageConfig,
+  BuildStatusConfig,
+  BuildGroupByPlatform,
+  BuildStatistics,
+} from './builds';
