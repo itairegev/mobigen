@@ -22,6 +22,12 @@ import {
 import { TaskTracker, type TaskError } from './task-tracker';
 import { emitProgress } from './api';
 import { createLogger, type GenerationLogger } from './logger';
+import {
+  IncrementalValidator,
+  type IncrementalValidationConfig,
+  type IncrementalValidationResult,
+  DEFAULT_INCREMENTAL_CONFIG,
+} from './incremental-validator';
 
 // ============================================================================
 // TYPES
@@ -32,6 +38,8 @@ export interface ParallelExecutionConfig {
   taskTimeout: number;          // Per-task timeout in ms
   maxRetries: number;           // Retries per task
   continueOnTaskFailure: boolean; // Continue other tasks if one fails
+  /** Incremental validation after each task */
+  incrementalValidation: Partial<IncrementalValidationConfig>;
 }
 
 export interface TaskExecutionResult {
@@ -41,6 +49,8 @@ export interface TaskExecutionResult {
   output: Record<string, unknown>;
   error?: string;
   duration: number;
+  /** Validation result after task completion */
+  validation?: IncrementalValidationResult;
 }
 
 export interface BatchResult {
@@ -64,6 +74,13 @@ export const DEFAULT_PARALLEL_CONFIG: ParallelExecutionConfig = {
   taskTimeout: 300000,          // 5 minutes per task
   maxRetries: 2,
   continueOnTaskFailure: true,  // Keep going if a task fails
+  incrementalValidation: {
+    enabled: true,              // Validate after each task
+    maxFixAttempts: 3,          // Try to fix errors 3 times
+    typescriptTimeout: 30000,   // 30 seconds for TypeScript check
+    runEslint: false,           // Skip ESLint for speed (run at end)
+    failOnValidationError: false, // Continue but track errors
+  },
 };
 
 // ============================================================================
@@ -148,6 +165,7 @@ export class ParallelTaskExecutor {
   private jobId: string;
   private agentRegistry: ReturnType<typeof getDefaultRegistry>;
   private context: Record<string, unknown>;
+  private incrementalValidator: IncrementalValidator | null = null;
 
   constructor(
     projectId: string,
@@ -166,6 +184,26 @@ export class ParallelTaskExecutor {
     this.context = context;
     this.config = config;
     this.logger = createLogger(projectId, projectPath);
+
+    // Initialize incremental validator if enabled
+    if (this.config.incrementalValidation?.enabled) {
+      this.incrementalValidator = new IncrementalValidator(
+        projectId,
+        projectPath,
+        mobigenRoot,
+        { ...DEFAULT_INCREMENTAL_CONFIG, ...this.config.incrementalValidation }
+      );
+    }
+  }
+
+  /**
+   * Initialize validator (must be called before execute)
+   */
+  async initialize(): Promise<void> {
+    if (this.incrementalValidator) {
+      await this.incrementalValidator.initialize();
+      this.logger.info('Incremental validation enabled');
+    }
   }
 
   /**
@@ -178,10 +216,14 @@ export class ParallelTaskExecutor {
     const allFilesModified: string[] = [];
     const failedTasks: string[] = [];
 
+    // Initialize incremental validator
+    await this.initialize();
+
     this.logger.info('Starting parallel execution', {
       totalTasks: breakdown.tasks.length,
       batchCount: batches.length,
       maxConcurrent: this.config.maxConcurrentAgents,
+      incrementalValidation: this.config.incrementalValidation?.enabled ?? false,
     });
 
     await emitProgress(this.projectId, 'parallel:start', {
@@ -375,6 +417,38 @@ export class ParallelTaskExecutor {
 
       output = result.output;
 
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // INCREMENTAL VALIDATION: Run TypeScript check and fix errors
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      let validationResult: IncrementalValidationResult | undefined;
+
+      if (this.incrementalValidator && filesModified.length > 0) {
+        this.logger.info(`Running incremental validation for task: ${task.id}`);
+
+        validationResult = await this.incrementalValidator.validateAfterTask({
+          taskId: task.id,
+          filesModified,
+          projectPath: this.projectPath,
+          mobigenRoot: this.mobigenRoot,
+        });
+
+        if (!validationResult.passed) {
+          this.logger.warn(`Task ${task.id} has validation issues: ${validationResult.errors.length} errors after ${validationResult.fixAttempts} fix attempts`);
+
+          // If configured to fail on validation error, treat as task failure
+          if (this.config.incrementalValidation?.failOnValidationError) {
+            const errorSummary = validationResult.errors
+              .slice(0, 3)
+              .map(e => `${e.file}:${e.line}: ${e.message}`)
+              .join('; ');
+
+            throw new Error(`Validation failed after ${validationResult.fixAttempts} fix attempts: ${errorSummary}`);
+          }
+        } else {
+          this.logger.info(`Task ${task.id} validated successfully (${validationResult.fixAttempts} fix attempts)`);
+        }
+      }
+
       // Mark task complete
       if (foundTask) {
         TaskTracker.completeTask(foundTask.id, true, output, filesModified);
@@ -383,12 +457,22 @@ export class ParallelTaskExecutor {
       this.logger.info(`Task completed: ${task.id}`, {
         filesModified: filesModified.length,
         duration: Date.now() - startTime,
+        validation: validationResult ? {
+          passed: validationResult.passed,
+          errors: validationResult.errors.length,
+          fixAttempts: validationResult.fixAttempts,
+        } : undefined,
       });
 
       await emitProgress(this.projectId, 'task:complete', {
         taskId: task.id,
         success: true,
         filesModified: filesModified.length,
+        validation: validationResult ? {
+          passed: validationResult.passed,
+          errorCount: validationResult.errors.length,
+          fixAttempts: validationResult.fixAttempts,
+        } : undefined,
       });
 
       return {
@@ -397,6 +481,7 @@ export class ParallelTaskExecutor {
         filesModified,
         output,
         duration: Date.now() - startTime,
+        validation: validationResult,
       };
 
     } catch (err) {

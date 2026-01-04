@@ -126,13 +126,16 @@ export const DEFAULT_PIPELINE: PipelineConfig = {
     {
       name: 'implementation',
       agents: ['developer'],
-      description: 'Implement all development tasks',
+      description: 'Implement all development tasks with incremental validation after each task',
       required: true,
+      // NOTE: Incremental validation runs TypeScript check after each task
+      // and fixes errors before moving to the next task.
+      // This ensures code is valid throughout development.
     },
     {
       name: 'validation',
       agents: ['validator'],
-      description: 'Validate generated code',
+      description: 'Final validation pass (lighter since incremental validation already ran)',
       required: true,
     },
     {
