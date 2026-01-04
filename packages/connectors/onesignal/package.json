@@ -1,0 +1,35 @@
+{
+  "name": "@mobigen/connector-onesignal",
+  "version": "1.0.0",
+  "description": "OneSignal push notifications connector for Mobigen",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "keywords": [
+    "mobigen",
+    "connector",
+    "onesignal",
+    "push-notifications",
+    "messaging",
+    "engagement"
+  ],
+  "author": "Mobigen",
+  "license": "MIT",
+  "dependencies": {
+    "@mobigen/connectors-core": "workspace:*",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "react-native-onesignal": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react-native-onesignal": "^5.0.0"
+  },
+  "metadata": {
+    "connectorId": "onesignal",
+    "category": "engagement",
+    "tier": "free",
+    "platforms": ["ios", "android"]
+  }
+}

@@ -139,3 +139,36 @@ export type {
   BuildGroupByPlatform,
   BuildStatistics,
 } from './builds';
+
+// Connector Components
+export {
+  ConnectorCard,
+  ConnectorList,
+  ConnectorConfigModal,
+  InstalledConnectorCard,
+  ConnectorSetupWizard,
+  useConnectors,
+  useInstalledConnectors,
+  useConnectorInstall,
+  useConnectorUninstall,
+  useTestConnection,
+  useConnectorDetails,
+} from './connectors';
+export type {
+  ConnectorCategory,
+  ConnectorTier,
+  ConnectorStatus,
+  ConnectorMetadata,
+  CredentialFieldType,
+  CredentialField,
+  ConnectionTestResult,
+  InstalledConnector,
+  SetupWizardStep,
+  ConnectorCardProps,
+  ConnectorListProps,
+  ConnectorConfigModalProps,
+  InstalledConnectorCardProps,
+  ConnectorSetupWizardProps,
+  ConnectorDetails,
+  ConnectorHookConfig,
+} from './connectors';

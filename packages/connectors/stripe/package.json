@@ -1,0 +1,36 @@
+{
+  "name": "@mobigen/connector-stripe",
+  "version": "1.0.0",
+  "description": "Stripe payment integration connector for Mobigen",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "keywords": [
+    "mobigen",
+    "connector",
+    "stripe",
+    "payments",
+    "subscriptions"
+  ],
+  "author": "Mobigen",
+  "license": "MIT",
+  "dependencies": {
+    "@mobigen/connectors-core": "workspace:*",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@stripe/stripe-react-native": "^0.37.0",
+    "stripe": "^14.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@stripe/stripe-react-native": "^0.37.0",
+    "stripe": "^14.0.0"
+  },
+  "metadata": {
+    "connectorId": "stripe",
+    "category": "payments",
+    "tier": "free",
+    "platforms": ["ios", "android"]
+  }
+}

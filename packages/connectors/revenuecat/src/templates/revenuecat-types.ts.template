@@ -1,0 +1,175 @@
+/**
+ * Auto-generated RevenueCat types
+ * Generated on: {{GENERATION_DATE}}
+ * Project: {{PROJECT_NAME}}
+ */
+
+import type { CustomerInfo, PurchasesOfferings, PurchasesPackage } from 'react-native-purchases';
+
+/**
+ * Re-export core types from react-native-purchases
+ */
+export type {
+  CustomerInfo,
+  PurchasesOfferings,
+  PurchasesPackage,
+  PurchasesStoreProduct,
+  EntitlementInfo,
+  EntitlementInfos,
+  PurchasesError,
+} from 'react-native-purchases';
+
+/**
+ * Purchase result
+ */
+export interface PurchaseResult {
+  success: boolean;
+  customerInfo?: CustomerInfo;
+  userCancelled?: boolean;
+  error?: Error;
+}
+
+/**
+ * Restore purchases result
+ */
+export interface RestoreResult {
+  success: boolean;
+  customerInfo?: CustomerInfo;
+  error?: Error;
+}
+
+/**
+ * Entitlement status
+ */
+export interface EntitlementStatus {
+  identifier: string;
+  isActive: boolean;
+  willRenew: boolean;
+  periodType: 'trial' | 'intro' | 'normal';
+  latestPurchaseDate?: Date;
+  originalPurchaseDate?: Date;
+  expirationDate?: Date;
+  store: 'app_store' | 'play_store' | 'stripe' | 'promotional';
+  productIdentifier: string;
+  isSandbox: boolean;
+}
+
+/**
+ * Subscription info
+ */
+export interface SubscriptionInfo {
+  productIdentifier: string;
+  isActive: boolean;
+  willRenew: boolean;
+  expirationDate: Date | null;
+  purchaseDate: Date;
+  billingIssueDetected: boolean;
+}
+
+/**
+ * Package type
+ */
+export type PackageType =
+  | 'LIFETIME'
+  | 'ANNUAL'
+  | 'SIX_MONTH'
+  | 'THREE_MONTH'
+  | 'TWO_MONTH'
+  | 'MONTHLY'
+  | 'WEEKLY'
+  | 'CUSTOM';
+
+/**
+ * Product pricing
+ */
+export interface ProductPricing {
+  price: number;
+  priceString: string;
+  currencyCode: string;
+  introPrice?: {
+    price: number;
+    priceString: string;
+    period: string;
+    cycles: number;
+  };
+  freeTrialPeriod?: string;
+}
+
+/**
+ * Offering with typed packages
+ */
+export interface TypedOffering {
+  identifier: string;
+  serverDescription: string;
+  availablePackages: PurchasesPackage[];
+  lifetime?: PurchasesPackage;
+  annual?: PurchasesPackage;
+  sixMonth?: PurchasesPackage;
+  threeMonth?: PurchasesPackage;
+  twoMonth?: PurchasesPackage;
+  monthly?: PurchasesPackage;
+  weekly?: PurchasesPackage;
+}
+
+/**
+ * Helper to get package by type
+ */
+export function getPackageByType(
+  offering: PurchasesOfferings['current'],
+  type: PackageType
+): PurchasesPackage | null {
+  if (!offering) return null;
+
+  const packageMap: Record<PackageType, keyof typeof offering> = {
+    LIFETIME: 'lifetime',
+    ANNUAL: 'annual',
+    SIX_MONTH: 'sixMonth',
+    THREE_MONTH: 'threeMonth',
+    TWO_MONTH: 'twoMonth',
+    MONTHLY: 'monthly',
+    WEEKLY: 'weekly',
+    CUSTOM: 'availablePackages',
+  };
+
+  const key = packageMap[type];
+  if (key === 'availablePackages') {
+    return offering.availablePackages[0] || null;
+  }
+
+  return (offering[key] as PurchasesPackage) || null;
+}
+
+/**
+ * Helper to check if entitlement is active
+ */
+export function isEntitlementActive(
+  customerInfo: CustomerInfo,
+  entitlementId: string
+): boolean {
+  return typeof customerInfo.entitlements.active[entitlementId] !== 'undefined';
+}
+
+/**
+ * Helper to get entitlement details
+ */
+export function getEntitlementDetails(
+  customerInfo: CustomerInfo,
+  entitlementId: string
+): EntitlementStatus | null {
+  const entitlement = customerInfo.entitlements.all[entitlementId];
+
+  if (!entitlement) return null;
+
+  return {
+    identifier: entitlement.identifier,
+    isActive: entitlement.isActive,
+    willRenew: entitlement.willRenew,
+    periodType: entitlement.periodType as 'trial' | 'intro' | 'normal',
+    latestPurchaseDate: new Date(entitlement.latestPurchaseDate),
+    originalPurchaseDate: new Date(entitlement.originalPurchaseDate),
+    expirationDate: entitlement.expirationDate ? new Date(entitlement.expirationDate) : undefined,
+    store: entitlement.store as 'app_store' | 'play_store' | 'stripe' | 'promotional',
+    productIdentifier: entitlement.productIdentifier,
+    isSandbox: entitlement.isSandbox,
+  };
+}

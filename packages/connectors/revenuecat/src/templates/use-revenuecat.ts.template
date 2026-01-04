@@ -1,0 +1,226 @@
+/**
+ * Auto-generated RevenueCat hooks
+ * Generated on: {{GENERATION_DATE}}
+ * Project: {{PROJECT_NAME}}
+ */
+
+import { useState, useEffect, useCallback } from 'react';
+import Purchases, {
+  CustomerInfo,
+  PurchasesOfferings,
+  PurchasesPackage,
+} from 'react-native-purchases';
+import {
+  getCustomerInfo,
+  getOfferings,
+  purchasePackage,
+  restorePurchases,
+  checkEntitlement,
+  DEFAULT_ENTITLEMENT_ID,
+} from '../services/revenuecat';
+
+/**
+ * Hook to access customer info and entitlements
+ */
+export function useRevenueCat() {
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const info = await getCustomerInfo();
+      setCustomerInfo(info);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to get customer info'));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refresh();
+
+    // Listen for customer info updates
+    const listener = Purchases.addCustomerInfoUpdateListener((info) => {
+      setCustomerInfo(info);
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, [refresh]);
+
+  return {
+    customerInfo,
+    loading,
+    error,
+    refresh,
+  };
+}
+
+/**
+ * Hook to get available offerings
+ */
+export function useOfferings() {
+  const [offerings, setOfferings] = useState<PurchasesOfferings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getOfferings();
+      setOfferings(data);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to get offerings'));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return {
+    offerings,
+    currentOffering: offerings?.current || null,
+    loading,
+    error,
+    refresh,
+  };
+}
+
+/**
+ * Hook for purchasing functionality
+ */
+export function usePurchase() {
+  const [purchasing, setPurchasing] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const purchase = useCallback(async (packageToPurchase: PurchasesPackage) => {
+    try {
+      setPurchasing(true);
+      setError(null);
+
+      const { customerInfo } = await purchasePackage(packageToPurchase);
+
+      return { success: true, customerInfo };
+    } catch (err: any) {
+      const error = err instanceof Error ? err : new Error('Purchase failed');
+      setError(error);
+
+      // Return user cancellation separately
+      if (err.userCancelled) {
+        return { success: false, userCancelled: true };
+      }
+
+      return { success: false, error };
+    } finally {
+      setPurchasing(false);
+    }
+  }, []);
+
+  return {
+    purchase,
+    purchasing,
+    error,
+  };
+}
+
+/**
+ * Hook for restoring purchases
+ */
+export function useRestorePurchases() {
+  const [restoring, setRestoring] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const restore = useCallback(async () => {
+    try {
+      setRestoring(true);
+      setError(null);
+
+      const { customerInfo } = await restorePurchases();
+
+      return { success: true, customerInfo };
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Restore failed');
+      setError(error);
+      return { success: false, error };
+    } finally {
+      setRestoring(false);
+    }
+  }, []);
+
+  return {
+    restore,
+    restoring,
+    error,
+  };
+}
+
+/**
+ * Hook to check a specific entitlement
+ */
+export function useEntitlement(entitlementId?: string) {
+  const [hasEntitlement, setHasEntitlement] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const id = entitlementId || DEFAULT_ENTITLEMENT_ID;
+
+  const check = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const active = await checkEntitlement(id);
+      setHasEntitlement(active);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to check entitlement'));
+      setHasEntitlement(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    check();
+
+    // Listen for customer info updates to re-check entitlement
+    const listener = Purchases.addCustomerInfoUpdateListener(() => {
+      check();
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, [check]);
+
+  return {
+    hasEntitlement,
+    loading,
+    error,
+    refresh: check,
+  };
+}
+
+/**
+ * Hook to get all active subscriptions
+ */
+export function useActiveSubscriptions() {
+  const { customerInfo, loading, error } = useRevenueCat();
+
+  const activeSubscriptions = customerInfo
+    ? Object.keys(customerInfo.entitlements.active)
+    : [];
+
+  return {
+    activeSubscriptions,
+    loading,
+    error,
+  };
+}

@@ -1,0 +1,198 @@
+/**
+ * Auto-generated RevenueCat service
+ * Generated on: {{GENERATION_DATE}}
+ * Project: {{PROJECT_NAME}}
+ */
+
+import Purchases, {
+  PurchasesOfferings,
+  CustomerInfo,
+  PurchasesPackage,
+  MakePurchaseResult,
+  RestorePurchasesResult,
+  LOG_LEVEL,
+} from 'react-native-purchases';
+import { Platform } from 'react-native';
+
+// RevenueCat API keys from environment
+const REVENUECAT_API_KEY_IOS = '{{REVENUECAT_API_KEY_IOS}}';
+const REVENUECAT_API_KEY_ANDROID = '{{REVENUECAT_API_KEY_ANDROID}}';
+const ENTITLEMENT_ID = '{{ENTITLEMENT_ID}}';
+
+export interface RevenueCatConfig {
+  apiKey?: string;
+  entitlementId?: string;
+  debugMode?: boolean;
+}
+
+/**
+ * Initialize RevenueCat SDK
+ * Call this once when your app starts, before any other RevenueCat calls
+ */
+export async function configureRevenueCat(config?: RevenueCatConfig): Promise<void> {
+  try {
+    // Determine which API key to use
+    const apiKey = config?.apiKey || (Platform.OS === 'ios' ? REVENUECAT_API_KEY_IOS : REVENUECAT_API_KEY_ANDROID);
+
+    if (!apiKey) {
+      throw new Error('RevenueCat API key not configured for this platform');
+    }
+
+    // Enable debug mode in development
+    if (__DEV__ || config?.debugMode) {
+      Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+    }
+
+    // Configure the SDK
+    await Purchases.configure({
+      apiKey,
+    });
+
+    console.log('[RevenueCat] SDK configured successfully');
+  } catch (error) {
+    console.error('[RevenueCat] Configuration failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get available offerings (products and packages)
+ */
+export async function getOfferings(): Promise<PurchasesOfferings | null> {
+  try {
+    const offerings = await Purchases.getOfferings();
+
+    if (offerings.current !== null) {
+      console.log('[RevenueCat] Current offering:', offerings.current.identifier);
+      console.log('[RevenueCat] Available packages:', offerings.current.availablePackages.length);
+    }
+
+    return offerings;
+  } catch (error) {
+    console.error('[RevenueCat] Failed to get offerings:', error);
+    return null;
+  }
+}
+
+/**
+ * Purchase a package
+ */
+export async function purchasePackage(
+  packageToPurchase: PurchasesPackage
+): Promise<MakePurchaseResult> {
+  try {
+    console.log('[RevenueCat] Purchasing package:', packageToPurchase.identifier);
+
+    const { customerInfo, productIdentifier } = await Purchases.purchasePackage(packageToPurchase);
+
+    console.log('[RevenueCat] Purchase successful:', productIdentifier);
+
+    return { customerInfo, productIdentifier };
+  } catch (error: any) {
+    console.error('[RevenueCat] Purchase failed:', error);
+
+    // Check if user cancelled
+    if (error.userCancelled) {
+      console.log('[RevenueCat] User cancelled purchase');
+    }
+
+    throw error;
+  }
+}
+
+/**
+ * Restore previous purchases
+ */
+export async function restorePurchases(): Promise<RestorePurchasesResult> {
+  try {
+    console.log('[RevenueCat] Restoring purchases...');
+
+    const { customerInfo } = await Purchases.restorePurchases();
+
+    console.log('[RevenueCat] Purchases restored successfully');
+
+    return { customerInfo };
+  } catch (error) {
+    console.error('[RevenueCat] Restore failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get current customer info
+ */
+export async function getCustomerInfo(): Promise<CustomerInfo> {
+  try {
+    const customerInfo = await Purchases.getCustomerInfo();
+    return customerInfo;
+  } catch (error) {
+    console.error('[RevenueCat] Failed to get customer info:', error);
+    throw error;
+  }
+}
+
+/**
+ * Check if user has an active entitlement
+ */
+export async function checkEntitlement(entitlementId?: string): Promise<boolean> {
+  try {
+    const customerInfo = await getCustomerInfo();
+    const id = entitlementId || ENTITLEMENT_ID;
+
+    if (!id) {
+      console.warn('[RevenueCat] No entitlement ID provided');
+      return false;
+    }
+
+    const hasEntitlement = typeof customerInfo.entitlements.active[id] !== 'undefined';
+
+    console.log(`[RevenueCat] Entitlement "${id}":`, hasEntitlement ? 'active' : 'inactive');
+
+    return hasEntitlement;
+  } catch (error) {
+    console.error('[RevenueCat] Failed to check entitlement:', error);
+    return false;
+  }
+}
+
+/**
+ * Identify user (optional - for analytics)
+ */
+export async function identifyUser(userId: string): Promise<void> {
+  try {
+    await Purchases.logIn(userId);
+    console.log('[RevenueCat] User identified:', userId);
+  } catch (error) {
+    console.error('[RevenueCat] Failed to identify user:', error);
+    throw error;
+  }
+}
+
+/**
+ * Log out current user
+ */
+export async function logoutUser(): Promise<void> {
+  try {
+    await Purchases.logOut();
+    console.log('[RevenueCat] User logged out');
+  } catch (error) {
+    console.error('[RevenueCat] Failed to log out user:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get active subscriptions
+ */
+export async function getActiveSubscriptions(): Promise<string[]> {
+  try {
+    const customerInfo = await getCustomerInfo();
+    return Object.keys(customerInfo.entitlements.active);
+  } catch (error) {
+    console.error('[RevenueCat] Failed to get active subscriptions:', error);
+    return [];
+  }
+}
+
+// Export default entitlement ID for convenience
+export const DEFAULT_ENTITLEMENT_ID = ENTITLEMENT_ID;

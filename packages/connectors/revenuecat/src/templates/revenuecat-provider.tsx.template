@@ -1,0 +1,125 @@
+/**
+ * Auto-generated RevenueCat provider
+ * Generated on: {{GENERATION_DATE}}
+ * Project: {{PROJECT_NAME}}
+ */
+
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { CustomerInfo } from 'react-native-purchases';
+import { configureRevenueCat, getCustomerInfo } from '../services/revenuecat';
+
+interface RevenueCatContextValue {
+  customerInfo: CustomerInfo | null;
+  loading: boolean;
+  error: Error | null;
+  refresh: () => Promise<void>;
+}
+
+const RevenueCatContext = createContext<RevenueCatContextValue | undefined>(undefined);
+
+export interface RevenueCatProviderProps {
+  children: React.ReactNode;
+  debugMode?: boolean;
+}
+
+/**
+ * RevenueCat provider component
+ *
+ * Wrap your app with this provider to initialize RevenueCat SDK
+ * and provide customer info to all child components.
+ *
+ * @example
+ * ```tsx
+ * import { RevenueCatProvider } from './providers/revenuecat-provider';
+ *
+ * export default function App() {
+ *   return (
+ *     <RevenueCatProvider>
+ *       <YourApp />
+ *     </RevenueCatProvider>
+ *   );
+ * }
+ * ```
+ */
+export function RevenueCatProvider({ children, debugMode }: RevenueCatProviderProps) {
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const refresh = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const info = await getCustomerInfo();
+      setCustomerInfo(info);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to get customer info'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    const initialize = async () => {
+      try {
+        // Configure RevenueCat SDK
+        await configureRevenueCat({ debugMode });
+
+        // Get initial customer info
+        if (mounted) {
+          await refresh();
+        }
+      } catch (err) {
+        if (mounted) {
+          setError(err instanceof Error ? err : new Error('Failed to initialize RevenueCat'));
+          setLoading(false);
+        }
+      }
+    };
+
+    initialize();
+
+    return () => {
+      mounted = false;
+    };
+  }, [debugMode]);
+
+  const value: RevenueCatContextValue = {
+    customerInfo,
+    loading,
+    error,
+    refresh,
+  };
+
+  return (
+    <RevenueCatContext.Provider value={value}>
+      {children}
+    </RevenueCatContext.Provider>
+  );
+}
+
+/**
+ * Hook to access RevenueCat context
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const { customerInfo, loading } = useRevenueCatContext();
+ *
+ *   if (loading) return <LoadingSpinner />;
+ *
+ *   return <Text>Active subscriptions: {Object.keys(customerInfo.entitlements.active).length}</Text>;
+ * }
+ * ```
+ */
+export function useRevenueCatContext() {
+  const context = useContext(RevenueCatContext);
+
+  if (context === undefined) {
+    throw new Error('useRevenueCatContext must be used within a RevenueCatProvider');
+  }
+
+  return context;
+}
