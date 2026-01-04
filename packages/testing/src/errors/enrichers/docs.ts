@@ -166,6 +166,104 @@ export function getContextualDocLinks(
 }
 
 /**
+ * Get documentation links for common React Native errors
+ */
+export function getReactNativeDocLinks(message: string): DocLink[] {
+  const links: DocLink[] = [];
+
+  if (message.includes('Text') || message.includes('must be rendered')) {
+    links.push({
+      title: 'React Native - Text Component',
+      url: 'https://reactnative.dev/docs/text',
+      description: 'Learn about the Text component and text rendering',
+    });
+  }
+
+  if (message.includes('StyleSheet') || message.includes('style')) {
+    links.push({
+      title: 'React Native - StyleSheet',
+      url: 'https://reactnative.dev/docs/stylesheet',
+      description: 'Understanding React Native styling',
+    });
+  }
+
+  if (message.includes('hook') || message.includes('useState') || message.includes('useEffect')) {
+    links.push({
+      title: 'React Hooks',
+      url: 'https://react.dev/reference/react/hooks',
+      description: 'Complete guide to React Hooks',
+    });
+  }
+
+  if (message.includes('navigation') || message.includes('screen')) {
+    links.push({
+      title: 'Expo Router',
+      url: 'https://docs.expo.dev/router/introduction/',
+      description: 'File-based routing for Expo apps',
+    });
+  }
+
+  if (message.includes('Platform')) {
+    links.push({
+      title: 'React Native - Platform',
+      url: 'https://reactnative.dev/docs/platform',
+      description: 'Platform-specific code',
+    });
+  }
+
+  return links;
+}
+
+/**
+ * Get documentation links for Expo errors
+ */
+export function getExpoDocLinks(message: string): DocLink[] {
+  const links: DocLink[] = [];
+
+  if (message.includes('app.json') || message.includes('config')) {
+    links.push({
+      title: 'Expo - App Configuration',
+      url: 'https://docs.expo.dev/workflow/configuration/',
+      description: 'Complete guide to app.json configuration',
+    });
+  }
+
+  if (message.includes('bundleIdentifier') || message.includes('package')) {
+    links.push({
+      title: 'Expo - Build Configuration',
+      url: 'https://docs.expo.dev/build/introduction/',
+      description: 'Setting up build identifiers',
+    });
+  }
+
+  if (message.includes('plugin')) {
+    links.push({
+      title: 'Expo - Config Plugins',
+      url: 'https://docs.expo.dev/config-plugins/introduction/',
+      description: 'Understanding Expo config plugins',
+    });
+  }
+
+  if (message.includes('prebuild')) {
+    links.push({
+      title: 'Expo - Prebuild',
+      url: 'https://docs.expo.dev/workflow/prebuild/',
+      description: 'Generating native projects',
+    });
+  }
+
+  if (message.includes('SDK')) {
+    links.push({
+      title: 'Expo - SDK Versions',
+      url: 'https://docs.expo.dev/versions/latest/',
+      description: 'Expo SDK documentation',
+    });
+  }
+
+  return links;
+}
+
+/**
  * Format documentation links for display
  */
 export function formatDocLinks(links: DocLink[]): string {

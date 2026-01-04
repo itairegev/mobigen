@@ -9,7 +9,7 @@ import { FixSuggestion } from '../enrichers/suggestions';
 import { DocLink } from '../enrichers/docs';
 
 export interface AIFormattedError {
-  type: 'typescript' | 'eslint' | 'metro' | 'unknown';
+  type: 'typescript' | 'eslint' | 'metro' | 'expo' | 'react-native' | 'unknown';
   severity: 'error' | 'warning';
   file: string;
   line?: number;

@@ -28,6 +28,8 @@ import {
 } from './parsers/eslint';
 
 import { parseMetroOutput, MetroError } from './parsers/metro';
+import { parseExpoOutput, ExpoError } from './parsers/expo';
+import { parseReactNativeError, ReactNativeError } from './parsers/react-native';
 
 import {
   getCodeContext,
@@ -39,6 +41,8 @@ import {
   getTypeScriptSuggestion,
   getESLintSuggestion,
   getGenericSuggestion,
+  getReactNativeSuggestion,
+  getExpoSuggestion,
   FixSuggestion,
 } from './enrichers/suggestions';
 
@@ -46,6 +50,8 @@ import {
   getTypeScriptDocLinks,
   getESLintDocLinks,
   getContextualDocLinks,
+  getReactNativeDocLinks,
+  getExpoDocLinks,
   DocLink,
 } from './enrichers/docs';
 
@@ -62,7 +68,7 @@ import { formatReportForConsole, formatReportAsMarkdown } from './formatters/use
  * Raw error from any source
  */
 export interface RawError {
-  source: 'typescript' | 'eslint' | 'metro';
+  source: 'typescript' | 'eslint' | 'metro' | 'expo' | 'react-native';
   rawOutput: string;
 }
 
@@ -183,6 +189,79 @@ export async function processMetroErrors(
 }
 
 /**
+ * Process Expo errors with enrichment
+ */
+export async function processExpoErrors(
+  output: string,
+  projectRoot: string
+): Promise<AIFormattedError[]> {
+  const parsed = parseExpoOutput(output);
+  const enriched: AIFormattedError[] = [];
+
+  for (const error of parsed) {
+    const context = error.line && error.file
+      ? await getCodeContext(error.file, error.line, projectRoot)
+      : null;
+
+    const suggestion = getExpoSuggestion(error.message);
+    const docs = getExpoDocLinks(error.message);
+
+    enriched.push(
+      formatErrorForAI(
+        {
+          type: 'expo',
+          severity: error.severity,
+          file: error.file || 'expo',
+          line: error.line,
+          column: error.column,
+          message: error.message,
+        },
+        { suggestion: suggestion || undefined, context: context || undefined, docs, category: error.type }
+      )
+    );
+  }
+
+  return enriched;
+}
+
+/**
+ * Process React Native errors with enrichment
+ */
+export async function processReactNativeErrors(
+  output: string,
+  projectRoot: string
+): Promise<AIFormattedError[]> {
+  const parsed = parseReactNativeError(output);
+  const enriched: AIFormattedError[] = [];
+
+  for (const error of parsed) {
+    const context = error.line && error.file
+      ? await getCodeContext(error.file, error.line, projectRoot)
+      : null;
+
+    // Try RN-specific and generic suggestions
+    const suggestion = getReactNativeSuggestion(error.message) || getGenericSuggestion(error.message);
+
+    const docs = getReactNativeDocLinks(error.message);
+
+    enriched.push(
+      formatErrorForAI(
+        {
+          type: 'react-native',
+          severity: 'error',
+          file: error.file || 'unknown',
+          line: error.line,
+          message: error.message,
+        },
+        { suggestion: suggestion || undefined, context: context || undefined, docs, category: error.type }
+      )
+    );
+  }
+
+  return enriched;
+}
+
+/**
  * Process all errors from multiple sources
  */
 export async function processAllErrors(
@@ -201,6 +280,12 @@ export async function processAllErrors(
         break;
       case 'metro':
         allErrors.push(...await processMetroErrors(error.rawOutput, projectRoot));
+        break;
+      case 'expo':
+        allErrors.push(...await processExpoErrors(error.rawOutput, projectRoot));
+        break;
+      case 'react-native':
+        allErrors.push(...await processReactNativeErrors(error.rawOutput, projectRoot));
         break;
     }
   }

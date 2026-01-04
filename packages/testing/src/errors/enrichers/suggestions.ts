@@ -227,5 +227,184 @@ export function getGenericSuggestion(message: string): FixSuggestion | null {
     };
   }
 
+  if (message.includes('must be rendered within')) {
+    return {
+      description: 'Wrap the content in the required component',
+      action: 'review',
+      autoFixable: false,
+      confidence: 0.85,
+    };
+  }
+
+  if (message.includes('is deprecated')) {
+    return {
+      description: 'Update to the recommended alternative',
+      action: 'change',
+      autoFixable: false,
+      confidence: 0.9,
+    };
+  }
+
+  if (message.includes('unmounted component')) {
+    return {
+      description: 'Add cleanup logic to prevent state updates on unmounted components',
+      action: 'add',
+      example: 'useEffect(() => { let mounted = true; ... return () => { mounted = false; }; }, []);',
+      autoFixable: false,
+      confidence: 0.8,
+    };
+  }
+
+  return null;
+}
+
+/**
+ * React Native specific suggestions
+ */
+const REACT_NATIVE_SUGGESTIONS: Record<string, FixSuggestion> = {
+  'text-component': {
+    description: 'Wrap text strings in a <Text> component',
+    action: 'change',
+    example: '<Text>Your text here</Text>',
+    autoFixable: true,
+    confidence: 0.95,
+  },
+
+  'undefined-object': {
+    description: 'Add null/undefined checks before accessing properties',
+    action: 'add',
+    example: 'obj?.property or if (obj) { obj.property }',
+    autoFixable: true,
+    confidence: 0.9,
+  },
+
+  'view-prop-types': {
+    description: 'Replace ViewPropTypes with ViewProps from react-native',
+    action: 'change',
+    example: "import { ViewProps } from 'react-native';",
+    autoFixable: true,
+    confidence: 0.95,
+  },
+
+  'hooks-rules': {
+    description: 'Move hook calls to the top level of the function component',
+    action: 'change',
+    autoFixable: false,
+    confidence: 0.7,
+  },
+
+  'screen-not-found': {
+    description: 'Register the screen in your navigator configuration',
+    action: 'add',
+    autoFixable: true,
+    confidence: 0.85,
+  },
+};
+
+/**
+ * Expo specific suggestions
+ */
+const EXPO_SUGGESTIONS: Record<string, FixSuggestion> = {
+  'missing-bundle-id': {
+    description: 'Add ios.bundleIdentifier to app.json',
+    action: 'add',
+    example: '"ios": { "bundleIdentifier": "com.yourcompany.yourapp" }',
+    autoFixable: true,
+    confidence: 0.95,
+  },
+
+  'missing-package': {
+    description: 'Add android.package to app.json',
+    action: 'add',
+    example: '"android": { "package": "com.yourcompany.yourapp" }',
+    autoFixable: true,
+    confidence: 0.95,
+  },
+
+  'invalid-config': {
+    description: 'Check app.json for invalid or missing required fields',
+    action: 'review',
+    autoFixable: false,
+    confidence: 0.8,
+  },
+
+  'plugin-error': {
+    description: 'Install the required Expo config plugin package',
+    action: 'add',
+    autoFixable: false,
+    confidence: 0.75,
+  },
+
+  'prebuild-clean': {
+    description: 'Run npx expo prebuild --clean to regenerate native projects',
+    action: 'review',
+    example: 'npx expo prebuild --clean',
+    autoFixable: false,
+    confidence: 0.9,
+  },
+
+  'sdk-version': {
+    description: 'Check SDK version compatibility in app.json and package.json',
+    action: 'review',
+    autoFixable: false,
+    confidence: 0.8,
+  },
+};
+
+/**
+ * Get suggestion for React Native error
+ */
+export function getReactNativeSuggestion(message: string): FixSuggestion | null {
+  if (message.includes('Text strings must be rendered')) {
+    return REACT_NATIVE_SUGGESTIONS['text-component'];
+  }
+
+  if (message.includes('undefined is not an object') || message.includes('Cannot read property')) {
+    return REACT_NATIVE_SUGGESTIONS['undefined-object'];
+  }
+
+  if (message.includes('ViewPropTypes')) {
+    return REACT_NATIVE_SUGGESTIONS['view-prop-types'];
+  }
+
+  if (message.includes('Hooks can only be called') || message.includes('Rendered more hooks')) {
+    return REACT_NATIVE_SUGGESTIONS['hooks-rules'];
+  }
+
+  if (message.includes('screen') && message.includes('not in the navigator')) {
+    return REACT_NATIVE_SUGGESTIONS['screen-not-found'];
+  }
+
+  return null;
+}
+
+/**
+ * Get suggestion for Expo error
+ */
+export function getExpoSuggestion(message: string): FixSuggestion | null {
+  if (message.includes('bundleIdentifier')) {
+    return EXPO_SUGGESTIONS['missing-bundle-id'];
+  }
+
+  if (message.includes('android.package')) {
+    return EXPO_SUGGESTIONS['missing-package'];
+  }
+
+  if (message.includes('config') || message.includes('app.json')) {
+    return EXPO_SUGGESTIONS['invalid-config'];
+  }
+
+  if (message.includes('plugin')) {
+    return EXPO_SUGGESTIONS['plugin-error'];
+  }
+
+  if (message.includes('prebuild')) {
+    return EXPO_SUGGESTIONS['prebuild-clean'];
+  }
+
+  if (message.includes('SDK version') || message.includes('version')) {
+    return EXPO_SUGGESTIONS['sdk-version'];
+  }
+
   return null;
 }
