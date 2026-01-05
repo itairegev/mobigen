@@ -128,8 +128,8 @@ export class OTAService {
     const metrics = await this.otaUpdatesService.getUpdateMetrics(updateId);
 
     // Calculate aggregate success rate
-    const totalSuccess = metrics.reduce((sum, m) => sum + m.successCount, 0);
-    const totalFailure = metrics.reduce((sum, m) => sum + m.failureCount, 0);
+    const totalSuccess = metrics.reduce((sum: number, m: { successCount: number }) => sum + m.successCount, 0);
+    const totalFailure = metrics.reduce((sum: number, m: { failureCount: number }) => sum + m.failureCount, 0);
     const successRate = totalSuccess + totalFailure > 0
       ? totalSuccess / (totalSuccess + totalFailure)
       : 0;

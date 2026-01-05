@@ -54,7 +54,7 @@ export class CodeFormatter {
   constructor() {
     this.prettierConfig = { ...DEFAULT_PRETTIER_CONFIG };
     this.eslint = new ESLint({
-      baseConfig: DEFAULT_ESLINT_CONFIG,
+      baseConfig: DEFAULT_ESLINT_CONFIG as unknown as ESLint.ConfigData,
       fix: true,
       useEslintrc: false, // Don't use external configs
     });

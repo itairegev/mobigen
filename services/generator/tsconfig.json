@@ -21,6 +21,8 @@
   "references": [
     { "path": "../../packages/claude-agent-sdk" },
     { "path": "../../packages/ai" },
-    { "path": "../../packages/storage" }
+    { "path": "../../packages/storage" },
+    { "path": "../../packages/ota-updates" },
+    { "path": "../../packages/testing" }
   ]
 }

@@ -647,22 +647,22 @@ Output JSON with just: { "template": "base", "category": "..." }`,
         context.astContext = preGenAst.structure;
         context.astContextSummary = preGenAst.summary;
         logger.info('AST context loaded from pre-generated file', {
-          screens: context.astContext.screens.length,
-          components: context.astContext.components.length,
-          hooks: context.astContext.hooks.length,
-          services: context.astContext.services.length,
-          routes: context.astContext.navigation.routes.length,
+          screens: context.astContext?.screens?.length ?? 0,
+          components: context.astContext?.components?.length ?? 0,
+          hooks: context.astContext?.hooks?.length ?? 0,
+          services: context.astContext?.services?.length ?? 0,
+          routes: context.astContext?.navigation?.routes?.length ?? 0,
         });
       } else {
         // Fall back to runtime analysis
         context.astContext = await analyzeProject(projectPath);
         context.astContextSummary = await generateLLMContext(projectPath);
         logger.info('AST context generated at runtime', {
-          screens: context.astContext.screens.length,
-          components: context.astContext.components.length,
-          hooks: context.astContext.hooks.length,
-          services: context.astContext.services.length,
-          routes: context.astContext.navigation.routes.length,
+          screens: context.astContext?.screens?.length ?? 0,
+          components: context.astContext?.components?.length ?? 0,
+          hooks: context.astContext?.hooks?.length ?? 0,
+          services: context.astContext?.services?.length ?? 0,
+          routes: context.astContext?.navigation?.routes?.length ?? 0,
         });
       }
     } catch (astError) {

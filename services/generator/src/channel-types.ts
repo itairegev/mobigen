@@ -55,14 +55,16 @@ export interface ChannelConfig {
 /**
  * Default channel configurations
  */
-export const DEFAULT_CHANNEL_CONFIGS: Record<string, Required<ChannelConfig>> = {
+// Note: Using Omit to exclude optional minVersion from Required since it can be undefined
+type DefaultChannelConfig = Omit<Required<ChannelConfig>, 'minVersion'> & Pick<ChannelConfig, 'minVersion'>;
+
+export const DEFAULT_CHANNEL_CONFIGS: Record<string, DefaultChannelConfig> = {
   development: {
     autoUpdate: true,
     rolloutPercentage: 100,
     maxRetries: 3,
     updateCheckInterval: 60, // Check every minute
     notifyBeforeUpdate: false,
-    minVersion: undefined,
     metadata: {},
   },
   staging: {
@@ -71,7 +73,6 @@ export const DEFAULT_CHANNEL_CONFIGS: Record<string, Required<ChannelConfig>> = 
     maxRetries: 3,
     updateCheckInterval: 300, // Check every 5 minutes
     notifyBeforeUpdate: true,
-    minVersion: undefined,
     metadata: {},
   },
   production: {
@@ -80,7 +81,6 @@ export const DEFAULT_CHANNEL_CONFIGS: Record<string, Required<ChannelConfig>> = 
     maxRetries: 2,
     updateCheckInterval: 3600, // Check every hour
     notifyBeforeUpdate: true,
-    minVersion: undefined,
     metadata: {},
   },
 };

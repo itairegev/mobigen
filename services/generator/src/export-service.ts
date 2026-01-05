@@ -6,7 +6,7 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import * as archiver from 'archiver';
+import archiver from 'archiver';
 import tar from 'tar';
 import { v4 as uuidv4 } from 'uuid';
 import { createWriteStream } from 'fs';

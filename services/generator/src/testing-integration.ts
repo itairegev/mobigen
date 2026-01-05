@@ -192,7 +192,7 @@ export class TestingIntegration {
       else this.lastTier3Result = result;
 
       // Convert to TaskErrors
-      const errors: TaskError[] = result.errors.map(err => ({
+      const errors: TaskError[] = result.errors.map((err: { rule?: string; message: string; file?: string; line?: number }) => ({
         code: err.rule || `${tier.toUpperCase()}_ERROR`,
         message: err.message,
         file: err.file,
@@ -204,7 +204,7 @@ export class TestingIntegration {
         await emitProgress(projectId, `testing:${tier}:complete`, {
           passed: result.passed,
           duration: result.duration,
-          stages: Object.entries(result.stages).map(([name, stage]) => ({
+          stages: Object.entries(result.stages).map(([name, stage]: [string, { passed: boolean; duration: number; errors: unknown[] }]) => ({
             name,
             passed: stage.passed,
             duration: stage.duration,

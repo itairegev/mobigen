@@ -353,3 +353,11 @@ export class GenerationLogger {
 export function createLogger(projectId: string, projectPath: string): GenerationLogger {
   return new GenerationLogger(projectId, projectPath);
 }
+
+// Simple logger for use in services without a project context
+export const logger = {
+  debug: (message: string, data?: unknown) => console.log(`[DEBUG] ${message}`, data || ''),
+  info: (message: string, data?: unknown) => console.log(`[INFO] ${message}`, data || ''),
+  warn: (message: string, data?: unknown) => console.warn(`[WARN] ${message}`, data || ''),
+  error: (message: string, data?: unknown) => console.error(`[ERROR] ${message}`, data || ''),
+};

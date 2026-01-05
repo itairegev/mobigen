@@ -62,8 +62,8 @@ export const DEFAULT_ESLINT_CONFIG = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: 2022 as const,
+    sourceType: 'module' as const,
     ecmaFeatures: {
       jsx: true,
     },
