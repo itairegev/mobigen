@@ -144,3 +144,66 @@ export {
   parseAgentOutputStrict,
   isValidAgentOutput,
 } from './schemas';
+
+// Export AI Providers (OpenAI/ChatGPT + Claude)
+export {
+  // Types
+  type AIProviderType,
+  type AIModel,
+  type OpenAIModel,
+  type ClaudeModel,
+  type Message,
+  type ToolCall,
+  type ToolDefinition,
+  type CompletionOptions,
+  type CompletionResult,
+  type StreamChunk,
+  type EmbeddingOptions,
+  type EmbeddingResult,
+  type AIProviderConfig,
+  type AIProvider as AIProviderInterface,
+  type ModelSelectorConfig,
+  type TaskModelMapping,
+  // Base provider
+  BaseAIProvider,
+  // OpenAI provider
+  OpenAIProvider,
+  createOpenAIProvider,
+  // Claude provider
+  ClaudeProvider,
+  createClaudeProvider,
+  // Model selector
+  ModelSelector,
+  createModelSelector,
+} from './providers/index.js';
+
+// Export Agent Spawning System
+export {
+  // Types
+  type TaskPriority,
+  type AgentState,
+  type TaskStatus,
+  type AgentConfig as SpawningAgentConfig,
+  type AgentTask,
+  type AgentInstance,
+  type AgentSpawnRequest,
+  type AgentSpawnResult,
+  type TaskResult,
+  type AgentPoolConfig,
+  type TaskQueueConfig,
+  type ParallelExecutionConfig,
+  type ParallelExecutionResult,
+  type AgentLifecycleEvent,
+  type AgentLifecycleEventData,
+  type LifecycleEventListener,
+  type AgentExecutionContext,
+  type AgentHealth,
+  // Classes
+  AgentFactory,
+  agentFactory,
+  TaskQueue,
+  AgentPool,
+  ParallelExecutor,
+  LifecycleManager,
+  lifecycleManager,
+} from './spawning/index.js';
