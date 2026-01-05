@@ -69,25 +69,26 @@ export interface RollbackError {
 // ============================================================================
 
 /**
+ * Update info for rollback validation
+ */
+export interface RollbackUpdateInfo {
+  id: string;
+  version: number;
+  message: string;
+  publishedAt: Date;
+  platform: string;
+  channelId?: string;
+  filesModified?: string[];
+}
+
+/**
  * Validation result for rollback eligibility
  */
 export interface RollbackValidation {
   canRollback: boolean;
   reason?: string;
-  targetUpdate?: {
-    id: string;
-    version: number;
-    message: string;
-    publishedAt: Date;
-    platform: string;
-  };
-  currentUpdate?: {
-    id: string;
-    version: number;
-    message: string;
-    publishedAt: Date;
-    platform: string;
-  };
+  targetUpdate?: RollbackUpdateInfo;
+  currentUpdate?: RollbackUpdateInfo;
   warnings?: RollbackWarning[];
   restrictions?: RollbackRestriction[];
 }

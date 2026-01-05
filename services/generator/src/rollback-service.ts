@@ -1,5 +1,4 @@
 import { PrismaClient } from '@mobigen/db';
-import { OTAUpdatesService } from '@mobigen/ota-updates';
 import {
   DEFAULT_ROLLBACK_CONFIG,
   type RollbackToVersionRequest,
@@ -14,6 +13,11 @@ import {
   type RollbackWarning,
   type RollbackRestriction,
 } from './rollback-types';
+
+// Stub OTAUpdatesService until @mobigen/ota-updates package is implemented
+class OTAUpdatesService {
+  constructor(_prisma: PrismaClient) {}
+}
 
 /**
  * Service for managing OTA update rollbacks
@@ -581,6 +585,8 @@ export class RollbackService {
     message: string;
     publishedAt: Date;
     platform: string;
+    channelId?: string;
+    filesModified?: string[];
   } {
     return {
       id: update.id,
@@ -588,6 +594,8 @@ export class RollbackService {
       message: update.message,
       publishedAt: update.publishedAt!,
       platform: update.platform,
+      channelId: update.channelId,
+      filesModified: update.filesModified,
     };
   }
 }

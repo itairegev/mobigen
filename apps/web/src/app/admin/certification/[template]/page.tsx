@@ -8,8 +8,46 @@ import {
   ValidationResult,
 } from '@/components/certification';
 
+type CertificationLevel = 'gold' | 'silver' | 'bronze' | 'failed' | 'pending';
+
+interface HistoryEntry {
+  date: Date;
+  passed: boolean;
+  certification: CertificationLevel;
+}
+
+interface TemplateDetails {
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  lastRun: Date;
+  tier1: {
+    passed: boolean;
+    totalChecks: number;
+    passedChecks: number;
+    duration: number;
+    checks: Array<{ name: string; passed: boolean; required: boolean; duration: number; errors?: Array<{ file?: string; line?: number; message: string; fixable?: boolean }> }>;
+  };
+  tier2: {
+    passed: boolean;
+    totalChecks: number;
+    passedChecks: number;
+    duration: number;
+    checks: Array<{ name: string; passed: boolean; required: boolean; duration: number; errors?: Array<{ file?: string; line?: number; message: string; fixable?: boolean }> }>;
+  };
+  tier3: {
+    passed: boolean;
+    totalChecks: number;
+    passedChecks: number;
+    duration: number;
+    checks: Array<{ name: string; passed: boolean; required: boolean; duration: number; errors?: Array<{ file?: string; line?: number; message: string; fixable?: boolean }> }>;
+  };
+  history: HistoryEntry[];
+}
+
 // Mock validation data - in production this would come from API
-const MOCK_TEMPLATE_DETAILS = {
+const MOCK_TEMPLATE_DETAILS: Record<string, TemplateDetails> = {
   'ecommerce-base': {
     name: 'E-commerce Base',
     slug: 'ecommerce-base',

@@ -56,7 +56,9 @@ export function GitHubSyncDashboard({ projectId, userId }: GitHubSyncDashboardPr
   } = useSyncStatus({
     projectId,
     enabled: !!connection,
-    refetchInterval: syncConfig?.syncStatus === 'syncing' ? 5000 : undefined,
+    // Note: To enable refetchInterval based on syncStatus, use a separate useEffect
+    // or pass a callback function if the hook supports it
+    refetchInterval: false,
   });
 
   // Fetch sync history

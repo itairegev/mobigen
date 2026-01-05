@@ -6,7 +6,7 @@ interface ValidationError {
 }
 
 interface ValidationResultProps {
-  checkName: string;
+  name: string;
   passed: boolean;
   required: boolean;
   duration?: number;
@@ -14,7 +14,7 @@ interface ValidationResultProps {
 }
 
 export function ValidationResult({
-  checkName,
+  name,
   passed,
   required,
   duration,
@@ -41,7 +41,7 @@ export function ValidationResult({
                 ? 'text-red-900 dark:text-red-100'
                 : 'text-yellow-900 dark:text-yellow-100'
             }`}>
-              {checkName}
+              {name}
             </h5>
             <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
               <span className={`px-2 py-0.5 rounded ${

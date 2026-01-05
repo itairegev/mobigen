@@ -141,8 +141,8 @@ export const ConnectorConfigModal = React.forwardRef<HTMLDivElement, ConnectorCo
           {field.type === 'select' ? (
             <Select
               value={credentials[field.key] || ''}
-              onChange={(e) =>
-                setCredentials({ ...credentials, [field.key]: e.target.value })
+              onChange={(value) =>
+                setCredentials({ ...credentials, [field.key]: value })
               }
               options={field.options || []}
               className={cn(hasError && 'border-red-500')}

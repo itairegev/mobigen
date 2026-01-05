@@ -5,8 +5,25 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
-import { slaMonitor } from '@/services/generator/src/sla-monitor';
+import { authOptions } from '@/lib/auth';
+
+interface Incident {
+  id: string;
+  serviceId: string;
+  serviceType: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  status: 'active' | 'resolved' | 'investigating';
+  detectedAt: Date;
+  resolvedAt?: Date;
+  description: string;
+}
+
+// Stub for SLA monitor - in production this would be a real service
+const slaMonitor = {
+  getIncidents: async (_serviceId: string, _period: { start: Date; end: Date }): Promise<Incident[]> => {
+    return [];
+  },
+};
 
 export async function GET(request: NextRequest) {
   try {

@@ -7,6 +7,7 @@ export interface ValidationError {
   message: string;
   severity: 'error' | 'warning';
   rule?: string;
+  code?: string;
 }
 
 export interface ValidationResult {
@@ -31,6 +32,14 @@ export interface ValidatorConfig {
   tier: ValidationTier;
   timeout?: number;
   cwd?: string;
+  tsOptions?: {
+    skipLibCheck?: boolean;
+    incremental?: boolean;
+  };
+  eslintOptions?: {
+    rules?: Record<string, unknown>;
+    maxWarnings?: number;
+  };
 }
 
 export interface Validator {

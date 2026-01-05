@@ -109,7 +109,7 @@ export default function UpdatesPage() {
 
     MOCK_UPDATES.forEach((update) => {
       stats[update.channel].total++;
-      if (update.status === 'active' || update.status === 'paused') {
+      if (update.status === 'active') {
         stats[update.channel].active++;
       }
     });
