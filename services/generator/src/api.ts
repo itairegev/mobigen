@@ -2905,4 +2905,134 @@ app.post('/api/projects/:projectId/branding/preview', async (req, res) => {
   }
 });
 
+// ═══════════════════════════════════════════════════════════════════════════
+// PROJECT INTEGRATIONS ENDPOINTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// In-memory storage for integrations (in production, use database)
+const projectIntegrations: Record<string, Record<string, { configured: boolean; lastUpdated: string }>> = {};
+
+// Get all integrations for a project
+app.get('/api/projects/:projectId/integrations', async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    const integrations = projectIntegrations[projectId] || {};
+
+    res.json({
+      success: true,
+      projectId,
+      integrations,
+    });
+  } catch (error) {
+    console.error('[api] Failed to get integrations:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get integrations',
+    });
+  }
+});
+
+// Save integration credentials
+app.post('/api/projects/:projectId/integrations/:integrationId', async (req, res) => {
+  const { projectId, integrationId } = req.params;
+  const { credentials } = req.body;
+
+  try {
+    if (!credentials || typeof credentials !== 'object') {
+      return res.status(400).json({
+        success: false,
+        error: 'Credentials are required',
+      });
+    }
+
+    // Initialize project integrations if not exists
+    if (!projectIntegrations[projectId]) {
+      projectIntegrations[projectId] = {};
+    }
+
+    // Store integration status (in production, encrypt and store credentials securely)
+    projectIntegrations[projectId][integrationId] = {
+      configured: true,
+      lastUpdated: new Date().toISOString(),
+    };
+
+    // In production, save encrypted credentials to database
+    // await saveIntegrationCredentials(projectId, integrationId, credentials);
+
+    console.log(`[api] Integration ${integrationId} configured for project ${projectId}`);
+
+    res.json({
+      success: true,
+      message: `Integration ${integrationId} configured successfully`,
+      integration: {
+        id: integrationId,
+        configured: true,
+        lastUpdated: projectIntegrations[projectId][integrationId].lastUpdated,
+      },
+    });
+  } catch (error) {
+    console.error('[api] Failed to save integration:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to save integration',
+    });
+  }
+});
+
+// Delete integration credentials
+app.delete('/api/projects/:projectId/integrations/:integrationId', async (req, res) => {
+  const { projectId, integrationId } = req.params;
+
+  try {
+    if (projectIntegrations[projectId]) {
+      delete projectIntegrations[projectId][integrationId];
+    }
+
+    // In production, delete from database
+    // await deleteIntegrationCredentials(projectId, integrationId);
+
+    console.log(`[api] Integration ${integrationId} disconnected for project ${projectId}`);
+
+    res.json({
+      success: true,
+      message: `Integration ${integrationId} disconnected successfully`,
+    });
+  } catch (error) {
+    console.error('[api] Failed to delete integration:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete integration',
+    });
+  }
+});
+
+// Get integration status
+app.get('/api/projects/:projectId/integrations/:integrationId', async (req, res) => {
+  const { projectId, integrationId } = req.params;
+
+  try {
+    const integration = projectIntegrations[projectId]?.[integrationId];
+
+    if (!integration) {
+      return res.json({
+        success: true,
+        configured: false,
+      });
+    }
+
+    res.json({
+      success: true,
+      configured: integration.configured,
+      lastUpdated: integration.lastUpdated,
+    });
+  } catch (error) {
+    console.error('[api] Failed to get integration status:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get integration status',
+    });
+  }
+});
+
 export { app, httpServer, io };
