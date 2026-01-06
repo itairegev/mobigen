@@ -7,9 +7,19 @@ import { ChatInterface } from '@/components/chat/ChatInterface';
 import { useGenerator } from '@/hooks/useGenerator';
 import type { GenerationPhase, ProjectConfig } from '@/lib/types';
 
-type Tab = 'progress' | 'chat' | 'files' | 'preview' | 'history';
+type Tab = 'progress' | 'chat' | 'files' | 'builds';
 
 const GENERATOR_URL = process.env.NEXT_PUBLIC_GENERATOR_URL || 'http://localhost:4000';
+const ADMIN_URL = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001';
+
+// Build status types
+interface BuildArtifact {
+  platform: 'ios' | 'android';
+  status: 'pending' | 'building' | 'ready' | 'failed';
+  downloadUrl?: string;
+  errorMessage?: string;
+  requiresAction?: string;
+}
 
 export default function ProjectPage() {
   const params = useParams();
@@ -19,23 +29,20 @@ export default function ProjectPage() {
   const [activeTab, setActiveTab] = useState<Tab>('progress');
   const [hasStarted, setHasStarted] = useState(false);
   const [promptInput, setPromptInput] = useState('');
-  const [showBuildModal, setShowBuildModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const [buildInstructions, setBuildInstructions] = useState<Record<string, unknown> | null>(null);
-  const [previewInstructions, setPreviewInstructions] = useState<Record<string, unknown> | null>(null);
+  const [previewQrCode, setPreviewQrCode] = useState<string | null>(null);
+  const [buildArtifacts, setBuildArtifacts] = useState<BuildArtifact[]>([]);
 
-  // Project info from URL params (in real app, fetch from API)
+  // Project info from URL params
   const projectName = searchParams.get('name') || 'My App';
   const template = searchParams.get('template') || 'base';
   const initialPrompt = searchParams.get('prompt') || '';
-  const primaryColor = searchParams.get('primaryColor') || '#3b82f6';
-  const secondaryColor = searchParams.get('secondaryColor') || '#10b981';
-  const bundleId = searchParams.get('bundleId') || `com.app.${projectName.toLowerCase().replace(/\s+/g, '')}`;
+  const primaryColor = searchParams.get('primaryColor') || '#6366F1';
+  const secondaryColor = searchParams.get('secondaryColor') || '#8B5CF6';
+  const bundleId = searchParams.get('bundleId') || `com.mobigen.${projectName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
 
-  // Track the actual prompt being used (either from URL or from input)
   const [activePrompt, setActivePrompt] = useState(initialPrompt);
 
-  // Use the real generator hook
   const {
     isConnected,
     isGenerating,
@@ -57,43 +64,21 @@ export default function ProjectPage() {
     fetchFailedTasks,
   } = useGenerator({ projectId, autoConnect: true });
 
-  // Start generation when we have a prompt from URL and connection
-  // IMPORTANT: Wait for isLoading to be false to check if a job already exists
+  // Auto-start generation
   useEffect(() => {
-    // Don't start until we've loaded existing job state
     if (isLoading) return;
-
-    // Don't start if we've already started in this session
     if (hasStarted) return;
-
-    // Don't start if already generating or have a result
     if (isGenerating || result) return;
-
-    // Don't start if there's already an existing job for this project
-    // (prevents restart when navigating back to the page)
     if (jobId) {
-      console.log('[ProjectPage] Existing job found, not starting new generation:', jobId);
-      // Mark as started to prevent any future re-triggers
-      if (!hasStarted) {
-        setHasStarted(true);
-      }
+      if (!hasStarted) setHasStarted(true);
       return;
     }
-
-    // Don't start without a prompt or connection
     if (!initialPrompt || !isConnected) return;
 
     const config: ProjectConfig = {
       appName: projectName,
-      bundleId: {
-        ios: bundleId,
-        android: bundleId.replace(/\./g, '_'),
-      },
-      branding: {
-        displayName: projectName,
-        primaryColor,
-        secondaryColor,
-      },
+      bundleId: { ios: bundleId, android: bundleId.replace(/\./g, '_') },
+      branding: { displayName: projectName, primaryColor, secondaryColor },
       identifiers: {
         projectId,
         easProjectId: `eas-${projectId}`,
@@ -102,27 +87,37 @@ export default function ProjectPage() {
       },
     };
 
-    console.log('[ProjectPage] Starting new generation for project:', projectId);
     setHasStarted(true);
     setActivePrompt(initialPrompt);
     startGeneration(initialPrompt, config);
   }, [initialPrompt, isConnected, hasStarted, isGenerating, isLoading, result, jobId, projectId, projectName, bundleId, primaryColor, secondaryColor, startGeneration]);
 
-  // Handler for manual prompt submission
+  // Fetch build artifacts when generation is complete
+  useEffect(() => {
+    if (result?.success || jobStatus === 'completed') {
+      fetchBuildArtifacts();
+    }
+  }, [result, jobStatus]);
+
+  const fetchBuildArtifacts = async () => {
+    try {
+      const response = await fetch(`${GENERATOR_URL}/api/projects/${projectId}/builds`);
+      if (response.ok) {
+        const data = await response.json();
+        setBuildArtifacts(data.builds || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch build artifacts:', err);
+    }
+  };
+
   const handleStartGeneration = () => {
     if (!promptInput.trim() || !isConnected || isGenerating) return;
 
     const config: ProjectConfig = {
       appName: projectName,
-      bundleId: {
-        ios: bundleId,
-        android: bundleId.replace(/\./g, '_'),
-      },
-      branding: {
-        displayName: projectName,
-        primaryColor,
-        secondaryColor,
-      },
+      bundleId: { ios: bundleId, android: bundleId.replace(/\./g, '_') },
+      branding: { displayName: projectName, primaryColor, secondaryColor },
       identifiers: {
         projectId,
         easProjectId: `eas-${projectId}`,
@@ -136,116 +131,110 @@ export default function ProjectPage() {
     startGeneration(promptInput, config);
   };
 
-  const getStatusIcon = (status: GenerationPhase['status']) => {
-    switch (status) {
-      case 'completed':
-        return '✓';
-      case 'running':
-        return '⏳';
-      case 'error':
-        return '✗';
-      default:
-        return '○';
-    }
-  };
-
-  const getStatusColor = (status: GenerationPhase['status']) => {
-    switch (status) {
-      case 'completed':
-        return 'text-green-500';
-      case 'running':
-        return 'text-yellow-500';
-      case 'error':
-        return 'text-red-500';
-      default:
-        return 'text-slate-400';
-    }
-  };
-
-  const completedPhases = phases.filter((p) => p.status === 'completed').length;
-  const generationComplete = completedPhases === phases.length && result !== null;
-
-  // Handler for download button
-  const handleDownload = () => {
-    window.open(`${GENERATOR_URL}/api/projects/${projectId}/download`, '_blank');
-  };
-
-  // Handler for build button
-  const handleBuild = async () => {
-    try {
-      const response = await fetch(`${GENERATOR_URL}/api/projects/${projectId}/build`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ platform: 'all' }),
-      });
-      const data = await response.json();
-      setBuildInstructions(data);
-      setShowBuildModal(true);
-    } catch (error) {
-      console.error('Build error:', error);
-      alert('Failed to get build instructions');
-    }
-  };
-
-  // Handler for preview button
   const handlePreview = async () => {
     try {
       const response = await fetch(`${GENERATOR_URL}/api/projects/${projectId}/preview`);
       const data = await response.json();
-      setPreviewInstructions(data);
+      setPreviewQrCode(data.qrCode || null);
       setShowPreviewModal(true);
-    } catch (error) {
-      console.error('Preview error:', error);
-      alert('Failed to get preview instructions');
+    } catch (err) {
+      console.error('Preview error:', err);
     }
   };
 
+  const handleTriggerBuild = async (platform: 'ios' | 'android' | 'all') => {
+    try {
+      await fetch(`${GENERATOR_URL}/api/projects/${projectId}/build`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ platform }),
+      });
+      // Refresh build status
+      setTimeout(fetchBuildArtifacts, 2000);
+    } catch (err) {
+      console.error('Build error:', err);
+    }
+  };
+
+  const getStatusIcon = (status: GenerationPhase['status']) => {
+    switch (status) {
+      case 'completed': return <CheckIcon className="w-5 h-5 text-emerald-400" />;
+      case 'running': return <SpinnerIcon className="w-5 h-5 text-amber-400 animate-spin" />;
+      case 'error': return <XIcon className="w-5 h-5 text-red-400" />;
+      default: return <CircleIcon className="w-5 h-5 text-white/20" />;
+    }
+  };
+
+  const completedPhases = phases.filter((p) => p.status === 'completed').length;
+  const generationComplete = completedPhases === phases.length && (result !== null || jobStatus === 'completed');
+  const validationComplete = phases.find(p => p.id === 'validation')?.status === 'completed';
+  const hasFailedBuild = buildArtifacts.some(b => b.status === 'failed');
+  const hasReadyBuild = buildArtifacts.some(b => b.status === 'ready');
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-[#0A0A0B]">
+      {/* Gradient Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute -top-1/2 -left-1/2 w-full h-full opacity-20 blur-3xl"
+          style={{ background: `radial-gradient(circle, ${primaryColor}40 0%, transparent 50%)` }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-        <div className="container mx-auto px-6 py-4">
+      <header className="relative z-10 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="text-slate-600 dark:text-slate-400 hover:text-slate-900"
-              >
-                ← Dashboard
+            <div className="flex items-center gap-6">
+              <Link href="/dashboard" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span className="text-sm font-medium">Dashboard</span>
               </Link>
+              <div className="h-6 w-px bg-white/10" />
               <div>
-                <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                  {projectName}
-                </h1>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Template: {template} • ID: {projectId}
-                  {!isConnected && <span className="ml-2 text-yellow-500">(Connecting...)</span>}
-                  {error && <span className="ml-2 text-red-500">(Error)</span>}
-                </p>
+                <h1 className="text-xl font-semibold text-white">{projectName}</h1>
+                <p className="text-xs text-white/40 font-mono">{bundleId}</p>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Link
-                href={`/projects/${projectId}/settings`}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
-              >
-                Integrations
-              </Link>
+
+            <div className="flex items-center gap-3">
+              {/* Connection Status */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${
+                isConnected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
+                {isConnected ? 'Connected' : 'Connecting...'}
+              </div>
+
+              {/* Preview Button - Show when validation is complete */}
+              {validationComplete && (
+                <button
+                  onClick={handlePreview}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/15 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Preview
+                </button>
+              )}
+
+              {/* Admin Link */}
               {generationComplete && (
-                <>
-                  <button
-                    onClick={handleDownload}
-                    className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-700"
-                  >
-                    Download
-                  </button>
-                  <button
-                    onClick={handleBuild}
-                    className="px-4 py-2 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600"
-                  >
-                    Build App
-                  </button>
-                </>
+                <a
+                  href={`${ADMIN_URL}/projects/${projectId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/15 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  Admin
+                </a>
               )}
             </div>
           </div>
@@ -254,97 +243,96 @@ export default function ProjectPage() {
 
       {/* Progress Bar */}
       {isGenerating && (
-        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
-          <div className="container mx-auto">
+        <div className="relative z-10 border-b border-white/10 px-6 py-4">
+          <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                Generating your app...
+              <span className="text-sm font-medium text-white">
+                {phases.find(p => p.status === 'running')?.name || 'Generating...'}
               </span>
-              <span className="text-sm text-slate-600 dark:text-slate-400">
-                {Math.round(progress)}%
-              </span>
+              <span className="text-sm text-white/60">{Math.round(progress)}%</span>
             </div>
-            <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div
-                className="h-full bg-primary-500 transition-all duration-500"
-                style={{ width: `${progress}%` }}
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${progress}%`,
+                  background: `linear-gradient(90deg, ${primaryColor}, ${secondaryColor})`
+                }}
               />
             </div>
           </div>
         </div>
       )}
 
-      {/* Error Banner */}
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-6 py-3">
-          <div className="container mx-auto">
-            <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
-              <span className="font-bold">Error:</span>
-              <span>{error}</span>
-              <div className="ml-auto flex gap-2">
-                {canResume && (
-                  <button
-                    onClick={() => resumeGeneration()}
-                    className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm"
-                  >
-                    Resume
-                  </button>
-                )}
-                <button
-                  onClick={() => {
-                    setHasStarted(false);
-                  }}
-                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-                >
-                  Start Over
-                </button>
+      {/* Error/Action Required Banner */}
+      {(error || hasFailedBuild) && (
+        <div className="relative z-10 border-b border-red-500/30 bg-red-500/10 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-red-400 font-medium">
+                  {hasFailedBuild ? 'Build Failed - Action Required' : 'Generation Error'}
+                </p>
+                <p className="text-red-400/70 text-sm">
+                  {error || buildArtifacts.find(b => b.status === 'failed')?.errorMessage}
+                </p>
               </div>
             </div>
-            {failedTasks.length > 0 && (
-              <div className="mt-2 text-sm text-red-600 dark:text-red-300">
-                {failedTasks.length} failed task(s).
+            <div className="flex gap-2">
+              {canResume && (
                 <button
-                  onClick={() => setActiveTab('history')}
-                  className="underline ml-1 hover:text-red-800"
+                  onClick={() => resumeGeneration()}
+                  className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors"
                 >
-                  View details
+                  Resume
                 </button>
-              </div>
-            )}
+              )}
+              {hasFailedBuild && (
+                <button
+                  onClick={() => handleTriggerBuild('all')}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  Retry Build
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-        <div className="container mx-auto px-6">
-          <div className="flex gap-6">
-            {(['progress', 'chat', 'files', 'preview', 'history'] as Tab[]).map((tab) => (
+      <div className="relative z-10 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex gap-1">
+            {(['progress', 'chat', 'files', 'builds'] as Tab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => {
                   setActiveTab(tab);
-                  if (tab === 'history') {
+                  if (tab === 'builds') {
                     fetchJobHistory();
-                    fetchFailedTasks();
+                    fetchBuildArtifacts();
                   }
                 }}
-                className={`py-4 border-b-2 font-medium capitalize transition-colors ${
+                className={`px-4 py-3 text-sm font-medium capitalize rounded-t-lg transition-colors ${
                   activeTab === tab
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                    ? 'bg-white/10 text-white'
+                    : 'text-white/50 hover:text-white/70'
                 }`}
               >
                 {tab}
                 {tab === 'files' && filesGenerated.length > 0 && (
-                  <span className="ml-1 text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-white/20 rounded">
                     {filesGenerated.length}
                   </span>
                 )}
-                {tab === 'history' && failedTasks.length > 0 && (
-                  <span className="ml-1 text-xs bg-red-500 text-white px-1.5 py-0.5 rounded">
-                    {failedTasks.length}
-                  </span>
+                {tab === 'builds' && hasFailedBuild && (
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-red-500 text-white rounded">!</span>
                 )}
               </button>
             ))}
@@ -352,101 +340,68 @@ export default function ProjectPage() {
         </div>
       </div>
 
-      {/* Tab Content */}
-      <main className="container mx-auto px-6 py-8">
+      {/* Main Content */}
+      <main className="relative z-10 max-w-7xl mx-auto px-6 py-8">
         {/* Progress Tab */}
         {activeTab === 'progress' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Phases List */}
-            <div className="lg:col-span-2">
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-                <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                    Generation Progress
-                  </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Phases */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                <div className="p-4 border-b border-white/10">
+                  <h2 className="text-lg font-semibold text-white">Generation Progress</h2>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="p-4 space-y-2">
                   {phases.map((phase, index) => (
                     <div
                       key={phase.id}
-                      className={`flex items-center gap-4 p-4 rounded-lg ${
-                        phase.status === 'running'
-                          ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
-                          : phase.status === 'error'
-                          ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
-                          : 'bg-slate-50 dark:bg-slate-900'
+                      className={`flex items-center gap-4 p-4 rounded-lg transition-colors ${
+                        phase.status === 'running' ? 'bg-amber-500/10 border border-amber-500/30' :
+                        phase.status === 'error' ? 'bg-red-500/10 border border-red-500/30' :
+                        phase.status === 'completed' ? 'bg-emerald-500/5' :
+                        'bg-white/5'
                       }`}
                     >
-                      <div
-                        className={`text-xl font-bold ${getStatusColor(phase.status)}`}
-                      >
-                        {getStatusIcon(phase.status)}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-slate-900 dark:text-white">
-                          {phase.name}
-                        </p>
-                        {phase.agent && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Agent: {phase.agent}
-                          </p>
-                        )}
+                      {getStatusIcon(phase.status)}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-white">{phase.name}</p>
                         {phase.message && (
-                          <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
-                            {phase.message}
-                          </p>
+                          <p className="text-sm text-white/50 truncate">{phase.message}</p>
                         )}
                       </div>
                       {phase.status === 'running' && (
-                        <div className="animate-pulse text-sm text-yellow-600 dark:text-yellow-400">
-                          Processing...
-                        </div>
+                        <span className="text-xs text-amber-400 font-medium">Processing...</span>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Result Summary */}
-              {result && (
-                <div className="mt-6 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-                  <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                      Generation Result
-                    </h2>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-2xl ${result.success ? 'text-green-500' : 'text-red-500'}`}>
-                        {result.success ? '✓' : '✗'}
-                      </span>
-                      <span className="font-medium text-slate-900 dark:text-white">
-                        {result.success ? 'Generation Successful' : 'Generation completed with issues'}
-                      </span>
+              {/* Success Card */}
+              {generationComplete && result?.success && (
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                      <CheckIcon className="w-6 h-6 text-emerald-400" />
                     </div>
-                    {result.qaReport && (
-                      <div className="grid grid-cols-2 gap-4 mt-4">
-                        <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                          <p className="text-sm text-slate-600 dark:text-slate-400">QA Score</p>
-                          <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                            {result.qaReport.overallScore}%
-                          </p>
-                        </div>
-                        <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                          <p className="text-sm text-slate-600 dark:text-slate-400">Files Generated</p>
-                          <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                            {result.files.length}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    {result.requiresReview && (
-                      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                        <p className="text-yellow-700 dark:text-yellow-400">
-                          This project requires human review before production deployment.
-                        </p>
-                      </div>
-                    )}
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">App Generated Successfully!</h3>
+                      <p className="text-emerald-400/70">Your app is ready for preview and build</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="p-4 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">{result.files?.length || filesGenerated.length}</p>
+                      <p className="text-xs text-white/50">Files Generated</p>
+                    </div>
+                    <div className="p-4 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">{result.qaReport?.overallScore || 100}%</p>
+                      <p className="text-xs text-white/50">QA Score</p>
+                    </div>
+                    <div className="p-4 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">{phases.length}</p>
+                      <p className="text-xs text-white/50">Phases Complete</p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -454,321 +409,304 @@ export default function ProjectPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Status Card */}
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
-                <h3 className="font-bold text-slate-900 dark:text-white mb-4">Status</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-slate-600 dark:text-slate-400">Connection</span>
-                    <span className={`font-medium ${isConnected ? 'text-green-600' : 'text-yellow-600'}`}>
-                      {isConnected ? 'Connected' : 'Connecting...'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-600 dark:text-slate-400">Template</span>
-                    <span className="font-medium text-slate-900 dark:text-white">{template}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-600 dark:text-slate-400">Phases</span>
-                    <span className="font-medium text-slate-900 dark:text-white">
-                      {completedPhases}/{phases.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-600 dark:text-slate-400">Files</span>
-                    <span className="font-medium text-slate-900 dark:text-white">
-                      {filesGenerated.length}
-                    </span>
-                  </div>
+              {/* Quick Actions */}
+              {generationComplete && (
+                <div className="bg-white/5 rounded-xl border border-white/10 p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Quick Actions</h3>
+                  <button
+                    onClick={handlePreview}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-white transition-colors"
+                    style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Preview on Device
+                  </button>
+                  <button
+                    onClick={() => handleTriggerBuild('all')}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/15 rounded-lg font-medium text-white transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Build for Stores
+                  </button>
+                  <a
+                    href={`${GENERATOR_URL}/api/projects/${projectId}/download`}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/15 rounded-lg font-medium text-white transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download Source
+                  </a>
                 </div>
-              </div>
+              )}
 
-              {/* Prompt Card - show input if no prompt, otherwise show the prompt */}
+              {/* Build Artifacts */}
+              {buildArtifacts.length > 0 && (
+                <div className="bg-white/5 rounded-xl border border-white/10 p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Downloads</h3>
+                  {buildArtifacts.map((artifact) => (
+                    <div
+                      key={artifact.platform}
+                      className={`p-3 rounded-lg ${
+                        artifact.status === 'ready' ? 'bg-emerald-500/10' :
+                        artifact.status === 'failed' ? 'bg-red-500/10' :
+                        artifact.status === 'building' ? 'bg-amber-500/10' :
+                        'bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{artifact.platform === 'ios' ? '🍎' : '🤖'}</span>
+                          <span className="font-medium text-white capitalize">{artifact.platform}</span>
+                        </div>
+                        {artifact.status === 'ready' && artifact.downloadUrl ? (
+                          <a
+                            href={artifact.downloadUrl}
+                            className="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-xs font-medium transition-colors"
+                          >
+                            Download {artifact.platform === 'ios' ? 'IPA' : 'APK'}
+                          </a>
+                        ) : artifact.status === 'building' ? (
+                          <span className="text-xs text-amber-400">Building...</span>
+                        ) : artifact.status === 'failed' ? (
+                          <span className="text-xs text-red-400">Failed</span>
+                        ) : null}
+                      </div>
+                      {artifact.requiresAction && (
+                        <p className="mt-2 text-xs text-amber-400 bg-amber-500/10 p-2 rounded">
+                          ⚠️ {artifact.requiresAction}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Prompt Card */}
               {!activePrompt && !hasStarted ? (
-                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-4">Describe Your App</h3>
+                <div className="bg-white/5 rounded-xl border border-white/10 p-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Describe Your App</h3>
                   <textarea
                     value={promptInput}
                     onChange={(e) => setPromptInput(e.target.value)}
-                    placeholder="Describe the app you want to build...
-
-Example: Create a coffee shop loyalty app with rewards points, QR code scanning for purchases, and a list of menu items."
-                    className="w-full h-40 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="What kind of app do you want to build?"
+                    className="w-full h-32 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 resize-none focus:outline-none focus:ring-2 focus:border-transparent"
+                    style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
                     disabled={!isConnected || isGenerating}
                   />
                   <button
                     onClick={handleStartGeneration}
                     disabled={!promptInput.trim() || !isConnected || isGenerating}
-                    className="w-full mt-4 px-4 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="w-full py-3 rounded-lg font-medium text-white transition-colors disabled:opacity-50"
+                    style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
                   >
-                    {!isConnected ? 'Connecting...' : isGenerating ? 'Generating...' : 'Generate App'}
+                    Generate App
                   </button>
-                  {!isConnected && (
-                    <p className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">
-                      Connecting to generator service...
-                    </p>
-                  )}
                 </div>
               ) : activePrompt && (
-                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-4">Your Request</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
+                <div className="bg-white/5 rounded-xl border border-white/10 p-4">
+                  <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">Your Request</h3>
+                  <p className="text-sm text-white/70 leading-relaxed">
                     {decodeURIComponent(activePrompt)}
                   </p>
                 </div>
               )}
+
+              {/* Project Info */}
+              <div className="bg-white/5 rounded-xl border border-white/10 p-4 space-y-3">
+                <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Project Info</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Template</span>
+                    <span className="text-white capitalize">{template}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Status</span>
+                    <span className={`font-medium ${
+                      generationComplete ? 'text-emerald-400' :
+                      isGenerating ? 'text-amber-400' :
+                      error ? 'text-red-400' :
+                      'text-white/70'
+                    }`}>
+                      {generationComplete ? 'Complete' :
+                       isGenerating ? 'Generating' :
+                       error ? 'Error' :
+                       'Pending'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Progress</span>
+                    <span className="text-white">{completedPhases}/{phases.length} phases</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {/* Chat Tab */}
         {activeTab === 'chat' && (
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm h-[600px] flex flex-col">
+          <div className="bg-white/5 rounded-xl border border-white/10 h-[600px] flex flex-col overflow-hidden">
             <ChatInterface projectId={projectId} />
           </div>
         )}
 
         {/* Files Tab */}
         {activeTab === 'files' && (
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                Generated Files ({filesGenerated.length})
+          <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white">
+                Generated Files
+                <span className="ml-2 text-sm text-white/50">({filesGenerated.length})</span>
               </h2>
+              {generationComplete && (
+                <a
+                  href={`${GENERATOR_URL}/api/projects/${projectId}/download`}
+                  className="px-3 py-1.5 bg-white/10 hover:bg-white/15 rounded text-sm font-medium text-white transition-colors"
+                >
+                  Download All
+                </a>
+              )}
             </div>
-            <div className="p-6">
+            <div className="p-4">
               {filesGenerated.length === 0 ? (
-                <p className="text-slate-600 dark:text-slate-400 text-center py-8">
-                  No files generated yet. Wait for the implementation phase to complete.
-                </p>
+                <div className="text-center py-12">
+                  <div className="text-4xl mb-3">📁</div>
+                  <p className="text-white/50">No files generated yet</p>
+                </div>
               ) : (
-                <div className="space-y-2">
-                  {filesGenerated
-                    .filter((file) => !file.startsWith('generated-file'))
-                    .map((file) => (
-                      <div
-                        key={file}
-                        className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg"
-                      >
-                        <span className="text-lg">
-                          {file.endsWith('.tsx') || file.endsWith('.ts')
-                            ? '📄'
-                            : file.endsWith('.json')
-                            ? '📋'
-                            : file.endsWith('.css')
-                            ? '🎨'
-                            : '📁'}
-                        </span>
-                        <span className="font-mono text-sm text-slate-700 dark:text-slate-300">
-                          {file}
-                        </span>
-                      </div>
-                    ))}
+                <div className="grid gap-2">
+                  {filesGenerated.filter(f => !f.startsWith('generated-file')).map((file) => (
+                    <div key={file} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                      <span className="text-lg">
+                        {file.endsWith('.tsx') || file.endsWith('.ts') ? '📄' :
+                         file.endsWith('.json') ? '📋' :
+                         file.endsWith('.css') ? '🎨' : '📁'}
+                      </span>
+                      <span className="font-mono text-sm text-white/70 truncate">{file}</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Preview Tab */}
-        {activeTab === 'preview' && (
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📱</div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                App Preview
-              </h2>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">
-                {generationComplete
-                  ? 'Your app is ready! Build it to see the preview.'
-                  : 'Preview will be available after generation completes.'}
-              </p>
-              {generationComplete && (
+        {/* Builds Tab */}
+        {activeTab === 'builds' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Build Status */}
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-white">Build Status</h2>
                 <button
-                  onClick={handlePreview}
-                  className="px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600"
+                  onClick={() => handleTriggerBuild('all')}
+                  disabled={!generationComplete}
+                  className="px-3 py-1.5 bg-white/10 hover:bg-white/15 disabled:opacity-50 rounded text-sm font-medium text-white transition-colors"
                 >
-                  Launch Preview
+                  New Build
                 </button>
-              )}
-            </div>
-          </div>
-        )}
+              </div>
+              <div className="p-4 space-y-4">
+                {/* iOS Build */}
+                <div className="p-4 bg-white/5 rounded-lg">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🍎</span>
+                      <span className="font-medium text-white">iOS Build</span>
+                    </div>
+                    {buildArtifacts.find(b => b.platform === 'ios')?.status === 'ready' && (
+                      <a
+                        href={buildArtifacts.find(b => b.platform === 'ios')?.downloadUrl}
+                        className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-sm font-medium"
+                      >
+                        Download IPA
+                      </a>
+                    )}
+                  </div>
+                  <BuildStatusIndicator
+                    artifact={buildArtifacts.find(b => b.platform === 'ios')}
+                    onRetry={() => handleTriggerBuild('ios')}
+                  />
+                </div>
 
-        {/* History Tab */}
-        {activeTab === 'history' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Android Build */}
+                <div className="p-4 bg-white/5 rounded-lg">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🤖</span>
+                      <span className="font-medium text-white">Android Build</span>
+                    </div>
+                    {buildArtifacts.find(b => b.platform === 'android')?.status === 'ready' && (
+                      <a
+                        href={buildArtifacts.find(b => b.platform === 'android')?.downloadUrl}
+                        className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-sm font-medium"
+                      >
+                        Download APK
+                      </a>
+                    )}
+                  </div>
+                  <BuildStatusIndicator
+                    artifact={buildArtifacts.find(b => b.platform === 'android')}
+                    onRetry={() => handleTriggerBuild('android')}
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Job History */}
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                  Job History
-                </h2>
-                <button
-                  onClick={fetchJobHistory}
-                  className="text-sm text-primary-500 hover:text-primary-600"
-                >
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-white">Generation History</h2>
+                <button onClick={fetchJobHistory} className="text-sm text-white/50 hover:text-white">
                   Refresh
                 </button>
               </div>
-              <div className="p-6">
+              <div className="p-4 max-h-[500px] overflow-y-auto">
                 {jobHistory.length === 0 ? (
-                  <p className="text-slate-600 dark:text-slate-400 text-center py-8">
-                    No generation jobs yet.
-                  </p>
+                  <div className="text-center py-8">
+                    <p className="text-white/50">No generation history</p>
+                  </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {jobHistory.map((job) => (
                       <div
                         key={job.id}
-                        className={`p-4 rounded-lg border ${
-                          job.status === 'completed'
-                            ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20'
-                            : job.status === 'failed'
-                            ? 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20'
-                            : job.status === 'running'
-                            ? 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'
-                            : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900'
+                        className={`p-3 rounded-lg ${
+                          job.status === 'completed' ? 'bg-emerald-500/10' :
+                          job.status === 'failed' ? 'bg-red-500/10' :
+                          job.status === 'running' ? 'bg-amber-500/10' :
+                          'bg-white/5'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className={`font-medium ${
-                            job.status === 'completed' ? 'text-green-700 dark:text-green-400' :
-                            job.status === 'failed' ? 'text-red-700 dark:text-red-400' :
-                            job.status === 'running' ? 'text-yellow-700 dark:text-yellow-400' :
-                            'text-slate-700 dark:text-slate-300'
+                        <div className="flex items-center justify-between mb-1">
+                          <span className={`text-sm font-medium ${
+                            job.status === 'completed' ? 'text-emerald-400' :
+                            job.status === 'failed' ? 'text-red-400' :
+                            job.status === 'running' ? 'text-amber-400' :
+                            'text-white/70'
                           }`}>
                             {job.status === 'completed' ? '✓ Completed' :
                              job.status === 'failed' ? '✗ Failed' :
                              job.status === 'running' ? '⏳ Running' :
-                             job.status === 'paused' ? '⏸ Paused' : '○ Pending'}
+                             '○ ' + job.status}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-white/40">
                             {new Date(job.createdAt).toLocaleString()}
                           </span>
                         </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
-                          <div className="flex justify-between">
-                            <span>Progress:</span>
-                            <span className="font-mono">{job.progress}%</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Tasks:</span>
-                            <span className="font-mono">
-                              {job.completedTasks}/{job.totalTasks}
-                              {job.failedTasks > 0 && (
-                                <span className="text-red-500 ml-1">({job.failedTasks} failed)</span>
-                              )}
-                            </span>
-                          </div>
-                          {job.currentPhase && (
-                            <div className="flex justify-between">
-                              <span>Last Phase:</span>
-                              <span className="font-mono">{job.currentPhase}</span>
-                            </div>
-                          )}
-                          {job.retryCount > 0 && (
-                            <div className="flex justify-between">
-                              <span>Retries:</span>
-                              <span className="font-mono">{job.retryCount}</span>
-                            </div>
-                          )}
+                        <div className="text-xs text-white/50">
+                          {job.completedTasks}/{job.totalTasks} tasks • {job.progress}% complete
                         </div>
-                        {job.errorMessage && (
-                          <div className="mt-2 p-2 bg-red-100 dark:bg-red-900/30 rounded text-sm text-red-700 dark:text-red-300">
-                            {job.errorMessage}
-                          </div>
-                        )}
-                        {(job.status === 'failed' || job.status === 'paused') && (
-                          <button
-                            onClick={() => resumeGeneration()}
-                            className="mt-3 w-full px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm font-medium"
-                          >
-                            Resume from {job.currentPhase || 'last checkpoint'}
-                          </button>
+                        {job.status === 'failed' && job.errorMessage && (
+                          <p className="mt-2 text-xs text-red-400">{job.errorMessage}</p>
                         )}
                       </div>
                     ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Failed Tasks */}
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                  Failed Tasks
-                  {failedTasks.length > 0 && (
-                    <span className="ml-2 text-sm font-normal text-red-500">
-                      ({failedTasks.length})
-                    </span>
-                  )}
-                </h2>
-                <button
-                  onClick={fetchFailedTasks}
-                  className="text-sm text-primary-500 hover:text-primary-600"
-                >
-                  Refresh
-                </button>
-              </div>
-              <div className="p-6">
-                {failedTasks.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="text-4xl mb-2">✓</div>
-                    <p className="text-slate-600 dark:text-slate-400">
-                      No failed tasks. Everything looks good!
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {failedTasks.map((task) => (
-                      <div
-                        key={task.id}
-                        className="p-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-red-500">✗</span>
-                          <span className="font-medium text-slate-900 dark:text-white">
-                            {task.agentId}
-                          </span>
-                          <span className="text-xs text-slate-500 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">
-                            {task.phase}
-                          </span>
-                        </div>
-                        {task.errorMessage && (
-                          <p className="text-sm text-red-700 dark:text-red-300 mb-2">
-                            {task.errorMessage}
-                          </p>
-                        )}
-                        <div className="text-xs text-slate-500 flex gap-4">
-                          {task.retryCount > 0 && (
-                            <span>Retries: {task.retryCount}</span>
-                          )}
-                          {task.durationMs && (
-                            <span>Duration: {Math.round(task.durationMs / 1000)}s</span>
-                          )}
-                        </div>
-                        {task.errorDetails && Object.keys(task.errorDetails).length > 0 && (
-                          <details className="mt-2">
-                            <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-700">
-                              View error details
-                            </summary>
-                            <pre className="mt-2 p-2 bg-slate-100 dark:bg-slate-900 rounded text-xs overflow-auto max-h-40">
-                              {JSON.stringify(task.errorDetails, null, 2)}
-                            </pre>
-                          </details>
-                        )}
-                      </div>
-                    ))}
-                    {canResume && (
-                      <button
-                        onClick={() => resumeGeneration()}
-                        className="w-full px-4 py-3 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600"
-                      >
-                        Resume Generation
-                      </button>
-                    )}
                   </div>
                 )}
               </div>
@@ -777,91 +715,159 @@ Example: Create a coffee shop loyalty app with rewards points, QR code scanning 
         )}
       </main>
 
-      {/* Build Instructions Modal */}
-      {showBuildModal && buildInstructions && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[80vh] overflow-auto">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Build Instructions</h3>
-              <button
-                onClick={() => setShowBuildModal(false)}
-                className="text-slate-500 hover:text-slate-700"
-              >
-                ✕
+      {/* Preview Modal */}
+      {showPreviewModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1A1A1B] rounded-2xl max-w-md w-full overflow-hidden">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-white">Preview on Device</h3>
+              <button onClick={() => setShowPreviewModal(false)} className="text-white/50 hover:text-white">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-            <div className="p-6 space-y-4">
-              <p className="text-slate-600 dark:text-slate-400">
-                {(buildInstructions as { instructions?: { note?: string } })?.instructions?.note}
-              </p>
-              <div className="bg-slate-100 dark:bg-slate-900 rounded-lg p-4">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Steps:</p>
-                <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400 font-mono">
-                  {((buildInstructions as { instructions?: { steps?: string[] } })?.instructions?.steps || []).map((step: string, i: number) => (
-                    <li key={i}>{step.replace(/^\d+\.\s*/, '')}</li>
-                  ))}
-                </ol>
-              </div>
-              <a
-                href={(buildInstructions as { instructions?: { docs?: string } })?.instructions?.docs}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-500 hover:text-primary-600 text-sm"
-              >
-                View Expo Build Documentation →
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Preview Instructions Modal */}
-      {showPreviewModal && previewInstructions && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[80vh] overflow-auto">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Preview Instructions</h3>
-              <button
-                onClick={() => setShowPreviewModal(false)}
-                className="text-slate-500 hover:text-slate-700"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <p className="text-slate-600 dark:text-slate-400">
-                {(previewInstructions as { instructions?: { note?: string } })?.instructions?.note}
-              </p>
-              <div className="bg-slate-100 dark:bg-slate-900 rounded-lg p-4">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Steps:</p>
-                <ol className="list-decimal list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400 font-mono">
-                  {((previewInstructions as { instructions?: { steps?: string[] } })?.instructions?.steps || []).map((step: string, i: number) => (
-                    <li key={i}>{step.replace(/^\d+\.\s*/, '')}</li>
-                  ))}
-                </ol>
-              </div>
-              <div className="flex gap-4">
-                <a
-                  href={(previewInstructions as { instructions?: { expoGoLinks?: { ios?: string } } })?.instructions?.expoGoLinks?.ios}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-500 hover:text-primary-600 text-sm"
-                >
-                  Get Expo Go (iOS) →
-                </a>
-                <a
-                  href={(previewInstructions as { instructions?: { expoGoLinks?: { android?: string } } })?.instructions?.expoGoLinks?.android}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-500 hover:text-primary-600 text-sm"
-                >
-                  Get Expo Go (Android) →
-                </a>
+            <div className="p-6 space-y-6">
+              {previewQrCode ? (
+                <div className="flex flex-col items-center">
+                  <div className="p-4 bg-white rounded-xl mb-4">
+                    <img src={previewQrCode} alt="Preview QR Code" className="w-48 h-48" />
+                  </div>
+                  <p className="text-white/70 text-sm text-center">
+                    Scan with Expo Go app on your device
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-white/50 mb-4">Preview requires Expo Go app</p>
+                  <div className="flex gap-3 justify-center">
+                    <a
+                      href="https://apps.apple.com/app/expo-go/id982107779"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg text-sm text-white"
+                    >
+                      iOS App Store
+                    </a>
+                    <a
+                      href="https://play.google.com/store/apps/details?id=host.exp.exponent"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg text-sm text-white"
+                    >
+                      Google Play
+                    </a>
+                  </div>
+                </div>
+              )}
+              <div className="p-4 bg-white/5 rounded-lg">
+                <p className="text-xs text-white/50 mb-2">Manual connection:</p>
+                <code className="text-xs text-white/70 font-mono">
+                  exp://{GENERATOR_URL.replace('http://', '').replace('https://', '')}/--/projects/{projectId}
+                </code>
               </div>
             </div>
           </div>
         </div>
       )}
     </div>
+  );
+}
+
+// Build Status Component
+function BuildStatusIndicator({ artifact, onRetry }: { artifact?: BuildArtifact; onRetry: () => void }) {
+  if (!artifact) {
+    return (
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-white/50">Not built yet</span>
+        <button onClick={onRetry} className="text-xs text-white/50 hover:text-white">
+          Start Build
+        </button>
+      </div>
+    );
+  }
+
+  if (artifact.status === 'building') {
+    return (
+      <div className="flex items-center gap-2 text-amber-400">
+        <SpinnerIcon className="w-4 h-4 animate-spin" />
+        <span className="text-sm">Building...</span>
+      </div>
+    );
+  }
+
+  if (artifact.status === 'failed') {
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-red-400">
+          <XIcon className="w-4 h-4" />
+          <span className="text-sm">Build failed</span>
+        </div>
+        {artifact.errorMessage && (
+          <p className="text-xs text-red-400/70">{artifact.errorMessage}</p>
+        )}
+        {artifact.requiresAction && (
+          <div className="p-2 bg-amber-500/10 border border-amber-500/30 rounded text-xs text-amber-400">
+            <strong>Action Required:</strong> {artifact.requiresAction}
+          </div>
+        )}
+        <button
+          onClick={onRetry}
+          className="w-full px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-sm font-medium"
+        >
+          Retry Build
+        </button>
+      </div>
+    );
+  }
+
+  if (artifact.status === 'ready') {
+    return (
+      <div className="flex items-center gap-2 text-emerald-400">
+        <CheckIcon className="w-4 h-4" />
+        <span className="text-sm">Ready for download</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 text-white/50">
+      <CircleIcon className="w-4 h-4" />
+      <span className="text-sm">Pending</span>
+    </div>
+  );
+}
+
+// Icons
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  );
+}
+
+function SpinnerIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+    </svg>
+  );
+}
+
+function CircleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" strokeWidth="2" />
+    </svg>
   );
 }
