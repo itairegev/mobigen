@@ -26,7 +26,7 @@ You can configure one or both notification channels:
 3. Click **Add to Slack**
 4. Select the channel where you want to receive notifications (e.g., `#mobigen-ci`)
 5. Click **Add Incoming WebHooks Integration**
-6. Copy the **Webhook URL** (it looks like: `your-slack-webhook-url`)
+6. Copy the **Webhook URL** (format: `your-slack-webhook-url`)
 
 ### Step 2: Add Webhook to GitHub Secrets
 

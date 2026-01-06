@@ -262,6 +262,7 @@ describe('StripeConnector', () => {
     });
 
     test('should warn about mismatched modes (test vs live)', async () => {
+      // Using fake key pattern that won't trigger secret scanning
       const result = await connector.validateCredentials({
         publishableKey: 'pk_test_FAKE_KEY_FOR_TESTING_12345',
         secretKey: 'sk_live_FAKE_KEY_FOR_TESTING_12345',
@@ -273,6 +274,7 @@ describe('StripeConnector', () => {
     });
 
     test('should warn about live keys', async () => {
+      // Using fake key pattern that won't trigger secret scanning
       const result = await connector.validateCredentials({
         publishableKey: 'pk_live_FAKE_KEY_FOR_TESTING_12345',
         secretKey: 'sk_live_FAKE_KEY_FOR_TESTING_12345',
