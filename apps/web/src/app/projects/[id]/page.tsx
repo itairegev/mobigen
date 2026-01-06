@@ -58,32 +58,55 @@ export default function ProjectPage() {
   } = useGenerator({ projectId, autoConnect: true });
 
   // Start generation when we have a prompt from URL and connection
+  // IMPORTANT: Wait for isLoading to be false to check if a job already exists
   useEffect(() => {
-    if (initialPrompt && isConnected && !hasStarted && !isGenerating && !result) {
-      const config: ProjectConfig = {
-        appName: projectName,
-        bundleId: {
-          ios: bundleId,
-          android: bundleId.replace(/\./g, '_'),
-        },
-        branding: {
-          displayName: projectName,
-          primaryColor,
-          secondaryColor,
-        },
-        identifiers: {
-          projectId,
-          easProjectId: `eas-${projectId}`,
-          awsResourcePrefix: `mobigen-${projectId.slice(0, 8)}`,
-          analyticsKey: `analytics-${projectId}`,
-        },
-      };
+    // Don't start until we've loaded existing job state
+    if (isLoading) return;
 
-      setHasStarted(true);
-      setActivePrompt(initialPrompt);
-      startGeneration(initialPrompt, config);
+    // Don't start if we've already started in this session
+    if (hasStarted) return;
+
+    // Don't start if already generating or have a result
+    if (isGenerating || result) return;
+
+    // Don't start if there's already an existing job for this project
+    // (prevents restart when navigating back to the page)
+    if (jobId) {
+      console.log('[ProjectPage] Existing job found, not starting new generation:', jobId);
+      // Mark as started to prevent any future re-triggers
+      if (!hasStarted) {
+        setHasStarted(true);
+      }
+      return;
     }
-  }, [initialPrompt, isConnected, hasStarted, isGenerating, result, projectId, projectName, bundleId, primaryColor, secondaryColor, startGeneration]);
+
+    // Don't start without a prompt or connection
+    if (!initialPrompt || !isConnected) return;
+
+    const config: ProjectConfig = {
+      appName: projectName,
+      bundleId: {
+        ios: bundleId,
+        android: bundleId.replace(/\./g, '_'),
+      },
+      branding: {
+        displayName: projectName,
+        primaryColor,
+        secondaryColor,
+      },
+      identifiers: {
+        projectId,
+        easProjectId: `eas-${projectId}`,
+        awsResourcePrefix: `mobigen-${projectId.slice(0, 8)}`,
+        analyticsKey: `analytics-${projectId}`,
+      },
+    };
+
+    console.log('[ProjectPage] Starting new generation for project:', projectId);
+    setHasStarted(true);
+    setActivePrompt(initialPrompt);
+    startGeneration(initialPrompt, config);
+  }, [initialPrompt, isConnected, hasStarted, isGenerating, isLoading, result, jobId, projectId, projectName, bundleId, primaryColor, secondaryColor, startGeneration]);
 
   // Handler for manual prompt submission
   const handleStartGeneration = () => {
