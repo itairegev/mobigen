@@ -136,7 +136,7 @@ alertManager.addRule(customRule);
 import { SlackChannel } from '@mobigen/observability';
 
 const slack = new SlackChannel({
-  webhookUrl: 'your-slack-webhook-url',
+  webhookUrl: process.env.SLACK_WEBHOOK_URL, // Set in environment
   channel: '#alerts-production',
   username: 'Mobigen Alerts',
   iconEmoji: ':warning:',

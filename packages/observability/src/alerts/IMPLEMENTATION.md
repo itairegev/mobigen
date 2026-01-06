@@ -279,7 +279,7 @@ Total: 3,107 lines of TypeScript code + documentation
 ### Environment Variables
 ```bash
 # Slack
-SLACK_WEBHOOK_URL=your-slack-webhook-url
+SLACK_WEBHOOK_URL=your-slack-webhook-url-here
 
 # Email (SMTP)
 SMTP_HOST=smtp.gmail.com

@@ -26,7 +26,7 @@ You can configure one or both notification channels:
 3. Click **Add to Slack**
 4. Select the channel where you want to receive notifications (e.g., `#mobigen-ci`)
 5. Click **Add Incoming WebHooks Integration**
-6. Copy the **Webhook URL** (format: `your-slack-webhook-url`)
+6. Copy the **Webhook URL** (see Slack documentation for format)
 
 ### Step 2: Add Webhook to GitHub Secrets
 
@@ -53,7 +53,7 @@ Push a commit to trigger the CI workflow and verify notifications appear in your
 4. Configure the webhook:
    - **Name**: `Mobigen CI` (or your preferred name)
    - **Channel**: Select the channel for notifications (e.g., `#ci-notifications`)
-5. Copy the **Webhook URL** (it looks like: `your-discord-webhook-url`)
+5. Copy the **Webhook URL** (see Discord documentation for format)
 
 ### Step 2: Add Webhook to GitHub Secrets
 
@@ -233,8 +233,8 @@ Available color options:
    ```
 
 2. **Verify webhook URLs are correct:**
-   - Slack webhooks start with `your-slack-webhook-urlvices/`
-   - Discord webhooks start with `https://discord.com/api/webhooks/`
+   - Slack webhooks have a specific format (check Slack documentation)
+   - Discord webhooks have a specific format (check Discord documentation)
 
 3. **Check workflow logs:**
    - Go to Actions tab in GitHub
