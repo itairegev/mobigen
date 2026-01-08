@@ -6,10 +6,12 @@
  * - File logging to project-specific log files
  * - Artifact saving (PRD, Architecture, UI Design, etc.)
  * - Phase timing and performance metrics
+ * - S3 upload for persistent log storage
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { uploadGenerationData, type LogUploadResult } from './artifact-storage';
 
 // ANSI color codes for console output
 const colors = {
@@ -331,6 +333,48 @@ export class GenerationLogger {
       artifactsDir: this.artifactsDir,
       timestamp: new Date().toISOString(),
     }, 'json');
+  }
+
+  /**
+   * Upload logs and artifacts to S3 for persistent storage
+   * Call this after generation completes (success or failure)
+   */
+  async uploadToS3(jobId?: string): Promise<{ logs: LogUploadResult; artifacts: LogUploadResult }> {
+    this.info('Uploading logs and artifacts to S3...', { projectId: this.projectId, jobId });
+
+    try {
+      const result = await uploadGenerationData(this.projectId, this.projectPath, jobId);
+
+      if (result.logs.success) {
+        this.success(`Logs uploaded to S3: ${result.logs.s3Url}`, { files: result.logs.files });
+      } else {
+        this.warn(`Log upload failed: ${result.logs.error}`);
+      }
+
+      if (result.artifacts.success) {
+        this.success(`Artifacts uploaded to S3: ${result.artifacts.s3Url}`, { files: result.artifacts.files });
+      } else {
+        this.warn(`Artifacts upload failed: ${result.artifacts.error}`);
+      }
+
+      // Save S3 upload info to artifacts
+      this.saveArtifact('s3-upload-result', {
+        projectId: this.projectId,
+        jobId,
+        logs: result.logs,
+        artifacts: result.artifacts,
+        uploadedAt: new Date().toISOString(),
+      }, 'json');
+
+      return result;
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'Unknown error';
+      this.error('S3 upload failed', { error });
+      return {
+        logs: { success: false, error },
+        artifacts: { success: false, error },
+      };
+    }
   }
 
   // Get all logs

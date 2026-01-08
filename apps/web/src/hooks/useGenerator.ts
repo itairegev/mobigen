@@ -72,6 +72,52 @@ interface FailedTask {
   durationMs: number | null;
 }
 
+// Log entry from generator
+interface LogEntry {
+  timestamp: string;
+  level: 'debug' | 'info' | 'warn' | 'error' | 'success' | 'phase';
+  phase?: string;
+  agent?: string;
+  message: string;
+  data?: unknown;
+  duration?: number;
+}
+
+// Validation error/warning structure
+interface ValidationIssue {
+  file?: string;
+  line?: number;
+  message: string;
+  code?: string;
+  rule?: string;
+}
+
+// Validation result structure
+interface ValidationResult {
+  passed: boolean;
+  tier?: string;
+  errors?: ValidationIssue[];
+  warnings?: ValidationIssue[];
+  timestamp?: string;
+  duration?: number;
+}
+
+interface LogsResponse {
+  success: boolean;
+  projectId: string;
+  summary: {
+    totalEntries: number;
+    returnedEntries: number;
+    errorCount: number;
+    warningCount: number;
+    phases: string[];
+  };
+  errors: LogEntry[];
+  warnings: LogEntry[];
+  validationResults: Array<{ file: string; data: ValidationResult }>;
+  logs: LogEntry[];
+}
+
 interface FailedTasksResponse {
   success: boolean;
   projectId: string;
@@ -89,6 +135,9 @@ interface UseGeneratorOptions {
   autoConnect?: boolean;
 }
 
+// Export types for use in components
+export type { LogEntry, ValidationResult, ValidationIssue };
+
 interface UseGeneratorReturn {
   isConnected: boolean;
   isGenerating: boolean;
@@ -105,12 +154,18 @@ interface UseGeneratorReturn {
   canResume: boolean;
   failedTasks: FailedTask[];
   jobHistory: JobSummary[];
+  // Logs for debugging
+  logs: LogEntry[];
+  logErrors: LogEntry[];
+  logWarnings: LogEntry[];
+  validationResults: ValidationResult | null;
   // Actions
   startGeneration: (prompt: string, config: ProjectConfig) => Promise<void>;
   resumeGeneration: (phase?: string) => Promise<void>;
   refreshProgress: () => Promise<void>;
   fetchJobHistory: () => Promise<void>;
   fetchFailedTasks: () => Promise<void>;
+  fetchLogs: (level?: string) => Promise<void>;
   disconnect: () => void;
 }
 
@@ -164,6 +219,12 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
   const [failedTasks, setFailedTasks] = useState<FailedTask[]>([]);
   const [jobHistory, setJobHistory] = useState<JobSummary[]>([]);
 
+  // Logs state for debugging
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [logErrors, setLogErrors] = useState<LogEntry[]>([]);
+  const [logWarnings, setLogWarnings] = useState<LogEntry[]>([]);
+  const [validationResults, setValidationResults] = useState<ValidationResult | null>(null);
+
   const socketRef = useRef<Socket | null>(null);
 
   // Refs to hold latest callback versions without causing effect re-runs
@@ -171,6 +232,7 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
   const refreshProgressRef = useRef<() => Promise<void>>(async () => {});
   const fetchJobHistoryRef = useRef<() => Promise<void>>(async () => {});
   const fetchFailedTasksRef = useRef<() => Promise<void>>(async () => {});
+  const fetchLogsRef = useRef<(level?: string) => Promise<void>>(async () => {});
 
   // Calculate progress
   const completedPhases = phases.filter((p) => p.status === 'completed').length;
@@ -269,6 +331,40 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       }
     } catch (err) {
       console.error('Failed to fetch failed tasks:', err);
+    }
+  }, [projectId]);
+
+  // Fetch logs for debugging
+  const fetchLogs = useCallback(async (level?: string) => {
+    try {
+      const url = new URL(`${GENERATOR_URL}/api/projects/${projectId}/logs`);
+      if (level) url.searchParams.set('level', level);
+      url.searchParams.set('limit', '200');
+
+      const response = await fetch(url.toString());
+      if (!response.ok) return;
+
+      const data: LogsResponse = await response.json();
+      if (data.success) {
+        setLogs(data.logs);
+        setLogErrors(data.errors);
+        setLogWarnings(data.warnings);
+
+        // Extract most recent validation result from the array
+        if (data.validationResults && data.validationResults.length > 0) {
+          // Sort by timestamp if available, or just take the last one
+          const sorted = [...data.validationResults].sort((a, b) => {
+            const aTime = a.data?.timestamp ? new Date(a.data.timestamp).getTime() : 0;
+            const bTime = b.data?.timestamp ? new Date(b.data.timestamp).getTime() : 0;
+            return bTime - aTime;
+          });
+          setValidationResults(sorted[0]?.data || null);
+        } else {
+          setValidationResults(null);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch logs:', err);
     }
   }, [projectId]);
 
@@ -542,6 +638,7 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
     refreshProgressRef.current = refreshProgress;
     fetchJobHistoryRef.current = fetchJobHistory;
     fetchFailedTasksRef.current = fetchFailedTasks;
+    fetchLogsRef.current = fetchLogs;
   });
 
   // Connect to socket - ONLY depends on projectId and autoConnect
@@ -793,11 +890,18 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
     canResume,
     failedTasks,
     jobHistory,
+    // Logs for debugging
+    logs,
+    logErrors,
+    logWarnings,
+    validationResults,
+    // Actions
     startGeneration,
     resumeGeneration,
     refreshProgress,
     fetchJobHistory,
     fetchFailedTasks,
+    fetchLogs,
     disconnect,
   };
 }

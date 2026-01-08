@@ -5,9 +5,10 @@ import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { useGenerator } from '@/hooks/useGenerator';
+import type { ValidationIssue } from '@/hooks/useGenerator';
 import type { GenerationPhase, ProjectConfig } from '@/lib/types';
 
-type Tab = 'progress' | 'chat' | 'files' | 'builds';
+type Tab = 'progress' | 'chat' | 'files' | 'builds' | 'logs';
 
 const GENERATOR_URL = process.env.NEXT_PUBLIC_GENERATOR_URL || 'http://localhost:4000';
 const ADMIN_URL = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001';
@@ -57,11 +58,18 @@ export default function ProjectPage() {
     canResume,
     failedTasks,
     jobHistory,
+    // Logs for debugging
+    logs,
+    logErrors,
+    logWarnings,
+    validationResults,
+    // Actions
     startGeneration,
     resumeGeneration,
     refreshProgress,
     fetchJobHistory,
     fetchFailedTasks,
+    fetchLogs,
   } = useGenerator({ projectId, autoConnect: true });
 
   // Auto-start generation
@@ -309,7 +317,7 @@ export default function ProjectPage() {
       <div className="relative z-10 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex gap-1">
-            {(['progress', 'chat', 'files', 'builds'] as Tab[]).map((tab) => (
+            {(['progress', 'chat', 'files', 'builds', 'logs'] as Tab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => {
@@ -317,6 +325,9 @@ export default function ProjectPage() {
                   if (tab === 'builds') {
                     fetchJobHistory();
                     fetchBuildArtifacts();
+                  }
+                  if (tab === 'logs') {
+                    fetchLogs();
                   }
                 }}
                 className={`px-4 py-3 text-sm font-medium capitalize rounded-t-lg transition-colors ${
@@ -333,6 +344,11 @@ export default function ProjectPage() {
                 )}
                 {tab === 'builds' && hasFailedBuild && (
                   <span className="ml-2 px-1.5 py-0.5 text-xs bg-red-500 text-white rounded">!</span>
+                )}
+                {tab === 'logs' && logErrors.length > 0 && (
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-red-500 text-white rounded">
+                    {logErrors.length}
+                  </span>
                 )}
               </button>
             ))}
@@ -711,6 +727,233 @@ export default function ProjectPage() {
                 )}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Logs Tab */}
+        {activeTab === 'logs' && (
+          <div className="space-y-6">
+            {/* Header with Refresh */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Generation Logs</h2>
+                <p className="text-sm text-white/50">Debug information from the generation process</p>
+              </div>
+              <button
+                onClick={() => fetchLogs()}
+                className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/15 rounded text-sm font-medium text-white transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh
+              </button>
+            </div>
+
+            {/* Validation Results */}
+            {validationResults && (
+              <div className={`rounded-xl border overflow-hidden ${
+                validationResults.passed
+                  ? 'bg-emerald-500/10 border-emerald-500/30'
+                  : 'bg-red-500/10 border-red-500/30'
+              }`}>
+                <div className="p-4 border-b border-white/10">
+                  <div className="flex items-center gap-3">
+                    {validationResults.passed ? (
+                      <CheckIcon className="w-6 h-6 text-emerald-400" />
+                    ) : (
+                      <XIcon className="w-6 h-6 text-red-400" />
+                    )}
+                    <div>
+                      <h3 className="font-semibold text-white">
+                        Validation {validationResults.passed ? 'Passed' : 'Failed'}
+                      </h3>
+                      <p className="text-sm text-white/50">
+                        Tier: {validationResults.tier} •
+                        {validationResults.errors?.length || 0} errors,
+                        {validationResults.warnings?.length || 0} warnings
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Validation Errors */}
+                {validationResults.errors && validationResults.errors.length > 0 && (
+                  <div className="p-4 space-y-2">
+                    <h4 className="text-sm font-medium text-red-400 mb-3">Validation Errors</h4>
+                    {validationResults.errors.map((err: ValidationIssue, idx: number) => (
+                      <div key={idx} className="p-3 bg-red-500/10 rounded-lg">
+                        {err.file && (
+                          <p className="text-xs font-mono text-white/60 mb-1">
+                            {err.file}{err.line ? `:${err.line}` : ''}
+                          </p>
+                        )}
+                        <p className="text-sm text-red-400">{err.message}</p>
+                        {err.code && (
+                          <pre className="mt-2 p-2 bg-black/30 rounded text-xs text-white/70 overflow-x-auto">
+                            {err.code}
+                          </pre>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Error Logs Section */}
+            {logErrors.length > 0 && (
+              <div className="bg-red-500/10 rounded-xl border border-red-500/30 overflow-hidden">
+                <div className="p-4 border-b border-red-500/30 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <XIcon className="w-5 h-5 text-red-400" />
+                    <h3 className="font-semibold text-red-400">Errors ({logErrors.length})</h3>
+                  </div>
+                </div>
+                <div className="p-4 space-y-3 max-h-[400px] overflow-y-auto">
+                  {logErrors.map((entry, idx) => (
+                    <div key={idx} className="p-3 bg-red-500/10 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-red-400 uppercase">
+                          {entry.phase || 'Unknown Phase'}
+                        </span>
+                        <span className="text-xs text-white/40">
+                          {new Date(entry.timestamp).toLocaleTimeString()}
+                        </span>
+                      </div>
+                      <p className="text-sm text-red-300 font-mono whitespace-pre-wrap break-all">
+                        {entry.message}
+                      </p>
+                      {entry.data !== undefined && entry.data !== null && (
+                        <details className="mt-2">
+                          <summary className="text-xs text-white/40 cursor-pointer hover:text-white/60">
+                            View Details
+                          </summary>
+                          <pre className="mt-2 p-2 bg-black/30 rounded text-xs text-white/60 overflow-x-auto">
+                            {typeof entry.data === 'string' ? String(entry.data) : JSON.stringify(entry.data, null, 2)}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Warning Logs Section */}
+            {logWarnings.length > 0 && (
+              <div className="bg-amber-500/10 rounded-xl border border-amber-500/30 overflow-hidden">
+                <div className="p-4 border-b border-amber-500/30 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <h3 className="font-semibold text-amber-400">Warnings ({logWarnings.length})</h3>
+                  </div>
+                </div>
+                <div className="p-4 space-y-3 max-h-[300px] overflow-y-auto">
+                  {logWarnings.map((entry, idx) => (
+                    <div key={idx} className="p-3 bg-amber-500/10 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-amber-400 uppercase">
+                          {entry.phase || 'Unknown Phase'}
+                        </span>
+                        <span className="text-xs text-white/40">
+                          {new Date(entry.timestamp).toLocaleTimeString()}
+                        </span>
+                      </div>
+                      <p className="text-sm text-amber-300 font-mono whitespace-pre-wrap break-all">
+                        {entry.message}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* All Logs Section */}
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <h3 className="font-semibold text-white">All Logs ({logs.length})</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => fetchLogs('error')}
+                    className="px-2 py-1 text-xs bg-red-500/20 text-red-400 rounded hover:bg-red-500/30"
+                  >
+                    Errors Only
+                  </button>
+                  <button
+                    onClick={() => fetchLogs('warn')}
+                    className="px-2 py-1 text-xs bg-amber-500/20 text-amber-400 rounded hover:bg-amber-500/30"
+                  >
+                    Warnings
+                  </button>
+                  <button
+                    onClick={() => fetchLogs()}
+                    className="px-2 py-1 text-xs bg-white/10 text-white/70 rounded hover:bg-white/20"
+                  >
+                    All
+                  </button>
+                </div>
+              </div>
+              <div className="p-4 max-h-[500px] overflow-y-auto">
+                {logs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-4xl mb-3">📋</div>
+                    <p className="text-white/50">No logs available</p>
+                    <p className="text-sm text-white/30 mt-1">
+                      Logs are generated during the app generation process
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-1 font-mono text-xs">
+                    {logs.map((entry, idx) => (
+                      <div
+                        key={idx}
+                        className={`p-2 rounded ${
+                          entry.level === 'error' ? 'bg-red-500/10 text-red-400' :
+                          entry.level === 'warn' ? 'bg-amber-500/10 text-amber-400' :
+                          entry.level === 'success' ? 'bg-emerald-500/10 text-emerald-400' :
+                          entry.level === 'phase' ? 'bg-indigo-500/10 text-indigo-400' :
+                          'bg-white/5 text-white/70'
+                        }`}
+                      >
+                        <span className="text-white/40 mr-2">
+                          {new Date(entry.timestamp).toLocaleTimeString()}
+                        </span>
+                        <span className={`uppercase mr-2 ${
+                          entry.level === 'error' ? 'text-red-400' :
+                          entry.level === 'warn' ? 'text-amber-400' :
+                          entry.level === 'success' ? 'text-emerald-400' :
+                          entry.level === 'phase' ? 'text-indigo-400' :
+                          'text-white/40'
+                        }`}>
+                          [{entry.level}]
+                        </span>
+                        {entry.phase && (
+                          <span className="text-white/50 mr-2">[{entry.phase}]</span>
+                        )}
+                        <span className="whitespace-pre-wrap break-all">{entry.message}</span>
+                        {entry.duration && (
+                          <span className="text-white/30 ml-2">({entry.duration}ms)</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* No Logs Message when everything is empty */}
+            {logs.length === 0 && logErrors.length === 0 && logWarnings.length === 0 && !validationResults && (
+              <div className="text-center py-12 bg-white/5 rounded-xl border border-white/10">
+                <div className="text-4xl mb-3">📋</div>
+                <p className="text-white/50">No logs available yet</p>
+                <p className="text-sm text-white/30 mt-1">
+                  Start a generation to see logs here
+                </p>
+              </div>
+            )}
           </div>
         )}
       </main>

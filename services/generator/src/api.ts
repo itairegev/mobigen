@@ -729,6 +729,135 @@ app.get('/api/projects/:projectId/failed-tasks', async (req, res) => {
   }
 });
 
+// ============================================================================
+// LOGS ENDPOINT - For debugging validation and generation issues
+// ============================================================================
+
+app.get('/api/projects/:projectId/logs', async (req, res) => {
+  const { projectId } = req.params;
+  const level = req.query.level as string | undefined; // Filter by level
+  const phase = req.query.phase as string | undefined; // Filter by phase
+  const limit = parseInt(req.query.limit as string) || 500; // Max entries to return
+  const includeData = req.query.includeData !== 'false'; // Include data field
+
+  try {
+    // Get project path
+    const projectsRoot = process.env.PROJECTS_ROOT || path.join(process.cwd(), 'projects');
+    const projectPath = path.join(projectsRoot, projectId);
+    const logsDir = path.join(projectPath, 'logs');
+    const artifactsDir = path.join(projectPath, 'artifacts');
+
+    // Check if project exists
+    if (!fs.existsSync(projectPath)) {
+      return res.status(404).json({
+        success: false,
+        error: 'Project not found',
+      });
+    }
+
+    // Read all log files and combine entries
+    const logEntries: Array<{
+      timestamp: string;
+      level: string;
+      phase?: string;
+      agent?: string;
+      message: string;
+      data?: unknown;
+      duration?: number;
+    }> = [];
+
+    // Read log files
+    if (fs.existsSync(logsDir)) {
+      const logFiles = fs.readdirSync(logsDir)
+        .filter(f => f.endsWith('.log'))
+        .sort()
+        .reverse(); // Most recent first
+
+      for (const logFile of logFiles.slice(0, 5)) { // Only read last 5 log files
+        try {
+          const logPath = path.join(logsDir, logFile);
+          const content = fs.readFileSync(logPath, 'utf-8');
+
+          // Parse JSON-lines format
+          const lines = content.split('\n').filter(line => line.trim());
+          for (const line of lines) {
+            try {
+              const entry = JSON.parse(line);
+
+              // Apply filters
+              if (level && entry.level !== level) continue;
+              if (phase && entry.phase !== phase) continue;
+
+              // Optionally strip data field to reduce payload
+              if (!includeData) {
+                delete entry.data;
+              }
+
+              logEntries.push(entry);
+            } catch {
+              // Skip malformed lines
+            }
+          }
+        } catch {
+          // Skip unreadable files
+        }
+      }
+    }
+
+    // Read validation artifacts for detailed error info
+    const validationResults: unknown[] = [];
+    if (fs.existsSync(artifactsDir)) {
+      const artifactFiles = fs.readdirSync(artifactsDir)
+        .filter(f => f.includes('validation') && f.endsWith('.json'))
+        .sort()
+        .reverse();
+
+      for (const artifactFile of artifactFiles.slice(0, 3)) { // Last 3 validation results
+        try {
+          const artifactPath = path.join(artifactsDir, artifactFile);
+          const content = fs.readFileSync(artifactPath, 'utf-8');
+          validationResults.push({
+            file: artifactFile,
+            data: JSON.parse(content),
+          });
+        } catch {
+          // Skip unreadable files
+        }
+      }
+    }
+
+    // Sort by timestamp descending and limit
+    logEntries.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    const limitedEntries = logEntries.slice(0, limit);
+
+    // Group errors for easy debugging
+    const errors = limitedEntries.filter(e => e.level === 'error');
+    const warnings = limitedEntries.filter(e => e.level === 'warn');
+    const phases = [...new Set(limitedEntries.map(e => e.phase).filter(Boolean))];
+
+    res.json({
+      success: true,
+      projectId,
+      summary: {
+        totalEntries: logEntries.length,
+        returnedEntries: limitedEntries.length,
+        errorCount: errors.length,
+        warningCount: warnings.length,
+        phases,
+      },
+      errors: errors.slice(0, 50), // First 50 errors
+      warnings: warnings.slice(0, 50), // First 50 warnings
+      validationResults,
+      logs: limitedEntries,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to read logs',
+    });
+  }
+});
+
 // Force sync to database (manual trigger)
 app.post('/api/admin/sync-database', async (req, res) => {
   try {

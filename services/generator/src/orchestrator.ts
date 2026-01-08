@@ -1305,6 +1305,19 @@ Provide overall score and production readiness assessment.`,
     await flagForHumanReview(projectId, result.logs);
   }
 
+  // Upload logs and artifacts to S3 (regardless of success/failure)
+  // This ensures we have persistent storage of all generation attempts
+  try {
+    const jobId = result.sessionId || new Date().toISOString().replace(/[:.]/g, '-');
+    await logger.uploadToS3(jobId);
+    logger.success('Logs uploaded to S3 for persistent storage');
+  } catch (uploadError) {
+    // Don't fail the generation if S3 upload fails
+    logger.warn('S3 log upload failed (non-fatal)', {
+      error: uploadError instanceof Error ? uploadError.message : String(uploadError),
+    });
+  }
+
   return result;
 }
 
