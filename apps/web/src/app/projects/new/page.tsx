@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
+import { ConfigChat } from '@/components/ConfigChat';
+import { getTemplateConfig } from '@/lib/template-config';
 
 // Professional color palettes from top apps
 const COLOR_PALETTES = [
@@ -231,9 +233,24 @@ export default function NewProjectPage() {
   const [projectName, setProjectName] = useState('');
   const [prompt, setPrompt] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  const [showConfigChat, setShowConfigChat] = useState(false);
+  const [templateConfig, setTemplateConfig] = useState<Record<string, string>>({});
+  const templateConfigRef = useRef<Record<string, string>>({});
 
   // Get random palette once on mount
   const [colorPalette] = useState(() => getRandomPalette());
+
+  // Get template info for ConfigChat
+  const selectedTemplateInfo = useMemo(() => {
+    return templates.find(t => t.id === selectedTemplate);
+  }, [selectedTemplate]);
+
+  // Check if template has configuration steps
+  const hasConfigSteps = useMemo(() => {
+    if (!selectedTemplate) return false;
+    const config = getTemplateConfig(selectedTemplate);
+    return config.steps.length > 0;
+  }, [selectedTemplate]);
 
   const filteredTemplates = useMemo(() => {
     return templates.filter((template) => {
@@ -288,6 +305,12 @@ export default function NewProjectPage() {
         secondaryColor: colorPalette.secondary,
         prompt: encodeURIComponent(prompt),
       });
+
+      // Add template config values to URL params (use ref for immediate access)
+      if (Object.keys(templateConfigRef.current).length > 0) {
+        params.set('config', encodeURIComponent(JSON.stringify(templateConfigRef.current)));
+      }
+
       router.push(`/projects/${project.id}?${params.toString()}`);
     },
     onError: (error) => {
@@ -299,7 +322,22 @@ export default function NewProjectPage() {
   const handleCreate = async () => {
     if (!projectName.trim() || !prompt.trim() || !selectedTemplate) return;
 
+    // If template has config steps, show the chat first
+    if (hasConfigSteps) {
+      setShowConfigChat(true);
+      return;
+    }
+
+    // Otherwise, create directly
+    proceedWithCreation({});
+  };
+
+  const proceedWithCreation = (config: Record<string, string>) => {
     setIsCreating(true);
+    setShowConfigChat(false);
+    setTemplateConfig(config);
+    templateConfigRef.current = config;  // Update ref for immediate access in onSuccess
+
     const bundleId = generateBundleId(
       projectName,
       session?.user?.name?.split(' ').map(n => n[0]).join('').toLowerCase()
@@ -307,14 +345,24 @@ export default function NewProjectPage() {
 
     createProject.mutate({
       name: projectName,
-      templateId: selectedTemplate,
+      templateId: selectedTemplate!,
       bundleIdIos: bundleId,
       bundleIdAndroid: bundleId.replace(/\./g, '_'),
       branding: {
         primaryColor: colorPalette.primary,
         secondaryColor: colorPalette.secondary,
       },
+      // Pass template-specific config as environment variables
+      envVars: config,
     });
+  };
+
+  const handleConfigComplete = (config: Record<string, string>) => {
+    proceedWithCreation(config);
+  };
+
+  const handleConfigCancel = () => {
+    setShowConfigChat(false);
   };
 
   const canCreate = selectedTemplate && projectName.trim().length > 0 && prompt.trim().length > 0;
@@ -610,6 +658,28 @@ export default function NewProjectPage() {
           </div>
         </div>
       </footer>
+
+      {/* Configuration Chat Modal */}
+      {showConfigChat && selectedTemplate && selectedTemplateInfo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={handleConfigCancel}
+          />
+          {/* Modal */}
+          <div className="relative w-full max-w-lg">
+            <ConfigChat
+              templateId={selectedTemplate}
+              templateName={selectedTemplateInfo.name}
+              templateIcon={selectedTemplateInfo.icon}
+              primaryColor={colorPalette.primary}
+              onComplete={handleConfigComplete}
+              onCancel={handleConfigCancel}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

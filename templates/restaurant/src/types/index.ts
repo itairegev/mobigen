@@ -15,6 +15,11 @@ export interface MenuItem {
   prepTime?: number; // minutes
   calories?: number;
   featured?: boolean;
+  // Extended fields from real API (TheMealDB)
+  ingredients?: string[];
+  fullInstructions?: string;
+  youtubeUrl?: string;
+  area?: string; // cuisine origin (e.g., "Italian", "Mexican")
 }
 
 export interface ModifierGroup {

@@ -46,6 +46,8 @@ export const projectsRouter = router({
             logoUrl: z.string().url().optional(),
           })
           .optional(),
+        // Template-specific environment variables collected from ConfigChat
+        envVars: z.record(z.string()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -60,6 +62,8 @@ export const projectsRouter = router({
           bundleIdIos: input.bundleIdIos,
           bundleIdAndroid: input.bundleIdAndroid,
           branding: input.branding || {},
+          // Store template config in the config JSON field
+          config: input.envVars ? { envVars: input.envVars } : {},
           s3Bucket: process.env.S3_BUCKET || 'mobigen-projects',
           s3Prefix: `projects/${projectId}`,
           status: 'draft',

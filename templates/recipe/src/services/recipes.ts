@@ -1,8 +1,15 @@
 // ============================================================================
-// Mock Recipe Data Service
+// Recipe Data Service (Real API with mock fallback)
 // ============================================================================
 
 import { Recipe, Category } from '../types';
+import {
+  getRecipeCategories,
+  getRecipesByCategory as getRecipesByCategoryApi,
+  getRecipeById as getRecipeByIdApi,
+  searchRecipesApi,
+  getRandomRecipes,
+} from './mealdb-api';
 
 export const MOCK_CATEGORIES: Category[] = [
   {
@@ -914,16 +921,53 @@ export const MOCK_RECIPES: Recipe[] = [
   },
 ];
 
-// Service Functions
+// ============================================================================
+// Service Functions (Real API with mock fallback)
+// ============================================================================
+
+/**
+ * Get all recipe categories
+ * Uses TheMealDB API with fallback to mock data
+ */
 export async function getCategories(): Promise<Category[]> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
+  try {
+    const categories = await getRecipeCategories();
+    if (categories.length > 0) {
+      return categories;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch categories from API, using mock data:', error);
+  }
   return [...MOCK_CATEGORIES];
 }
 
+/**
+ * Get recipes, optionally filtered by category
+ */
 export async function getRecipes(categoryId?: string): Promise<Recipe[]> {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  try {
+    if (categoryId) {
+      // Find category name from ID
+      const categories = await getCategories();
+      const category = categories.find(c => c.id === categoryId);
+      if (category) {
+        const recipes = await getRecipesByCategoryApi(category.name);
+        if (recipes.length > 0) {
+          return recipes;
+        }
+      }
+    } else {
+      // Get random recipes when no category specified
+      const recipes = await getRandomRecipes(12);
+      if (recipes.length > 0) {
+        return recipes;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to fetch recipes from API, using mock data:', error);
+  }
 
+  // Fallback to mock data
   let recipes = [...MOCK_RECIPES];
   if (categoryId) {
     recipes = recipes.filter(recipe => recipe.categoryId === categoryId);
@@ -931,22 +975,54 @@ export async function getRecipes(categoryId?: string): Promise<Recipe[]> {
   return recipes;
 }
 
+/**
+ * Get recipe by ID
+ */
 export async function getRecipeById(id: string): Promise<Recipe | null> {
-  await new Promise(resolve => setTimeout(resolve, 300));
+  try {
+    const recipe = await getRecipeByIdApi(id);
+    if (recipe) {
+      return recipe;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch recipe from API, using mock data:', error);
+  }
 
-  const recipe = MOCK_RECIPES.find(r => r.id === id);
-  return recipe || null;
+  return MOCK_RECIPES.find(r => r.id === id) || null;
 }
 
+/**
+ * Get featured recipes
+ */
 export async function getFeaturedRecipes(): Promise<Recipe[]> {
-  await new Promise(resolve => setTimeout(resolve, 400));
+  try {
+    const recipes = await getRandomRecipes(8);
+    if (recipes.length > 0) {
+      return recipes.map(r => ({ ...r, featured: true }));
+    }
+  } catch (error) {
+    console.warn('Failed to fetch featured recipes, using mock data:', error);
+  }
 
   return MOCK_RECIPES.filter(r => r.featured === true);
 }
 
+/**
+ * Search recipes by query
+ */
 export async function searchRecipes(query: string): Promise<Recipe[]> {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  if (!query.trim()) return [];
 
+  try {
+    const results = await searchRecipesApi(query);
+    if (results.length > 0) {
+      return results;
+    }
+  } catch (error) {
+    console.warn('Failed to search recipes from API, using mock data:', error);
+  }
+
+  // Fallback to mock search
   const lowerQuery = query.toLowerCase();
   return MOCK_RECIPES.filter(recipe =>
     recipe.name.toLowerCase().includes(lowerQuery) ||
@@ -954,3 +1030,14 @@ export async function searchRecipes(query: string): Promise<Recipe[]> {
     recipe.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
   );
 }
+
+// Re-export API functions for direct use if needed
+export {
+  getRecipeCategories,
+  getRecipesByCategory as getRecipesByCategoryApi,
+  getRecipeByIdApi,
+  searchRecipesApi,
+  getRandomRecipes,
+  getRecipesByArea,
+  getRecipeAreas,
+} from './mealdb-api';

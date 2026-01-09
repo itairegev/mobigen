@@ -60,3 +60,70 @@ export {
   getCategoryDisplayName,
 } from './apis/pet-care';
 export type { PetCareTip, PetCareCategory } from './apis/pet-care';
+
+// Meals/Food API (TheMealDB)
+export {
+  MealDbClient,
+  getMealDbApi,
+  parseIngredients,
+  parseTags,
+} from './apis/meals';
+export type {
+  Meal,
+  MealCategory,
+  MealArea,
+  MealIngredient,
+  SimpleMeal,
+  ParsedIngredient,
+} from './apis/meals';
+
+// Exercise/Fitness API (WGER)
+export {
+  WgerClient,
+  getWgerApi,
+  EXERCISE_CATEGORIES,
+  EQUIPMENT,
+  getCategoryName,
+  getEquipmentName,
+} from './apis/exercises';
+export type {
+  Exercise,
+  ExerciseInfo,
+  ExerciseCategory,
+  Muscle,
+  Equipment,
+  ExerciseImage,
+  ExerciseVideo,
+} from './apis/exercises';
+
+// News APIs
+export {
+  GNewsClient,
+  NewsApiClient,
+  MockNewsClient,
+  createNewsClient,
+  getNewsClient,
+  NEWS_CATEGORIES,
+} from './apis/news';
+export type {
+  NewsArticle,
+  NewsCategory,
+  NewsProvider,
+} from './apis/news';
+
+// Shopify API
+export {
+  ShopifyClient,
+  createShopifyClient,
+  validateShopifyStore,
+  DEMO_STORES,
+} from './apis/shopify';
+export type {
+  ShopifyProduct,
+  ShopifyVariant,
+  ShopifyImage,
+  ShopifyOption,
+  Product,
+  ProductVariant,
+  ProductOption,
+} from './apis/shopify';

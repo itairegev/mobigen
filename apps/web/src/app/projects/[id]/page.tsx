@@ -42,6 +42,12 @@ export default function ProjectPage() {
   const secondaryColor = searchParams.get('secondaryColor') || '#8B5CF6';
   const bundleId = searchParams.get('bundleId') || `com.mobigen.${projectName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
 
+  // Template-specific config (e.g., Shopify domain, API keys) from ConfigChat
+  const templateConfigParam = searchParams.get('config');
+  const templateEnvVars = templateConfigParam
+    ? JSON.parse(decodeURIComponent(templateConfigParam)) as Record<string, string>
+    : {};
+
   const [activePrompt, setActivePrompt] = useState(initialPrompt);
 
   const {
@@ -93,12 +99,14 @@ export default function ProjectPage() {
         awsResourcePrefix: `mobigen-${projectId.slice(0, 8)}`,
         analyticsKey: `analytics-${projectId}`,
       },
+      // Template-specific environment variables (e.g., Shopify domain, API keys)
+      envVars: templateEnvVars,
     };
 
     setHasStarted(true);
     setActivePrompt(initialPrompt);
     startGeneration(initialPrompt, config);
-  }, [initialPrompt, isConnected, hasStarted, isGenerating, isLoading, result, jobId, projectId, projectName, bundleId, primaryColor, secondaryColor, startGeneration]);
+  }, [initialPrompt, isConnected, hasStarted, isGenerating, isLoading, result, jobId, projectId, projectName, bundleId, primaryColor, secondaryColor, templateEnvVars, startGeneration]);
 
   // Fetch build artifacts when generation is complete
   useEffect(() => {
@@ -132,6 +140,8 @@ export default function ProjectPage() {
         awsResourcePrefix: `mobigen-${projectId.slice(0, 8)}`,
         analyticsKey: `analytics-${projectId}`,
       },
+      // Template-specific environment variables (e.g., Shopify domain, API keys)
+      envVars: templateEnvVars,
     };
 
     setHasStarted(true);

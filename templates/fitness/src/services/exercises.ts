@@ -1,4 +1,16 @@
 import { Exercise } from '@/types';
+import {
+  getWgerExercises,
+  getWgerExerciseById,
+  searchWgerExercises,
+  getWgerExercisesByCategory,
+  getFeaturedWgerExercises,
+  getBodyweightExercises,
+} from './wger-api';
+
+// ============================================================================
+// Mock Exercises (Fallback when API fails)
+// ============================================================================
 
 export const MOCK_EXERCISES: Exercise[] = [
   {
@@ -513,27 +525,71 @@ export const MOCK_EXERCISES: Exercise[] = [
   },
 ];
 
+// ============================================================================
+// Service Functions (Real API with mock fallback)
+// ============================================================================
+
+/**
+ * Get exercises, optionally filtered by category
+ * Uses WGER API with fallback to mock data
+ */
 export async function getExercises(category?: string): Promise<Exercise[]> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  try {
+    if (category && category !== 'all') {
+      const exercises = await getWgerExercisesByCategory(category);
+      if (exercises.length > 0) {
+        return exercises;
+      }
+    } else {
+      const exercises = await getWgerExercises({ limit: 20 });
+      if (exercises.length > 0) {
+        return exercises;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to fetch exercises from API, using mock data:', error);
+  }
 
+  // Fallback to mock data
   let exercises = [...MOCK_EXERCISES];
-
   if (category && category !== 'all') {
     exercises = exercises.filter((e) => e.category === category);
   }
-
   return exercises;
 }
 
+/**
+ * Get exercise by ID
+ */
 export async function getExerciseById(id: string): Promise<Exercise | null> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    const exercise = await getWgerExerciseById(id);
+    if (exercise) {
+      return exercise;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch exercise from API, using mock data:', error);
+  }
 
   return MOCK_EXERCISES.find((e) => e.id === id) || null;
 }
 
+/**
+ * Search exercises by query
+ */
 export async function searchExercises(query: string): Promise<Exercise[]> {
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  if (!query.trim()) return [];
 
+  try {
+    const results = await searchWgerExercises(query);
+    if (results.length > 0) {
+      return results;
+    }
+  } catch (error) {
+    console.warn('Failed to search exercises from API, using mock data:', error);
+  }
+
+  // Fallback to mock search
   const lowerQuery = query.toLowerCase();
   return MOCK_EXERCISES.filter(
     (e) =>
@@ -542,3 +598,48 @@ export async function searchExercises(query: string): Promise<Exercise[]> {
       e.muscleGroups.some((m) => m.toLowerCase().includes(lowerQuery))
   );
 }
+
+/**
+ * Get featured exercises for home screen
+ */
+export async function getFeaturedExercises(): Promise<Exercise[]> {
+  try {
+    const exercises = await getFeaturedWgerExercises(8);
+    if (exercises.length > 0) {
+      return exercises;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch featured exercises, using mock data:', error);
+  }
+
+  // Return a mix of mock exercises
+  return MOCK_EXERCISES.slice(0, 8);
+}
+
+/**
+ * Get bodyweight exercises (no equipment needed)
+ */
+export async function getNoEquipmentExercises(): Promise<Exercise[]> {
+  try {
+    const exercises = await getBodyweightExercises(15);
+    if (exercises.length > 0) {
+      return exercises;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch bodyweight exercises, using mock data:', error);
+  }
+
+  // Filter mock exercises without equipment
+  return MOCK_EXERCISES.filter(
+    (e) => !e.equipment || e.equipment.length === 0
+  );
+}
+
+// Re-export WGER API functions for direct use if needed
+export {
+  getWgerExercises,
+  getWgerExerciseById,
+  searchWgerExercises,
+  getWgerCategories,
+  WGER_CATEGORIES,
+} from './wger-api';

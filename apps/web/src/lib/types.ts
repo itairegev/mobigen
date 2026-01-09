@@ -76,6 +76,8 @@ export interface ProjectConfig {
     awsResourcePrefix: string;
     analyticsKey: string;
   };
+  // Template-specific environment variables (e.g., Shopify domain, API keys)
+  envVars?: Record<string, string>;
 }
 
 // Phase definitions matching the generator orchestrator

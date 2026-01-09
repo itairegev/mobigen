@@ -1,7 +1,14 @@
 import { Category, MenuItem } from '@/types';
+import {
+  getMealCategories,
+  getMealsByCategory,
+  getMealById,
+  searchMeals as searchMealsApi,
+  getRandomMeals,
+} from './meals-api';
 
 // ============================================================================
-// Mock Categories
+// Mock Categories (Fallback when API fails)
 // ============================================================================
 
 export const MOCK_CATEGORIES: Category[] = [
@@ -344,17 +351,53 @@ export const MOCK_MENU_ITEMS: MenuItem[] = [
 ];
 
 // ============================================================================
-// Service Functions (Simulated API with delays)
+// Service Functions (Real API with mock fallback)
 // ============================================================================
 
+/**
+ * Get all food categories from TheMealDB
+ * Falls back to mock data on error
+ */
 export async function getCategories(): Promise<Category[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    const categories = await getMealCategories();
+    if (categories.length > 0) {
+      return categories;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch categories from API, using mock data:', error);
+  }
   return [...MOCK_CATEGORIES];
 }
 
+/**
+ * Get menu items, optionally filtered by category
+ * Uses TheMealDB for real meal data with fallback to mock
+ */
 export async function getMenuItems(categoryId?: string): Promise<MenuItem[]> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  try {
+    if (categoryId) {
+      // Find the category name from ID
+      const categories = await getCategories();
+      const category = categories.find(c => c.id === categoryId);
+      if (category) {
+        const meals = await getMealsByCategory(category.name);
+        if (meals.length > 0) {
+          return meals;
+        }
+      }
+    } else {
+      // Get featured/random meals when no category specified
+      const meals = await getRandomMeals(10);
+      if (meals.length > 0) {
+        return meals;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to fetch menu items from API, using mock data:', error);
+  }
 
+  // Fallback to mock data
   let items = [...MOCK_MENU_ITEMS];
   if (categoryId) {
     items = items.filter((item) => item.categoryId === categoryId);
@@ -362,18 +405,54 @@ export async function getMenuItems(categoryId?: string): Promise<MenuItem[]> {
   return items;
 }
 
+/**
+ * Get featured menu items
+ * Uses random meals from TheMealDB
+ */
 export async function getFeaturedItems(): Promise<MenuItem[]> {
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  try {
+    const meals = await getRandomMeals(6);
+    if (meals.length > 0) {
+      // Mark all as featured for display
+      return meals.map(m => ({ ...m, featured: true }));
+    }
+  } catch (error) {
+    console.warn('Failed to fetch featured items from API, using mock data:', error);
+  }
   return MOCK_MENU_ITEMS.filter((item) => item.featured);
 }
 
+/**
+ * Get a single menu item by ID
+ */
 export async function getMenuItem(id: string): Promise<MenuItem | null> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    const meal = await getMealById(id);
+    if (meal) {
+      return meal;
+    }
+  } catch (error) {
+    console.warn('Failed to fetch menu item from API, using mock data:', error);
+  }
   return MOCK_MENU_ITEMS.find((item) => item.id === id) || null;
 }
 
+/**
+ * Search menu items by query
+ */
 export async function searchMenuItems(query: string): Promise<MenuItem[]> {
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  if (!query.trim()) return [];
+
+  try {
+    const results = await searchMealsApi(query);
+    if (results.length > 0) {
+      return results;
+    }
+  } catch (error) {
+    console.warn('Failed to search meals from API, using mock data:', error);
+  }
+
+  // Fallback to mock search
   const lowerQuery = query.toLowerCase();
   return MOCK_MENU_ITEMS.filter(
     (item) =>

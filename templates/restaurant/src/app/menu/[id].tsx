@@ -133,8 +133,8 @@ export default function MenuItemDetailScreen() {
               </View>
             )}
 
-            {/* Prep Time & Calories */}
-            <View className="flex-row gap-4 mb-6">
+            {/* Prep Time, Calories & Cuisine */}
+            <View className="flex-row flex-wrap gap-4 mb-6">
               {item.prepTime && (
                 <Text className="text-gray-500 text-sm">
                   🕐 {item.prepTime} min
@@ -145,7 +145,40 @@ export default function MenuItemDetailScreen() {
                   🔥 {item.calories} cal
                 </Text>
               )}
+              {item.area && (
+                <Text className="text-gray-500 text-sm">
+                  🌍 {item.area} Cuisine
+                </Text>
+              )}
             </View>
+
+            {/* Ingredients */}
+            {item.ingredients && item.ingredients.length > 0 && (
+              <View className="mb-6">
+                <Text className="text-base font-bold text-gray-900 mb-3">
+                  Ingredients
+                </Text>
+                <View className="bg-gray-50 rounded-lg p-4">
+                  {item.ingredients.map((ingredient, index) => (
+                    <Text key={index} className="text-gray-700 text-sm mb-1">
+                      • {ingredient}
+                    </Text>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Full Instructions (collapsible) */}
+            {item.fullInstructions && (
+              <View className="mb-6">
+                <Text className="text-base font-bold text-gray-900 mb-3">
+                  How It's Made
+                </Text>
+                <Text className="text-gray-600 text-sm leading-6">
+                  {item.fullInstructions}
+                </Text>
+              </View>
+            )}
 
             {/* Modifiers */}
             {item.modifierGroups && item.modifierGroups.length > 0 && (
