@@ -1,10 +1,15 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Message, Conversation } from '@/types';
+import { sendChatMessage, isAIConfigured } from '@/services/ai';
+import { useSettings } from './useSettings';
 
 interface ChatState {
   conversations: Conversation[];
   currentConversationId: string | null;
   isTyping: boolean;
+  error: string | null;
 
   // Actions
   createConversation: () => string;
@@ -14,32 +19,39 @@ interface ChatState {
   deleteConversation: (id: string) => void;
   clearAllConversations: () => void;
   setTyping: (isTyping: boolean) => void;
+  setError: (error: string | null) => void;
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 15);
 
-const useChatStore = create<ChatState>((set, get) => ({
-  conversations: [
+// Initial welcome conversation
+const getInitialConversation = (): Conversation => ({
+  id: '1',
+  title: 'Getting Started',
+  messages: [
     {
-      id: '1',
-      title: 'Getting Started',
-      messages: [
-        {
-          id: 'm1',
-          role: 'assistant',
-          content: 'Hello! I\'m your AI assistant. How can I help you today?',
-          timestamp: new Date(),
-          status: 'sent',
-        },
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      id: 'm1',
+      role: 'assistant',
+      content: isAIConfigured()
+        ? "Hello! I'm your AI assistant powered by Claude. How can I help you today?"
+        : "Hello! I'm your AI assistant. To enable real AI responses, please configure your API key in the app settings.",
+      timestamp: new Date(),
+      status: 'sent',
     },
   ],
-  currentConversationId: '1',
-  isTyping: false,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+});
 
-  createConversation: () => {
+const useChatStore = create<ChatState>()(
+  persist(
+    (set, get) => ({
+      conversations: [getInitialConversation()],
+      currentConversationId: '1',
+      isTyping: false,
+      error: null,
+
+      createConversation: () => {
     const id = generateId();
     const newConversation: Conversation = {
       id,
@@ -124,49 +136,105 @@ const useChatStore = create<ChatState>((set, get) => ({
   setTyping: (isTyping) => {
     set({ isTyping });
   },
-}));
+
+  setError: (error) => {
+    set({ error });
+  },
+    }),
+    {
+      name: 'ai-assistant-chat',
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        conversations: state.conversations,
+        currentConversationId: state.currentConversationId,
+      }),
+    }
+  )
+);
 
 export function useChat() {
   const store = useChatStore();
+  const { settings } = useSettings();
 
   const currentConversation = store.conversations.find(
     (c) => c.id === store.currentConversationId
   );
 
   const sendMessage = async (content: string) => {
+    // Clear any previous error
+    store.setError(null);
+
     // Add user message
     store.addMessage({ role: 'user', content, status: 'sent' });
 
-    // Simulate AI response
+    // Show typing indicator
     store.setTyping(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 1000));
 
-    // Mock AI response
-    const responses = [
-      "That's a great question! Let me think about that...",
-      "I understand what you're asking. Here's my perspective:",
-      "Interesting! Based on my knowledge, I would say:",
-      "Thanks for sharing that with me. Here's what I think:",
-    ];
-    const response = responses[Math.floor(Math.random() * responses.length)];
+    try {
+      // Check if AI is configured
+      if (!isAIConfigured()) {
+        // Fallback to helpful mock response
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        store.addMessage({
+          role: 'assistant',
+          content: "I'm currently running in demo mode. To enable real AI responses:\n\n1. Go to Settings\n2. Configure your API key (Claude or OpenAI)\n3. Come back and chat!\n\nIn the meantime, I can still help you test the interface.",
+          status: 'sent',
+        });
+        return;
+      }
 
-    store.addMessage({
-      role: 'assistant',
-      content: `${response}\n\nThis is a mock response. In a real implementation, this would connect to an AI API like Claude or GPT to generate intelligent responses based on your message: "${content}"`,
-      status: 'sent',
-    });
+      // Get current conversation messages for context
+      const conversationMessages = currentConversation?.messages || [];
+      const allMessages: Message[] = [
+        ...conversationMessages,
+        {
+          id: 'temp',
+          role: 'user',
+          content,
+          timestamp: new Date(),
+          status: 'sent',
+        },
+      ];
 
-    store.setTyping(false);
+      // Call the real AI API
+      const response = await sendChatMessage(allMessages, settings);
+
+      // Add AI response
+      store.addMessage({
+        role: 'assistant',
+        content: response.content,
+        status: 'sent',
+      });
+
+    } catch (error) {
+      console.error('AI Error:', error);
+
+      // Set error state
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      store.setError(errorMessage);
+
+      // Add error message as assistant response
+      store.addMessage({
+        role: 'assistant',
+        content: `I encountered an error: ${errorMessage}\n\nPlease check your API configuration in Settings and try again.`,
+        status: 'error',
+      });
+    } finally {
+      store.setTyping(false);
+    }
   };
 
   return {
     conversations: store.conversations,
     currentConversation,
     isTyping: store.isTyping,
+    error: store.error,
+    isConfigured: isAIConfigured(),
     createConversation: store.createConversation,
     selectConversation: store.selectConversation,
     sendMessage,
     deleteConversation: store.deleteConversation,
     clearAllConversations: store.clearAllConversations,
+    clearError: () => store.setError(null),
   };
 }

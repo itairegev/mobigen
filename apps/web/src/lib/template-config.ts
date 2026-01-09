@@ -374,6 +374,70 @@ export const TEMPLATE_CONFIGS: Record<string, TemplateConfig> = {
     completionMessage: "Your fitness app is ready to build!",
   },
 
+  // PODCAST TEMPLATE
+  'podcast': {
+    templateId: 'podcast',
+    welcomeMessage: "Let's create your podcast app! Tell me about your show.",
+    steps: [
+      {
+        id: 'podcast_source',
+        title: 'Podcast Source',
+        message: "Do you have an RSS feed for your podcast? Most podcast hosts provide one.",
+        fields: [
+          {
+            id: 'podcast_mode',
+            label: 'Podcast Source',
+            type: 'select',
+            options: [
+              { value: 'demo', label: 'Demo Mode (Sample episodes)' },
+              { value: 'rss', label: 'Use my RSS feed' },
+            ],
+            required: true,
+            defaultValue: 'demo',
+            envVar: 'EXPO_PUBLIC_PODCAST_MODE',
+          },
+        ],
+      },
+      {
+        id: 'rss_config',
+        title: 'RSS Feed',
+        message: "Enter your podcast RSS feed URL. You can find this in your podcast hosting dashboard (Anchor, Buzzsprout, etc.)",
+        fields: [
+          {
+            id: 'podcast_rss_url',
+            label: 'RSS Feed URL',
+            type: 'url',
+            placeholder: 'https://feeds.example.com/my-podcast',
+            helpText: 'The RSS feed URL from your podcast host',
+            required: true,
+            validation: {
+              validator: 'url',
+              pattern: '^https?://',
+            },
+            envVar: 'EXPO_PUBLIC_PODCAST_RSS_URL',
+          },
+        ],
+        skipCondition: 'podcast_mode', // Only show if podcast_mode === 'rss'
+      },
+      {
+        id: 'podcast_branding',
+        title: 'App Branding',
+        message: "What should your podcast app be called?",
+        fields: [
+          {
+            id: 'podcast_name',
+            label: 'Podcast Name',
+            type: 'text',
+            placeholder: 'My Awesome Podcast',
+            required: true,
+            envVar: 'EXPO_PUBLIC_PODCAST_NAME',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your podcast app is configured!",
+  },
+
   // LOYALTY TEMPLATE
   'loyalty': {
     templateId: 'loyalty',
@@ -440,6 +504,153 @@ export const TEMPLATE_CONFIGS: Record<string, TemplateConfig> = {
       },
     ],
     completionMessage: "Your loyalty program is configured!",
+  },
+
+  // SERVICE BOOKING TEMPLATE
+  'service-booking': {
+    templateId: 'service-booking',
+    welcomeMessage: "Let's create your booking app! Tell me about your business.",
+    steps: [
+      {
+        id: 'business_info',
+        title: 'Business Info',
+        message: "What's your business called?",
+        fields: [
+          {
+            id: 'business_name',
+            label: 'Business Name',
+            type: 'text',
+            placeholder: 'Wellness Spa',
+            required: true,
+            envVar: 'EXPO_PUBLIC_BUSINESS_NAME',
+          },
+        ],
+      },
+      {
+        id: 'business_type',
+        title: 'Business Type',
+        message: "What type of services do you offer?",
+        fields: [
+          {
+            id: 'service_type',
+            label: 'Service Type',
+            type: 'select',
+            options: [
+              { value: 'spa', label: 'Spa & Wellness' },
+              { value: 'salon', label: 'Hair Salon / Barber' },
+              { value: 'fitness', label: 'Personal Training / Fitness' },
+              { value: 'medical', label: 'Medical / Dental' },
+              { value: 'consulting', label: 'Consulting / Coaching' },
+              { value: 'other', label: 'Other Service' },
+            ],
+            required: true,
+            defaultValue: 'spa',
+          },
+        ],
+      },
+      {
+        id: 'business_hours',
+        title: 'Business Hours',
+        message: "What are your operating hours?",
+        fields: [
+          {
+            id: 'hours_start',
+            label: 'Opening Time',
+            type: 'select',
+            options: [
+              { value: '08:00', label: '8:00 AM' },
+              { value: '09:00', label: '9:00 AM' },
+              { value: '10:00', label: '10:00 AM' },
+            ],
+            required: true,
+            defaultValue: '09:00',
+            envVar: 'EXPO_PUBLIC_BUSINESS_HOURS_START',
+          },
+          {
+            id: 'hours_end',
+            label: 'Closing Time',
+            type: 'select',
+            options: [
+              { value: '17:00', label: '5:00 PM' },
+              { value: '18:00', label: '6:00 PM' },
+              { value: '19:00', label: '7:00 PM' },
+              { value: '20:00', label: '8:00 PM' },
+              { value: '21:00', label: '9:00 PM' },
+            ],
+            required: true,
+            defaultValue: '18:00',
+            envVar: 'EXPO_PUBLIC_BUSINESS_HOURS_END',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your booking app is ready! Your clients will love it.",
+  },
+
+  // SPORTS TEAM TEMPLATE
+  'sports-team': {
+    templateId: 'sports-team',
+    welcomeMessage: "Let's create your sports team app! Tell me about your team.",
+    steps: [
+      {
+        id: 'team_info',
+        title: 'Team Info',
+        message: "What's your team called? I can look up real game schedules and player info!",
+        fields: [
+          {
+            id: 'team_name',
+            label: 'Team Name',
+            type: 'text',
+            placeholder: 'Manchester United',
+            helpText: 'Enter your team name (e.g., "Lakers", "Chelsea", "Patriots")',
+            required: true,
+            envVar: 'EXPO_PUBLIC_TEAM_NAME',
+          },
+        ],
+      },
+      {
+        id: 'sport_type',
+        title: 'Sport Type',
+        message: "What sport does your team play?",
+        fields: [
+          {
+            id: 'sport_type',
+            label: 'Sport',
+            type: 'select',
+            options: [
+              { value: 'soccer', label: 'Soccer / Football' },
+              { value: 'basketball', label: 'Basketball' },
+              { value: 'football', label: 'American Football' },
+              { value: 'baseball', label: 'Baseball' },
+              { value: 'hockey', label: 'Hockey' },
+            ],
+            required: true,
+            defaultValue: 'soccer',
+            envVar: 'EXPO_PUBLIC_SPORT_TYPE',
+          },
+        ],
+      },
+      {
+        id: 'data_source',
+        title: 'Data Source',
+        message: "Should I fetch real game schedules and player data, or use demo content?",
+        fields: [
+          {
+            id: 'sports_mode',
+            label: 'Data Source',
+            type: 'select',
+            options: [
+              { value: 'api', label: 'Real Data (from TheSportsDB)' },
+              { value: 'demo', label: 'Demo Mode (Sample data)' },
+            ],
+            required: true,
+            defaultValue: 'api',
+            envVar: 'EXPO_PUBLIC_SPORTS_MODE',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your sports team app is ready to build! Go team! 🏆",
   },
 };
 
