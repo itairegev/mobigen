@@ -652,6 +652,514 @@ export const TEMPLATE_CONFIGS: Record<string, TemplateConfig> = {
     ],
     completionMessage: "Your sports team app is ready to build! Go team! 🏆",
   },
+
+  // COMMUNITY TEMPLATE
+  'community': {
+    templateId: 'community',
+    welcomeMessage: "Let's create your community app! Tell me about your community.",
+    steps: [
+      {
+        id: 'community_info',
+        title: 'Community Info',
+        message: "What's your community called?",
+        fields: [
+          {
+            id: 'community_name',
+            label: 'Community Name',
+            type: 'text',
+            placeholder: 'My Awesome Community',
+            required: true,
+            envVar: 'EXPO_PUBLIC_COMMUNITY_NAME',
+          },
+          {
+            id: 'community_type',
+            label: 'Community Type',
+            type: 'select',
+            options: [
+              { value: 'general', label: 'General Interest' },
+              { value: 'professional', label: 'Professional Network' },
+              { value: 'hobby', label: 'Hobby / Interest Group' },
+              { value: 'local', label: 'Local Community' },
+              { value: 'alumni', label: 'Alumni / School' },
+              { value: 'other', label: 'Other' },
+            ],
+            required: true,
+            defaultValue: 'general',
+          },
+        ],
+      },
+      {
+        id: 'membership_tiers',
+        title: 'Membership',
+        message: "Should your community have membership tiers?",
+        fields: [
+          {
+            id: 'has_tiers',
+            label: 'Enable Membership Tiers',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'false',
+            envVar: 'EXPO_PUBLIC_HAS_MEMBERSHIP_TIERS',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your community app is ready to bring people together!",
+  },
+
+  // CHURCH TEMPLATE
+  'church': {
+    templateId: 'church',
+    welcomeMessage: "Let's create your church app! Tell me about your congregation.",
+    steps: [
+      {
+        id: 'church_info',
+        title: 'Church Info',
+        message: "What's your church called?",
+        fields: [
+          {
+            id: 'church_name',
+            label: 'Church Name',
+            type: 'text',
+            placeholder: 'First Baptist Church',
+            required: true,
+            envVar: 'EXPO_PUBLIC_CHURCH_NAME',
+          },
+          {
+            id: 'denomination',
+            label: 'Denomination',
+            type: 'select',
+            options: [
+              { value: 'baptist', label: 'Baptist' },
+              { value: 'catholic', label: 'Catholic' },
+              { value: 'methodist', label: 'Methodist' },
+              { value: 'lutheran', label: 'Lutheran' },
+              { value: 'presbyterian', label: 'Presbyterian' },
+              { value: 'pentecostal', label: 'Pentecostal' },
+              { value: 'nondenominational', label: 'Non-denominational' },
+              { value: 'other', label: 'Other' },
+            ],
+            required: false,
+            defaultValue: 'nondenominational',
+          },
+        ],
+      },
+      {
+        id: 'features',
+        title: 'Features',
+        message: "What features would you like in your church app?",
+        fields: [
+          {
+            id: 'enable_giving',
+            label: 'Enable Online Giving',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_GIVING',
+          },
+          {
+            id: 'enable_prayer_requests',
+            label: 'Enable Prayer Requests',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_PRAYER_REQUESTS',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your church app is ready to serve your congregation!",
+  },
+
+  // MARKETPLACE TEMPLATE
+  'marketplace': {
+    templateId: 'marketplace',
+    welcomeMessage: "Let's create your marketplace app! Tell me about your platform.",
+    steps: [
+      {
+        id: 'marketplace_info',
+        title: 'Marketplace Info',
+        message: "What's your marketplace called?",
+        fields: [
+          {
+            id: 'marketplace_name',
+            label: 'Marketplace Name',
+            type: 'text',
+            placeholder: 'Local Finds',
+            required: true,
+            envVar: 'EXPO_PUBLIC_MARKETPLACE_NAME',
+          },
+          {
+            id: 'marketplace_type',
+            label: 'Marketplace Type',
+            type: 'select',
+            options: [
+              { value: 'general', label: 'General (Buy/Sell Anything)' },
+              { value: 'fashion', label: 'Fashion & Clothing' },
+              { value: 'electronics', label: 'Electronics' },
+              { value: 'home', label: 'Home & Garden' },
+              { value: 'vehicles', label: 'Vehicles' },
+              { value: 'services', label: 'Services' },
+            ],
+            required: true,
+            defaultValue: 'general',
+          },
+        ],
+      },
+      {
+        id: 'marketplace_features',
+        title: 'Features',
+        message: "How should your marketplace work?",
+        fields: [
+          {
+            id: 'enable_messaging',
+            label: 'Enable In-App Messaging',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_MESSAGING',
+          },
+          {
+            id: 'enable_offers',
+            label: 'Allow Price Negotiations',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_OFFERS',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your marketplace is ready to connect buyers and sellers!",
+  },
+
+  // EVENT TEMPLATE
+  'event': {
+    templateId: 'event',
+    welcomeMessage: "Let's create your event app! Tell me about your conference or event.",
+    steps: [
+      {
+        id: 'event_info',
+        title: 'Event Info',
+        message: "What's your event called?",
+        fields: [
+          {
+            id: 'event_name',
+            label: 'Event Name',
+            type: 'text',
+            placeholder: 'Tech Conference 2025',
+            required: true,
+            envVar: 'EXPO_PUBLIC_EVENT_NAME',
+          },
+          {
+            id: 'event_type',
+            label: 'Event Type',
+            type: 'select',
+            options: [
+              { value: 'conference', label: 'Conference' },
+              { value: 'summit', label: 'Summit' },
+              { value: 'workshop', label: 'Workshop Series' },
+              { value: 'festival', label: 'Festival' },
+              { value: 'trade_show', label: 'Trade Show' },
+              { value: 'other', label: 'Other' },
+            ],
+            required: true,
+            defaultValue: 'conference',
+          },
+        ],
+      },
+      {
+        id: 'event_features',
+        title: 'Features',
+        message: "What features do you need for your event app?",
+        fields: [
+          {
+            id: 'enable_networking',
+            label: 'Enable Attendee Networking',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_NETWORKING',
+          },
+          {
+            id: 'enable_session_notes',
+            label: 'Allow Session Note-Taking',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_SESSION_NOTES',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your event app is ready! Your attendees will love it!",
+  },
+
+  // REAL ESTATE TEMPLATE
+  'real-estate': {
+    templateId: 'real-estate',
+    welcomeMessage: "Let's create your real estate app! Tell me about your business.",
+    steps: [
+      {
+        id: 'agency_info',
+        title: 'Agency Info',
+        message: "What's your real estate business called?",
+        fields: [
+          {
+            id: 'agency_name',
+            label: 'Agency/Business Name',
+            type: 'text',
+            placeholder: 'Dream Home Realty',
+            required: true,
+            envVar: 'EXPO_PUBLIC_AGENCY_NAME',
+          },
+          {
+            id: 'property_type',
+            label: 'Property Focus',
+            type: 'select',
+            options: [
+              { value: 'all', label: 'All Properties' },
+              { value: 'residential', label: 'Residential Only' },
+              { value: 'commercial', label: 'Commercial Only' },
+              { value: 'rental', label: 'Rentals Only' },
+              { value: 'luxury', label: 'Luxury Properties' },
+            ],
+            required: true,
+            defaultValue: 'all',
+            envVar: 'EXPO_PUBLIC_PROPERTY_FOCUS',
+          },
+        ],
+      },
+      {
+        id: 'features',
+        title: 'Features',
+        message: "What features do you need?",
+        fields: [
+          {
+            id: 'enable_mortgage_calculator',
+            label: 'Enable Mortgage Calculator',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_MORTGAGE_CALC',
+          },
+          {
+            id: 'enable_virtual_tours',
+            label: 'Enable Virtual Tours',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'false',
+            envVar: 'EXPO_PUBLIC_ENABLE_VIRTUAL_TOURS',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your real estate app is ready to help clients find their dream home!",
+  },
+
+  // COURSE TEMPLATE
+  'course': {
+    templateId: 'course',
+    welcomeMessage: "Let's create your learning platform! Tell me about your courses.",
+    steps: [
+      {
+        id: 'platform_info',
+        title: 'Platform Info',
+        message: "What's your learning platform called?",
+        fields: [
+          {
+            id: 'platform_name',
+            label: 'Platform Name',
+            type: 'text',
+            placeholder: 'LearnPro Academy',
+            required: true,
+            envVar: 'EXPO_PUBLIC_PLATFORM_NAME',
+          },
+          {
+            id: 'course_category',
+            label: 'Primary Category',
+            type: 'select',
+            options: [
+              { value: 'technology', label: 'Technology & Programming' },
+              { value: 'business', label: 'Business & Marketing' },
+              { value: 'creative', label: 'Creative & Design' },
+              { value: 'lifestyle', label: 'Lifestyle & Health' },
+              { value: 'academic', label: 'Academic Subjects' },
+              { value: 'general', label: 'General / Multiple' },
+            ],
+            required: true,
+            defaultValue: 'general',
+          },
+        ],
+      },
+      {
+        id: 'learning_features',
+        title: 'Features',
+        message: "What learning features do you need?",
+        fields: [
+          {
+            id: 'enable_quizzes',
+            label: 'Enable Quizzes',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_QUIZZES',
+          },
+          {
+            id: 'enable_certificates',
+            label: 'Enable Certificates',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_CERTIFICATES',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your learning platform is ready to educate!",
+  },
+
+  // FIELD SERVICE TEMPLATE
+  'field-service': {
+    templateId: 'field-service',
+    welcomeMessage: "Let's create your field service app! Tell me about your business.",
+    steps: [
+      {
+        id: 'business_info',
+        title: 'Business Info',
+        message: "What's your field service business called?",
+        fields: [
+          {
+            id: 'company_name',
+            label: 'Company Name',
+            type: 'text',
+            placeholder: 'Pro Services LLC',
+            required: true,
+            envVar: 'EXPO_PUBLIC_COMPANY_NAME',
+          },
+          {
+            id: 'service_type',
+            label: 'Service Type',
+            type: 'select',
+            options: [
+              { value: 'hvac', label: 'HVAC' },
+              { value: 'plumbing', label: 'Plumbing' },
+              { value: 'electrical', label: 'Electrical' },
+              { value: 'cleaning', label: 'Cleaning Services' },
+              { value: 'landscaping', label: 'Landscaping' },
+              { value: 'general', label: 'General Contracting' },
+              { value: 'other', label: 'Other' },
+            ],
+            required: true,
+            defaultValue: 'general',
+            envVar: 'EXPO_PUBLIC_SERVICE_TYPE',
+          },
+        ],
+      },
+      {
+        id: 'tracking_features',
+        title: 'Features',
+        message: "What tracking features do you need?",
+        fields: [
+          {
+            id: 'enable_gps_tracking',
+            label: 'Enable GPS Tracking',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_GPS',
+          },
+          {
+            id: 'enable_time_tracking',
+            label: 'Enable Time Tracking',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_TIME_TRACKING',
+          },
+          {
+            id: 'enable_photo_upload',
+            label: 'Enable Job Photos',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_PHOTOS',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your field service app is ready for your team!",
+  },
+
+  // SCHOOL TEMPLATE
+  'school': {
+    templateId: 'school',
+    welcomeMessage: "Let's create your school app! Tell me about your institution.",
+    steps: [
+      {
+        id: 'school_info',
+        title: 'School Info',
+        message: "What's your school or institution called?",
+        fields: [
+          {
+            id: 'school_name',
+            label: 'School Name',
+            type: 'text',
+            placeholder: 'Springfield High School',
+            required: true,
+            envVar: 'EXPO_PUBLIC_SCHOOL_NAME',
+          },
+          {
+            id: 'school_type',
+            label: 'School Type',
+            type: 'select',
+            options: [
+              { value: 'elementary', label: 'Elementary School' },
+              { value: 'middle', label: 'Middle School' },
+              { value: 'high', label: 'High School' },
+              { value: 'university', label: 'College / University' },
+              { value: 'online', label: 'Online School' },
+              { value: 'other', label: 'Other' },
+            ],
+            required: true,
+            defaultValue: 'high',
+          },
+        ],
+      },
+      {
+        id: 'student_features',
+        title: 'Features',
+        message: "What features do students need?",
+        fields: [
+          {
+            id: 'enable_grades',
+            label: 'Grade Tracking',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_GRADES',
+          },
+          {
+            id: 'enable_calendar',
+            label: 'School Calendar',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_CALENDAR',
+          },
+          {
+            id: 'enable_study_tracker',
+            label: 'Study Session Tracker',
+            type: 'boolean',
+            required: false,
+            defaultValue: 'true',
+            envVar: 'EXPO_PUBLIC_ENABLE_STUDY_TRACKER',
+          },
+        ],
+      },
+    ],
+    completionMessage: "Your school app is ready to help students succeed!",
+  },
 };
 
 // Default config for templates without specific configuration
