@@ -1,25 +1,30 @@
-import { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { usePets, useUpcomingAppointments, useUpcomingReminders } from '@/hooks';
-import { PetCard, AppointmentCard, ReminderItem } from '@/components';
-import { getPetById, getServiceById } from '@/services';
-import { Plus, FileText } from 'lucide-react-native';
+import { usePets, useUpcomingAppointments, useUpcomingReminders, useFeaturedBreeds } from '@/hooks';
+import { PetCard, AppointmentCard, ReminderItem, BreedCard, ArticleCard } from '@/components';
+import { getFeaturedArticles } from '@/services';
+import { Plus, FileText, ChevronRight } from 'lucide-react-native';
+import { Article } from '@/types';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { pets, fetchPets } = usePets();
   const { data: upcomingAppointments = [] } = useUpcomingAppointments();
   const { data: upcomingReminders = [] } = useUpcomingReminders();
+  const { data: featuredBreeds, loading: breedsLoading } = useFeaturedBreeds(6);
+  const [featuredArticles, setFeaturedArticles] = useState<Article[]>([]);
 
   useEffect(() => {
     fetchPets();
+    // Fetch featured articles
+    getFeaturedArticles(3).then(setFeaturedArticles);
   }, [fetchPets]);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1">
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View className="bg-primary-500 px-6 py-8">
           <Text className="text-3xl font-bold text-white mb-2">
@@ -72,11 +77,62 @@ export default function HomeScreen() {
                   <FileText size={32} color="#8b5cf6" />
                 </View>
                 <Text className="text-sm text-gray-700 font-medium">
-                  Articles
+                  Tips
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => router.push('/(tabs)/shop')}
+                className="items-center"
+                testID="quick-action-shop"
+              >
+                <View className="w-16 h-16 bg-green-100 rounded-full items-center justify-center mb-2">
+                  <Text className="text-3xl">🛒</Text>
+                </View>
+                <Text className="text-sm text-gray-700 font-medium">
+                  Shop
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
+        </View>
+
+        {/* Discover Breeds - Real API Data */}
+        <View className="mb-6">
+          <View className="px-6 flex-row justify-between items-center mb-3">
+            <Text className="text-xl font-bold text-gray-900">Discover Breeds</Text>
+            <TouchableOpacity
+              onPress={() => router.push('/breeds' as never)}
+              className="flex-row items-center"
+              testID="view-all-breeds"
+            >
+              <Text className="text-primary-600 font-medium mr-1">View All</Text>
+              <ChevronRight size={16} color="#f97316" />
+            </TouchableOpacity>
+          </View>
+
+          {breedsLoading ? (
+            <View className="h-36 items-center justify-center">
+              <ActivityIndicator size="small" color="#f97316" />
+              <Text className="text-gray-500 text-sm mt-2">Loading breeds...</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="pl-6"
+              contentContainerStyle={{ paddingRight: 24 }}
+            >
+              {featuredBreeds.map((breed, index) => (
+                <BreedCard
+                  key={breed.id}
+                  breed={breed}
+                  compact
+                  testID={`breed-card-${index}`}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* My Pets */}
@@ -122,6 +178,30 @@ export default function HomeScreen() {
               />
             ))
           )}
+        </View>
+
+        {/* Pet Care Tips - Real Articles */}
+        <View className="px-6 mb-6">
+          <View className="flex-row justify-between items-center mb-3">
+            <Text className="text-xl font-bold text-gray-900">Pet Care Tips</Text>
+            <TouchableOpacity
+              onPress={() => router.push('/articles')}
+              className="flex-row items-center"
+              testID="view-all-articles"
+            >
+              <Text className="text-primary-600 font-medium mr-1">View All</Text>
+              <ChevronRight size={16} color="#f97316" />
+            </TouchableOpacity>
+          </View>
+
+          {featuredArticles.map((article) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              onPress={() => router.push(`/articles/${article.id}` as never)}
+              testID={`article-${article.id}`}
+            />
+          ))}
         </View>
 
         {/* Upcoming Reminders */}

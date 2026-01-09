@@ -5,3 +5,4 @@ export * from './reminders';
 export * from './records';
 export * from './articles';
 export * from './products';
+export * from './breeds';
