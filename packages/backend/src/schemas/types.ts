@@ -10,7 +10,7 @@ export type DynamoDBAttributeType = 'S' | 'N' | 'B';
 /**
  * Application attribute type for schema definition
  */
-export type AttributeType = 'string' | 'number' | 'boolean' | 'list' | 'map';
+export type AttributeType = 'string' | 'number' | 'boolean' | 'list' | 'map' | 'binary';
 
 /**
  * Key schema for DynamoDB

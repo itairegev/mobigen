@@ -19,6 +19,7 @@ export const projectsRouter = router({
       const project = await ctx.prisma.project.findFirst({
         where: { id: input.id, userId: ctx.userId },
         include: {
+          user: { select: { id: true, tier: true } },
           sessions: { take: 5, orderBy: { createdAt: 'desc' } },
           changes: { take: 10, orderBy: { version: 'desc' } },
           builds: { take: 5, orderBy: { createdAt: 'desc' } },

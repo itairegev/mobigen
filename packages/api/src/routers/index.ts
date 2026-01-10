@@ -8,6 +8,9 @@ import { analyticsRouter } from './analytics';
 import { marketplaceRouter } from './marketplace';
 import { otaUpdatesRouter } from './ota-updates';
 import { submissionGuideRouter } from './submission-guide';
+import { contentRouter } from './content';
+import { apiKeysRouter } from './api-keys';
+import { teamRouter } from './team';
 
 export const appRouter = router({
   projects: projectsRouter,
@@ -19,6 +22,9 @@ export const appRouter = router({
   marketplace: marketplaceRouter,
   otaUpdates: otaUpdatesRouter,
   submissionGuide: submissionGuideRouter,
+  content: contentRouter,
+  apiKeys: apiKeysRouter,
+  team: teamRouter,
 });
 
 export type AppRouter = typeof appRouter;

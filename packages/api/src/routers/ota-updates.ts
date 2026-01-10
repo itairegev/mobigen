@@ -8,6 +8,19 @@ import {
   RollbackUpdateSchema,
   TrackUpdateEventSchema,
 } from '@mobigen/ota-updates';
+import type { RollbackService as RollbackServiceType } from '../types/rollback-service';
+
+/**
+ * Helper to dynamically import RollbackService with proper types
+ * Using dynamic import to avoid circular dependencies
+ * The path is computed to prevent TypeScript from following it during compilation
+ */
+async function getRollbackService(prisma: unknown): Promise<RollbackServiceType> {
+  const servicePath = ['..', '..', '..', '..', 'services', 'generator', 'src', 'rollback-service'].join('/');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const module = await import(/* webpackIgnore: true */ servicePath) as any;
+  return new module.RollbackService(prisma) as RollbackServiceType;
+}
 
 /**
  * OTA Updates Router
@@ -231,9 +244,8 @@ export const otaUpdatesRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
       }
 
-      // Import RollbackService dynamically to avoid circular dependencies
-      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
-      const rollbackService = new RollbackService(ctx.prisma);
+      // Use helper to get typed RollbackService
+      const rollbackService = await getRollbackService(ctx.prisma);
 
       return rollbackService.rollbackToPrevious(
         { projectId: input.projectId, reason: input.reason },
@@ -260,9 +272,8 @@ export const otaUpdatesRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
       }
 
-      // Import RollbackService dynamically to avoid circular dependencies
-      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
-      const rollbackService = new RollbackService(ctx.prisma);
+      // Use helper to get typed RollbackService
+      const rollbackService = await getRollbackService(ctx.prisma);
 
       return rollbackService.rollbackToVersion(
         {
@@ -292,9 +303,8 @@ export const otaUpdatesRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
       }
 
-      // Import RollbackService dynamically to avoid circular dependencies
-      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
-      const rollbackService = new RollbackService(ctx.prisma);
+      // Use helper to get typed RollbackService
+      const rollbackService = await getRollbackService(ctx.prisma);
 
       return rollbackService.canRollback(input.projectId, input.targetVersion);
     }),
@@ -314,9 +324,8 @@ export const otaUpdatesRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
       }
 
-      // Import RollbackService dynamically to avoid circular dependencies
-      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
-      const rollbackService = new RollbackService(ctx.prisma);
+      // Use helper to get typed RollbackService
+      const rollbackService = await getRollbackService(ctx.prisma);
 
       return rollbackService.getRollbackStatus(input.projectId);
     }),
@@ -339,9 +348,8 @@ export const otaUpdatesRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
       }
 
-      // Import RollbackService dynamically to avoid circular dependencies
-      const { RollbackService } = await import('../../../../services/generator/src/rollback-service');
-      const rollbackService = new RollbackService(ctx.prisma);
+      // Use helper to get typed RollbackService
+      const rollbackService = await getRollbackService(ctx.prisma);
 
       return rollbackService.getRollbackHistory(input.projectId, input.limit);
     }),

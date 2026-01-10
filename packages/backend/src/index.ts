@@ -56,3 +56,6 @@ export { aiAssistantSchema } from './schemas/ai-assistant';
 
 // Client generator
 export { generateApiClient, type GeneratedClient } from './client/generator';
+
+// Content manager (owner dashboard)
+export * from './content-manager';

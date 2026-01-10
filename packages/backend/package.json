@@ -10,6 +10,11 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./content-manager": {
+      "types": "./src/content-manager/index.ts",
+      "import": "./src/content-manager/index.ts",
+      "default": "./src/content-manager/index.ts"
     }
   },
   "scripts": {
@@ -26,7 +31,8 @@
     "@aws-sdk/client-iam": "^3.490.0",
     "@aws-sdk/client-s3": "^3.490.0",
     "@aws-sdk/lib-dynamodb": "^3.490.0",
-    "archiver": "^6.0.1"
+    "archiver": "^6.0.1",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
