@@ -583,13 +583,16 @@ app.get('/api/projects/:projectId/progress', async (req, res) => {
   const { projectId } = req.params;
 
   try {
-    // First try to load from database if not in memory
+    // First try to get active job (running/pending)
     let job = TaskTracker.getJobByProject(projectId);
 
     if (!job) {
-      // Try loading from database
-      const dbJob = await TaskTracker.loadJobFromDatabase(projectId);
-      job = dbJob ?? undefined;
+      // Try loading latest job from database (including completed)
+      const allJobs = await TaskTracker.getAllJobsForProject(projectId, {
+        limit: 1,
+        includeCompleted: true
+      });
+      job = allJobs[0];
     }
 
     if (!job) {
@@ -1029,12 +1032,40 @@ app.get('/api/projects/:projectId/download', async (req, res) => {
   const { projectId } = req.params;
   const { format = 'zip', upload = 'false' } = req.query;
   const projectPath = getProjectPath(projectId);
+  const localExists = fs.existsSync(projectPath);
 
-  // Check S3 availability
-  const s3Status = await checkS3Availability();
+  // Check S3 availability (with timeout protection)
+  let s3Status: { available: boolean; bucket: string; endpoint?: string; error?: string };
+  try {
+    s3Status = await Promise.race([
+      checkS3Availability(),
+      new Promise<{ available: boolean; bucket: string; error: string }>((_, reject) =>
+        setTimeout(() => reject(new Error('S3 check timeout')), 5000)
+      )
+    ]).catch(() => ({ available: false, bucket: '', error: 'S3 check timeout' }));
+  } catch {
+    s3Status = { available: false, bucket: '', error: 'S3 check failed' };
+  }
 
-  // If S3 is available and upload is requested, upload to S3 first
-  if (s3Status.available && upload === 'true') {
+  // Check if S3 already has this artifact (try this first - fast path)
+  if (s3Status.available) {
+    try {
+      const existingUrl = await getArtifactDownloadUrl(projectId, 'latest', 'zip');
+      if (existingUrl) {
+        return res.json({
+          success: true,
+          message: 'Artifact available on S3',
+          downloadUrl: existingUrl,
+          source: 's3',
+        });
+      }
+    } catch (e) {
+      console.warn(`[api] S3 artifact check failed: ${e}`);
+    }
+  }
+
+  // If S3 is available, upload is requested, AND local project exists
+  if (s3Status.available && upload === 'true' && localExists) {
     console.log(`[api] Uploading project ${projectId} to S3...`);
     const uploadResult = await uploadProjectZip(projectPath, projectId);
 
@@ -1049,19 +1080,6 @@ app.get('/api/projects/:projectId/download', async (req, res) => {
       });
     }
     // Fall through to local download if S3 upload fails
-  }
-
-  // Check if S3 already has this artifact
-  if (s3Status.available) {
-    const existingUrl = await getArtifactDownloadUrl(projectId, 'latest', 'zip');
-    if (existingUrl) {
-      return res.json({
-        success: true,
-        message: 'Artifact available on S3',
-        downloadUrl: existingUrl,
-        source: 's3',
-      });
-    }
   }
 
   // Fall back to local file streaming
