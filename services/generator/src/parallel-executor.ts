@@ -33,6 +33,26 @@ import {
 // TYPES
 // ============================================================================
 
+export interface AccumulatedErrorConfig {
+  /** Maximum total warnings before blocking (default: 50) */
+  maxAccumulatedWarnings: number;
+  /** Maximum unresolved errors that were eventually fixed (but indicate instability) */
+  maxFlappingErrors: number;
+  /** Block at end if accumulated issues exceed thresholds */
+  blockOnAccumulatedIssues: boolean;
+  /** Emit progress events for visibility */
+  trackProgress: boolean;
+}
+
+export interface AccumulatedErrorStats {
+  totalWarnings: number;
+  totalErrorsFixed: number;
+  totalFixAttempts: number;
+  taskWithMostErrors: string | null;
+  warningsByType: Record<string, number>;
+  errorTrend: 'improving' | 'stable' | 'worsening';
+}
+
 export interface ParallelExecutionConfig {
   maxConcurrentAgents: number;  // Max agents running at once
   taskTimeout: number;          // Per-task timeout in ms
@@ -40,6 +60,8 @@ export interface ParallelExecutionConfig {
   continueOnTaskFailure: boolean; // Continue other tasks if one fails
   /** Incremental validation after each task */
   incrementalValidation: Partial<IncrementalValidationConfig>;
+  /** Accumulated error tracking across tasks */
+  accumulatedErrorConfig: AccumulatedErrorConfig;
 }
 
 export interface TaskExecutionResult {
@@ -66,7 +88,19 @@ export interface ParallelExecutionResult {
   totalFilesModified: string[];
   failedTasks: string[];
   duration: number;
+  /** Accumulated error statistics across all tasks */
+  accumulatedStats: AccumulatedErrorStats;
+  /** Whether execution was blocked due to accumulated issues */
+  blockedByAccumulatedIssues: boolean;
 }
+
+// Default accumulated error config
+export const DEFAULT_ACCUMULATED_ERROR_CONFIG: AccumulatedErrorConfig = {
+  maxAccumulatedWarnings: 50,    // Block if > 50 warnings accumulated
+  maxFlappingErrors: 10,         // Block if > 10 errors needed fixing
+  blockOnAccumulatedIssues: true,
+  trackProgress: true,
+};
 
 // Default configuration
 export const DEFAULT_PARALLEL_CONFIG: ParallelExecutionConfig = {
@@ -79,8 +113,9 @@ export const DEFAULT_PARALLEL_CONFIG: ParallelExecutionConfig = {
     maxFixAttempts: 3,          // Try to fix errors 3 times
     typescriptTimeout: 30000,   // 30 seconds for TypeScript check
     runEslint: false,           // Skip ESLint for speed (run at end)
-    failOnValidationError: false, // Continue but track errors
+    failOnValidationError: true, // BLOCK: Must fix errors before moving to next task
   },
+  accumulatedErrorConfig: DEFAULT_ACCUMULATED_ERROR_CONFIG,
 };
 
 // ============================================================================
@@ -153,6 +188,191 @@ export function analyzeDependencies(
 }
 
 // ============================================================================
+// ACCUMULATED ERROR TRACKER
+// ============================================================================
+
+/**
+ * Tracks warnings, errors, and fix attempts across all tasks in an implementation phase.
+ * Provides visibility into error trends and can block execution if issues accumulate.
+ */
+class AccumulatedErrorTracker {
+  private warnings: Array<{ taskId: string; code: string; message: string }> = [];
+  private errorsFixed: Array<{ taskId: string; code: string; attempts: number }> = [];
+  private errorCountByTask: Map<string, number> = new Map();
+  private previousErrorCount: number = 0;
+  private trendHistory: number[] = [];
+  private config: AccumulatedErrorConfig;
+  private logger: GenerationLogger;
+  private projectId: string;
+
+  constructor(projectId: string, logger: GenerationLogger, config: AccumulatedErrorConfig) {
+    this.projectId = projectId;
+    this.logger = logger;
+    this.config = config;
+  }
+
+  /**
+   * Record validation result for a task
+   */
+  recordValidation(taskId: string, result: IncrementalValidationResult): void {
+    // Track warnings
+    for (const warning of result.warnings) {
+      this.warnings.push({
+        taskId,
+        code: warning.code,
+        message: warning.message,
+      });
+    }
+
+    // Track errors that needed fixing
+    if (result.fixAttempts > 0) {
+      // Calculate how many errors were fixed (errors that existed but are now 0)
+      const errorsInitiallyFound = result.errors.length + result.fixAttempts; // Approximation
+      for (let i = 0; i < result.fixAttempts; i++) {
+        this.errorsFixed.push({
+          taskId,
+          code: 'VALIDATION_ERROR',
+          attempts: result.fixAttempts,
+        });
+      }
+    }
+
+    // Track error count by task
+    const taskErrorCount = result.errors.length + (result.fixAttempts > 0 ? result.fixAttempts : 0);
+    this.errorCountByTask.set(taskId, taskErrorCount);
+
+    // Update trend
+    this.trendHistory.push(result.errors.length);
+
+    // Emit progress if configured
+    if (this.config.trackProgress) {
+      this.emitProgress();
+    }
+  }
+
+  /**
+   * Emit accumulated error stats as progress event
+   */
+  private async emitProgress(): Promise<void> {
+    const stats = this.getStats();
+    await emitProgress(this.projectId, 'accumulated:update', {
+      totalWarnings: stats.totalWarnings,
+      totalErrorsFixed: stats.totalErrorsFixed,
+      totalFixAttempts: stats.totalFixAttempts,
+      trend: stats.errorTrend,
+      thresholds: {
+        warnings: { current: stats.totalWarnings, max: this.config.maxAccumulatedWarnings },
+        flapping: { current: stats.totalErrorsFixed, max: this.config.maxFlappingErrors },
+      },
+    });
+  }
+
+  /**
+   * Get accumulated error statistics
+   */
+  getStats(): AccumulatedErrorStats {
+    // Group warnings by type
+    const warningsByType: Record<string, number> = {};
+    for (const w of this.warnings) {
+      warningsByType[w.code] = (warningsByType[w.code] || 0) + 1;
+    }
+
+    // Find task with most errors
+    let taskWithMostErrors: string | null = null;
+    let maxErrors = 0;
+    for (const [taskId, count] of this.errorCountByTask) {
+      if (count > maxErrors) {
+        maxErrors = count;
+        taskWithMostErrors = taskId;
+      }
+    }
+
+    // Calculate trend
+    const trend = this.calculateTrend();
+
+    // Total fix attempts
+    const totalFixAttempts = this.errorsFixed.reduce((sum, e) => sum + e.attempts, 0);
+
+    return {
+      totalWarnings: this.warnings.length,
+      totalErrorsFixed: this.errorsFixed.length,
+      totalFixAttempts,
+      taskWithMostErrors,
+      warningsByType,
+      errorTrend: trend,
+    };
+  }
+
+  /**
+   * Calculate error trend based on history
+   */
+  private calculateTrend(): 'improving' | 'stable' | 'worsening' {
+    if (this.trendHistory.length < 3) return 'stable';
+
+    const recent = this.trendHistory.slice(-3);
+    const earlier = this.trendHistory.slice(-6, -3);
+
+    if (earlier.length === 0) return 'stable';
+
+    const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
+    const earlierAvg = earlier.reduce((a, b) => a + b, 0) / earlier.length;
+
+    if (recentAvg < earlierAvg * 0.7) return 'improving';
+    if (recentAvg > earlierAvg * 1.3) return 'worsening';
+    return 'stable';
+  }
+
+  /**
+   * Check if accumulated issues exceed thresholds
+   */
+  shouldBlock(): { blocked: boolean; reason?: string } {
+    if (!this.config.blockOnAccumulatedIssues) {
+      return { blocked: false };
+    }
+
+    const stats = this.getStats();
+
+    if (stats.totalWarnings > this.config.maxAccumulatedWarnings) {
+      return {
+        blocked: true,
+        reason: `Accumulated ${stats.totalWarnings} warnings (threshold: ${this.config.maxAccumulatedWarnings}). ` +
+                `Top warning types: ${Object.entries(stats.warningsByType).slice(0, 3).map(([k, v]) => `${k}: ${v}`).join(', ')}`,
+      };
+    }
+
+    if (stats.totalErrorsFixed > this.config.maxFlappingErrors) {
+      return {
+        blocked: true,
+        reason: `${stats.totalErrorsFixed} errors needed fixing across tasks (threshold: ${this.config.maxFlappingErrors}). ` +
+                `This indicates unstable code generation. Most problematic task: ${stats.taskWithMostErrors}`,
+      };
+    }
+
+    // Also check if trend is worsening and we're close to thresholds
+    if (stats.errorTrend === 'worsening' &&
+        (stats.totalWarnings > this.config.maxAccumulatedWarnings * 0.8 ||
+         stats.totalErrorsFixed > this.config.maxFlappingErrors * 0.8)) {
+      this.logger.warn('Error trend is worsening and approaching thresholds', {
+        trend: stats.errorTrend,
+        warnings: stats.totalWarnings,
+        errorsFixed: stats.totalErrorsFixed,
+      });
+    }
+
+    return { blocked: false };
+  }
+
+  /**
+   * Get summary for logging
+   */
+  getSummary(): string {
+    const stats = this.getStats();
+    return `Warnings: ${stats.totalWarnings}, Errors Fixed: ${stats.totalErrorsFixed}, ` +
+           `Fix Attempts: ${stats.totalFixAttempts}, Trend: ${stats.errorTrend}`;
+  }
+}
+
+// ============================================================================
 // PARALLEL EXECUTOR CLASS
 // ============================================================================
 
@@ -166,6 +386,7 @@ export class ParallelTaskExecutor {
   private agentRegistry: ReturnType<typeof getDefaultRegistry>;
   private context: Record<string, unknown>;
   private incrementalValidator: IncrementalValidator | null = null;
+  private accumulatedErrorTracker: AccumulatedErrorTracker;
 
   constructor(
     projectId: string,
@@ -194,6 +415,13 @@ export class ParallelTaskExecutor {
         { ...DEFAULT_INCREMENTAL_CONFIG, ...this.config.incrementalValidation }
       );
     }
+
+    // Initialize accumulated error tracker
+    this.accumulatedErrorTracker = new AccumulatedErrorTracker(
+      projectId,
+      this.logger,
+      this.config.accumulatedErrorConfig || DEFAULT_ACCUMULATED_ERROR_CONFIG
+    );
   }
 
   /**
@@ -253,11 +481,15 @@ export class ParallelTaskExecutor {
       const batchResult = await this.executeBatch(batch, batchIndex);
       results.push(batchResult);
 
-      // Collect results
+      // Collect results and record validation stats
       for (const taskResult of batchResult.tasks) {
         allFilesModified.push(...taskResult.filesModified);
         if (!taskResult.success) {
           failedTasks.push(taskResult.taskId);
+        }
+        // Record validation result in accumulated tracker
+        if (taskResult.validation) {
+          this.accumulatedErrorTracker.recordValidation(taskResult.taskId, taskResult.validation);
         }
       }
 
@@ -276,20 +508,44 @@ export class ParallelTaskExecutor {
     }
 
     const totalDuration = Date.now() - startTime;
-    const success = failedTasks.length === 0;
+    let success = failedTasks.length === 0;
+    let blockedByAccumulatedIssues = false;
+
+    // Check accumulated error thresholds
+    const accumulatedStats = this.accumulatedErrorTracker.getStats();
+    const blockCheck = this.accumulatedErrorTracker.shouldBlock();
+
+    if (blockCheck.blocked && success) {
+      // Tasks all passed individually, but accumulated issues exceed thresholds
+      success = false;
+      blockedByAccumulatedIssues = true;
+      this.logger.error('Blocking due to accumulated issues', {
+        reason: blockCheck.reason,
+        stats: accumulatedStats,
+      });
+
+      await emitProgress(this.projectId, 'accumulated:blocked', {
+        reason: blockCheck.reason,
+        stats: accumulatedStats,
+      });
+    }
 
     this.logger.info('Parallel execution completed', {
       success,
+      blockedByAccumulatedIssues,
       totalDuration,
       filesModified: allFilesModified.length,
       failedTasks: failedTasks.length,
+      accumulatedSummary: this.accumulatedErrorTracker.getSummary(),
     });
 
     await emitProgress(this.projectId, 'parallel:complete', {
       success,
+      blockedByAccumulatedIssues,
       duration: totalDuration,
       filesModified: allFilesModified.length,
       failedTasks,
+      accumulatedStats,
     });
 
     return {
@@ -298,6 +554,8 @@ export class ParallelTaskExecutor {
       totalFilesModified: [...new Set(allFilesModified)], // Dedupe
       failedTasks,
       duration: totalDuration,
+      accumulatedStats,
+      blockedByAccumulatedIssues,
     };
   }
 

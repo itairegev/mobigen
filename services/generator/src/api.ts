@@ -537,6 +537,189 @@ app.get('/api/projects/:projectId/errors', (req, res) => {
   });
 });
 
+// Fix errors with AI assistance (chat-based fixing)
+app.post('/api/projects/:projectId/fix', async (req, res) => {
+  const { projectId } = req.params;
+  const { userMessage, errorContext } = req.body;
+
+  if (!userMessage && !errorContext) {
+    return res.status(400).json({
+      success: false,
+      error: 'Either userMessage or errorContext is required',
+    });
+  }
+
+  const projectPath = path.join(process.cwd(), '../../projects', projectId);
+
+  // Check project exists
+  if (!fs.existsSync(projectPath)) {
+    return res.status(404).json({
+      success: false,
+      error: 'Project not found',
+    });
+  }
+
+  try {
+    // Send initial response
+    res.json({
+      success: true,
+      message: 'Fix started. Subscribe to WebSocket for progress updates.',
+      projectId,
+    });
+
+    // Emit fix started
+    io.to(`project:${projectId}`).emit('fix:started', { projectId });
+
+    // Import required modules dynamically to avoid circular deps
+    const { getDefaultRegistry } = await import('@mobigen/ai');
+    const { query } = await import('@anthropic-ai/claude-agent-sdk');
+    const { verifyGeneratedApp } = await import('./verification');
+
+    // Initialize agent registry
+    const mobigenRoot = path.resolve(process.cwd(), '../..');
+    const agentRegistry = getDefaultRegistry(mobigenRoot);
+    await agentRegistry.initialize();
+
+    // Get error-fixer agent
+    const errorFixerAgent = agentRegistry.get('error-fixer');
+    if (!errorFixerAgent) {
+      io.to(`project:${projectId}`).emit('fix:error', {
+        error: 'Error fixer agent not available',
+      });
+      return;
+    }
+
+    // Build fix prompt
+    const fixPrompt = buildFixPrompt(userMessage, errorContext, projectPath);
+
+    // Track files modified
+    const filesModified: string[] = [];
+    let fixResult = '';
+
+    // Emit progress: agent starting
+    io.to(`project:${projectId}`).emit('fix:progress', {
+      phase: 'fixing',
+      message: 'AI is analyzing and fixing errors...',
+    });
+
+    // Run error-fixer agent
+    for await (const message of query({
+      prompt: fixPrompt,
+      options: {
+        model: errorFixerAgent.model || 'sonnet',
+        systemPrompt: `${errorFixerAgent.prompt}\n\nWorking directory: ${mobigenRoot}\nProject directory: ${projectPath}`,
+        cwd: mobigenRoot,
+        permissionMode: 'acceptEdits',
+        allowedTools: errorFixerAgent.tools || ['Read', 'Edit', 'Bash', 'Grep', 'Glob'],
+        maxTurns: errorFixerAgent.maxTurns || 100,
+      },
+    })) {
+      // Track file modifications
+      if (message.type === 'tool' && (message.tool_name === 'Write' || message.tool_name === 'Edit')) {
+        const filePath = message.tool_input?.file_path as string;
+        if (filePath && !filesModified.includes(filePath)) {
+          filesModified.push(filePath);
+          io.to(`project:${projectId}`).emit('fix:progress', {
+            phase: 'fixing',
+            message: `Modified: ${path.relative(projectPath, filePath)}`,
+            filesModified: filesModified.length,
+          });
+        }
+      }
+
+      // Capture assistant response
+      if (message.type === 'assistant' && message.message) {
+        const textBlock = message.message.content.find((b: { type: string }) => b.type === 'text');
+        if (textBlock && 'text' in textBlock) {
+          fixResult += textBlock.text;
+        }
+      }
+    }
+
+    // Emit progress: verification starting
+    io.to(`project:${projectId}`).emit('fix:progress', {
+      phase: 'verifying',
+      message: 'Verifying fixes...',
+      filesModified: filesModified.length,
+    });
+
+    // Run verification after fixes
+    const verification = await verifyGeneratedApp(projectPath);
+
+    // Emit completion
+    io.to(`project:${projectId}`).emit('fix:complete', {
+      success: verification.passed,
+      filesModified: filesModified.length,
+      files: filesModified.map(f => path.relative(projectPath, f)),
+      verification: {
+        passed: verification.passed,
+        checks: verification.checks.map(c => ({
+          name: c.name,
+          passed: c.passed,
+          message: c.message,
+          details: c.details,
+          errors: c.errors,
+        })),
+        summary: verification.summary,
+      },
+      fixResult: fixResult.substring(0, 2000), // Truncate for transmission
+    });
+
+    logger.info(`Fix completed for project ${projectId}`, {
+      filesModified: filesModified.length,
+      verificationPassed: verification.passed,
+    });
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Fix failed';
+    logger.error(`Fix failed for project ${projectId}`, error);
+    io.to(`project:${projectId}`).emit('fix:error', { error: errorMessage });
+  }
+});
+
+// Helper function to build fix prompt
+function buildFixPrompt(
+  userMessage: string | undefined,
+  errorContext: { checks?: Array<{ name: string; errors?: Array<{ file?: string; line?: number; message: string }> }> } | undefined,
+  projectPath: string
+): string {
+  let prompt = `Fix the errors in the project at: ${projectPath}\n\n`;
+
+  // Add user guidance if provided
+  if (userMessage) {
+    prompt += `## USER GUIDANCE\nThe user says: "${userMessage}"\n\n`;
+  }
+
+  // Add error context if provided
+  if (errorContext?.checks) {
+    prompt += `## ERRORS TO FIX\n`;
+    for (const check of errorContext.checks) {
+      if (check.errors && check.errors.length > 0) {
+        prompt += `\n### ${check.name}\n`;
+        for (const err of check.errors) {
+          if (err.file) {
+            prompt += `- ${err.file}${err.line ? `:${err.line}` : ''}: ${err.message}\n`;
+          } else {
+            prompt += `- ${err.message}\n`;
+          }
+        }
+      }
+    }
+    prompt += '\n';
+  }
+
+  prompt += `## INSTRUCTIONS
+1. Read the error context and user guidance
+2. Analyze the root cause of each error
+3. Apply minimal, targeted fixes
+4. Focus on the most critical errors first (TypeScript errors that break compilation)
+5. After fixing, provide a summary of what was fixed
+
+Start by reading the relevant files to understand the context, then apply fixes.`;
+
+  return prompt;
+}
+
 // ============================================================================
 // PROGRESS & HISTORY ENDPOINTS
 // ============================================================================

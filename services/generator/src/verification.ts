@@ -23,6 +23,10 @@ export interface VerificationCheck {
   name: string;
   passed: boolean;
   message?: string;
+  /** Detailed error output for failed checks */
+  details?: string;
+  /** Individual errors for display */
+  errors?: Array<{ file?: string; line?: number; message: string }>;
   duration: number;
 }
 
@@ -240,10 +244,25 @@ async function checkTypeScript(projectPath: string): Promise<VerificationCheck> 
     const execError = error as { stdout?: string; stderr?: string };
     const output = execError.stdout || execError.stderr || '';
     const errorCount = (output.match(/error TS/g) || []).length;
+
+    // Parse individual errors for display
+    const errors: Array<{ file?: string; line?: number; message: string }> = [];
+    const errorRegex = /^(.+?)\((\d+),\d+\):\s*error TS\d+:\s*(.+)$/gm;
+    let match;
+    while ((match = errorRegex.exec(output)) !== null && errors.length < 10) {
+      errors.push({
+        file: match[1].replace(projectPath + '/', ''), // Remove project path prefix
+        line: parseInt(match[2], 10),
+        message: match[3],
+      });
+    }
+
     return {
       name: 'typescript',
       passed: false,
       message: `${errorCount} TypeScript error${errorCount !== 1 ? 's' : ''}`,
+      details: output.substring(0, 2000), // Limit to 2KB
+      errors,
       duration: Date.now() - start,
     };
   }
@@ -280,15 +299,28 @@ async function checkCircularImports(projectPath: string): Promise<VerificationCh
       duration: Date.now() - start,
     };
   } catch (error: unknown) {
-    const execError = error as { stdout?: string };
-    const output = execError.stdout || '';
+    const execError = error as { stdout?: string; stderr?: string };
+    const output = execError.stdout || execError.stderr || '';
 
     // madge returns non-zero when circular deps found
-    if (output.includes('Circular')) {
+    if (output.includes('Circular') || output.includes('Found')) {
+      // Parse circular dependency chains
+      const errors: Array<{ file?: string; line?: number; message: string }> = [];
+      const chainRegex = /(\S+\.tsx?)\s*->\s*(\S+\.tsx?)/g;
+      let match;
+      while ((match = chainRegex.exec(output)) !== null && errors.length < 10) {
+        errors.push({
+          file: match[1],
+          message: `Circular import: ${match[1]} -> ${match[2]}`,
+        });
+      }
+
       return {
         name: 'circular-imports',
         passed: false,
-        message: 'Circular imports detected',
+        message: `Circular imports detected (${errors.length} cycle${errors.length !== 1 ? 's' : ''})`,
+        details: output.substring(0, 2000),
+        errors: errors.length > 0 ? errors : [{ message: 'Circular dependencies found - check madge output' }],
         duration: Date.now() - start,
       };
     }
@@ -329,15 +361,16 @@ async function checkNavigation(projectPath: string): Promise<VerificationCheck> 
       };
     }
 
+    const errors: Array<{ file?: string; line?: number; message: string }> = [];
+    const relativePath = appDir.replace(projectPath + '/', '');
+
     // Check for root layout file (required for Expo Router)
     const layoutFile = path.join(appDir, '_layout.tsx');
     if (!fs.existsSync(layoutFile)) {
-      return {
-        name: 'navigation',
-        passed: false,
-        message: 'Root _layout.tsx not found in app directory',
-        duration: Date.now() - start,
-      };
+      errors.push({
+        file: `${relativePath}/_layout.tsx`,
+        message: 'Root _layout.tsx is missing - required for Expo Router',
+      });
     }
 
     // Check that at least one page exists
@@ -345,10 +378,49 @@ async function checkNavigation(projectPath: string): Promise<VerificationCheck> 
     const pageFiles = files.filter((f) => f.endsWith('.tsx') && !f.startsWith('_'));
 
     if (pageFiles.length === 0) {
+      errors.push({
+        file: relativePath,
+        message: 'No page files found in app directory - need at least one route (e.g., index.tsx)',
+      });
+    }
+
+    // Check subdirectories for layouts if they exist
+    const subdirs = files.filter((f) => {
+      const fullPath = path.join(appDir, f);
+      return fs.statSync(fullPath).isDirectory() && !f.startsWith('.');
+    });
+
+    for (const subdir of subdirs) {
+      const subdirPath = path.join(appDir, subdir);
+      const subdirFiles = fs.readdirSync(subdirPath);
+
+      // Check if there's an index.tsx or page files in subdirectory
+      const hasPages = subdirFiles.some((f) => f.endsWith('.tsx'));
+      if (!hasPages) {
+        errors.push({
+          file: `${relativePath}/${subdir}`,
+          message: `Route group "${subdir}" has no page files`,
+        });
+      }
+
+      // For tab groups (like (tabs)), check for _layout.tsx
+      if (subdir.startsWith('(') && subdir.endsWith(')')) {
+        const groupLayout = path.join(subdirPath, '_layout.tsx');
+        if (!fs.existsSync(groupLayout)) {
+          errors.push({
+            file: `${relativePath}/${subdir}/_layout.tsx`,
+            message: `Route group "${subdir}" is missing _layout.tsx for navigation configuration`,
+          });
+        }
+      }
+    }
+
+    if (errors.length > 0) {
       return {
         name: 'navigation',
         passed: false,
-        message: 'No page files found in app directory',
+        message: `${errors.length} navigation issue${errors.length !== 1 ? 's' : ''} found`,
+        errors,
         duration: Date.now() - start,
       };
     }
@@ -364,6 +436,7 @@ async function checkNavigation(projectPath: string): Promise<VerificationCheck> 
       name: 'navigation',
       passed: false,
       message: err.message,
+      errors: [{ message: err.message }],
       duration: Date.now() - start,
     };
   }
@@ -387,7 +460,7 @@ async function checkImports(projectPath: string): Promise<VerificationCheck> {
 
     // Use tsc to check module resolution
     const { stdout } = await execAsync(
-      'npx tsc --noEmit --traceResolution 2>&1 | grep -i "not found" | head -5 || true',
+      'npx tsc --noEmit --traceResolution 2>&1 | grep -i "not found" | head -20 || true',
       {
         cwd: projectPath,
         timeout: 60000,
@@ -396,10 +469,32 @@ async function checkImports(projectPath: string): Promise<VerificationCheck> {
 
     // If output contains "not found", there are unresolved imports
     if (stdout.includes('not found')) {
+      // Parse unresolved modules
+      const errors: Array<{ file?: string; line?: number; message: string }> = [];
+      const moduleRegex = /Module\s+'([^']+)'\s+not found/gi;
+      let match;
+      while ((match = moduleRegex.exec(stdout)) !== null && errors.length < 10) {
+        errors.push({
+          message: `Cannot resolve module '${match[1]}'`,
+        });
+      }
+
+      // Also check for file resolution errors
+      const fileRegex = /File\s+'([^']+)'\s+not found/gi;
+      while ((match = fileRegex.exec(stdout)) !== null && errors.length < 10) {
+        const relativePath = match[1].replace(projectPath + '/', '');
+        errors.push({
+          file: relativePath,
+          message: `File not found: ${relativePath}`,
+        });
+      }
+
       return {
         name: 'imports',
         passed: false,
-        message: 'Unresolved imports found',
+        message: `${errors.length} unresolved import${errors.length !== 1 ? 's' : ''} found`,
+        details: stdout.substring(0, 2000),
+        errors: errors.length > 0 ? errors : [{ message: 'Unresolved imports found - check TypeScript output' }],
         duration: Date.now() - start,
       };
     }

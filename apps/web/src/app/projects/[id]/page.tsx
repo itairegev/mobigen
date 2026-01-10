@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { trpc } from '@/lib/trpc';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { useGenerator } from '@/hooks/useGenerator';
 import type { ValidationIssue } from '@/hooks/useGenerator';
@@ -34,19 +35,43 @@ export default function ProjectPage() {
   const [previewQrCode, setPreviewQrCode] = useState<string | null>(null);
   const [buildArtifacts, setBuildArtifacts] = useState<BuildArtifact[]>([]);
 
-  // Project info from URL params
-  const projectName = searchParams.get('name') || 'My App';
-  const template = searchParams.get('template') || 'base';
+  // Fetch project from database - this is the source of truth
+  const { data: project, isLoading: projectLoading } = trpc.projects.getById.useQuery(
+    { id: projectId },
+    { enabled: !!projectId }
+  );
+
+  // URL params (used for initial creation flow, fallback when DB not yet populated)
+  const urlName = searchParams.get('name');
+  const urlTemplate = searchParams.get('template');
+  const urlBundleId = searchParams.get('bundleId');
+  const urlPrimaryColor = searchParams.get('primaryColor');
+  const urlSecondaryColor = searchParams.get('secondaryColor');
   const initialPrompt = searchParams.get('prompt') || '';
-  const primaryColor = searchParams.get('primaryColor') || '#6366F1';
-  const secondaryColor = searchParams.get('secondaryColor') || '#8B5CF6';
-  const bundleId = searchParams.get('bundleId') || `com.mobigen.${projectName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+
+  // Use database values first, fall back to URL params, then defaults
+  const projectName = project?.name || urlName || 'My App';
+  const template = project?.templateId || urlTemplate || 'base';
+  const bundleId = project?.bundleIdIos || urlBundleId || `com.mobigen.${projectName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+  const primaryColor = (project?.branding as { primaryColor?: string })?.primaryColor || urlPrimaryColor || '#6366F1';
+  const secondaryColor = (project?.branding as { secondaryColor?: string })?.secondaryColor || urlSecondaryColor || '#8B5CF6';
 
   // Template-specific config (e.g., Shopify domain, API keys) from ConfigChat
+  // Priority: URL params (for initial creation) > database > empty object
   const templateConfigParam = searchParams.get('config');
-  const templateEnvVars = templateConfigParam
-    ? JSON.parse(decodeURIComponent(templateConfigParam)) as Record<string, string>
-    : {};
+  const templateEnvVars = useMemo(() => {
+    // First check URL params (used during initial creation flow)
+    if (templateConfigParam) {
+      try {
+        return JSON.parse(decodeURIComponent(templateConfigParam)) as Record<string, string>;
+      } catch {
+        // Ignore parse errors
+      }
+    }
+    // Fall back to database config
+    const projectConfig = project?.config as { envVars?: Record<string, string> } | undefined;
+    return projectConfig?.envVars || {};
+  }, [templateConfigParam, project?.config]);
 
   const [activePrompt, setActivePrompt] = useState(initialPrompt);
 
@@ -69,18 +94,31 @@ export default function ProjectPage() {
     logErrors,
     logWarnings,
     validationResults,
+    // Verification results (detailed error info)
+    verificationResult,
+    // Fix-related state
+    isFixing,
+    fixProgress,
+    fixResult,
     // Actions
     startGeneration,
     resumeGeneration,
+    startFix,
     refreshProgress,
     fetchJobHistory,
     fetchFailedTasks,
     fetchLogs,
   } = useGenerator({ projectId, autoConnect: true });
 
+  // Fix chat state
+  const [fixMessage, setFixMessage] = useState('');
+
   // Auto-start generation
   useEffect(() => {
+    // Wait for generator status to load
     if (isLoading) return;
+    // Wait for project data from database (unless we have URL params from initial creation)
+    if (projectLoading && !urlBundleId) return;
     if (hasStarted) return;
     if (isGenerating || result) return;
     if (jobId) {
@@ -106,7 +144,7 @@ export default function ProjectPage() {
     setHasStarted(true);
     setActivePrompt(initialPrompt);
     startGeneration(initialPrompt, config);
-  }, [initialPrompt, isConnected, hasStarted, isGenerating, isLoading, result, jobId, projectId, projectName, bundleId, primaryColor, secondaryColor, templateEnvVars, startGeneration]);
+  }, [initialPrompt, isConnected, hasStarted, isGenerating, isLoading, projectLoading, urlBundleId, result, jobId, projectId, projectName, bundleId, primaryColor, secondaryColor, templateEnvVars, startGeneration]);
 
   // Fetch build artifacts when generation is complete
   useEffect(() => {
@@ -402,6 +440,183 @@ export default function ProjectPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Verification Errors - Show when verification failed with details */}
+              {verificationResult && !verificationResult.passed && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl overflow-hidden">
+                  <div className="p-4 border-b border-red-500/20 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                        <XIcon className="w-4 h-4 text-red-400" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-white">Verification Failed</h3>
+                        <p className="text-sm text-red-400/70">{verificationResult.summary}</p>
+                      </div>
+                    </div>
+                    <span className="text-xs text-white/40">{verificationResult.duration}ms</span>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {verificationResult.checks.filter(c => !c.passed).map((check) => (
+                      <div key={check.name} className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <XIcon className="w-4 h-4 text-red-400" />
+                          <span className="font-medium text-red-400 capitalize">{check.name.replace(/-/g, ' ')}</span>
+                          {check.message && (
+                            <span className="text-sm text-red-400/60">— {check.message}</span>
+                          )}
+                        </div>
+                        {check.errors && check.errors.length > 0 && (
+                          <div className="ml-6 space-y-1">
+                            {check.errors.slice(0, 10).map((err, idx) => (
+                              <div key={idx} className="flex items-start gap-2 text-sm">
+                                <span className="text-white/30">•</span>
+                                <div className="flex-1 min-w-0">
+                                  {err.file && (
+                                    <span className="text-amber-400 font-mono text-xs">
+                                      {err.file}{err.line ? `:${err.line}` : ''}
+                                    </span>
+                                  )}
+                                  <span className={`${err.file ? ' ml-2' : ''} text-white/70`}>
+                                    {err.message}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                            {check.errors.length > 10 && (
+                              <p className="text-xs text-white/40 ml-4">
+                                ...and {check.errors.length - 10} more errors
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        {check.details && !check.errors?.length && (
+                          <pre className="ml-6 p-2 bg-black/30 rounded text-xs text-white/60 overflow-x-auto max-h-32 whitespace-pre-wrap">
+                            {check.details.substring(0, 500)}
+                            {check.details.length > 500 && '...'}
+                          </pre>
+                        )}
+                      </div>
+                    ))}
+
+                    {/* Fix with AI Section */}
+                    <div className="pt-4 border-t border-red-500/20 space-y-4">
+                      {/* Fix Progress */}
+                      {isFixing && fixProgress && (
+                        <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-6 h-6">
+                              <svg className="animate-spin w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium text-blue-400">AI is fixing errors...</p>
+                              <p className="text-sm text-blue-400/70">{fixProgress.message}</p>
+                              {fixProgress.filesModified && (
+                                <p className="text-xs text-blue-400/50">{fixProgress.filesModified} files modified</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Fix Result */}
+                      {fixResult && !isFixing && (
+                        <div className={`${fixResult.success ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-amber-500/10 border-amber-500/30'} border rounded-lg p-4`}>
+                          <div className="flex items-center gap-3 mb-2">
+                            {fixResult.success ? (
+                              <CheckIcon className="w-5 h-5 text-emerald-400" />
+                            ) : (
+                              <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                              </svg>
+                            )}
+                            <div>
+                              <p className={`font-medium ${fixResult.success ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                {fixResult.success ? 'Fixes applied successfully!' : 'Some errors remain'}
+                              </p>
+                              <p className={`text-sm ${fixResult.success ? 'text-emerald-400/70' : 'text-amber-400/70'}`}>
+                                {fixResult.filesModified} files modified
+                              </p>
+                            </div>
+                          </div>
+                          {fixResult.files && fixResult.files.length > 0 && (
+                            <div className="mt-2 text-xs text-white/50">
+                              Modified: {fixResult.files.slice(0, 3).join(', ')}
+                              {fixResult.files.length > 3 && ` and ${fixResult.files.length - 3} more`}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Fix Chat Input */}
+                      {!isFixing && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <svg className="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            <span className="font-medium text-white">Fix with AI</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={fixMessage}
+                              onChange={(e) => setFixMessage(e.target.value)}
+                              placeholder="Describe the fix you want, or leave empty for auto-fix..."
+                              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  const errorContext = {
+                                    checks: verificationResult?.checks
+                                      .filter(c => !c.passed)
+                                      .map(c => ({ name: c.name, errors: c.errors }))
+                                  };
+                                  startFix(fixMessage || undefined, errorContext);
+                                  setFixMessage('');
+                                }
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                const errorContext = {
+                                  checks: verificationResult?.checks
+                                    .filter(c => !c.passed)
+                                    .map(c => ({ name: c.name, errors: c.errors }))
+                                };
+                                startFix(fixMessage || undefined, errorContext);
+                                setFixMessage('');
+                              }}
+                              className="px-4 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg text-white font-medium text-sm transition-colors"
+                            >
+                              Fix
+                            </button>
+                          </div>
+                          <p className="text-xs text-white/40">
+                            AI will analyze the errors and apply fixes. You can provide guidance or let it auto-fix.
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Download Option */}
+                      <div className="flex items-center gap-4 pt-2">
+                        <span className="text-xs text-white/30">OR</span>
+                        <a
+                          href={`${GENERATOR_URL}/api/projects/${projectId}/download?include_failed=true`}
+                          className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/80 transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                          Download source to fix locally
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Success Card */}
               {generationComplete && result?.success && (

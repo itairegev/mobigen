@@ -175,6 +175,11 @@ export const DEFAULT_PIPELINE: PipelineConfig = {
     taskTimeout: 300000,         // 5 minutes per task
     maxRetries: 2,
     continueOnTaskFailure: true,
+    incrementalValidation: {
+      enabled: true,
+      maxFixAttempts: 3,
+      failOnValidationError: true, // CRITICAL: Block until errors are fixed
+    },
   },
 };
 
@@ -359,6 +364,8 @@ export class PipelineExecutor {
               name: c.name,
               passed: c.passed,
               message: c.message,
+              details: c.details,
+              errors: c.errors,
             })),
             summary: verification.summary,
             duration: verification.duration,
@@ -370,15 +377,29 @@ export class PipelineExecutor {
               failedChecks: verification.checks.filter(c => !c.passed).map(c => c.name),
             });
 
-            // Add verification errors to the error list
+            // Add verification errors to the error list with detailed info
             verification.checks
               .filter(c => !c.passed)
               .forEach(c => {
+                // Add the check-level error
                 allErrors.push({
                   code: `VERIFICATION_${c.name.toUpperCase()}`,
                   message: c.message || `${c.name} check failed`,
                   autoFixable: true,
                 });
+
+                // Also add individual errors from the check if available
+                if (c.errors && c.errors.length > 0) {
+                  c.errors.forEach(err => {
+                    allErrors.push({
+                      code: `VERIFICATION_${c.name.toUpperCase()}_DETAIL`,
+                      message: err.message,
+                      file: err.file,
+                      line: err.line,
+                      autoFixable: true,
+                    });
+                  });
+                }
               });
 
             // If feedback loop is enabled, try to fix

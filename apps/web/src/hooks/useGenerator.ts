@@ -102,6 +102,23 @@ interface ValidationResult {
   duration?: number;
 }
 
+// Verification check result (from verification:complete event)
+interface VerificationCheckResult {
+  name: string;
+  passed: boolean;
+  message?: string;
+  details?: string;
+  errors?: Array<{ file?: string; line?: number; message: string }>;
+}
+
+// Full verification result
+interface VerificationResult {
+  passed: boolean;
+  checks: VerificationCheckResult[];
+  summary: string;
+  duration: number;
+}
+
 interface LogsResponse {
   success: boolean;
   projectId: string;
@@ -136,7 +153,7 @@ interface UseGeneratorOptions {
 }
 
 // Export types for use in components
-export type { LogEntry, ValidationResult, ValidationIssue };
+export type { LogEntry, ValidationResult, ValidationIssue, VerificationResult, VerificationCheckResult };
 
 interface UseGeneratorReturn {
   isConnected: boolean;
@@ -159,9 +176,34 @@ interface UseGeneratorReturn {
   logErrors: LogEntry[];
   logWarnings: LogEntry[];
   validationResults: ValidationResult | null;
+  // Verification results (detailed error info)
+  verificationResult: VerificationResult | null;
+  // Fix-related state
+  isFixing: boolean;
+  fixProgress: {
+    phase: string;
+    message: string;
+    filesModified?: number;
+  } | null;
+  fixResult: {
+    success: boolean;
+    filesModified: number;
+    files: string[];
+    verification?: VerificationResult;
+    fixResult?: string;
+  } | null;
   // Actions
   startGeneration: (prompt: string, config: ProjectConfig) => Promise<void>;
   resumeGeneration: (phase?: string) => Promise<void>;
+  startFix: (
+    userMessage?: string,
+    errorContext?: {
+      checks?: Array<{
+        name: string;
+        errors?: Array<{ file?: string; line?: number; message: string }>;
+      }>;
+    }
+  ) => Promise<void>;
   refreshProgress: () => Promise<void>;
   fetchJobHistory: () => Promise<void>;
   fetchFailedTasks: () => Promise<void>;
@@ -224,6 +266,22 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
   const [logErrors, setLogErrors] = useState<LogEntry[]>([]);
   const [logWarnings, setLogWarnings] = useState<LogEntry[]>([]);
   const [validationResults, setValidationResults] = useState<ValidationResult | null>(null);
+  const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
+
+  // Fix-related state
+  const [isFixing, setIsFixing] = useState(false);
+  const [fixProgress, setFixProgress] = useState<{
+    phase: string;
+    message: string;
+    filesModified?: number;
+  } | null>(null);
+  const [fixResult, setFixResult] = useState<{
+    success: boolean;
+    filesModified: number;
+    files: string[];
+    verification?: VerificationResult;
+    fixResult?: string;
+  } | null>(null);
 
   const socketRef = useRef<Socket | null>(null);
 
@@ -562,8 +620,47 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       case 'pipeline:start':
         setIsGenerating(true);
         setError(null);
+        setVerificationResult(null);
         // Reset phases to pending when pipeline starts
         setPhases(prev => prev.map(p => ({ ...p, status: p.id === 'setup' ? 'completed' : 'pending', message: undefined })));
+        break;
+
+      // Handle verification events
+      case 'verification:start':
+        handlePhaseUpdate('validation', 'running', 'Verifying generated code...');
+        break;
+
+      case 'verification:complete':
+        {
+          const verificationData = progressData as {
+            passed: boolean;
+            checks: VerificationCheckResult[];
+            summary: string;
+            duration: number;
+          };
+          setVerificationResult({
+            passed: verificationData.passed,
+            checks: verificationData.checks || [],
+            summary: verificationData.summary || '',
+            duration: verificationData.duration || 0,
+          });
+
+          if (verificationData.passed) {
+            handlePhaseUpdate('validation', 'completed', 'All checks passed');
+          } else {
+            const failedChecks = (verificationData.checks || []).filter(c => !c.passed);
+            const failedNames = failedChecks.map(c => c.name).join(', ');
+            handlePhaseUpdate('validation', 'error', `Failed: ${failedNames}`);
+          }
+        }
+        break;
+
+      case 'verification:fixing':
+        handlePhaseUpdate('validation', 'running', 'Auto-fixing verification errors...');
+        break;
+
+      case 'verification:fixed':
+        handlePhaseUpdate('validation', 'completed', (progressData.summary as string) || 'Errors fixed');
         break;
 
       case 'pipeline:complete':
@@ -722,6 +819,65 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
       setCanResume(true);
     });
 
+    // Fix-related socket events
+    socket.on('fix:started', () => {
+      setIsFixing(true);
+      setFixProgress(null);
+      setFixResult(null);
+    });
+
+    socket.on('fix:progress', (data: { phase: string; message: string; filesModified?: number }) => {
+      setFixProgress(data);
+    });
+
+    socket.on('fix:complete', (data: {
+      success: boolean;
+      filesModified: number;
+      files: string[];
+      verification?: {
+        passed: boolean;
+        checks: Array<{
+          name: string;
+          passed: boolean;
+          message?: string;
+          details?: string;
+          errors?: Array<{ file?: string; line?: number; message: string }>;
+        }>;
+        summary: string;
+      };
+      fixResult?: string;
+    }) => {
+      setIsFixing(false);
+      setFixProgress(null);
+      setFixResult({
+        success: data.success,
+        filesModified: data.filesModified,
+        files: data.files,
+        verification: data.verification ? {
+          passed: data.verification.passed,
+          checks: data.verification.checks,
+          summary: data.verification.summary,
+          duration: 0,
+        } : undefined,
+        fixResult: data.fixResult,
+      });
+      // Update verification result if fix succeeded
+      if (data.verification) {
+        setVerificationResult({
+          passed: data.verification.passed,
+          checks: data.verification.checks,
+          summary: data.verification.summary,
+          duration: 0,
+        });
+      }
+    });
+
+    socket.on('fix:error', (data: { error: string }) => {
+      setIsFixing(false);
+      setFixProgress(null);
+      setError(data.error);
+    });
+
     socketRef.current = socket;
 
     return () => {
@@ -865,6 +1021,48 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
     }
   }, [projectId, isGenerating]);
 
+  // Start AI-powered fix
+  const startFix = useCallback(async (
+    userMessage?: string,
+    errorContext?: {
+      checks?: Array<{
+        name: string;
+        errors?: Array<{ file?: string; line?: number; message: string }>;
+      }>;
+    }
+  ) => {
+    if (isFixing) {
+      console.log('[useGenerator] Fix already in progress, skipping');
+      return;
+    }
+
+    setError(null);
+    setIsFixing(true);
+    setFixProgress({ phase: 'starting', message: 'Starting AI fix...' });
+    setFixResult(null);
+
+    try {
+      const response = await fetch(`${GENERATOR_URL}/api/projects/${projectId}/fix`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userMessage, errorContext }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to start fix');
+      }
+
+      // Fix progress will be streamed via WebSocket
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start fix');
+      setIsFixing(false);
+      setFixProgress(null);
+    }
+  }, [projectId, isFixing]);
+
   // Disconnect
   const disconnect = useCallback(() => {
     if (socketRef.current) {
@@ -895,9 +1093,16 @@ export function useGenerator({ projectId, autoConnect = true }: UseGeneratorOpti
     logErrors,
     logWarnings,
     validationResults,
+    // Verification results (detailed error info)
+    verificationResult,
+    // Fix-related state
+    isFixing,
+    fixProgress,
+    fixResult,
     // Actions
     startGeneration,
     resumeGeneration,
+    startFix,
     refreshProgress,
     fetchJobHistory,
     fetchFailedTasks,

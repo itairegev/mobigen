@@ -79,7 +79,7 @@ export const DEFAULT_INCREMENTAL_CONFIG: IncrementalValidationConfig = {
   maxFixAttempts: 3,
   runEslint: false,            // Skip for speed, run at end
   targetedValidation: false,   // Full project check for reliability
-  failOnValidationError: false, // Continue but log issues
+  failOnValidationError: true, // BLOCK task until errors are fixed - prevents error accumulation
 };
 
 // ============================================================================
@@ -430,6 +430,9 @@ export class IncrementalValidator {
     const prompt = this.buildFixPrompt(context, errorsByFile, attempt);
 
     try {
+      // Use more turns for later attempts since they need deeper analysis
+      const maxTurns = attempt === 1 ? 50 : (attempt === 2 ? 75 : 100);
+
       for await (const message of query({
         prompt,
         options: {
@@ -443,13 +446,17 @@ export class IncrementalValidator {
           },
           allowedTools: errorFixerAgent.tools,
           model: errorFixerAgent.model || 'sonnet',
-          maxTurns: 50,
-          systemPrompt: `You are an error fixer running as part of incremental validation.
+          maxTurns,
+          systemPrompt: `You are an expert error fixer running as part of incremental validation.
 Working directory: ${this.mobigenRoot}
 Project directory: ${context.projectPath}
 
-Fix the TypeScript/ESLint errors listed. Focus on quick, targeted fixes.
-${errorFixerAgent.prompt}`,
+Your job is to fix TypeScript/ESLint errors so the project compiles successfully.
+You MUST fix all errors before moving on - the build will fail if errors remain.
+
+${errorFixerAgent.prompt}
+
+CRITICAL: After fixing, verify the fix doesn't introduce new errors.`,
           cwd: this.mobigenRoot,
           permissionMode: 'acceptEdits',
         },
@@ -477,29 +484,59 @@ ${errorFixerAgent.prompt}`,
     errorsByFile: Map<string, ValidationError[]>,
     attempt: number
   ): string {
-    let prompt = `INCREMENTAL VALIDATION FIX - ATTEMPT ${attempt}\n\n`;
-    prompt += `Task: ${context.taskId}\n`;
-    prompt += `Project: ${context.projectPath}\n\n`;
-    prompt += `The following TypeScript errors need to be fixed:\n\n`;
+    let prompt = `# INCREMENTAL VALIDATION FIX - ATTEMPT ${attempt}/${this.config.maxFixAttempts}\n\n`;
+    prompt += `**Task:** ${context.taskId}\n`;
+    prompt += `**Project:** ${context.projectPath}\n`;
+    prompt += `**Total Errors:** ${Array.from(errorsByFile.values()).flat().length}\n\n`;
 
+    // Error listing
+    prompt += `## Errors to Fix\n\n`;
     for (const [file, fileErrors] of errorsByFile) {
-      prompt += `📄 ${file}:\n`;
+      const relativePath = file.replace(context.projectPath + '/', '');
+      prompt += `### ${relativePath}\n`;
       for (const err of fileErrors) {
-        prompt += `  Line ${err.line || '?'}: [${err.code}] ${err.message}\n`;
+        prompt += `- **Line ${err.line || '?'}** [${err.code}]: ${err.message}\n`;
       }
       prompt += '\n';
     }
 
-    prompt += `\nINSTRUCTIONS:\n`;
-    prompt += `1. Read each file with errors\n`;
-    prompt += `2. Apply minimal fixes to resolve the TypeScript errors\n`;
-    prompt += `3. Do not refactor or change unrelated code\n`;
-    prompt += `4. Ensure fixes don't introduce new errors\n`;
+    // Strategy based on attempt number
+    prompt += `## Fix Strategy\n\n`;
 
-    if (attempt > 1) {
-      prompt += `\n⚠️ This is attempt ${attempt}. Previous fixes did not resolve all errors.\n`;
-      prompt += `Please analyze the errors more carefully and try different approaches.\n`;
+    if (attempt === 1) {
+      prompt += `**First attempt - Quick fixes:**\n`;
+      prompt += `1. Read each file containing errors\n`;
+      prompt += `2. Fix the exact errors listed (missing imports, type mismatches, etc.)\n`;
+      prompt += `3. Use Edit tool with exact old_string matches\n`;
+      prompt += `4. Do NOT refactor or change unrelated code\n`;
+    } else if (attempt === 2) {
+      prompt += `**Second attempt - Deeper analysis:**\n`;
+      prompt += `1. Previous quick fixes didn't work - analyze root cause\n`;
+      prompt += `2. Check if types/interfaces are correctly defined\n`;
+      prompt += `3. Check import paths and module resolution\n`;
+      prompt += `4. Look for circular dependencies or missing exports\n`;
+      prompt += `5. Read related files if needed to understand context\n`;
+    } else {
+      prompt += `**Final attempt - Comprehensive fix:**\n`;
+      prompt += `1. Previous attempts failed - take a broader view\n`;
+      prompt += `2. The error might be in a different file than reported\n`;
+      prompt += `3. Check type definitions, interfaces, and exports\n`;
+      prompt += `4. Consider if the implementation approach needs adjustment\n`;
+      prompt += `5. If a type doesn't exist, check if you need to create it\n`;
+      prompt += `6. Look for any 'any' types that should be properly typed\n`;
     }
+
+    prompt += `\n## Common Fix Patterns\n\n`;
+    prompt += `- **Cannot find module 'X'**: Check import path, use @/ alias or relative path\n`;
+    prompt += `- **Property 'X' does not exist**: Add property to interface or check spelling\n`;
+    prompt += `- **Type 'X' not assignable to 'Y'**: Fix type annotation or add type conversion\n`;
+    prompt += `- **Missing return type**: Add explicit return type annotation\n`;
+    prompt += `- **Parameter implicitly has 'any'**: Add type annotation to parameter\n`;
+
+    prompt += `\n## Critical Rules\n\n`;
+    prompt += `- Fix errors without introducing new ones\n`;
+    prompt += `- Preserve existing functionality\n`;
+    prompt += `- Keep changes minimal and targeted\n`;
 
     return prompt;
   }
