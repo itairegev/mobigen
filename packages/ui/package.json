@@ -9,6 +9,11 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./mockup": {
+      "types": "./src/mockup/index.ts",
+      "import": "./src/mockup/index.ts",
+      "default": "./src/mockup/index.ts"
     }
   },
   "scripts": {

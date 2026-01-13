@@ -15,6 +15,11 @@
       "types": "./src/content-manager/index.ts",
       "import": "./src/content-manager/index.ts",
       "default": "./src/content-manager/index.ts"
+    },
+    "./mockup": {
+      "types": "./src/mockup/index.ts",
+      "import": "./src/mockup/index.ts",
+      "default": "./src/mockup/index.ts"
     }
   },
   "scripts": {
@@ -31,12 +36,15 @@
     "@aws-sdk/client-iam": "^3.490.0",
     "@aws-sdk/client-s3": "^3.490.0",
     "@aws-sdk/lib-dynamodb": "^3.490.0",
+    "@mobigen/ui": "workspace:*",
     "archiver": "^6.0.1",
+    "puppeteer": "^21.0.0",
     "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
     "@types/node": "^20.10.0",
+    "@types/puppeteer": "^7.0.4",
     "typescript": "^5.6.3",
     "vitest": "^1.2.0"
   }
