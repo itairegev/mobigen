@@ -149,7 +149,7 @@ jobs:
 
       - name: Upload AST artifacts
         if: steps.ast-changes.outputs.changed == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: template-ast-files
           path: |
