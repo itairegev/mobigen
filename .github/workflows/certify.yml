@@ -132,7 +132,7 @@ jobs:
           fi
 
       - name: Upload certification report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: certification-${{ matrix.template }}
           path: |
